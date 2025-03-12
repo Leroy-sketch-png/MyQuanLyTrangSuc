@@ -4,11 +4,70 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="ItemListPage">
+      d:DesignHeight="720" d:DesignWidth="880"
+      Loaded="Page_Loaded">
+    <Page.Resources>
+        <!-- Rounded Corner Button Style -->
+        <Style x:Key="RoundedButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#A392D1" />
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                            CornerRadius="15" 
+                            Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#ba80d3" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
 
-    <Grid>
-        
+    <Grid Background="#F0F0F0">
+        <StackPanel>
+            <TextBlock Text="Items' List" FontSize="36" FontWeight="Bold" Foreground="Black" HorizontalAlignment="Left" TextAlignment="Center" Margin="20,0,0,0"/>
+            <Separator BorderBrush="#ba80d3" BorderThickness="10" Margin="5,10,30,10"/>
+            <DockPanel>
+                <Button DockPanel.Dock="Left" Width="160" Height="36" Content="Add new item" IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" HorizontalAlignment="Left" Margin="10, 0, 20, 0" FontWeight="Bold" 
+                        materialDesign:ButtonAssist.CornerRadius="10"
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        Background="#FF747525"
+                        Foreground="White"
+                        Click="OnClick_Add_ItemList"/>
+                <!---->
+
+                <TextBox DockPanel.Dock="Right" Width="200" x:Name="SearchTextBox" materialDesign:HintAssist.Hint="Search By Name" HorizontalAlignment="Right" Margin="20,0,10,0" Height="60"
+                         TextChanged="TextChanged_Search"/>
+                <ComboBox DockPanel.Dock="Right" Width="150" Style="{StaticResource MaterialDesignOutlinedComboBox}" HorizontalAlignment="Right" Margin="20,0,10,0" ItemsSource="{Binding Categories}" SelectionChanged="ComboBox_SelectionChanged" MouseDoubleClick="ComboBox_MouseDoubleClick" ToolTip="Double click to clear"
+                          materialDesign:HintAssist.Hint="Category"/>
+
+            </DockPanel>
+            <Border BorderBrush="Black" BorderThickness="1" Margin="10" Padding="10">
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding Items, Mode=OneWay}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!--<local:ItemUserControlUI />-->
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+        </StackPanel>
     </Grid>
 </Page>
