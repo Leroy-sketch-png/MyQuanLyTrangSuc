@@ -1,0 +1,178 @@
+﻿<Page x:Class="MyQuanLyTrangSuc.View.CustomerListPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
+      xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d" 
+      d:DesignHeight="720" d:DesignWidth="880"
+      Title="CustomerPageUI">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Page.Resources>
+
+    <Border Background="#eff2f7" CornerRadius="30">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <!--Main Section-->
+            <Grid Grid.Column="1" HorizontalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <!--Top Button-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 15 0">
+                    <!--<TextBlock Foreground="#374655" FontSize="14" Margin="0 0 10 0" VerticalAlignment="Center"
+                                Text="Welcome, have a nice day" FontStyle="Italic"/>-->
+                    <TextBlock x:Name="welcomeTextBlock" Foreground="#374655" FontSize="14" Margin="0 0 10 0"
+                               VerticalAlignment="Center" Text="Welcome, have a nice day" FontStyle="Italic">
+                        <TextBlock.RenderTransform>
+                            <TranslateTransform x:Name="textTransform" X="-50"/>
+                        </TextBlock.RenderTransform>
+                        <TextBlock.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation Storyboard.TargetName="textTransform" 
+                                                         Storyboard.TargetProperty="X" 
+                                                         From="-50" To="0" Duration="0:0:4" 
+                                                         AutoReverse="True" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBlock.Triggers>
+                    </TextBlock>
+
+                    <!--<Button Style="{StaticResource menuButton_2}">
+                        <Icon:PackIconMaterial Kind="BellOutline" Width="14" Height="14"/>
+                    </Button>
+
+                    <Button Style="{StaticResource menuButton_2}">
+                        <Icon:PackIconMaterial Kind="Cog" Width="14" Height="14"/>
+                    </Button>
+
+                    <Button Style="{StaticResource menuButton_2}">
+                        <Icon:PackIconMaterial Kind="AccountCheckOutline" Width="14" Height="14"/>
+                    </Button>-->
+                </StackPanel>
+
+                <!--Page Title-->
+                <TextBlock Text="Customer" Grid.Row="1" FontSize="32" FontWeight="SemiBold" 
+                            Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
+                <TextBlock Text="Customer Page" HorizontalAlignment="Left" VerticalAlignment="Center"
+                            Margin="55 0 0 2" FontSize="16" FontWeight="SemiBold" Foreground="Blue"/>
+                <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="33 0 0 4" Width="14" Height="14" Foreground="#ff9d00"/>
+                <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="30 4 0 0" Width="14" Height="14" Foreground="#4880ff"/>
+
+                <!--Add Data Function-->
+                <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                    <!--Add Button-->
+                    <Button x:Name="addButton" Style="{StaticResource addButton}" Click="addButton_Click" Grid.RowSpan="4" Grid.Row="1" >
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11"
+                                   Height="11" Margin="0 1 8 0"/>
+                            <TextBlock Text="Add new customer" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+                    <!--Import Button-->
+                    <Button x:Name="importExcelFileButton" Click="importExcelFileButton_Click" Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
+                            <TextBlock Text="Import" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--Export Button-->
+                    <Button x:Name="exportExcelFileButton" Click="exportExcelFileButton_Click" Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
+                            <TextBlock Text="Export" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+
+
+                <!--Separator-->
+                <Separator Grid.Row="3" BorderBrush="#ba80d3" BorderThickness="10" Margin="5,10,30,10"/>
+
+
+                <!--Filter TextBox-->
+                <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
+                    <TextBlock x:Name="searchTextBlock" Margin="15 8 0 5" VerticalAlignment="Center" Foreground="#b0b9c6"
+                                IsHitTestVisible="False" Panel.ZIndex="1" Text="Search"
+                                Visibility="{Binding ElementName=txtFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
+                    <TextBox TextChanged="searchTextBox_TextChanged"  x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0"/>
+                </Grid>
+
+                <!--Search Option-->
+                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
+                    <ComboBoxItem Content="Name"/>
+                    <ComboBoxItem Content="ID"/>
+                </ComboBox>
+
+                <!--Customers DataGrid-->
+                <DataGrid AutoGenerateColumns="False" IsReadOnly="True" CanUserSortColumns="True" ItemsSource="{Binding Customers, Mode=TwoWay}" SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}" x:Name="membersDataGrid" Style="{DynamicResource DataGridStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
+                    <DataGrid.Columns>
+
+                        <!--ID-->
+                        <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="False" Width="80" Binding="{Binding id_customer}"/>
+
+                        <!--Name-->
+                        <DataGridTextColumn Header="Name" Width="*" Binding="{Binding name_customer}" CanUserResize="False" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!--Email-->
+                        <DataGridTextColumn Header="Email" Binding="{Binding email_customer}" Width="*" IsReadOnly="True" CanUserResize="False">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!--Telephone-->
+                        <DataGridTextColumn Header="Telephone" IsReadOnly="True" Width="*" Binding="{Binding tel_customer}"/>
+
+                        <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="editButton" Click="editButton_Click" Style="{StaticResource gridEditButton}">
+                                            <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
+                                        </Button>
+
+                                        <Button x:Name="deleteButton" Click="deleteButton_Click" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0">
+                                            <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
+                                        </Button>
+
+
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+    </Border>
+</Page>
