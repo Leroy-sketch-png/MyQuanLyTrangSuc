@@ -13,7 +13,6 @@
             <TextBlock Text="ADDING CUSTOMER..." FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,20"/>
             <StackPanel Margin="40,70,40,20">
 
-
                 <Grid Margin="0,0,0,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -84,7 +83,9 @@
                     </StackPanel>
                 </Grid>
 
-                <Button Click="addButton_Click"  x:Name="addButton" Content="ADD" FontSize="24" Background="#ba80d3" Foreground="White" Padding="5" HorizontalAlignment="Center" Width="120" Height="50"/>
+                <!-- Commented out the Click event -->
+                <Button x:Name="addButton" Content="ADD" FontSize="24" Background="#ba80d3" Foreground="White" Padding="5" HorizontalAlignment="Center" Width="120" Height="50"/>
+                <!-- Click="addButton_Click" -->
 
             </StackPanel>
         </Grid>
