@@ -1,4 +1,4 @@
-﻿<Window x:Class="MyQuanLyTrangSuc.MainNavigationWindow"
+﻿<Window x:Class="MyQuanLyTrangSuc.View.MainNavigationWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,17 +6,14 @@
         xmlns:local="clr-namespace:MyQuanLyTrangSuc"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        
-        Title="MainNavigationWindow" Height="720" Width="1180" WindowStartupLocation="CenterScreen">
-    <Border Background="#FF272E3C" >
+        Title="MainNavigationWindow" Height="750" Width="1180" WindowStartupLocation="CenterScreen">
+    <Border Background="#FF272E3C">
         <!--MouseDown="Border_MouseDown"-->
-        <!--MouseLeftButtonDown="Border_MouseLeftButtonDown">-->
+        <!--MouseLeftButtonDown="Border_MouseLeftButtonDown"-->
         <Grid Margin="-3,0,3,0" x:Name="LayoutRoot">
-
             <Grid.Background>
                 <SolidColorBrush Color="Transparent"/>
             </Grid.Background>
-
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
                 <ColumnDefinition Width="*"/>
@@ -27,7 +24,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height ="*"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
                 <Border Grid.Row="0" Grid.RowSpan="3" CornerRadius="20 20 20 20" Margin="5 5 5 5">
@@ -41,10 +38,8 @@
                         <!--Menu Logo-->
                         <Border Width="100" Height="100" Padding="3" Background="White" CornerRadius="100"
                                 DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="0 20 0 0">
-                            <Ellipse Margin="-3,-3,-3,-3">
-                            </Ellipse>
+                            <Ellipse Margin="-3,-3,-3,-3"/>
                         </Border>
-
 
                         <!--Navigation Titles-->
                         <TextBlock Text="Kristal" Foreground="White" FontSize="40" FontWeight="SemiBold"
@@ -53,80 +48,75 @@
                                    DockPanel.Dock="Top" FontFamily="Californian FB"/>
 
                         <!--Navigation Separator-->
-                        <Separator Margin="25" DockPanel.Dock="Top" Height="0.8" Background="#FFC1CC00" />
+                        <Separator Margin="25" DockPanel.Dock="Top" Height="0.8" Background="#FFC1CC00"/>
 
                         <!--Navigation Buttons-->
                         <StackPanel DockPanel.Dock="Top">
                             <Button Style="{StaticResource menuButton}">
-                                <!--Click="OnClick_DashboardPageNavigation">-->
+                                <!--Click="OnClick_DashboardPageNavigation"-->
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="HomeVariant" Foreground="White" HorizontalAlignment="Left"/>
-                                    <TextBlock Text=" Dashboard" 
-                                               Foreground="White"/>
+                                    <TextBlock Text=" Dashboard" Foreground="White"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Top">
                             <Button Style="{StaticResource menuButton}">
-                                <!--Click="OnClick_ProfilePageNavigation">-->
+                                <!--Click="OnClick_ProfilePageNavigation"-->
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="AccountCircle" Foreground="White"/>
-                                    <TextBlock Text=" Profile" 
-                                               Foreground="White"/>
+                                    <TextBlock Text=" Profile" Foreground="White"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Top">
                             <Button Style="{StaticResource menuButton}">
-                                <!--Click="OnClick_ItemListPageNavigation">-->
+                                <!--Click="OnClick_ItemListPageNavigation"-->
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="Cube" Foreground="White"/>
-                                    <TextBlock Text=" Jewelry" 
-                                               Foreground="White"/>
+                                    <TextBlock Text=" Jewelry" Foreground="White"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Top">
                             <Button Style="{StaticResource menuButton}">
-                                <!--Click="OnClick_ImportRecordPageNavigation">-->
+                                <!--Click="OnClick_ImportRecordPageNavigation"-->
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="Import" Foreground="White"/>
-                                    <TextBlock Text=" Import" 
-                                               Foreground="White"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-                        <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}">
-                                <!--Click="OnClick_ExportRecordPageNavigation">-->
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Receipt" Foreground="White"/>
-                                    <TextBlock Text=" Receipt" 
-                                               Foreground="White"/>
+                                    <TextBlock Text=" Import" Foreground="White"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}" >
-                                <!--Click="OnClick_CustomerPageNavigation">-->
+                            <Button Style="{StaticResource menuButton}">
+                                <!--Click="OnClick_ExportRecordPageNavigation"-->
                                 <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="FaceAgent" Foreground="White"/>
-                                    <TextBlock Text=" Customers" 
-                                               Foreground="White"/>
+                                    <materialDesign:PackIcon Kind="Invoice" Foreground="White"/>
+                                    <TextBlock Text=" Invoice" Foreground="White"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
+
                         <StackPanel DockPanel.Dock="Top">
                             <Button Style="{StaticResource menuButton}">
-                                <!--Click="OnClick_SupplierPageNavigation">-->
+                                <!--Click="OnClick_CustomerPageNavigation"-->
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="FaceAgent" Foreground="White"/>
+                                    <TextBlock Text=" Customers" Foreground="White"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <StackPanel DockPanel.Dock="Top">
+                            <Button Style="{StaticResource menuButton}">
+                                <!--Click="OnClick_SupplierPageNavigation"-->
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="AccountTie" Foreground="White"/>
-                                    <TextBlock Text=" Suppliers" 
-                                               Foreground="White"/>
+                                    <TextBlock Text=" Suppliers" Foreground="White"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -138,38 +128,32 @@
                                 <!--Click="OnClick_UserPageNavigation"-->
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="AccountGroup" Foreground="White"/>
-                                    <TextBlock Text=" Human Resource" 
-                                               Foreground="White"/>
+                                    <TextBlock Text=" Human Resource" Foreground="White"/>
                                 </StackPanel>
                             </Button>
-                        </StackPanel>
-
-                        <StackPanel  DockPanel.Dock="Top">
-                            <!--Navigation Separator-->
-                            <Separator Margin="18" Height="0.8" Background="#FFC1CC00" />
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}" >
-                                <!--Click="OnClick_LogOut">-->
+                            <!--Navigation Separator-->
+                            <Separator Margin="18" Height="0.8" Background="#FFC1CC00"/>
+                        </StackPanel>
+
+                        <StackPanel DockPanel.Dock="Top">
+                            <Button Style="{StaticResource menuButton}">
+                                <!--Click="OnClick_LogOut"-->
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="Export" Foreground="White"/>
-                                    <TextBlock Text=" Log Out" 
-                                               Foreground="White"/>
+                                    <TextBlock Text=" Log Out" Foreground="White"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
-
                     </DockPanel>
-
                 </Border>
             </Grid>
             <Grid Grid.Column="1">
                 <!-- Add a Frame navigating to DashboardUI -->
                 <Frame Name="MainFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" NavigationUIVisibility="Hidden"/>
             </Grid>
-
-
         </Grid>
     </Border>
 </Window>

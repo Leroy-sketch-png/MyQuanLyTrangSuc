@@ -13,13 +13,13 @@
     <Border CornerRadius="50">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="1.1*" ></RowDefinition>
-                <RowDefinition Height="0.4*"></RowDefinition>
-                <RowDefinition Height="1.2*"></RowDefinition>
+                <RowDefinition Height="1.1*"/>
+                <RowDefinition Height="0.4*"/>
+                <RowDefinition Height="1.2*"/>
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0">
-                <materialDesign:PackIcon Kind="SignText" Width="600" Height="222"/>  
+                <materialDesign:PackIcon Kind="SignText" Width="600" Height="222"/>
             </StackPanel>
             <StackPanel Grid.Row="1">
                 <TextBlock Text="Forgot your password?" HorizontalAlignment="Center" FontSize="42" FontWeight="Bold"/>
@@ -42,6 +42,7 @@
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Background="#FF20232E"/> <!--Click="sendButton_Click"-->
                 </StackPanel>
+                <!--Click="sendButton_Click"-->
 
                 <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
                     <materialDesign:PackIcon Kind="CodeEqual" Margin="20 4 0 0" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -59,11 +60,8 @@
                             Style="{StaticResource MaterialDesignRaisedButton}" 
                             Background="#FF20232E"/> <!--Click="verifyButton_Click"-->
                 </Grid>
+                <!--Click="verifyButton_Click"-->
             </StackPanel>
-
-
-
         </Grid>
     </Border>
-
 </Window>

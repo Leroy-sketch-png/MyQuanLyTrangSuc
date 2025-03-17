@@ -1,4 +1,8 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -9,12 +13,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MyQuanLyTrangSuc {
+namespace MyQuanLyTrangSuc.View
+{
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ExportRecordPage.xaml
     /// </summary>
-    public partial class MainNavigationWindow : Window {
-        public MainNavigationWindow() {
+    public partial class InvoicePage : Page
+    {
+        public InvoicePage()
+        {
             InitializeComponent();
         }
     }

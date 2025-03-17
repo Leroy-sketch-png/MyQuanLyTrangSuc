@@ -18,9 +18,9 @@ namespace MyQuanLyTrangSuc.View
     /// <summary>
     /// Interaction logic for ImportRecordPage.xaml
     /// </summary>
-    public partial class ImportRecordPage : Page
+    public partial class ImportPage : Page
     {
-        public ImportRecordPage()
+        public ImportPage()
         {
             InitializeComponent();
         }

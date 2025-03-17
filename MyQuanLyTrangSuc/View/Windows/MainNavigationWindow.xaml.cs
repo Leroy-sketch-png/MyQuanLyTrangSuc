@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -13,15 +9,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MyQuanLyTrangSuc.View
-{
+namespace MyQuanLyTrangSuc.View {
     /// <summary>
-    /// Interaction logic for ExportRecordPage.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class ExportRecordPage : Page
-    {
-        public ExportRecordPage()
-        {
+    public partial class MainNavigationWindow : Window {
+        public MainNavigationWindow() {
             InitializeComponent();
         }
     }
