@@ -136,7 +136,7 @@
         <Border Grid.Column="1" Name="RightBorder"
                         Background="#FF272E3C"
                         CornerRadius="0 20 20 0"
-                        MouseDown="Border_MouseDown" RenderTransformOrigin="0.493,0.589">
+                        RenderTransformOrigin="0.493,0.589"><!--MouseDown="Border_MouseDown"-->
             <Grid>
                 <Grid>
                     <Ellipse Width="90"
@@ -161,9 +161,9 @@
 
                 </Grid>
                 <ToggleButton
-                    Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked"
+                    
                     Style="{StaticResource MaterialDesignSwitchDarkToggleButton}"
-                    ToolTip="MaterialDesignSwitchDarkToggleButton" Margin="415,-496,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="34" >
+                    ToolTip="MaterialDesignSwitchDarkToggleButton" Margin="415,-496,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="34" ><!--Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked"-->
                     <ToggleButton.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform ScaleX="-1"/>
@@ -178,10 +178,10 @@
                                          Height="20"
                                          Margin="425,13,14,0" 
                                          HorizontalAlignment="Stretch"
-                                         MouseLeftButtonUp="CloseButton_Click"
+                                        
                                          Name="CloseIcon"
                                          Foreground="#ba80d3"
-                                         />
+                                         /> <!--MouseLeftButtonUp="CloseButton_Click"-->
 
                 <!--Inputs-->
                 <StackPanel VerticalAlignment="Center"
@@ -228,9 +228,11 @@
                         </PasswordBox.Resources>
                     </PasswordBox>
 
-                    <Button x:Name="forgotPasswordTextBox" Background="Transparent" Content="Forgot Password" 
+                    <Button x:Name="forgotPasswordTextBox" 
+                            Background="Transparent" 
+                            Content="Forgot Password" 
                             Foreground="#ba80d3"
-                            Width="140" BorderBrush="Transparent" Click="forgotPasswordTextBox_Click"/>
+                            Width="140" BorderBrush="Transparent"/> <!--Click="forgotPasswordTextBox_Click"-->
 
                     <!--SignIn Button-->
                     <StackPanel Orientation="Horizontal" Height="77">
@@ -240,7 +242,7 @@
                                         Width="307"
                                         Height="45"
                                         materialDesign:ButtonAssist.CornerRadius="22"
-                                        Click="OnClick_Login"/>
+                                        /> <!--Click="OnClick_Login"-->
                     </StackPanel>
                 </StackPanel>
             </Grid>

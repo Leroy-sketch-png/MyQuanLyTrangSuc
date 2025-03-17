@@ -65,7 +65,7 @@
 
                 <!--Add Button-->
                 <Button Style="{StaticResource addButton}" Margin="0 0 20 5" Grid.RowSpan="4" Grid.Row="1" 
-                        Click="OnClick_AddRecord_ExportRecordPage">
+                        ><!--Click="OnClick_AddRecord_ExportRecordPage"-->
                     <StackPanel Orientation="Horizontal">
                         <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11"
                                            Height="11" Margin="0 1 8 0"/>
@@ -81,7 +81,7 @@
                     <TextBlock x:Name="searchTextBlock" Margin="15 8 0 5" VerticalAlignment="Center" Foreground="#b0b9c6"
                                IsHitTestVisible="False" Panel.ZIndex="1" Text="Search by customer"
                                Visibility="{Binding ElementName=searchTextBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-                    <TextBox TextChanged="searchTextBox_TextChanged" x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0"/>
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0"/> <!--TextChanged="searchTextBox_TextChanged"-->
                 </Grid>
 
                 <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
@@ -93,7 +93,7 @@
                 <!--Members DataGrid-->
                 <DataGrid x:Name="membersDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" Grid.Row="5"
                           ItemsSource="{Binding ExportRecords}"
-                          MouseDoubleClick="OnDoubleClick_InspectRecord_ExportRecordPageDataGrid">
+                          ><!--MouseDoubleClick="OnDoubleClick_InspectRecord_ExportRecordPageDataGrid"-->
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="False" Width="80" Binding="{Binding id_export}"/>
                         <DataGridTextColumn Header="Date" IsReadOnly="True" Width="0.8*" Binding="{Binding date_export}"/>
@@ -103,11 +103,11 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" >
-                                        <Button Click="viewButton_Click" Margin="0 0 3 0"
-                                                x:Name="viewButton" Style="{StaticResource gridEditButton}">
+                                        <Button Margin="0 0 3 0"
+                                                x:Name="viewButton" Style="{StaticResource gridEditButton}"><!--Click="viewButton_Click"-->
                                             <Icon:PackIconMaterial Kind="ViewListOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
-                                        <Button Margin="3 0 0 0" x:Name="printButton" Click="printButton_Click" Style="{StaticResource gridEditButton}">
+                                        <Button Margin="3 0 0 0" x:Name="printButton"  Style="{StaticResource gridEditButton}"><!--Click="printButton_Click"-->
                                             <Icon:PackIconMaterial Kind="Printer" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>

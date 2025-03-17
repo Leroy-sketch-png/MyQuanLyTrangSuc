@@ -51,8 +51,8 @@
   IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
   Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
   ToolTip="MaterialDesignFloatingActionMiniDarkButton" HorizontalAlignment="Left" Margin="200 30 0 0"
-                    Opacity="0.6"
-                    Click="OnClick_ProfilePictureChange">
+                    Opacity="0.6" Background="#FF747525"
+                    ><!--Click="OnClick_ProfilePictureChange"-->
                     <materialDesign:PackIcon
     Width="30"
     Height="30"
@@ -173,7 +173,7 @@
                             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             ToolTip="MaterialDesignRaisedButton with Round Corners"
-                            Click="OnClick_ProfileUpdate">
+                            ><!--Click="OnClick_ProfileUpdate"-->
                         <TextBlock Text="UPDATE" FontSize="24" />
                     </Button>
 
@@ -183,7 +183,7 @@
                             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             ToolTip="MaterialDesignRaisedButton with Round Corners"
-                            Click="OnClick_CancelUpdate">
+                            ><!--Click="OnClick_CancelUpdate"-->
                         <TextBlock Text="CANCEL" FontSize="24" />
                     </Button>
 
@@ -194,7 +194,7 @@
                             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             ToolTip="MaterialDesignRaisedButton with Round Corners"
-                            Click="resetPassWordButton_Click">
+                            ><!--Click="resetPassWordButton_Click"-->
                         <TextBlock Text="RESET PASSWORD" FontSize="24" />
                     </Button>
                 </Grid>

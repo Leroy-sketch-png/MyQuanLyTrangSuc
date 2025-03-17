@@ -79,7 +79,7 @@
                 <!--Add Data Function-->
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
                     <!--Add Button-->
-                    <Button x:Name="addButton" Style="{StaticResource addButton}" Click="addButton_Click" Grid.RowSpan="4" Grid.Row="1" >
+                    <Button x:Name="addButton" Style="{StaticResource addButton}" Grid.RowSpan="4" Grid.Row="1" ><!--Click="addButton_Click"-->
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11"
                                    Height="11" Margin="0 1 8 0"/>
@@ -87,7 +87,7 @@
                         </StackPanel>
                     </Button>
                     <!--Import Button-->
-                    <Button x:Name="importExcelFileButton" Click="importExcelFileButton_Click" Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
+                    <Button x:Name="importExcelFileButton"  Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4"><!--Click="importExcelFileButton_Click"-->
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Import" FontWeight="SemiBold"/>
@@ -95,7 +95,7 @@
                     </Button>
 
                     <!--Export Button-->
-                    <Button x:Name="exportExcelFileButton" Click="exportExcelFileButton_Click" Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
+                    <Button x:Name="exportExcelFileButton" Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4"><!--Click="exportExcelFileButton_Click"-->
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Export" FontWeight="SemiBold"/>
@@ -114,7 +114,7 @@
                     <TextBlock x:Name="searchTextBlock" Margin="15 8 0 5" VerticalAlignment="Center" Foreground="#b0b9c6"
                                 IsHitTestVisible="False" Panel.ZIndex="1" Text="Search"
                                 Visibility="{Binding ElementName=txtFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-                    <TextBox TextChanged="searchTextBox_TextChanged"  x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0"/>
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0"/> <!--TextChanged="searchTextBox_TextChanged"-->
                 </Grid>
 
                 <!--Search Option-->
@@ -155,11 +155,11 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button x:Name="editButton" Click="editButton_Click" Style="{StaticResource gridEditButton}">
+                                        <Button x:Name="editButton" Style="{StaticResource gridEditButton}"><!--Click="editButton_Click"-->
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
-                                        <Button x:Name="deleteButton" Click="deleteButton_Click" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0">
+                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0"><!--Click="deleteButton_Click"-->
                                             <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 

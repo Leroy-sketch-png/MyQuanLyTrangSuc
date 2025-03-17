@@ -1,0 +1,74 @@
+﻿<Window x:Class="MyQuanLyTrangSuc.View.ImportDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        x:Name="PrintPage"
+        WindowStartupLocation="CenterScreen"
+        Height="500" Width="600">
+    <ScrollViewer HorizontalAlignment="Center" Width="600">
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="IMPORT RECORD" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
+
+            <DockPanel Grid.Row="1">
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="40,0,0,0" HorizontalAlignment="Left">
+                    <TextBlock Text="Record ID: " VerticalAlignment="Center" FontSize="16"/>
+                    <TextBlock Text="{Binding SelectedImportRecord.id_import}" VerticalAlignment="Center" Margin="10,20,20,20" FontSize="16" FontWeight="Bold"/>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0,0,40,0" HorizontalAlignment="Right">
+                    <TextBlock Text="Date: " VerticalAlignment="Center" FontSize="16"/>
+                    <TextBlock Text="{Binding SelectedImportRecord.date_import}" VerticalAlignment="Center" Margin="10,20,20,20" FontWeight="Bold" FontSize="16"/>
+                </StackPanel>
+            </DockPanel>
+            <Border Grid.Row="2" Margin="5">
+                <DataGrid Margin="5" AutoGenerateColumns="False" ItemsSource="{Binding ImportInfos}"
+          IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Index" Width="65" CanUserResize="False" Binding="{Binding ITEM.id_item}"/>
+                        <DataGridTextColumn Header="Name" Width="*" Binding="{Binding ITEM.Name_item}"/>
+                        <DataGridTextColumn Header="Type" Width="*" Binding="{Binding ITEM.Type_item}"/>
+                        <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding count_importinfo}"/>
+                        <DataGridTextColumn Header="Unit" Width="*" Binding="{Binding ITEM.Unit_item}"/>
+                        <DataGridTextColumn Header="Price" Width="*" Binding="{Binding ITEM.Price_item}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+            <DockPanel Grid.Row="3">
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="40,0,0,0" HorizontalAlignment="Left">
+                    <TextBlock Text="Creator: " VerticalAlignment="Center" FontSize="16"/>
+                    <TextBlock Text="{Binding SelectedImportRecord.EMPLOYEE.name_employee}" VerticalAlignment="Center" Margin="10,0,20,0" FontSize="16" FontWeight="Bold"/>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0,0,40,0" HorizontalAlignment="Right">
+                    <TextBlock Text="From Supplier: " VerticalAlignment="Center" FontSize="16"/>
+                    <TextBlock Text="{Binding SelectedImportRecord.SUPPLIER.Name_supplier}" VerticalAlignment="Center" Margin="10,0,20,0" FontWeight="Bold" FontSize="16"/>
+                </StackPanel>
+            </DockPanel>
+
+            <Border Grid.Row="4" Margin="30">
+                <StackPanel>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="10,0,0,0" HorizontalAlignment="Left">
+                        <TextBlock Text="Contact: " VerticalAlignment="Center" FontSize="16"/>
+                        <TextBlock Text="{Binding SelectedImportRecord.SUPPLIER.Phone_supplier}" VerticalAlignment="Center" Margin="10,0,20,0" FontWeight="Bold" FontSize="16"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="TOTAL: " FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding SelectedImportRecord.expense_import}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10,0,10,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+        </Grid>
+    </ScrollViewer>
+
+</Window> 
