@@ -1,4 +1,4 @@
-﻿<Page x:Class="MyQuanLyTrangSuc.View.ExportRecordPage"
+﻿<Page x:Class="MyQuanLyTrangSuc.View.InvoicePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -51,13 +51,13 @@
                 </StackPanel>
 
                 <!--Page Title-->
-                <TextBlock Text="Export Records Page" HorizontalAlignment="Left" VerticalAlignment="Center"
+                <TextBlock Text="Invoice Page" HorizontalAlignment="Left" VerticalAlignment="Center"
                             Margin="55 0 0 2" FontSize="16" FontWeight="SemiBold" Foreground="Blue"/>
 
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="33 0 0 4" Width="14" Height="14" Foreground="#ff9d00"/>
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="30 4 0 0" Width="14" Height="14" Foreground="#4880ff"/>
 
-                <TextBlock Text="Export Records" Grid.Row="1" FontSize="32" FontWeight="SemiBold"
+                <TextBlock Text="Invoice" Grid.Row="1" FontSize="32" FontWeight="SemiBold"
                        Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
                 <!--Add Button-->
