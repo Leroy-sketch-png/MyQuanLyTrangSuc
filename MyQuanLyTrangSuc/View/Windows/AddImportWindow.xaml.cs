@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace MyQuanLyTrangSuc.View
 {
     /// <summary>
-    /// Interaction logic for ExportDetailsWindow.xaml
+    /// Interaction logic for AddImportRecordWindow.xaml
     /// </summary>
-    public partial class ExportDetailsWindow : Window
+    public partial class AddImportWindow : Window
     {
-        public ExportDetailsWindow()
+        public AddImportWindow()
         {
             InitializeComponent();
         }

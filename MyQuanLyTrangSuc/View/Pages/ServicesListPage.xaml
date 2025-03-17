@@ -1,14 +1,14 @@
-﻿<Page x:Class="MyQuanLyTrangSuc.View.ItemCategoryListPage"
+﻿<Page x:Class="MyQuanLyTrangSuc.View.ServicesListPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
       xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      mc:Ignorable="d" 
+      mc:Ignorable="d"
       d:DesignHeight="720" d:DesignWidth="880"
-      Title="ItemCategoryListPage">
+      Title="ServicesPageUI">
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
@@ -34,7 +34,7 @@
                 </Grid.RowDefinitions>
 
                 <!--Page Title-->
-                <TextBlock Text="Employee Page" HorizontalAlignment="Left" VerticalAlignment="Center"
+                <TextBlock Text="Services Page" HorizontalAlignment="Left" VerticalAlignment="Center"
                            Margin="55 0 0 2" FontSize="16" FontWeight="SemiBold" Foreground="Blue"/>
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="33 0 0 4" Width="14" Height="14" Foreground="#ff9d00"/>
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="30 4 0 0" Width="14" Height="14" Foreground="#4880ff"/>
@@ -50,9 +50,9 @@
                             <EventTrigger RoutedEvent="Loaded">
                                 <BeginStoryboard>
                                     <Storyboard RepeatBehavior="Forever">
-                                        <DoubleAnimation Storyboard.TargetName="textTransform" 
-                                     Storyboard.TargetProperty="X" 
-                                     From="-50" To="0" Duration="0:0:4" 
+                                        <DoubleAnimation Storyboard.TargetName="textTransform"
+                                     Storyboard.TargetProperty="X"
+                                     From="-50" To="0" Duration="0:0:4"
                                      AutoReverse="True" />
                                     </Storyboard>
                                 </BeginStoryboard>
@@ -60,49 +60,26 @@
                         </TextBlock.Triggers>
                     </TextBlock>
 
-
-
-
-                    <!--<Button Style="{StaticResource menuButton_2}">
-                        <Icon:PackIconMaterial Kind="BellOutline" Width="14" Height="14"/>
-                    </Button>
-
-                    <Button Style="{StaticResource menuButton_2}">
-                        <Icon:PackIconMaterial Kind="Cog" Width="14" Height="14"/>
-                    </Button>
-
-                    <Button Style="{StaticResource menuButton_2}">
-                        <Icon:PackIconMaterial Kind="AccountCheckOutline" Width="14" Height="14"/>
-                    </Button>-->
                 </StackPanel>
 
-
-                <!--<Button Style="{StaticResource topButton}" Margin="0 0 20 0" Background="#dcdcdc" HorizontalAlignment="Right">
-                    <Icon:PackIconMaterial Kind="Cog"/>
-                </Button>
-
-                <Button Style="{StaticResource topButton}" Margin="0 0 55 0" HorizontalAlignment="Right">
-                    <Icon:PackIconMaterial Kind="Bell"/>
-                </Button>-->
-
-
                 <!--Page Title-->
-                <TextBlock Text="ITEM CATEGORY" Grid.Row="1" FontSize="32" FontWeight="SemiBold" 
-                            Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518" Height="43" Grid.RowSpan="2" VerticalAlignment="Top"/>
+                <TextBlock Text="SERVICES" Grid.Row="1" FontSize="32" FontWeight="SemiBold"
+                            Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
                     <!--Add Button-->
-                    <Button x:Name="addButton" Style="{StaticResource addButton}" Grid.RowSpan="4" Grid.Row="1" >
-                        <!--Click="addButton_Click"-->
+                    <Button x:Name="addButton" Style="{StaticResource addButton}"  Grid.RowSpan="4" Grid.Row="1" >
+                        <!-- Click="addButton_Click" -->
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="15"
                                    Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Add new category" FontWeight="SemiBold"/>
+                            <TextBlock Text="Add new service" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
                     <!--Import Button-->
-                    <Button x:Name="importExcelFileButton"  Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
-                        <!--Click="importExcelFileButton_Click"-->
+                    <Button x:Name="importExcelFileButton"
+                            Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
+                        <!-- Click="importExcelFileButton_Click" -->
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Import" FontWeight="SemiBold"/>
@@ -110,8 +87,9 @@
                     </Button>
 
                     <!--Export Button-->
-                    <Button x:Name="exportExcelFileButton"  Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
-                        <!--Click="exportExcelFileButton_Click"-->
+                    <Button x:Name="exportExcelFileButton"
+                            Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
+                        <!-- Click="exportExcelFileButton_Click" -->
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Export" FontWeight="SemiBold"/>
@@ -127,8 +105,8 @@
                     <TextBlock x:Name="searchTextBlock" Margin="15 8 0 5" VerticalAlignment="Center" Foreground="#b0b9c6"
                                 IsHitTestVisible="False" Panel.ZIndex="1" Text="Search"
                                 Visibility="{Binding ElementName=txtFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-                    <TextBox  x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0"/>
-                    <!--TextChanged="searchTextBox_TextChanged"-->
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0"/>
+                    <!-- TextChanged="searchTextBox_TextChanged" -->
                 </Grid>
 
                 <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
@@ -136,14 +114,12 @@
                     <ComboBoxItem Content="ID"/>
                 </ComboBox>
 
-                <!--Item Category DataGrid-->
-                <DataGrid ItemsSource="{Binding Employees}" SelectedItem="{Binding SelectedEmployee}" x:Name="employeesDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
+                <!--Employees DataGrid-->
+                <DataGrid ItemsSource="{Binding Services}" SelectedItem="{Binding SelectedServices}" x:Name="servicesDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
+                    <!-- SelectionChanged="employeesDataGrid_SelectionChanged" -->
                     <DataGrid.Columns>
                         <!--ID-->
-                        <DataGridTextColumn Binding="{Binding id_itemcategory}" Header="ID" IsReadOnly="True" CanUserResize="False" Width="80"/>
-
-                        <!--Name-->
-                        <DataGridTextColumn Binding="{Binding name_itemcategory}" Header="Category Name" IsReadOnly="True" CanUserResize="False" Width="*">
+                        <DataGridTextColumn Binding="{Binding services_servicetype}" Header="ID" IsReadOnly="True" CanUserResize="False" Width="65">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -151,8 +127,8 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!--Unit-->
-                        <DataGridTextColumn Binding="{Binding unit_id}" Header="Unit" IsReadOnly="True" CanUserResize="False" Width="*">
+                        <!--Created Date-->
+                        <DataGridTextColumn Binding="{Binding services_date, StringFormat=dd-MM-yyyy}" Header="Created Date" IsReadOnly="True" CanUserResize="False" Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -160,8 +136,8 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!--Profit Percentage-->
-                        <DataGridTextColumn Header="Profit Percentage" Binding="{Binding profitpercentage_itemcategory}" Width="*" IsReadOnly="True" CanUserResize="False">
+                        <!--Customer-->
+                        <DataGridTextColumn Header="Customer" Binding="{Binding customer_name}" Width="*" IsReadOnly="True" CanUserResize="False">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -169,32 +145,38 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
+                        <!--Total-->
+                        <DataGridTextColumn Binding="{Binding services_total}" Header=" Total" IsReadOnly="True" Width="*"/>
+
+                        <!--Prepaid-->
+                        <DataGridTextColumn Binding="{Binding services_prepaid}" Header="Prepaid" IsReadOnly="True" Width="*"/>
+
+                        <!--Remain-->
+                        <DataGridTextColumn Binding="{Binding services_remain}" Header="Remain" IsReadOnly="True" Width="*"/>
+
+                        <!--Status-->
+                        <DataGridTextColumn Binding="{Binding services_status}" Header="Status" IsReadOnly="True" Width="69"/>
                         <!--Operations-->
 
-                        <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
+                        <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <Button x:Name="editButton" Style="{StaticResource gridEditButton}">
-                                            <!--Click="editButton_Click"-->
+                                            <!-- Click="editButton_Click" -->
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
                                         <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0">
-                                            <!--Click="deleteButton_Click"-->
+                                            <!-- Click="deleteButton_Click" -->
                                             <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
-
-
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
-
                     </DataGrid.Columns>
                 </DataGrid>
-
             </Grid>
         </Grid>
     </Border>
