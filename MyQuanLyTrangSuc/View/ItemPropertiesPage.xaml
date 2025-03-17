@@ -6,9 +6,7 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
       mc:Ignorable="d" 
-      d:DesignHeight="720" d:DesignWidth="880"
-      x:Name="ItemPropertiesPage">
-
+      d:DesignHeight="720" d:DesignWidth="880">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <StackPanel Background="White">
             <Button Content="BACK" Width="200" FontSize="25" Margin="10,10,0,0" Height="45" HorizontalAlignment="Left" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"
