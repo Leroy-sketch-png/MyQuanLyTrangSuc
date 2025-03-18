@@ -1,18 +1,17 @@
-﻿<!--<Window x:Class="PhanMemQuanLyVatTu.View.NotificationWindowUI"
+﻿<Window x:Class="MyQuanLyTrangSuc.View.NotificationWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PhanMemQuanLyVatTu.View"
+        xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
         mc:Ignorable="d"
-        Title="NotificationWindowUI" Height="60" Width="350"
+        Title="NotificationWindow" Height="60" Width="350"
         AllowsTransparency="True"
         Topmost="True"
         Background="Transparent"
-        WindowStyle="None"
-        Loaded="Window_Loaded"
-        >
-
+        WindowStyle="None"        >
+        <!--Loaded="Window_Loaded"-->
+    <!--
     <Window.Resources>
         -->
 <!--  || Gradient ||  -->
@@ -145,7 +144,7 @@
             />
         </StackPanel>
     </Border>
-</Window>-->
+</Window>--><!--
 <Window x:Class="MyQuanLyTrangSuc.View.NotificationWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -157,7 +156,7 @@
         Background="Transparent" WindowStyle="None"
         Loaded="Window_Loaded">
     <Window.Resources>
-        <!-- Animations -->
+        --><!-- Animations --><!--
         <Storyboard x:Key="CloseButtonFadeInAnimation">
             <DoubleAnimation Storyboard.TargetName="_Close"
                              Storyboard.TargetProperty="Opacity"
@@ -208,5 +207,6 @@
             <Rectangle x:Name="_Rectangle" Width="350" Height="4" Fill="{Binding RecFill}" />
         </StackPanel>
     </Border>
+    -->
 </Window>
 

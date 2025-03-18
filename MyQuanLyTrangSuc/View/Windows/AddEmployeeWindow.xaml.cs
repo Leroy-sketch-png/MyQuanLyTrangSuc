@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,20 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class AddEmployeeWindow : Window
     {
+        private AddEmployeeWindowLogic addEmployeeWindowLogic;
         public AddEmployeeWindow()
         {
+            addEmployeeWindowLogic = new AddEmployeeWindowLogic(this);
+            DataContext = addEmployeeWindowLogic;
             InitializeComponent();
+        }
+
+        private void ChooseImageButton_Click(object sender, RoutedEventArgs e) {
+            addEmployeeWindowLogic.ChooseImageFileDialog();
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e) {
+            addEmployeeWindowLogic.AddEmployeeToDatabase();
         }
     }
 }

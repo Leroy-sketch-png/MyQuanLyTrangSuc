@@ -9,7 +9,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="720" d:DesignWidth="880"
       Title="MonthlyStockReportPage">
-
+    <!--
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Page.Resources>
@@ -20,7 +20,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <!--Main Section-->
+            --><!--Main Section--><!--
             <Grid Grid.Column="1" HorizontalAlignment="Center">
 
                 <Grid.RowDefinitions>
@@ -33,13 +33,13 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <!--Page Title-->
+                --><!--Page Title--><!--
                 <TextBlock Text="Services Page" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                            Margin="55 0 0 2" FontSize="16" FontWeight="SemiBold" Foreground="Blue"/>
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="33 0 0 4" Width="14" Height="14" Foreground="#ff9d00"/>
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="30 4 0 0" Width="14" Height="14" Foreground="#4880ff"/>
 
-                <!--Top Button-->
+                --><!--Top Button--><!--
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 15 0">
                     <TextBlock x:Name="welcomeTextBlock" Foreground="#374655" FontSize="14" Margin="0 0 10 0"
                                 VerticalAlignment="Center" Text="Welcome, have a nice day" FontStyle="Italic">
@@ -62,34 +62,34 @@
 
                 </StackPanel>
 
-                <!--Page Title-->
+                --><!--Page Title--><!--
                 <TextBlock Text="STOCK REPORT" Grid.Row="1" FontSize="32" FontWeight="SemiBold" 
                             Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518" Height="43" Grid.RowSpan="2" VerticalAlignment="Top"/>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
-                    <!--Add Button-->
+                    --><!--Add Button--><!--
                     <Button x:Name="addButton" Style="{StaticResource addButton}"  Grid.RowSpan="4" Grid.Row="1" >
-                        <!--Click="addButton_Click"-->
+                        --><!--Click="addButton_Click"--><!--
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="15"
                                    Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Add new category" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
-                    <!--Import Button-->
+                    --><!--Import Button--><!--
                     <Button x:Name="importExcelFileButton"
                             Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
-                        <!--Click="importExcelFileButton_Click"-->
+                        --><!--Click="importExcelFileButton_Click"--><!--
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Import" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
 
-                    <!--Export Button-->
+                    --><!--Export Button--><!--
                     <Button x:Name="exportExcelFileButton"
                             Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
-                        <!--Click="exportExcelFileButton_Click"-->
+                        --><!--Click="exportExcelFileButton_Click"--><!--
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Export" FontWeight="SemiBold"/>
@@ -97,16 +97,16 @@
                     </Button>
                 </StackPanel>
 
-                <!--Separator-->
+                --><!--Separator--><!--
                 <Separator Grid.Row="3" BorderBrush="#ba80d3" BorderThickness="10" Margin="5,10,30,10"/>
 
-                <!--Filter TextBox-->
+                --><!--Filter TextBox--><!--
                 <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
                     <TextBlock x:Name="searchTextBlock" Margin="15 8 0 5" VerticalAlignment="Center" Foreground="#b0b9c6"
                                 IsHitTestVisible="False" Panel.ZIndex="1" Text="Search"
                                 Visibility="{Binding ElementName=txtFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
                     <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0"/>
-                    <!--TextChanged="searchTextBox_TextChanged"-->
+                    --><!--TextChanged="searchTextBox_TextChanged"--><!--
                 </Grid>
 
                 <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
@@ -114,10 +114,10 @@
                     <ComboBoxItem Content="ID"/>
                 </ComboBox>
 
-                <!--Stock Report DataGrid-->
+                --><!--Stock Report DataGrid--><!--
                 <DataGrid ItemsSource="{Binding ServiceCategory}" SelectedItem="{Binding SelectedCategory}" x:Name="servicesDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5" SelectionChanged="employeesDataGrid_SelectionChanged">
                     <DataGrid.Columns>
-                        <!--Month-->
+                        --><!--Month--><!--
                         <DataGridTextColumn Binding="{Binding stockReport_month}" Header="Month" IsReadOnly="True" CanUserResize="False" Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -126,22 +126,22 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!--Year-->
+                        --><!--Year--><!--
                         <DataGridTextColumn Binding="{Binding stockReport_year}" Header="Year" IsReadOnly="True" Width="*"/>
 
-                        <!--Operations-->
+                        --><!--Operations--><!--
 
                         <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <Button x:Name="editButton" Style="{StaticResource gridEditButton}">
-                                            <!--Click="editButton_Click"-->
+                                            --><!--Click="editButton_Click"--><!--
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
                                         <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0">
-                                            <!--Click="deleteButton_Click"-->
+                                            --><!--Click="deleteButton_Click"--><!--
                                             <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
@@ -158,4 +158,5 @@
             </Grid>
         </Grid>
     </Border>
+    -->
 </Page>

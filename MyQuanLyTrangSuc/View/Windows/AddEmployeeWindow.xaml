@@ -115,13 +115,15 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBox Grid.Column="0" x:Name="ImagePathTextBox" Text="{Binding ImagePath, Mode=TwoWay}" FontSize="14" BorderThickness="1" Margin="0,0,0,10"/>
-                        <Button Grid.Column="1" x:Name="ChooseImageButton" Content="Choose Image" FontSize="14" Background="#4CAF50" Foreground="White" Margin="0,0,0,10" HorizontalAlignment="Right"/>
-                        <!--Click="ChooseImageButton_Click"-->
+                        <Button Grid.Column="1" x:Name="ChooseImageButton" Content="Choose Image" FontSize="14" Background="#4CAF50" Foreground="White" Margin="0,0,0,10" HorizontalAlignment="Right"
+                                Click="ChooseImageButton_Click"/>
+                        
                     </Grid>
                 </StackPanel>
 
-                <Button  x:Name="AddButton" Content="ADD" FontSize="20" Background="#FFC1CC00" Foreground="White" Padding="5" HorizontalAlignment="Center" Width="70" Height="40"/>
-                <!--Click="AddButton_Click"-->    
+                <Button  x:Name="AddButton" Content="ADD" FontSize="20" Background="#FFC1CC00" Foreground="White" Padding="5" HorizontalAlignment="Center" Width="70" Height="40"
+                         Click="AddButton_Click"/>
+                    
             </StackPanel>
         </Grid>
     </Grid>

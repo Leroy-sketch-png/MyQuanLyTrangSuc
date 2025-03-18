@@ -6,11 +6,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MyQuanLyTrangSuc.Model;
 
-public partial class MyQuanLyTrangSucContext : DbContext
-{
-    public MyQuanLyTrangSucContext(DbContextOptions<MyQuanLyTrangSucContext> options)
-        : base(options)
-    {
+public partial class MyQuanLyTrangSucContext : DbContext {
+
+    //Singleton
+    private static MyQuanLyTrangSucContext instance;
+    public static MyQuanLyTrangSucContext Instance {
+        get {
+            if (instance == null) {
+                instance = new MyQuanLyTrangSucContext();
+            }
+            return instance;
+        }
+    }
+    private MyQuanLyTrangSucContext()
+    : base() {
+    }
+    //
+    private MyQuanLyTrangSucContext(DbContextOptions<MyQuanLyTrangSucContext> options)
+        : base(options) {
     }
 
     public virtual DbSet<Account> Accounts { get; set; }
@@ -45,10 +58,8 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
     public virtual DbSet<Unit> Units { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Account>(entity =>
-        {
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        modelBuilder.Entity<Account>(entity => {
             entity.HasKey(e => e.AccountId).HasName("PK__Account__F267253E533820CA");
 
             entity.ToTable("Account");
@@ -80,8 +91,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasConstraintName("FK__Account__employe__6D0D32F4");
         });
 
-        modelBuilder.Entity<Customer>(entity =>
-        {
+        modelBuilder.Entity<Customer>(entity => {
             entity.HasKey(e => e.CustomerId).HasName("PK__Customer__B611CB9D6148C87A");
 
             entity.ToTable("Customer");
@@ -110,8 +120,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasColumnName("email");
         });
 
-        modelBuilder.Entity<Employee>(entity =>
-        {
+        modelBuilder.Entity<Employee>(entity => {
             entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__C134C9A18780A778");
 
             entity.ToTable("Employee");
@@ -143,8 +152,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasColumnName("position");
         });
 
-        modelBuilder.Entity<Import>(entity =>
-        {
+        modelBuilder.Entity<Import>(entity => {
             entity.HasKey(e => e.ImportId).HasName("PK__Import__2CC5AB07EE17FB43");
 
             entity.ToTable("Import");
@@ -169,8 +177,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasConstraintName("FK__Import__supplier__5CD6CB2B");
         });
 
-        modelBuilder.Entity<ImportDetail>(entity =>
-        {
+        modelBuilder.Entity<ImportDetail>(entity => {
             entity.HasKey(e => e.Stt).HasName("PK__ImportDe__DDDF328EFE66CD3D");
 
             entity.ToTable("ImportDetail");
@@ -205,8 +212,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasConstraintName("FK__ImportDet__produ__619B8048");
         });
 
-        modelBuilder.Entity<Invoice>(entity =>
-        {
+        modelBuilder.Entity<Invoice>(entity => {
             entity.HasKey(e => e.InvoiceId).HasName("PK__Invoice__1252410C3AACA18D");
 
             entity.ToTable("Invoice");
@@ -231,8 +237,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasConstraintName("FK__Invoice__custome__6477ECF3");
         });
 
-        modelBuilder.Entity<InvoiceDetail>(entity =>
-        {
+        modelBuilder.Entity<InvoiceDetail>(entity => {
             entity.HasKey(e => e.Stt).HasName("PK__InvoiceD__DDDF328EF653F223");
 
             entity.ToTable("InvoiceDetail");
@@ -267,8 +272,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasConstraintName("FK__InvoiceDe__produ__693CA210");
         });
 
-        modelBuilder.Entity<Parameter>(entity =>
-        {
+        modelBuilder.Entity<Parameter>(entity => {
             entity
                 .HasNoKey()
                 .ToTable("Parameter");
@@ -281,8 +285,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasColumnName("constValue");
         });
 
-        modelBuilder.Entity<Product>(entity =>
-        {
+        modelBuilder.Entity<Product>(entity => {
             entity.HasKey(e => e.ProductId).HasName("PK__Product__2D10D14AE471C970");
 
             entity.ToTable("Product");
@@ -314,8 +317,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasConstraintName("FK__Product__categor__4E88ABD4");
         });
 
-        modelBuilder.Entity<ProductCategory>(entity =>
-        {
+        modelBuilder.Entity<ProductCategory>(entity => {
             entity.HasKey(e => e.CategoryId).HasName("PK__ProductC__23CAF1F81FD3A71F");
 
             entity.ToTable("ProductCategory");
@@ -339,8 +341,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasConstraintName("FK__ProductCa__unitI__4BAC3F29");
         });
 
-        modelBuilder.Entity<Service>(entity =>
-        {
+        modelBuilder.Entity<Service>(entity => {
             entity.HasKey(e => e.ServiceId).HasName("PK__Service__4550733F5AC58340");
 
             entity.ToTable("Service");
@@ -357,8 +358,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasColumnName("servicePrice");
         });
 
-        modelBuilder.Entity<ServiceDetail>(entity =>
-        {
+        modelBuilder.Entity<ServiceDetail>(entity => {
             entity.HasKey(e => new { e.ServiceRecordId, e.ServiceId }).HasName("PK__ServiceD__6FC5D3762091692B");
 
             entity.ToTable("ServiceDetail");
@@ -396,8 +396,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasConstraintName("FK__ServiceDe__servi__787EE5A0");
         });
 
-        modelBuilder.Entity<ServiceRecord>(entity =>
-        {
+        modelBuilder.Entity<ServiceRecord>(entity => {
             entity.HasKey(e => e.ServiceRecordId).HasName("PK__ServiceR__8B90D445F20FA176");
 
             entity.ToTable("ServiceRecord");
@@ -422,8 +421,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasConstraintName("FK__ServiceRe__custo__75A278F5");
         });
 
-        modelBuilder.Entity<StockReport>(entity =>
-        {
+        modelBuilder.Entity<StockReport>(entity => {
             entity.HasKey(e => new { e.MonthYear, e.ProductId }).HasName("PK__StockRep__2CD5A41C9C678F48");
 
             entity.ToTable("StockReport");
@@ -444,8 +442,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasConstraintName("FK__StockRepo__produ__6FE99F9F");
         });
 
-        modelBuilder.Entity<Supplier>(entity =>
-        {
+        modelBuilder.Entity<Supplier>(entity => {
             entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__DB8E62CD7EE867B5");
 
             entity.ToTable("Supplier");
@@ -474,8 +471,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasColumnName("name");
         });
 
-        modelBuilder.Entity<Unit>(entity =>
-        {
+        modelBuilder.Entity<Unit>(entity => {
             entity.HasKey(e => e.UnitId).HasName("PK__Unit__55D79215DE05D27B");
 
             entity.ToTable("Unit");
@@ -493,4 +489,11 @@ public partial class MyQuanLyTrangSucContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+        if (!optionsBuilder.IsConfigured) {
+            optionsBuilder.UseSqlServer("Server=DESKTOP-71PN892\\SQLEXPRESS;Database=MyQuanLyTrangSuc;Trusted_Connection=True;TrustServerCertificate=True;");
+            //optionsBuilder.UseSqlServer("Server=DESKTOP-71PN892\\SQLEXPRESS;;Trusted_Connection=True;");
+        }
+    }
 }
