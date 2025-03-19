@@ -6,7 +6,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:MyQuanLyTrangSuc"
         mc:Ignorable="d"
-        Title="MainWindow" Height="645" Width="875"
+        Title="Krystal Management" Height="645" Width="875"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -38,7 +38,7 @@
             <ColumnDefinition Width="1.22*"/>
         </Grid.ColumnDefinitions>
 
-        <Border Background="#623ed0"
+        <Border Background="#FF272E3C"
                CornerRadius="10 0 0 10"
                ClipToBounds="True" Name="LeftBorder">
 
@@ -52,42 +52,52 @@
                 <StackPanel Margin="0 120 0 0"
                             VerticalAlignment="Top">
 
-                    <TextBlock FontSize="46"
+                    <Border Width="180" Height="180" Padding="3" Background="#FFC1CC00" CornerRadius="100"
+                                DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="0 -100 0 0">
+                        <Ellipse>
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="/Resources/Krystal.png" />
+                            </Ellipse.Fill>
+                        </Ellipse>
+                                 
+                    </Border>
+
+                    <TextBlock FontSize="70"
                                FontStyle="Normal"
                                FontWeight="Medium"
-                               Text="WELCOME BACK"
-                               Foreground="#ba80d3"
+                               Text="Welcome Back"
+                               Foreground="#FFC1CC00"
                                TextAlignment="Center"
-                               FontFamily="Bold"
-                               Margin="0 0 0 -40"/>
+                               FontFamily="Edwardian Script ITC"
+                               Margin="0 20 0 -40"/>
                 </StackPanel>
                 <Ellipse Width="500"
                          Height="500"
                          VerticalAlignment="Bottom"
-                         Fill="#ba80d3"
+                         Fill="#FF747525"
                          Margin="50 0 0 -200"
                          Opacity="0.6"/>
                 <Ellipse Width="300"
                          Height="300"
                          VerticalAlignment="Bottom"
-                         Fill="#ba80d3"
+                         Fill="#FF747525"
                          Margin="-450 0 0 30"
                          Opacity="0.3"/>
                 <Ellipse Width="400"
                          Height="400"
                          VerticalAlignment="Bottom"
-                         Fill="#ba80d3"
+                         Fill="#FF747525"
                          Margin="-320 0 0 -120"
                          Opacity="0.3"/>
                 <Ellipse Width="250"
                          Height="250"
                          VerticalAlignment="Bottom"
-                         Fill="#ba80d3"
+                         Fill="#FF747525"
                          Margin="-380 0 0 -130"/>
                 <Ellipse Width="400"
                          Height="400"
                          VerticalAlignment="Bottom"
-                         Fill="#ba80d3"
+                         Fill="#FF747525"
                          Margin="280 0 0 -70"
                          Opacity="0.8"/>
 
@@ -134,9 +144,10 @@
 
         <!--Right selection-->
         <Border Grid.Column="1" Name="RightBorder"
-                        Background="#FF272E3C"
+                        Background="White"
                         CornerRadius="0 20 20 0"
-                        RenderTransformOrigin="0.493,0.589"><!--MouseDown="Border_MouseDown"-->
+                        RenderTransformOrigin="0.493,0.589"
+                MouseDown="Border_MouseDown">
             <Grid>
                 <Grid>
                     <Ellipse Width="90"
@@ -144,7 +155,7 @@
                              StrokeThickness="4" Margin="184,62,185,453">
                         <Ellipse.Stroke>
                             <LinearGradientBrush>
-                                <GradientStop Color="#ba80d3"           />
+                                <GradientStop Color="#FFC1CC00"           />
                             </LinearGradientBrush>
                         </Ellipse.Stroke>
                     </Ellipse>
@@ -154,16 +165,17 @@
                                              HorizontalAlignment="Center" Margin="0,67,0,0">
                         <materialDesign:PackIcon.Foreground>
                             <LinearGradientBrush>
-                                <GradientStop Color="#ba80d3"/>
+                                <GradientStop Color="#FFC1CC00"/>
                             </LinearGradientBrush>
                         </materialDesign:PackIcon.Foreground>
                     </materialDesign:PackIcon>
 
                 </Grid>
                 <ToggleButton
-                    
+                    Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked"
                     Style="{StaticResource MaterialDesignSwitchDarkToggleButton}"
-                    ToolTip="MaterialDesignSwitchDarkToggleButton" Margin="415,-496,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="34" ><!--Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked"-->
+                    Background="#FFC1CC00"
+                    ToolTip="MaterialDesignSwitchDarkToggleButton" Margin="415,-496,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="34" >
                     <ToggleButton.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform ScaleX="-1"/>
@@ -173,7 +185,7 @@
                         </TransformGroup>
                     </ToggleButton.RenderTransform>
                 </ToggleButton>
-                <!--Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked"-->
+
 
                 <!--Close Icon-->
                 <materialDesign:PackIcon Kind="Close"
@@ -182,8 +194,9 @@
                                          HorizontalAlignment="Stretch"
                                         
                                          Name="CloseIcon"
-                                         Foreground="#ba80d3"
-                                         /> <!--MouseLeftButtonUp="CloseButton_Click"-->
+                                         Foreground="#FFC1CC00"
+                                         MouseLeftButtonUp="CloseButton_Click"
+                                         /> 
 
                 <!--Inputs-->
                 <StackPanel VerticalAlignment="Center"
@@ -191,6 +204,7 @@
 
                     <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                      Name="UsernameBox"
+                                     Text="{Binding userName}"
                                      materialDesign:HintAssist.Hint="Username"
                                      materialDesign:HintAssist.FloatingOffset="0,-20"
                                      BorderBrush="#c5c8cc"
@@ -233,18 +247,19 @@
                     <Button x:Name="forgotPasswordTextBox" 
                             Background="Transparent" 
                             Content="Forgot Password" 
-                            Foreground="#ba80d3"
+                            Foreground="#FFC1CC00"
                             Width="140" BorderBrush="Transparent"/> <!--Click="forgotPasswordTextBox_Click"-->
 
                     <!--SignIn Button-->
                     <StackPanel Orientation="Horizontal" Height="77">
                         <Button Content="Sign In"
-                                        Background="#ba80d3"
+                                        Background="#FFC1CC00"
                                         FontSize="18"
                                         Width="307"
                                         Height="45"
                                         materialDesign:ButtonAssist.CornerRadius="22"
-                                        /> <!--Click="OnClick_Login"-->
+                                        
+                                Click="OnClick_Login"/> 
                     </StackPanel>
                 </StackPanel>
             </Grid>

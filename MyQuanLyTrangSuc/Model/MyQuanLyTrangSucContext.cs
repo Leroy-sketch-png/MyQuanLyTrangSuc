@@ -492,7 +492,7 @@ public partial class MyQuanLyTrangSucContext : DbContext {
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
-            optionsBuilder.UseSqlServer("Server=DESKTOP-71PN892\\SQLEXPRESS;Database=MyQuanLyTrangSuc;Trusted_Connection=True;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Server=LAPTOP-CMTNMGDI\\SQLEXPRESS;Database=MyQuanLyTrangSuc;Trusted_Connection=True;TrustServerCertificate=True;");
             //optionsBuilder.UseSqlServer("Server=DESKTOP-71PN892\\SQLEXPRESS;;Trusted_Connection=True;");
         }
     }
