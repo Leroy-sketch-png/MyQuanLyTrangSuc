@@ -18,11 +18,11 @@ public partial class MyQuanLyTrangSucContext : DbContext {
             return instance;
         }
     }
-    public MyQuanLyTrangSucContext()
+    private MyQuanLyTrangSucContext()
     : base() {
     }
     //
-    public MyQuanLyTrangSucContext(DbContextOptions<MyQuanLyTrangSucContext> options)
+    private MyQuanLyTrangSucContext(DbContextOptions<MyQuanLyTrangSucContext> options)
         : base(options) {
     }
 
@@ -490,11 +490,10 @@ public partial class MyQuanLyTrangSucContext : DbContext {
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseSqlServer("Server=VIET-ANH;Database=MyQuanLyTrangSuc;Trusted_Connection=True;TrustServerCertificate=True;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+        if (!optionsBuilder.IsConfigured) {
+            optionsBuilder.UseSqlServer("Server=DESKTOP-71PN892\\SQLEXPRESS;Database=MyQuanLyTrangSuc;Trusted_Connection=True;TrustServerCertificate=True;");
+            //optionsBuilder.UseSqlServer("Server=DESKTOP-71PN892\\SQLEXPRESS;;Trusted_Connection=True;");
         }
     }
 }

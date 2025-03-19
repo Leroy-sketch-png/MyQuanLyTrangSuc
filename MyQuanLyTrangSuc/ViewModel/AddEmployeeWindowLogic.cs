@@ -1,91 +1,176 @@
-﻿using Microsoft.Win32;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.View;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
     class AddEmployeeWindowLogic
     {
-        private const string PREFIX = "EMP"; // Prefix cho Employee ID
-        private readonly MyQuanLyTrangSucContext _context;
+        private string PREFIX = "EMP"; // My prefix
 
-        public string NewID => GenerateNewID(PREFIX);
+        MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
+
+        //Data Context Binding Zone
+        public string NewID {
+            get { return GenerateNewID(PREFIX); }
+        }
+
         public string Name { get; set; }
         public string Email { get; set; }
         public string Telephone { get; set; }
-        public string Position { get; set; } // Thêm thuộc tính Position
         public string ImagePath { get; set; }
+        //
 
-        public AddEmployeeWindowLogic(MyQuanLyTrangSucContext context)
-        {
-            _context = context;
+        private AddEmployeeWindow addEmployeeWindow;
+        public AddEmployeeWindowLogic() {
+        }
+        public AddEmployeeWindowLogic(AddEmployeeWindow addEmployeeWindow) { 
+            this.addEmployeeWindow = addEmployeeWindow;
         }
 
-        private string GetLastID()
-        {
-            var lastEmployee = _context.Employees
-                .OrderByDescending(e => e.EmployeeId)
-                .FirstOrDefault();
-            return lastEmployee?.EmployeeId ?? "EMP000";
+
+
+
+
+        public string GetLastID() {
+            var lastID = context.Employees
+                          .OrderByDescending(e => e.EmployeeId)
+                          .FirstOrDefault().EmployeeId;
+            return lastID;
+
         }
 
-        private string GenerateNewID(string prefix)
-        {
+
+        public string GenerateNewID(string prefix) {
             string lastID = GetLastID();
-            if (int.TryParse(lastID.Substring(prefix.Length), out int number))
-            {
-                return $"{prefix}{(number + 1):D3}";
+            int newNumber = 1;
+
+            if (!string.IsNullOrEmpty(lastID) && lastID.StartsWith(prefix)) {
+                string numericPart = lastID.Substring(prefix.Length);
+                if (int.TryParse(numericPart, out int parsedNumber)) {
+                    newNumber = parsedNumber + 1;
+                }
             }
-            return "EMP001";
+
+            return $"{prefix}{newNumber:D3}";
+        }
+        //Check data before adding to DB
+
+        //Check Name_Customer
+        private bool IsValidName(string name) {
+            return !string.IsNullOrEmpty(name) && name.All(c => char.IsLetter(c) || char.IsWhiteSpace(c));
         }
 
-        bool IsValidName(string name) => !string.IsNullOrWhiteSpace(name) && Regex.IsMatch(name, @"^[\p{L} ]+$");
+        //Check Email_Customer
+        private bool IsValidEmail(string email) {
+            var gmailPattern = @"^(?!.*\.\.)[a-zA-Z0-9._%+-]+(?<!\.)@gmail\.com$";
+            return Regex.IsMatch(email, gmailPattern);
+        }
 
-
-        bool IsValidEmail(string email) => !string.IsNullOrWhiteSpace(email) && Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@gmail\.com$");
-
-
-        bool IsValidTelephoneNumber(string phoneNumber) => !string.IsNullOrWhiteSpace(phoneNumber) && Regex.IsMatch(phoneNumber, @"^\+?\d{10,15}$");
-
-
-
-        public bool AddEmployeeToDatabase(string name, string email, string telephone, string position, string imagePath)
-        {
-            if (!IsValidName(name) || !IsValidEmail(email) || !IsValidTelephoneNumber(telephone))
-            {
-                return false;
-            }
-            Employee emp = new Employee
-            {
-                EmployeeId = NewID,
-                Name = name,
-                Position = position,
-                Email = email,
-                ContactNumber = telephone,
-                ImagePath = imagePath
-            };
-
-            _context.Employees.Add(emp);
-            _context.SaveChanges(); 
+        //Check Tel_Customer
+        private bool IsValidTelephoneNumber(string phoneNumber) {
+            return !string.IsNullOrEmpty(phoneNumber) && phoneNumber.All(char.IsDigit) && phoneNumber.Length >= 10 && phoneNumber.Length <= 15;
+        }
+        private bool IsValidData(string name, string email, string telephone) {
+            if (!IsValidName(name)) return false;
+            if (!IsValidEmail(email)) return false;
+            if (!IsValidTelephoneNumber(telephone)) return false;
             return true;
         }
+        public void AddEmployeeToDatabase(TextBox NameTextBox, DatePicker Birthday, TextBox EmailTextBox, TextBox TelephoneTextBox, RadioButton Gender, RichTextBox MoreInfo, TextBox ImagePathTextBox) {
+            var textrange = new TextRange(
+        MoreInfo.Document.ContentStart,
+        MoreInfo.Document.ContentEnd
+    );
+            string moreInfoText = textrange.Text.Trim();
 
-        public void ChooseImageFileDialog()
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
+            var temp = context.Employees.FirstOrDefault(e => e.ContactNumber == TelephoneTextBox.Text && e.Name == NameTextBox.Text);
+            if (temp != null) {
+                //if (temp.isdeleted_employee != false) {
+                    //temp.isdeleted_employee = false;
+                    temp.Name = Name;
+                    //temp.birthday_employee = Birthday.SelectedDate.HasValue ? Birthday.SelectedDate.Value.Date : (DateTime?)null;
+                    //temp.Gende = Gender.Content.ToString();
+                    //temp.moreinfo_employee = moreInfoText;
+                    temp.ImagePath = ImagePathTextBox.Text;
+
+                    //context.SaveChangesAdded(temp);
+                    //notificationWindowLogic.LoadNotification("Success", "Restored employee successfully!", "BottomRight");
+                //} else {
+                    // Nếu nhân viên tồn tại và không bị xóa
+                    //notificationWindowLogic.LoadNotification("Warning", "Employee already exists!", "BottomRight");
+                //}
+                return;
+            }
+            Employee emp = new Employee() {
+                EmployeeId = NewID,
+                Name = Name,
+                Email = Email,
+                //birthday_employee = Birthday.SelectedDate.HasValue ? Birthday.SelectedDate.Value.Date : (DateTime?)null,
+                ContactNumber = Telephone,
+                //gender_employee = Gender.Content.ToString(),
+                //moreinfo_employee = moreInfoText,
+                ImagePath = ImagePath,
+            };
+            context.Employees.Add(emp);
+            context.SaveChanges();
+            //context.SaveChangesAdded(emp);
+
+            //notificationWindowLogic.LoadNotification("Success", "Added employees successfully!", "BottomRight");
+        }
+
+
+        public void ChooseImageFileDialog() {
+            OpenFileDialog openFileDialog = new OpenFileDialog {
                 Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png|All files (*.*)|*.*"
             };
 
-            if (openFileDialog.ShowDialog() == true)
-            {
+            if (openFileDialog.ShowDialog() == true) {
                 ImagePath = openFileDialog.FileName;
             }
+        }
+        public void AddEmployeeToDatabase() {
+            //var temp = context.Employees.FirstOrDefault(e => e.ContactNumber == TelephoneTextBox.Text && e.Name == NameTextBox.Text);
+            //if (temp != null) {
+                //if (temp.isdeleted_employee != false) {
+                //temp.isdeleted_employee = false;
+                //temp.Name = Name;
+                //temp.birthday_employee = Birthday.SelectedDate.HasValue ? Birthday.SelectedDate.Value.Date : (DateTime?)null;
+                //temp.Gende = Gender.Content.ToString();
+                //temp.moreinfo_employee = moreInfoText;
+                //temp.ImagePath = ImagePath;
+
+                //context.SaveChangesAdded(temp);
+                //notificationWindowLogic.LoadNotification("Success", "Restored employee successfully!", "BottomRight");
+                //} else {
+                // Nếu nhân viên tồn tại và không bị xóa
+                //notificationWindowLogic.LoadNotification("Warning", "Employee already exists!", "BottomRight");
+                //}
+                //return;
+            //}
+            Employee emp = new Employee() {
+                EmployeeId = NewID,
+                Name = Name,
+                Email = Email,
+                //birthday_employee = Birthday.SelectedDate.HasValue ? Birthday.SelectedDate.Value.Date : (DateTime?)null,
+                ContactNumber = Telephone,
+                //gender_employee = Gender.Content.ToString(),
+                //moreinfo_employee = moreInfoText,
+                ImagePath = ImagePath,
+            };
+            context.Employees.Add(emp);
+            context.SaveChanges();
+            //context.SaveChangesAdded(emp);
+
         }
     }
 }
