@@ -23,9 +23,9 @@ namespace MyQuanLyTrangSuc.View
         private AddEmployeeWindowLogic addEmployeeWindowLogic;
         public AddEmployeeWindow()
         {
+            InitializeComponent();
             addEmployeeWindowLogic = new AddEmployeeWindowLogic(this);
             DataContext = addEmployeeWindowLogic;
-            InitializeComponent();
         }
 
         private void ChooseImageButton_Click(object sender, RoutedEventArgs e) {

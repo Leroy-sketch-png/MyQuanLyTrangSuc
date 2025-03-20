@@ -17,7 +17,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
     class AddEmployeeWindowLogic : INotifyPropertyChanged {
         private const string PREFIX = "EMP"; // My prefix
 
-        MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
+        private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
 
         //Data Context Binding Zone
         public string NewID {
@@ -27,7 +27,16 @@ namespace MyQuanLyTrangSuc.ViewModel {
         public string Name { get; set; }
         public string Email { get; set; }
         public string Telephone { get; set; }
-
+        private string position;
+        public string Position {
+            get { return position; }
+            set {
+                if (position != value) {
+                    position = value;
+                    OnPropertyChanged(nameof(Position));
+                }
+            }
+        }
         private string imagePath;
         public string ImagePath {
             get { return imagePath; }
@@ -45,6 +54,11 @@ namespace MyQuanLyTrangSuc.ViewModel {
         }
         public AddEmployeeWindowLogic(AddEmployeeWindow addEmployeeWindow) {
             this.addEmployeeWindow = addEmployeeWindow;
+
+            this.addEmployeeWindow.PositionComboBox.ItemsSource = context.Employees
+.GroupBy(emp => emp.Position)
+.Select(group => group.Key)
+.ToList();
         }
 
 
@@ -73,11 +87,12 @@ namespace MyQuanLyTrangSuc.ViewModel {
                 Gender = addEmployeeWindow.femaleRadioButton.Content.ToString();
             }
 
-            Employee emp = context.Employees.FirstOrDefault(e => e.ContactNumber == Telephone && e.Name == Name);
+            Employee emp = context.Employees.FirstOrDefault(e => e.ContactNumber == Telephone || e.Name == Name);
             if (emp != null) {
                 if (emp.IsDeleted != false) {
                     emp.IsDeleted = false;
                     emp.Name = Name;
+                    emp.Position = Position;
                     emp.Email = Email;
                     emp.DateOfBirth = addEmployeeWindow.birthdayDatePicker.SelectedDate.HasValue ? DateOnly.FromDateTime(addEmployeeWindow.birthdayDatePicker.SelectedDate.Value) : (DateOnly?)null;
                     emp.Gender = Gender;
@@ -97,6 +112,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
             emp = new Employee() {
                 EmployeeId = NewID,
                 Name = Name,
+                Position = Position,
                 Email = Email,
                 DateOfBirth = addEmployeeWindow.birthdayDatePicker.SelectedDate.HasValue ? DateOnly.FromDateTime(addEmployeeWindow.birthdayDatePicker.SelectedDate.Value) : (DateOnly?)null,
                 ContactNumber = Telephone,
@@ -163,20 +179,20 @@ namespace MyQuanLyTrangSuc.ViewModel {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        //public string YourProperty {
-        //    get { return _yourProperty; }
-        //    set {
-        //        if (_yourProperty != value) {
-        //            _yourProperty = value;
-        //            OnPropertyChanged(nameof(YourProperty));
-        //        }
-        //    }
-        //}
 
     }
 
 
     #region Commented Out
+    //public string YourProperty {
+    //    get { return _yourProperty; }
+    //    set {
+    //        if (_yourProperty != value) {
+    //            _yourProperty = value;
+    //            OnPropertyChanged(nameof(YourProperty));
+    //        }
+    //    }
+    //}
     //var temp = context.Employees.FirstOrDefault(e => e.ContactNumber == TelephoneTextBox.Text && e.Name == NameTextBox.Text);
     //if (temp != null) {
     //if (temp.isdeleted_employee != false) {
