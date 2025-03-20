@@ -26,4 +26,7 @@ public partial class Customer
     public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 
     public virtual ICollection<ServiceRecord> ServiceRecords { get; set; } = new List<ServiceRecord>();
+
+    //not sure what this is for
+    //public static implicit operator Customer(Customer v) => throw new NotImplementedException(); 
 }

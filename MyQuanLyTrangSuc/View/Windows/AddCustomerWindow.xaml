@@ -6,14 +6,15 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
         mc:Ignorable="d"
+        ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen"
         Title="AddCustomerWindow" Height="500" Width="500">
     <Grid>
         <Grid Background="#F2F2F2">
             <TextBlock Text="ADDING CUSTOMER..." FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,20"/>
-            <StackPanel Margin="40,70,40,20">
+            <StackPanel Margin="40,70,40,10">
 
-                <Grid Margin="0,0,0,-10">
+                <Grid Margin="0,0,0,-20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
@@ -22,7 +23,7 @@
                     <!-- Column 1 -->
                     <StackPanel Grid.Column="0" Margin="0,0,20,30">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="RenameBox" Margin="0 2 3 0" Height="30" Width="30"/>
+                            <materialDesign:PackIcon Kind="RenameOutline" Margin="0 2 3 0" Height="30" Width="30"/>
                             <TextBlock Text="Customer's ID: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>
                         </StackPanel>
                         <Border BorderBrush="Black" BorderThickness="1" Padding="5" Margin="0,0,0,10">
@@ -51,7 +52,7 @@
                     </StackPanel>
                 </Grid>
 
-                <Grid Margin="0,0,0,-10">
+                <Grid Margin="0,0,0,-20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
@@ -82,10 +83,15 @@
                     </StackPanel>
                 </Grid>
 
-                <Grid Margin="0,0,0,-10">
-                    <StackPanel Grid.Column="0" Margin="60,0,60,20">
+                <Grid Margin="0,0,0,-20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,20,30">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Email" Height="30" Width="30" Margin="0 2 3 0"/>
+                            <materialDesign:PackIcon Kind="Home" Height="30" Width="30" Margin="0 2 3 0"/>
                             <TextBlock Text="Address: " FontSize="24" Margin="0,0,0,5"/>
                         </StackPanel>
                         <TextBox BorderBrush="Black" x:Name="AddressTextBox" Text="{Binding Address, Mode=TwoWay}" FontSize="20" BorderThickness="1" Margin="0,0,0,10">
@@ -94,10 +100,28 @@
                             </TextBox.ToolTip>
                         </TextBox>
                     </StackPanel>
-                </Grid>
 
-                <Button x:Name="addButton" Content="ADD" FontSize="24" Background="#FFC1CC00" Foreground="White" Padding="5" HorizontalAlignment="Center" Width="120" Height="50"/>
-                <!--Click="addButton_Click"-->
+                    <StackPanel Grid.Column="1" Margin="20 0 0 0">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Cake" Margin="0 0 3 0" Height="30" Width="30"/>
+                            <TextBlock Text="Birthday: " FontSize="24" Margin="0,0,0,5"/>
+                        </StackPanel>
+                        <DatePicker x:Name="birthdayDatePicker" HorizontalAlignment="Left" Width="auto" Margin="0 0 0 10" BorderThickness="1"
+                                    materialDesign:HintAssist.Hint="Pick Date" FontSize="16"
+                                    materialDesign:TextFieldAssist.HasClearButton="True"
+                                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+                        </StackPanel>
+                </Grid>
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Human" Width="30" Height="30" Margin="0 2 0 0"/>
+                        <TextBlock Text="Gender: " FontSize="24" Margin="0,0,10,5" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <RadioButton x:Name="maleRadioButton" FontSize="24" Content="Male" Margin="0 0 15 0" VerticalAlignment="Center"></RadioButton>
+                    <RadioButton x:Name="femaleRadioButton" FontSize="24" Content="Female" VerticalAlignment="Center"></RadioButton>
+                </StackPanel>
+
+                <Button x:Name="addButton" Content="ADD" FontSize="24" Background="#FFC1CC00" Foreground="White" Padding="5" HorizontalAlignment="Center" Width="120" Height="50" Click="addButton_Click"/>
             </StackPanel>
         </Grid>
     </Grid>

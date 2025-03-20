@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,29 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class AddCustomerWindow : Window
     {
+        private readonly AddCustomerWindowLogic logicService;
         public AddCustomerWindow()
         {
             InitializeComponent();
+            logicService = new AddCustomerWindowLogic();
+            DataContext = logicService;
+        }
+
+        private void addButton_Click(object sender, RoutedEventArgs e)
+        {
+            RadioButton temp = new RadioButton();
+            if (maleRadioButton.IsChecked == true)
+                temp = maleRadioButton;
+            else
+                temp = femaleRadioButton;
+
+            if (!logicService.IsValidData(NameTextBox.Text, EmailTextBox.Text, TelephoneTextBox.Text))
+            {
+                MessageBox.Show("Thông tin không hợp lệ! Vui lòng nhập đúng định dạng", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            logicService.AddCustomerToDatabase(NameTextBox, EmailTextBox, TelephoneTextBox, birthdayDatePicker, temp, AddressTextBox);
+            this.Close();
         }
     }
 }

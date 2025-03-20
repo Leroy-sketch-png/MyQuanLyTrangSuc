@@ -94,6 +94,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
             catch (Exception ex)
             {
+                Console.WriteLine("Error: " + ex.Message);
                 notificationLogic.LoadNotification("Error", $"An error occurred: {ex.Message}", "BottomRight");
             }
         }
