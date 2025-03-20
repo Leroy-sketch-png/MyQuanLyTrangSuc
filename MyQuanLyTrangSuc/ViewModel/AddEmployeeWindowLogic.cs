@@ -39,18 +39,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
 
 
-
-
-        public string GetLastID() {
-            var lastID = context.Employees
-                          .OrderByDescending(e => e.EmployeeId)
-                          .FirstOrDefault().EmployeeId;
-            return lastID;
-
-        }
-
-
-        public string GenerateNewID(string prefix) {
+        private string GenerateNewID(string prefix) {
             string lastID = GetLastID();
             int newNumber = 1;
 
@@ -63,6 +52,19 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             return $"{prefix}{newNumber:D3}";
         }
+
+
+        private string GetLastID() {
+            Employee employee = context.Employees
+                          .OrderByDescending(e => e.EmployeeId)
+                          .FirstOrDefault();
+            if (employee == null)
+                return null;
+            var lastID = employee.EmployeeId;
+            return lastID;
+        }
+
+
         //Check data before adding to DB
 
         //Check Name_Customer
@@ -86,47 +88,47 @@ namespace MyQuanLyTrangSuc.ViewModel
             if (!IsValidTelephoneNumber(telephone)) return false;
             return true;
         }
-        public void AddEmployeeToDatabase(TextBox NameTextBox, DatePicker Birthday, TextBox EmailTextBox, TextBox TelephoneTextBox, RadioButton Gender, RichTextBox MoreInfo, TextBox ImagePathTextBox) {
-            var textrange = new TextRange(
-        MoreInfo.Document.ContentStart,
-        MoreInfo.Document.ContentEnd
-    );
-            string moreInfoText = textrange.Text.Trim();
+    //    public void AddEmployeeToDatabase(TextBox NameTextBox, DatePicker Birthday, TextBox EmailTextBox, TextBox TelephoneTextBox, RadioButton Gender, RichTextBox MoreInfo, TextBox ImagePathTextBox) {
+    //        var textrange = new TextRange(
+    //    MoreInfo.Document.ContentStart,
+    //    MoreInfo.Document.ContentEnd
+    //);
+    //        string moreInfoText = textrange.Text.Trim();
 
-            var temp = context.Employees.FirstOrDefault(e => e.ContactNumber == TelephoneTextBox.Text && e.Name == NameTextBox.Text);
-            if (temp != null) {
-                //if (temp.isdeleted_employee != false) {
-                    //temp.isdeleted_employee = false;
-                    temp.Name = Name;
-                    //temp.birthday_employee = Birthday.SelectedDate.HasValue ? Birthday.SelectedDate.Value.Date : (DateTime?)null;
-                    //temp.Gende = Gender.Content.ToString();
-                    //temp.moreinfo_employee = moreInfoText;
-                    temp.ImagePath = ImagePathTextBox.Text;
+    //        var temp = context.Employees.FirstOrDefault(e => e.ContactNumber == TelephoneTextBox.Text && e.Name == NameTextBox.Text);
+    //        if (temp != null) {
+    //            //if (temp.isdeleted_employee != false) {
+    //                //temp.isdeleted_employee = false;
+    //                temp.Name = Name;
+    //                //temp.birthday_employee = Birthday.SelectedDate.HasValue ? Birthday.SelectedDate.Value.Date : (DateTime?)null;
+    //                //temp.Gende = Gender.Content.ToString();
+    //                //temp.moreinfo_employee = moreInfoText;
+    //                temp.ImagePath = ImagePathTextBox.Text;
 
-                    //context.SaveChangesAdded(temp);
-                    //notificationWindowLogic.LoadNotification("Success", "Restored employee successfully!", "BottomRight");
-                //} else {
-                    // Nếu nhân viên tồn tại và không bị xóa
-                    //notificationWindowLogic.LoadNotification("Warning", "Employee already exists!", "BottomRight");
-                //}
-                return;
-            }
-            Employee emp = new Employee() {
-                EmployeeId = NewID,
-                Name = Name,
-                Email = Email,
-                //birthday_employee = Birthday.SelectedDate.HasValue ? Birthday.SelectedDate.Value.Date : (DateTime?)null,
-                ContactNumber = Telephone,
-                //gender_employee = Gender.Content.ToString(),
-                //moreinfo_employee = moreInfoText,
-                ImagePath = ImagePath,
-            };
-            context.Employees.Add(emp);
-            context.SaveChanges();
-            //context.SaveChangesAdded(emp);
+    //                //context.SaveChangesAdded(temp);
+    //                //notificationWindowLogic.LoadNotification("Success", "Restored employee successfully!", "BottomRight");
+    //            //} else {
+    //                // Nếu nhân viên tồn tại và không bị xóa
+    //                //notificationWindowLogic.LoadNotification("Warning", "Employee already exists!", "BottomRight");
+    //            //}
+    //            return;
+    //        }
+    //        Employee emp = new Employee() {
+    //            EmployeeId = NewID,
+    //            Name = Name,
+    //            Email = Email,
+    //            //birthday_employee = Birthday.SelectedDate.HasValue ? Birthday.SelectedDate.Value.Date : (DateTime?)null,
+    //            ContactNumber = Telephone,
+    //            //gender_employee = Gender.Content.ToString(),
+    //            //moreinfo_employee = moreInfoText,
+    //            ImagePath = ImagePath,
+    //        };
+    //        context.Employees.Add(emp);
+    //        context.SaveChanges();
+    //        //context.SaveChangesAdded(emp);
 
-            //notificationWindowLogic.LoadNotification("Success", "Added employees successfully!", "BottomRight");
-        }
+    //        //notificationWindowLogic.LoadNotification("Success", "Added employees successfully!", "BottomRight");
+    //    }
 
 
         public void ChooseImageFileDialog() {

@@ -17,6 +17,12 @@ public partial class Customer
 
     public string Address { get; set; }
 
+    public DateOnly? DateOfBirth { get; set; }
+
+    public string Gender { get; set; }
+
+    public bool IsDeleted { get; set; }
+
     public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 
     public virtual ICollection<ServiceRecord> ServiceRecords { get; set; } = new List<ServiceRecord>();

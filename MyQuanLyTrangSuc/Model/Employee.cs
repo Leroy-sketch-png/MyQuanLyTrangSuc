@@ -19,5 +19,11 @@ public partial class Employee
 
     public string ImagePath { get; set; }
 
+    public DateOnly? DateOfBirth { get; set; }
+
+    public string Gender { get; set; }
+
+    public bool IsDeleted { get; set; }
+
     public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
 }

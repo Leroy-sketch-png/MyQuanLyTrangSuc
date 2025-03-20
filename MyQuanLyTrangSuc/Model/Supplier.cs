@@ -17,5 +17,7 @@ public partial class Supplier
 
     public string Address { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public virtual ICollection<Import> Imports { get; set; } = new List<Import>();
 }

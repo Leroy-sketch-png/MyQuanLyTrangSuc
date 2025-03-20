@@ -13,5 +13,9 @@ public partial class Service
 
     public decimal? ServicePrice { get; set; }
 
+    public string MoreInfo { get; set; }
+
+    public bool IsDeleted { get; set; }
+
     public virtual ICollection<ServiceDetail> ServiceDetails { get; set; } = new List<ServiceDetail>();
 }

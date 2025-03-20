@@ -21,6 +21,10 @@ public partial class Product
 
     public string ImagePath { get; set; }
 
+    public string MoreInfo { get; set; }
+
+    public bool IsDeleted { get; set; }
+
     public virtual ProductCategory Category { get; set; }
 
     public virtual ICollection<ImportDetail> ImportDetails { get; set; } = new List<ImportDetail>();
