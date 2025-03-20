@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using static MaterialDesignThemes.Wpf.Theme.ToolBar;
 
 namespace MyQuanLyTrangSuc.Model;
 
@@ -22,6 +23,88 @@ public partial class MyQuanLyTrangSucContext : DbContext {
         : base(options) {
     }
 
+
+    public int SaveChangesAdded(Product product) {
+
+        int result = base.SaveChanges();
+
+        OnItemAdded?.Invoke(product);
+
+        return result;
+    }
+    public int SaveChangesRemoved(Product product) {
+        int result = base.SaveChanges();
+
+        OnItemRemoved?.Invoke(product);
+
+        return result;
+    }
+    public void ResetProducts() {
+        OnItemsReset?.Invoke();
+    }
+    public int SaveChangesAdded(Invoice invoice) {
+
+        int result = base.SaveChanges();
+
+        OnExportAdded?.Invoke(invoice);
+
+        return result;
+    }
+    public int SaveChangesAdded(Import import) {
+
+        int result = base.SaveChanges();
+
+        OnImportAdded?.Invoke(import);
+
+        return result;
+    }
+    public int SaveChangesAdded(Supplier supplier) {
+        int result = base.SaveChanges();
+
+        OnSupplierAdded?.Invoke(supplier);
+
+        return result;
+    }
+    public int SaveChangesEdited(Supplier supplier) {
+        int result = base.SaveChanges();
+
+        OnSupplierEdited?.Invoke(supplier);
+
+        return result;
+    }
+    public int SaveChangesAdded(Customer customer) {
+        int res = base.SaveChanges();
+        OnCustomerAdded?.Invoke(customer);
+        return res;
+    }
+    public int SaveChangesAdded(Employee employee) {
+
+        int result = base.SaveChanges();
+
+        OnEmployeeAdded?.Invoke(employee);
+
+        return result;
+    }
+    public void ResetEmployees() {
+        OnEmployeesReset?.Invoke();
+    }
+
+    public event Action<Customer> OnCustomerAdded;
+    public event Action<Supplier> OnSupplierAdded;
+    public event Action<Supplier> OnSupplierEdited;
+
+    public event Action<Product> OnItemAdded;
+    public event Action<Product> OnItemRemoved;
+    public event Action OnItemsReset;
+
+    public event Action<Invoice> OnExportAdded;
+    public event Action<Import> OnImportAdded;
+
+
+    public event Action<Employee> OnEmployeeAdded;
+    public event Action OnEmployeesReset;
+
+    #region All the tables
     public virtual DbSet<Account> Accounts { get; set; }
 
     public virtual DbSet<Customer> Customers { get; set; }
@@ -53,7 +136,9 @@ public partial class MyQuanLyTrangSucContext : DbContext {
     public virtual DbSet<Supplier> Suppliers { get; set; }
 
     public virtual DbSet<Unit> Units { get; set; }
+    #endregion
 
+    #region Default configurations
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<Account>(entity => {
             entity.HasKey(e => e.AccountId).HasName("PK__Account__F267253EA4D3E57B");
@@ -500,10 +585,12 @@ public partial class MyQuanLyTrangSucContext : DbContext {
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    #endregion
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
             //Your server goes here!
-            optionsBuilder.UseSqlServer("Server=DESKTOP-71PN892\\SQLEXPRESS;Database=MyQuanLyTrangSuc;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Server=DESKTOP-71PN892\\SQLEXPRESS;Database=MyQuanLyTrangSuc;Trusted_Connection=True;TrustServerCertificate=True;");
         }
     }
 }
