@@ -1,0 +1,91 @@
+﻿<Window x:Class="MyQuanLyTrangSuc.View.EditCustomerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="EditCustomerWindowUI" Height="500" Width="500">
+
+    <Grid Background="#F2F2F2">
+        <Grid Background="#F2F2F2">
+            <TextBlock Text="EDITING CUSTOMER..." FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,20"/>
+            <StackPanel Margin="40,70,40,20">
+
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Column 1 -->
+                    <StackPanel Grid.Column="0" Margin="0,0,20,30">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="RenameBox" Margin="0 2 3 0" Height="30" Width="30"/>
+                            <TextBlock Text="Customer's ID: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                        </StackPanel>
+                        <Border BorderBrush="Black" BorderThickness="1" Padding="5" Margin="0,0,0,10">
+                            <TextBlock x:Name="IDTextBlock" FontSize="20" VerticalAlignment="Center"/>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Column 2 -->
+                    <StackPanel Grid.Column="1" Margin="20,0,0,30">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="RenameBox" Margin="0 2 3 0" Height="30" Width="30"/>
+                            <TextBlock Text="Full Name: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                        </StackPanel>
+                        <TextBox x:Name="NameTextBox"
+                                 Text="{Binding Name, Mode=TwoWay}"
+                                 FontSize="20"
+                                 Padding="5"
+                                 BorderBrush="Black"
+                                 BorderThickness="1"
+                                 Margin="0,0,0,10"
+                                 VerticalAlignment="Center">
+                            <TextBox.ToolTip>
+                                <ToolTip Background="White" Foreground="Black" Content="Please enter a valid full name (not including numbers)."/>
+                            </TextBox.ToolTip>
+                        </TextBox>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,20,30">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Email" Height="30" Width="30" Margin="0 2 3 0"/>
+                            <TextBlock Text="Email Address: " FontSize="24" Margin="0,0,0,5"/>
+                        </StackPanel>
+                        <TextBox BorderBrush="Black" x:Name="EmailTextBox" Text="{Binding Email, Mode=TwoWay}" FontSize="20" BorderThickness="1" Margin="0,0,0,10">
+                            <TextBox.ToolTip>
+                                <ToolTip Background="White" Foreground="Black" Content="Please enter a valid email address (e.g., example@mail.com)."/>
+                            </TextBox.ToolTip>
+                        </TextBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="20,0,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Margin="0 0 3 1" Kind="PhoneOutline" VerticalAlignment="Center" Height="30" Width="30"/>
+                            <TextBlock Text="Telephone: " FontSize="24" Margin="0,0,0,5"/>
+                        </StackPanel>
+                        <TextBox BorderBrush="Black" x:Name="TelephoneTextBox" Text="{Binding Telephone, Mode=TwoWay}" FontSize="20" BorderThickness="1" Margin="0,0,0,10">
+                            <TextBox.ToolTip>
+                                <ToolTip Background="White" Foreground="Black" Content="Please enter a valid phone number (e.g., 123-456-7890) - 10 to 15 digits"/>
+                            </TextBox.ToolTip>
+                        </TextBox>
+                    </StackPanel>
+                </Grid>
+
+                <Button x:Name="saveButton" Content="SAVE" FontSize="24" Background="#FFC1CC00" Foreground="White" Padding="5" HorizontalAlignment="Center" Width="120" Height="50"/>
+                <!--Click="saveButton_Click"-->
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

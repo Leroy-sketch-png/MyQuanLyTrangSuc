@@ -1,0 +1,116 @@
+﻿<Window x:Class="MyQuanLyTrangSuc.View.ReceiptWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="ReceiptWindowUI" Height="800" Width="400"
+        WindowStartupLocation="CenterScreen">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
+        <Grid>
+            <Border Background="White" CornerRadius="20" BorderBrush="#D0D0D0" BorderThickness="1">
+                <StackPanel>
+                    <!--Title-->
+                    <Grid>
+                        <Image Height="200" Stretch="Fill" Source="/Resources/background2.png"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock VerticalAlignment="Center" FontFamily="Edwardian Script ITC" Text="Krystal" FontSize="80" FontWeight="SemiBold" Foreground="#FF00069B" TextAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="University of Information and Technology" FontSize="14" FontFamily="Segoe UI, Arial, sans-serif" Foreground="#34495E" TextAlignment="Center" />
+                        <TextBlock Text="Hotline: 1900 1234" FontSize="14" FontFamily="Segoe UI, Arial, sans-serif" Foreground="#34495E" TextAlignment="Center" />
+                        <TextBlock Text="{Binding SelectedExportRecord.date_export}" Grid.Column="1" Grid.Row="0" FontFamily="Segoe UI, Arial, sans-serif" Foreground="#34495E" HorizontalAlignment="Center" />
+                    </StackPanel>
+
+                    <Line Margin="0 5 0 0" X1="0" Y1="0" X2="550" Y2="0"
+                        Stroke="Black" StrokeThickness="1"
+                        StrokeDashArray="4,2"/>
+
+                    <!--Receipt Info-->
+                    <StackPanel>
+                        <TextBlock Text="SALES RECEIPT" FontSize="20" FontWeight="Bold" FontFamily="Roboto, sans-serif" Foreground="#E74C3C" TextAlignment="Center" Margin="0,10" />
+                        <Grid Margin="0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Margin="0 0 0 5" FontWeight="ExtraLight" Text="Receipt ID:" Grid.Column="0" Grid.Row="1" FontFamily="Segoe UI, Arial, sans-serif" Foreground="#2C3E50" />
+                            <TextBlock Margin="0 0 0 5" FontWeight="DemiBold" Text="{Binding SelectedExportRecord.id_export}" Grid.Column="1" Grid.Row="1" FontFamily="Segoe UI, Arial, sans-serif" Foreground="#34495E" />
+
+                            <TextBlock Margin="0 0 0 5" FontWeight="ExtraLight" Text="Employee:" Grid.Column="0" Grid.Row="2" FontFamily="Segoe UI, Arial, sans-serif" Foreground="#2C3E50" />
+                            <TextBlock Margin="0 0 0 5" FontWeight="DemiBold" Text="{Binding SelectedExportRecord.EMPLOYEE.name_employee}" Grid.Column="1" Grid.Row="2" FontFamily="Segoe UI, Arial, sans-serif" Foreground="#34495E" />
+
+                            <TextBlock Margin="0 0 0 5" FontWeight="ExtraLight" Text="Customer:" Grid.Column="0" Grid.Row="3" FontFamily="Segoe UI, Arial, sans-serif" Foreground="#2C3E50" />
+                            <TextBlock Margin="0 0 0 5" FontWeight="DemiBold" Text="{Binding SelectedExportRecord.CUSTOMER.Name_customer}" Grid.Column="1" Grid.Row="3" FontFamily="Segoe UI, Arial, sans-serif" Foreground="#34495E" />
+                        </Grid>
+                    </StackPanel>
+
+                    <Line Margin="0 5 0 0" X1="0" Y1="0" X2="550" Y2="0"
+                        Stroke="Black" StrokeThickness="1"
+                        StrokeDashArray="4,2"/>
+
+                    <!--Product List-->
+                    <Border>
+                        <DataGrid Background="White" AutoGenerateColumns="False" ItemsSource="{Binding ExportInfos}"
+                            IsReadOnly="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Width="90" Binding="{Binding ITEM.Name_item}"/>
+                                <DataGridTextColumn Header="Price" Width="0.8*" Binding="{Binding ITEM.Price_item, StringFormat={}{0:N0}}"/>
+                                <DataGridTextColumn Header="Quantity" Width="90" Binding="{Binding count_exportinfo}"/>
+                                <DataGridTextColumn Header="Total" Width="*" Binding="{Binding ActualTotal ,StringFormat={}{0:N0}}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+                    <Line Margin="0 5 0 0" X1="0" Y1="0" X2="550" Y2="0"
+                        Stroke="Black" StrokeThickness="1"
+                        StrokeDashArray="4,2"/>
+
+                    <!--Total-->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10">
+                        <TextBlock Text="TOTAL: " FontWeight="Bold" FontSize="16" FontFamily="Segoe UI, Arial, sans-serif" Foreground="#2C3E50" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding SelectedExportRecord.revenue_export, StringFormat={}{0:N0} VND}" x:Name="TotalTextBlock" FontWeight="Bold" FontSize="16" FontFamily="Segoe UI, Arial, sans-serif" Foreground="#E74C3C" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <Line Margin="0 5 0 0" X1="0" Y1="0" X2="550" Y2="0"
+                        Stroke="Black" StrokeThickness="1"
+                        StrokeDashArray="4,2"/>
+
+                    <!--Footer-->
+                    <StackPanel HorizontalAlignment="Center" Margin="0,10">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Heart" Foreground="#FF62013C" Width="20" Height="20" Margin="5" VerticalAlignment="Center"/>
+                            <TextBlock VerticalAlignment="Center" Text="Thank you and see you again!" FontStyle="Italic" FontSize="14" FontFamily="Segoe UI, Arial, sans-serif" Foreground="#34495E" TextAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Text="Purchased products cannot be exchanged." FontSize="10" FontFamily="Segoe UI, Arial, sans-serif" Foreground="#7F8C8D" TextAlignment="Center" />
+                        <!--Print Button-->
+                        <Button Background="#c8a8e9" x:Name="printButton" HorizontalAlignment="Center" VerticalAlignment="Top"
+                            Margin="0,10,0,0" Height="40" Foreground="White"
+                            FontWeight="Bold" BorderThickness="0" FontFamily="Segoe UI, Arial, sans-serif">
+                            <!-- Click="printButton_Click" -->
+                            <materialDesign:PackIcon HorizontalAlignment="Center" VerticalAlignment="Center" Kind="Printer" Width="25" Height="25"/>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <Path Fill="White" Stroke="#BDC3C7" StrokeThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="20">
+                <Path.Data>
+                    <PathGeometry>
+                        <PathFigure StartPoint="0,0">
+                            <PolyLineSegment Points="10,10 20,0 30,10 40,0 50,10 60,0 70,10 80,0 90,10 100,0,110,10,120,0,130,10,140,0,150,10,160,0,170,10,180,0,190,10,200,0,210,10,220,0,230,10,240,0,250,10,260,0,270,10,280,0,290,10,300,0,310,10,320,0,330,10,340,0,350,10,360,0,370,10,380,0,390,10,400,0" />
+                        </PathFigure>
+                    </PathGeometry>
+                </Path.Data>
+            </Path>
+        </Grid>
+    </ScrollViewer>
+</Window>
