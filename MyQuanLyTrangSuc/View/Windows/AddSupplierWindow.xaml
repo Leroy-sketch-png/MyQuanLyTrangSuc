@@ -33,7 +33,7 @@
                     <StackPanel Grid.Column="1" Margin="20,0,0,30">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="RenameBox" Margin="0 2 3 0" Height="30" Width="30"/>
-                            <TextBlock Text="Full Name: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                            <TextBlock Text="Name: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>
                         </StackPanel>
                         <TextBox x:Name="NameTextBox"
                                  Text="{Binding Name, Mode=TwoWay}"
@@ -95,8 +95,7 @@
                     </StackPanel>
                 </Grid>
 
-                <Button x:Name="addButton" Content="ADD" FontSize="24" Background="#FFC1CC00" Foreground="White" Padding="5" HorizontalAlignment="Center" Width="120" Height="50"/>
-                <!--Click="addButton_Click"-->
+                <Button x:Name="addButton" Content="ADD" FontSize="24" Background="#FFC1CC00" Foreground="White" Padding="5" HorizontalAlignment="Center" Width="120" Height="50" Click="addButton_Click"/>
             </StackPanel>
         </Grid>
     </Grid>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,23 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class AddSupplierWindow : Window
     {
+        private AddSupplierWindowLogic logicService;
         public AddSupplierWindow()
         {
             InitializeComponent();
+            logicService = new AddSupplierWindowLogic();
+            DataContext = logicService;
+        }
+
+        private void addButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!logicService.IsValidData(NameTextBox.Text, EmailTextBox.Text, TelephoneTextBox.Text))
+            {
+                MessageBox.Show("Invalid data! Please enter the valid format.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            logicService.AddSupplierToDatabase(NameTextBox, EmailTextBox, TelephoneTextBox, AddressTextBox);
+            this.Close();
         }
     }
 }
