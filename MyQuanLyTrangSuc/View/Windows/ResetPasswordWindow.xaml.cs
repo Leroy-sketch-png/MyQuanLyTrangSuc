@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,21 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class ResetPasswordWindow : Window
     {
-        public ResetPasswordWindow()
+        ResetPasswordLogic logicService;
+        private string email;
+
+        public ResetPasswordWindow(string email)
         {
             InitializeComponent();
+            this.email = email;
+            ResetPasswordLogic.flag = false;
+            logicService = new ResetPasswordLogic();
+            DataContext = logicService;
+        }
+        private void resetGrid_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.ResetPassword(newPasswordBox, confirmPasswordBox, email);
+            //if (ResetPasswordLogic.flag) this.Hide();
         }
     }
 }

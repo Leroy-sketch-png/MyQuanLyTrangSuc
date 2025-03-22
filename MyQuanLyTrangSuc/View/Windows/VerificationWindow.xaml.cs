@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,26 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class VerificationWindow : Window
     {
+        ResetPasswordLogic resetPasswordLogic;
         public VerificationWindow()
         {
             InitializeComponent();
+            resetPasswordLogic = new ResetPasswordLogic();
+            DataContext = resetPasswordLogic;
+            ResetPasswordLogic.flag = false;
+        }
+
+        private void sendButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            resetPasswordLogic.SendCode(emailTextBox);
+        }
+
+        private void verifyButton_Click(object sender, RoutedEventArgs e)
+        {
+            resetPasswordLogic.VerifyCode(codeTextBox, emailTextBox);
+            if (ResetPasswordLogic.flag == true)
+                this.Hide();
         }
     }
 }

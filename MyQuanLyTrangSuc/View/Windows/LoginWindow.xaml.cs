@@ -57,5 +57,10 @@ namespace MyQuanLyTrangSuc.View
         {
             loginWindowLogic.ChangeToLightTheme(RightBorder, LeftBorder);
         }
+
+        private void forgotPassword_Click(object sender, RoutedEventArgs e)
+        {
+            loginWindowLogic.LoadVerificationWindow();
+        }
     }
 }

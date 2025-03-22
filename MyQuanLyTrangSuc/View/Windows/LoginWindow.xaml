@@ -248,7 +248,8 @@
                             Background="Transparent" 
                             Content="Forgot Password" 
                             Foreground="#FFC1CC00"
-                            Width="140" BorderBrush="Transparent"/> <!--Click="forgotPasswordTextBox_Click"-->
+                            Width="140" BorderBrush="Transparent"
+                            Click="forgotPassword_Click"/> 
 
                     <!--SignIn Button-->
                     <StackPanel Orientation="Horizontal" Height="77">

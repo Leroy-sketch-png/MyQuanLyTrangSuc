@@ -48,6 +48,12 @@ namespace MyQuanLyTrangSuc.ViewModel
             leftBorder.Background = new SolidColorBrush(Color.FromArgb(255, 39, 46, 60)); // #FF272E3C
         }
 
+        public void LoadVerificationWindow()
+        {
+            VerificationWindow window = new VerificationWindow();
+            window.Show();
+        }
+
         public void Login(PasswordBox passwordBox)
         {
             try
