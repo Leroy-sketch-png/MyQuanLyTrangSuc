@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Title="VerificationWindowUI" Height="600" Width="600">
+        Title="Verification Window" Height="600" Width="600">
 
     <Border CornerRadius="50">
         <Grid>
@@ -40,9 +40,10 @@
                             Margin="10,0"
                             Content="Send" 
                             Style="{StaticResource MaterialDesignRaisedButton}"
-                            Background="#FF20232E"/> <!--Click="sendButton_Click"-->
+                            Background="#FF20232E"
+                            Click="sendButton_Click"/> 
                 </StackPanel>
-                <!--Click="sendButton_Click"-->
+
 
                 <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
                     <materialDesign:PackIcon Kind="CodeEqual" Margin="20 4 0 0" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -58,7 +59,8 @@
                             Margin="2,0" 
                             Content="Verify"
                             Style="{StaticResource MaterialDesignRaisedButton}" 
-                            Background="#FF20232E"/> <!--Click="verifyButton_Click"-->
+                            Background="#FF20232E"
+                            Click="verifyButton_Click"/> 
                 </Grid>
                 <!--Click="verifyButton_Click"-->
             </StackPanel>
