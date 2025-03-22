@@ -30,13 +30,9 @@ namespace MyQuanLyTrangSuc.View
 
         private void addButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!logicService.IsValidData(NameTextBox.Text, EmailTextBox.Text, TelephoneTextBox.Text))
-            {
-                MessageBox.Show("Invalid data! Please enter the valid format.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            logicService.AddSupplierToDatabase(NameTextBox, EmailTextBox, TelephoneTextBox, AddressTextBox);
-            this.Close();
+            bool isSuccess = logicService.AddSupplier(NameTextBox.Text, EmailTextBox.Text, TelephoneTextBox.Text, AddressTextBox.Text);
+            if (isSuccess)
+                this.Close();
         }
     }
 }
