@@ -35,14 +35,9 @@ namespace MyQuanLyTrangSuc.View
                 temp = maleRadioButton;
             else
                 temp = femaleRadioButton;
-
-            if (!logicService.IsValidData(NameTextBox.Text, EmailTextBox.Text, TelephoneTextBox.Text))
-            {
-                MessageBox.Show("Thông tin không hợp lệ! Vui lòng nhập đúng định dạng", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            logicService.AddCustomerToDatabase(NameTextBox, EmailTextBox, TelephoneTextBox, birthdayDatePicker, temp, AddressTextBox);
-            this.Close();
+            bool isSuccess = logicService.AddCustomer(NameTextBox.Text, EmailTextBox.Text, TelephoneTextBox.Text, AddressTextBox.Text, birthdayDatePicker.SelectedDate, temp.Content.ToString());
+            if (isSuccess)
+                this.Close();
         }
     }
 }
