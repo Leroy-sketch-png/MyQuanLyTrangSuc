@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,12 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class SupplierListPage : Page
     {
+        private readonly SupplierListPageLogic logicService;
         public SupplierListPage()
         {
             InitializeComponent();
+            logicService = new SupplierListPageLogic();
+            DataContext = logicService;
         }
     }
 }

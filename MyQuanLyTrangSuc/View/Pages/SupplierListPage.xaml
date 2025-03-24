@@ -136,10 +136,10 @@
                     <DataGrid.Columns>
 
                         <!--ID-->
-                        <DataGridTextColumn Binding="{Binding id_supplier}" Header="ID" IsReadOnly="True" CanUserResize="False" Width="80"/>
+                        <DataGridTextColumn Binding="{Binding SupplierId}" Header="ID" IsReadOnly="True" CanUserResize="False" Width="80"/>
 
                         <!--Name-->
-                        <DataGridTextColumn Header="Name" Width="*" Binding="{Binding name_supplier}" CanUserResize="False" IsReadOnly="True">
+                        <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}" CanUserResize="False" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -148,7 +148,7 @@
                         </DataGridTextColumn>
 
                         <!--Email-->
-                        <DataGridTextColumn Header="Email" Binding="{Binding email_supplier}" Width="*" IsReadOnly="True" CanUserResize="False">
+                        <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*" IsReadOnly="True" CanUserResize="False">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -157,10 +157,10 @@
                         </DataGridTextColumn>
 
                         <!--Telephone-->
-                        <DataGridTextColumn Binding="{Binding tel_supplier}" Header="Telephone" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding ContactNumber}" Header="Telephone" IsReadOnly="True" Width="*"/>
 
                         <!--Address-->
-                        <DataGridTextColumn Binding="{Binding address_supplier}" Header="Address" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding Address}" Header="Address" IsReadOnly="True" Width="*"/>
 
                         <!--Operations-->
                         <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
