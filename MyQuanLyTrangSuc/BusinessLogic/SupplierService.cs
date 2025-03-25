@@ -75,6 +75,12 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             return IsValidName(name) && IsValidEmail(email) && IsValidTelephoneNumber(phone);
         }
 
+        //Get list of suppliers
+        public List<Supplier> GetListOfSuppliers()
+        {
+            return supplierRepository.GetListOfSuppliers();
+        }
+
         //Add new supplier
         public string AddOrUpdateSupplier(string name, string email, string phone, string address)
         {
@@ -116,10 +122,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             }
         }
 
-        public List<Supplier> GetListOfSuppliers()
-        {
-            return supplierRepository.GetListOfSuppliers();
-        }
+        
 
         //Delete supplier
         public void DeleteSupplier(Supplier supplier)

@@ -13,6 +13,14 @@ namespace MyQuanLyTrangSuc.BusinessLogic
     {
         private readonly CustomerRepository customerRepository;
         private readonly string prefix = "KH";
+        public event Action<Customer> OnCustomerAdded; //add or update
+        public event Action<Customer> OnCustomerUpdated; //edit
+
+        //singleton
+
+        private static CustomerService _instance;
+        public static CustomerService Instance => _instance ??= new CustomerService();
+
 
         public CustomerService()
         {
@@ -54,9 +62,11 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         {
             return IsValidName(name) && IsValidEmail(email) && IsValidTelephoneNumber(phone);
         }
+
+        //add new customer
         public string AddOrUpdateCustomer(string name, string email, string phone, string address, DateTime? birthday, string gender)
         {
-            var customer = customerRepository.GetCustomerrByDetails(name, email, phone);
+            var customer = customerRepository.GetCustomerByDetails(name, email, phone);
 
             if (customer != null)
             {
@@ -88,7 +98,14 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                 IsDeleted = false
             };
             customerRepository.AddCustomer(newCustomer);
+            OnCustomerAdded?.Invoke(newCustomer);
             return "Added customer successfully!";
+        }
+
+        //Get list of customers
+        public List<Customer> GetListOfCustomers()
+        {
+            return customerRepository.GetListOfCustomers();
         }
     }
 }

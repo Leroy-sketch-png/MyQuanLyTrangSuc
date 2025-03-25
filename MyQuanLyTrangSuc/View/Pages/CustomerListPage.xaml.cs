@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,10 +20,18 @@ namespace MyQuanLyTrangSuc.View
     /// Interaction logic for CustomerListPage.xaml
     /// </summary>
     public partial class CustomerListPage : Page
-    {
+    {   
+        private readonly CustomerListPageLogic logicService;
         public CustomerListPage()
         {
             InitializeComponent();
+            logicService = new CustomerListPageLogic();
+            DataContext = logicService;
+        }
+
+        private void addButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.LoadAddCustomerWindow();
         }
     }
 }

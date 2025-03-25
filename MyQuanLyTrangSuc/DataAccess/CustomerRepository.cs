@@ -19,7 +19,7 @@ namespace MyQuanLyTrangSuc.DataAccess
             var lastID = context.Customers.OrderByDescending(c => c.CustomerId).Select(c => c.CustomerId).FirstOrDefault();
             return lastID;
         }
-        public Customer GetCustomerrByDetails(string name, string email, string phone)
+        public Customer GetCustomerByDetails(string name, string email, string phone)
         {
             return context.Customers.FirstOrDefault(c => c.CustomerName == name && c.Email == email && c.ContactNumber == phone);
         }
@@ -31,6 +31,11 @@ namespace MyQuanLyTrangSuc.DataAccess
         public void UpdateCustomer(Customer customer)
         {
             context.SaveChangesAdded(customer);
+        }
+
+        public List<Customer> GetListOfCustomers()
+        {
+            return context.Customers.Where(c => !c.IsDeleted).ToList();
         }
     }
 }
