@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using MyQuanLyTrangSuc.DataAccess;
 using MyQuanLyTrangSuc.Model;
 using OfficeOpenXml;
@@ -21,7 +22,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
     public class SupplierService
     {
         
-        private readonly SupplierRepository supplierRepository;
+        private SupplierRepository supplierRepository;
         private readonly string prefix = "SUP";
         public event Action<Supplier> OnSupplierAdded; //add or update
         public event Action<Supplier> OnSupplierUpdated; //edit
@@ -203,7 +204,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                         string phone = workSheet.Cells[i, j++].Text;
                         string address = workSheet.Cells[i, j++].Text;
 
-                        MessageBox.Show($"Row {i}: {name}, {email}, {phone}, {address}");
+                        //MessageBox.Show($"Row {i}: {name}, {email}, {phone}, {address}");
 
 
                         if (!IsValidSupplierData(name, email, phone))
@@ -220,8 +221,9 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                             Address = address,
                             IsDeleted = false
                         };
-                        MessageBox.Show(sup.SupplierId + " " + sup.Name);
+                        //MessageBox.Show(sup.SupplierId + " " + sup.Name);
                         supplierRepository.AddSupplier(sup);
+                        OnSupplierAdded.Invoke(sup);
                     }
                     catch (Exception e)
                     {
