@@ -114,9 +114,10 @@ namespace MyQuanLyTrangSuc.ViewModel
         private readonly SupplierService supplierService;
         private readonly NotificationWindowLogic notificationWindowLogic;
 
+
         public AddSupplierWindowLogic()
         {
-            supplierService = new SupplierService();
+            this.supplierService = SupplierService.Instance;
             notificationWindowLogic = new NotificationWindowLogic();
             GenerateNewSupplierID();
         }

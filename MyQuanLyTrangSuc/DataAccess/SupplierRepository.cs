@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MyQuanLyTrangSuc.DataAccess
 {
@@ -33,5 +34,36 @@ namespace MyQuanLyTrangSuc.DataAccess
         {
             context.SaveChangesAdded(supplier);
         }
+
+        public List<Supplier> GetListOfSuppliers()
+        {
+            return context.Suppliers.Where(s => !s.IsDeleted).ToList();
+        }
+
+        public Supplier GetSupplierByID(string id)
+        {
+            return context.Suppliers.Find(id);
+        }
+
+        public void DeleteSupplier(Supplier temp)
+        {
+            if (temp != null)
+            {
+                temp.IsDeleted = true;
+                context.SaveChangesAdded(temp);
+            }
+        }
+
+        public List<Supplier> SearchSupplierByName(string name)
+        {
+            return context.Suppliers.Where(s => s.Name.Contains(name) && !s.IsDeleted).ToList();
+        }
+
+        public List<Supplier> SearchSupplierByID(string id)
+        {
+            return context.Suppliers.Where(s => s.SupplierId.Contains(id) && !s.IsDeleted).ToList();
+        }
     }
 }
+
+

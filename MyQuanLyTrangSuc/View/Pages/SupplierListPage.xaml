@@ -79,34 +79,33 @@
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
                     <!--Add Button-->
                     <Button x:Name="addButton" Style="{StaticResource addButton}"
-                            Grid.RowSpan="4" Grid.Row="1" ><!--Click="addButton_Click"-->
+                            Click="addButton_Click"
+                            Grid.RowSpan="4" Grid.Row="1" >
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="15"
                                                    Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Add new supplier" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
-                    <!--Click="addButton_Click"-->
 
                     <!--Import Button-->
-                    <Button x:Name="importExcelFileButton"
-                            Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4"><!--Click="importExcelFileButton_Click"-->
+                    <Button x:Name="importExcelFileButton" Click="importExcelFileButton_Click"
+                            Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Import" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
-                    <!--Click="importExcelFileButton_Click"-->
 
                     <!--Export Button-->
-                    <Button x:Name="exportExcelFileButton" 
-                            Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4"><!--Click="exportExcelFileButton_Click"-->
+                    <Button x:Name="exportExcelFileButton" Click="exportExcelFileButton_Click"
+                            Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
+                        <!--Click="exportExcelFileButton_Click"-->
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Export" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
-                    <!--Click="exportExcelFileButton_Click"-->
                 </StackPanel>
 
                 <!--Separator-->
@@ -114,14 +113,11 @@
 
                 <!--Filter TextBox-->
                 <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
-                    <TextBlock x:Name="searchTextBlock" Margin="15 8 0 5" VerticalAlignment="Center" Foreground="#b0b9c6"
-                                IsHitTestVisible="False" Panel.ZIndex="1" Text="Search"
-                                Visibility="{Binding ElementName=txtFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0"/> <!--TextChanged="searchTextBox_TextChanged"-->
+                    <TextBox TextChanged="searchTextBox_TextChanged" x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0" FontSize="20"/>
                 </Grid>
-                <!--TextChanged="searchTextBox_TextChanged"-->
 
-                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
+
+                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220,0,0,0" HorizontalAlignment="Left" Width="120">
                     <ComboBoxItem Content="Name"/>
                     <ComboBoxItem Content="ID"/>
                 </ComboBox>
@@ -129,17 +125,19 @@
                 <!--Suppliers DataGrid-->
                 <DataGrid AutoGenerateColumns="False" IsReadOnly="True" 
                           CanUserSortColumns="True"
+                          MouseDoubleClick="supplierDataGrid_MouseDoubleClick"
                           ItemsSource="{Binding Suppliers}" x:Name="supplierDataGrid" 
                           Style="{DynamicResource DataGridStyle1}"  
                           RowStyle="{DynamicResource DataGridRowStyle1}" 
-                          CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5"><!--MouseDoubleClick="supplierDataGrid_MouseDoubleClick" SelectedItem="{Binding SelectedSupplier, Mode=TwoWay}"-->
+                          SelectedItem="{Binding SelectedSupplier, Mode=TwoWay}"
+                          CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
                     <DataGrid.Columns>
 
                         <!--ID-->
-                        <DataGridTextColumn Binding="{Binding id_supplier}" Header="ID" IsReadOnly="True" CanUserResize="False" Width="80"/>
+                        <DataGridTextColumn Binding="{Binding SupplierId}" Header="ID" IsReadOnly="True" CanUserResize="False" Width="80"/>
 
                         <!--Name-->
-                        <DataGridTextColumn Header="Name" Width="*" Binding="{Binding name_supplier}" CanUserResize="False" IsReadOnly="True">
+                        <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}" CanUserResize="False" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -148,7 +146,7 @@
                         </DataGridTextColumn>
 
                         <!--Email-->
-                        <DataGridTextColumn Header="Email" Binding="{Binding email_supplier}" Width="*" IsReadOnly="True" CanUserResize="False">
+                        <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*" IsReadOnly="True" CanUserResize="False">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -157,25 +155,24 @@
                         </DataGridTextColumn>
 
                         <!--Telephone-->
-                        <DataGridTextColumn Binding="{Binding tel_supplier}" Header="Telephone" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding ContactNumber}" Header="Telephone" IsReadOnly="True" Width="*"/>
 
                         <!--Address-->
-                        <DataGridTextColumn Binding="{Binding address_supplier}" Header="Address" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding Address}" Header="Address" IsReadOnly="True" Width="*"/>
 
                         <!--Operations-->
                         <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button x:Name="editButton" Style="{StaticResource gridEditButton}"><!--Click="editButton_Click"-->
+                                        <Button x:Name="editButton" Style="{StaticResource gridEditButton}" Click="editButton_Click">
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
-                                        <!--Click="editButton_Click"-->
 
-                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0"><!--Click="deleteButton_Click"-->
+                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0" Click="deleteButton_Click">
                                             <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
-                                        <!--Click="deleteButton_Click"-->
+
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
