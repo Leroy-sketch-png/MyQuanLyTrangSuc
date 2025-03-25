@@ -242,6 +242,8 @@ namespace MyQuanLyTrangSuc.BusinessLogic
 
         }
 
+
+        //export excel file
         public void ExportExcelFile(DataGrid supplierDataGrid)
         {
             string filePath = "";

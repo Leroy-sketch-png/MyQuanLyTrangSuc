@@ -1,4 +1,7 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.BusinessLogic;
+using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +22,18 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class EditCustomerWindow : Window
     {
-        public EditCustomerWindow()
+        private readonly EditCustomerWindowLogic logicService;
+        public EditCustomerWindow(Customer customer)
         {
             InitializeComponent();
+            logicService = new EditCustomerWindowLogic(customer);
+            DataContext = logicService;
+        }
+
+        private void editButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool isSuccess = logicService.EditCustomer();
+            if (isSuccess) this.Close();
         }
     }
 }

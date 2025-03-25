@@ -37,5 +37,31 @@ namespace MyQuanLyTrangSuc.DataAccess
         {
             return context.Customers.Where(c => !c.IsDeleted).ToList();
         }
+        public Customer GetCustomerByID(string id)
+        {
+            return context.Customers.Find(id);
+        }
+
+
+        //delete
+        public void DeleteCustomer(Customer temp)
+        {
+            if (temp != null)
+            {
+                temp.IsDeleted = true;
+                context.SaveChangesAdded(temp);
+            }
+        }
+
+        //for search options
+        public List<Customer> SearchCustomerByName(string name)
+        {
+            return context.Customers.Where(c => c.CustomerName.Contains(name) && !c.IsDeleted).ToList();
+        }
+
+        public List<Customer> SearchCustomerByID(string id)
+        {
+            return context.Customers.Where(c => c.CustomerId.Contains(id) && !c.IsDeleted).ToList();
+        }
     }
 }

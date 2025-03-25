@@ -56,13 +56,6 @@ namespace MyQuanLyTrangSuc.ViewModel
         //Load data from database
         private void LoadSuppliersFromDatabase()
         {
-            //Suppliers.Clear();
-            //var suppliers = supplierService.GetListOfSuppliers();
-            //foreach (var sup in suppliers)
-            //{
-            //    if (!sup.IsDeleted)
-            //        Suppliers.Add(sup);
-            //}
             var suppliers = supplierService.GetListOfSuppliers().Where(s => !s.IsDeleted).ToList();
             Suppliers = new ObservableCollection<Supplier>(suppliers);
         }
