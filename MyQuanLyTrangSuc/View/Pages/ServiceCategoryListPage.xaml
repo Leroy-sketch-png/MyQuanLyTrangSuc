@@ -77,7 +77,7 @@
                     </Button>
 
                     <!--Import Button-->
-                    <Button x:Name="importExcelFileButton" Click="importExcelFileButton_Click"
+                    <Button x:Name="importExcelFileButton"
                         Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
@@ -86,9 +86,8 @@
                     </Button>
 
                     <!--Export Button-->
-                    <Button x:Name="exportExcelFileButton" Click="exportExcelFileButton_Click"
+                    <Button x:Name="exportExcelFileButton"
                         Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
-                        <!--Click="exportExcelFileButton_Click"-->
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Export" FontWeight="SemiBold"/>

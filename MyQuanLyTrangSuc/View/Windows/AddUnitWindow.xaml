@@ -1,0 +1,58 @@
+﻿<Window x:Class="MyQuanLyTrangSuc.View.Windows.AddUnitWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MyQuanLyTrangSuc.View.Windows"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="AddUnitWindow" Height="500" Width="500">
+    <Grid>
+        <Grid Background="#F2F2F2">
+            <TextBlock Text="ADDING UNIT..." FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,20"/>
+            <StackPanel Margin="40,70,40,20">
+                <Grid Margin="0,0,0,-10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Column 1 -->
+                    <StackPanel Grid.Column="0" Margin="0,0,20,30">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="RenameBox" Margin="0 2 3 0" Height="35" Width="35"/>
+                            <TextBlock Text="Unit's ID: " FontSize="28" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                        </StackPanel>
+                        <Border BorderBrush="Black" BorderThickness="1" Padding="5" Margin="0,10,0,10">
+                            <TextBlock x:Name="IDTextBlock" Text="{Binding UnitId, Mode=OneWay}" FontSize="22" VerticalAlignment="Center"/>
+                        </Border>
+                    </StackPanel>
+
+                </Grid>
+
+                <Grid Margin="0,0,0,-10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,20,30">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="AlphaUBox" Height="35" Width="35" Margin="0 2 3 0"/>
+                            <TextBlock Text="Unit Name: " FontSize="28" Margin="0,0,0,5"/>
+                        </StackPanel>
+                        <TextBox BorderBrush="Black" x:Name="unitNameTextBox" Text="{Binding UnitName, Mode=TwoWay}" FontSize="22" BorderThickness="1" Margin="0,10,0,10">
+                            <TextBox.ToolTip>
+                                <ToolTip Foreground="Black" Background="White" Content="Please enter a valid unit name (not including numbers)"/>
+                            </TextBox.ToolTip>
+                        </TextBox>
+                    </StackPanel>
+
+                    
+                </Grid>
+
+
+                <Button Margin="0 15 0 0" x:Name="addButton" Content="ADD" FontSize="30" Background="#FFC1CC00" Foreground="White" Padding="10" HorizontalAlignment="Center" Width="150" Height="60"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
