@@ -7,7 +7,7 @@ namespace MyQuanLyTrangSuc.Model;
 
 public partial class StockReport
 {
-    public DateOnly MonthYear { get; set; }
+    public DateTime MonthYear { get; set; }
 
     public string ProductId { get; set; }
 

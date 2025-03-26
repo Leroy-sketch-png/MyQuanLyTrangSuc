@@ -19,7 +19,7 @@ public partial class Employee
 
     public string ImagePath { get; set; }
 
-    public DateOnly? DateOfBirth { get; set; }
+    public DateTime? DateOfBirth { get; set; }
 
     public string Gender { get; set; }
 

@@ -15,6 +15,8 @@ public partial class ProductCategory
 
     public int? ProfitPercentage { get; set; }
 
+    public bool IsNotMarketable { get; set; }
+
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
     public virtual Unit Unit { get; set; }

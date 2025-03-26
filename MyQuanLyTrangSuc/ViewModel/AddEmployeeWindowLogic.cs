@@ -16,6 +16,7 @@ using System.Windows.Documents;
 namespace MyQuanLyTrangSuc.ViewModel {
     class AddEmployeeWindowLogic : INotifyPropertyChanged {
         private const string PREFIX = "EMP"; // My prefix
+        private readonly NotificationWindowLogic notificationWindowLogic;
 
         private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
 
@@ -53,6 +54,8 @@ namespace MyQuanLyTrangSuc.ViewModel {
         public AddEmployeeWindowLogic() {
         }
         public AddEmployeeWindowLogic(AddEmployeeWindow addEmployeeWindow) {
+            notificationWindowLogic = new NotificationWindowLogic();
+
             this.addEmployeeWindow = addEmployeeWindow;
 
             this.addEmployeeWindow.PositionComboBox.ItemsSource = context.Employees
@@ -94,17 +97,17 @@ namespace MyQuanLyTrangSuc.ViewModel {
                     emp.Name = Name;
                     emp.Position = Position;
                     emp.Email = Email;
-                    emp.DateOfBirth = addEmployeeWindow.birthdayDatePicker.SelectedDate.HasValue ? DateOnly.FromDateTime(addEmployeeWindow.birthdayDatePicker.SelectedDate.Value) : (DateOnly?)null;
+                    emp.DateOfBirth = addEmployeeWindow.birthdayDatePicker.SelectedDate.HasValue ? addEmployeeWindow.birthdayDatePicker.SelectedDate.Value : (DateTime?)null;
                     emp.Gender = Gender;
                     ImagePath = ImagePath;
 
                     context.SaveChangesAdded(emp);
 
-                    //notificationWindowLogic.LoadNotification("Success", "Restored employee successfully!", "BottomRight");
+                    notificationWindowLogic.LoadNotification("Success", "Restored employee successfully!", "BottomRight");
                 } else {
                     ////Nếu nhân viên tồn tại và không bị xóa
 
-                    //notificationWindowLogic.LoadNotification("Warning", "Employee already exists!", "BottomRight");
+                    notificationWindowLogic.LoadNotification("Warning", "Employee already exists!", "BottomRight");
                 }
                 return;
             }
@@ -114,7 +117,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
                 Name = Name,
                 Position = Position,
                 Email = Email,
-                DateOfBirth = addEmployeeWindow.birthdayDatePicker.SelectedDate.HasValue ? DateOnly.FromDateTime(addEmployeeWindow.birthdayDatePicker.SelectedDate.Value) : (DateOnly?)null,
+                DateOfBirth = addEmployeeWindow.birthdayDatePicker.SelectedDate.HasValue ? addEmployeeWindow.birthdayDatePicker.SelectedDate.Value : (DateTime?)null,
                 ContactNumber = Telephone,
                 Gender = Gender,
                 ImagePath = ImagePath,

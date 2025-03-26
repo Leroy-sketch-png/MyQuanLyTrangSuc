@@ -11,5 +11,7 @@ public partial class Unit
 
     public string UnitName { get; set; }
 
+    public bool IsNotMarketable { get; set; }
+
     public virtual ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
 }

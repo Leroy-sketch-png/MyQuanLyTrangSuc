@@ -83,7 +83,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                     customer.CustomerName = name;
                     customer.Email = email;
                     customer.ContactNumber = phone;
-                    customer.DateOfBirth = birthday.HasValue ? DateOnly.FromDateTime(birthday.Value) : default;
+                    customer.DateOfBirth = birthday.HasValue ? birthday.Value : default;
                     customer.Gender = gender;
                     customer.Address = address;
 
@@ -99,7 +99,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                 CustomerName = name,
                 ContactNumber = phone,
                 Email = email,
-                DateOfBirth = birthday.HasValue ? DateOnly.FromDateTime(birthday.Value) : default,
+                DateOfBirth = birthday.HasValue ? birthday.Value : default,
                 Gender = gender,
                 Address = address,
                 IsDeleted = false
@@ -210,7 +210,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                             Email = email,
                             ContactNumber = phone,
                             Address = address,
-                            DateOfBirth = DateOnly.Parse(birthday),
+                            DateOfBirth = DateTime.Parse(birthday),
                             Gender = gender,
                             IsDeleted = false
                         };
