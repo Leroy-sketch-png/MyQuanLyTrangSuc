@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,18 @@ namespace MyQuanLyTrangSuc.View.Windows
     /// </summary>
     public partial class AddUnitWindow : Window
     {
+        private AddUnitWindowLogic logicService;    
         public AddUnitWindow()
         {
             InitializeComponent();
+            logicService = new AddUnitWindowLogic();
+            DataContext = logicService;
+        }
+
+        private void addButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.AddUnit(unitNameTextBox.Text);
+            this.Close();
         }
     }
 }

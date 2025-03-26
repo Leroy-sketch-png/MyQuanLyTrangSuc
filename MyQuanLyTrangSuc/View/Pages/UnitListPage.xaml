@@ -67,7 +67,9 @@
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
                     <!--Add Button-->
                     <Button x:Name="addButton" Style="{StaticResource addButton}"
-                        Grid.RowSpan="4" Grid.Row="1" >
+                            Grid.RowSpan="4" Grid.Row="1" 
+                            Click="addButton_Click"
+                            >
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="15"
                                                Height="15" Margin="0 1 8 0"/>
@@ -75,7 +77,17 @@
                         </StackPanel>
                     </Button>
 
-                    
+                    <!--Delete multiple units-->
+                    <Button x:Name="deleteMultipleButton" Click="deleteMultipleButton_Click"
+                            Style="{StaticResource addButton}" Grid.Row="1" 
+                            Grid.RowSpan="4">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="AlphaDBox" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
+                            <TextBlock Text="Delete multiple" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+
+
                 </StackPanel>
 
                 <!--Separator-->
@@ -83,7 +95,10 @@
 
                 <!--Filter TextBox-->
                 <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
-                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0" FontSize="20"/>
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" 
+                             Margin="0 0 0 0" FontSize="20"
+                             TextChanged="searchTextBox_TextChanged"
+                             />
                 </Grid>
 
 
@@ -100,15 +115,21 @@
                       RowStyle="{DynamicResource DataGridRowStyle1}" 
                       SelectedItem="{Binding SelectedSupplier, Mode=TwoWay}"
                       CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
-                    <DataGrid.Columns>
-                        <DataGridCheckBoxColumn Header="" Width="0.5*">
-                            
-                        </DataGridCheckBoxColumn>
+                <DataGrid.Columns>
+
+                        <DataGridTemplateColumn Header="✔" Width="0.5*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
                         <!--ID-->
                         <DataGridTextColumn Binding="{Binding UnitId}" Header="Unit ID" IsReadOnly="True" CanUserResize="False" Width="2*"/>
 
                         <!--Name-->
-                        <DataGridTextColumn Header="Unit Name" Width="2*" Binding="{Binding Name}" CanUserResize="False" IsReadOnly="True">
+                        <DataGridTextColumn Header="Unit Name" Width="2*" Binding="{Binding UnitName}" CanUserResize="False" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -121,11 +142,14 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button x:Name="editButton" Style="{StaticResource gridEditButton}" >
+                                        <Button x:Name="editButton" Style="{StaticResource gridEditButton}" 
+                                                Click="editButton_Click"
+                                                >
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
-                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0">
+                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" 
+                                                Margin="5 0 0 0" Click="deleteButton_Click">
                                             <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
