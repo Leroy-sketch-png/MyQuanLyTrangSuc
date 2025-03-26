@@ -115,7 +115,8 @@
                 </ComboBox>
 
                 <!--Stock Report DataGrid-->
-                <DataGrid ItemsSource="{Binding ServiceCategory}" SelectedItem="{Binding SelectedCategory}" x:Name="servicesDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5" SelectionChanged="employeesDataGrid_SelectionChanged">
+                <DataGrid ItemsSource="{Binding ServiceCategory}" SelectedItem="{Binding SelectedCategory}" x:Name="servicesDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5" >
+                    <!--SelectionChanged="employeesDataGrid_SelectionChanged"-->
                     <DataGrid.Columns>
                         <!--Month-->
                         <DataGridTextColumn Binding="{Binding stockReport_month}" Header="Month" IsReadOnly="True" CanUserResize="False" Width="*">

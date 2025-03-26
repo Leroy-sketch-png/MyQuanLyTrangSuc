@@ -24,34 +24,34 @@
             <DockPanel Grid.Row="1">
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="40,0,0,0" HorizontalAlignment="Left">
                     <TextBlock Text="Record ID: " VerticalAlignment="Center" FontSize="16"/>
-                    <TextBlock Text="{Binding SelectedImportRecord.id_import}" VerticalAlignment="Center" Margin="10,20,20,20" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding SelectedImportRecord.ImportId}" VerticalAlignment="Center" Margin="10,20,20,20" FontSize="16" FontWeight="Bold"/>
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0,0,40,0" HorizontalAlignment="Right">
                     <TextBlock Text="Date: " VerticalAlignment="Center" FontSize="16"/>
-                    <TextBlock Text="{Binding SelectedImportRecord.date_import}" VerticalAlignment="Center" Margin="10,20,20,20" FontWeight="Bold" FontSize="16"/>
+                    <TextBlock Text="{Binding SelectedImportRecord.Date}" VerticalAlignment="Center" Margin="10,20,20,20" FontWeight="Bold" FontSize="16"/>
                 </StackPanel>
             </DockPanel>
             <Border Grid.Row="2" Margin="5">
-                <DataGrid Margin="5" AutoGenerateColumns="False" ItemsSource="{Binding ImportInfos}"
+                <DataGrid Margin="5" AutoGenerateColumns="False" ItemsSource="{Binding ImportDetails}"
           IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Index" Width="65" CanUserResize="False" Binding="{Binding ITEM.id_item}"/>
-                        <DataGridTextColumn Header="Name" Width="*" Binding="{Binding ITEM.Name_item}"/>
-                        <DataGridTextColumn Header="Type" Width="*" Binding="{Binding ITEM.Type_item}"/>
-                        <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding count_importinfo}"/>
-                        <DataGridTextColumn Header="Unit" Width="*" Binding="{Binding ITEM.Unit_item}"/>
-                        <DataGridTextColumn Header="Price" Width="*" Binding="{Binding ITEM.Price_item}"/>
+                        <DataGridTextColumn Header="Index" Width="65" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
+                        <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Product.Name}"/>
+                        <DataGridTextColumn Header="Type" Width="*" Binding="{Binding Product.Category.Categoryname}"/>
+                        <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
+                        <DataGridTextColumn Header="Unit" Width="*" Binding="{Binding Product.Category.Unit.UnitName}"/>
+                        <DataGridTextColumn Header="Price" Width="*" Binding="{Binding Product.Price}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>
             <DockPanel Grid.Row="3">
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="40,0,0,0" HorizontalAlignment="Left">
                     <TextBlock Text="Creator: " VerticalAlignment="Center" FontSize="16"/>
-                    <TextBlock Text="{Binding SelectedImportRecord.EMPLOYEE.name_employee}" VerticalAlignment="Center" Margin="10,0,20,0" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding SelectedImportRecord.Employee.Name}" VerticalAlignment="Center" Margin="10,0,20,0" FontSize="16" FontWeight="Bold"/>
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0,0,40,0" HorizontalAlignment="Right">
                     <TextBlock Text="From Supplier: " VerticalAlignment="Center" FontSize="16"/>
-                    <TextBlock Text="{Binding SelectedImportRecord.SUPPLIER.Name_supplier}" VerticalAlignment="Center" Margin="10,0,20,0" FontWeight="Bold" FontSize="16"/>
+                    <TextBlock Text="{Binding SelectedImportRecord.Supplier.Name}" VerticalAlignment="Center" Margin="10,0,20,0" FontWeight="Bold" FontSize="16"/>
                 </StackPanel>
             </DockPanel>
 
@@ -59,11 +59,11 @@
                 <StackPanel>
                     <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="10,0,0,0" HorizontalAlignment="Left">
                         <TextBlock Text="Contact: " VerticalAlignment="Center" FontSize="16"/>
-                        <TextBlock Text="{Binding SelectedImportRecord.SUPPLIER.Phone_supplier}" VerticalAlignment="Center" Margin="10,0,20,0" FontWeight="Bold" FontSize="16"/>
+                        <TextBlock Text="{Binding SelectedImportRecord.Supplier.ContactNumber}" VerticalAlignment="Center" Margin="10,0,20,0" FontWeight="Bold" FontSize="16"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <TextBlock Text="TOTAL: " FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding SelectedImportRecord.expense_import}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10,0,10,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding SelectedImportRecord.TotalAmount}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10,0,10,0" VerticalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>
             </Border>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,20 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class ImportDetailsWindow : Window
     {
+        MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
         public ImportDetailsWindow()
         {
             InitializeComponent();
+            //
+            Import selectedImportRecord = context.Imports.FirstOrDefault();
+            ImportDetailsWindowLogic importDetailsWindowLogic = new ImportDetailsWindowLogic(this, selectedImportRecord);
+            this.DataContext = importDetailsWindowLogic;
+            //
+        }
+        public ImportDetailsWindow(Import selectedImportRecord) {
+            InitializeComponent();
+            ImportDetailsWindowLogic importDetailsWindowLogic = new ImportDetailsWindowLogic(this, selectedImportRecord);
+            this.DataContext = importDetailsWindowLogic;
         }
     }
 }

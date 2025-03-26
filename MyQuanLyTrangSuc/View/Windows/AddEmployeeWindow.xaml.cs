@@ -20,20 +20,20 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class AddEmployeeWindow : Window
     {
-        private AddEmployeeWindowLogic addEmployeeWindowLogic;
+        private AddEmployeeWindowLogic logicService;
         public AddEmployeeWindow()
         {
             InitializeComponent();
-            addEmployeeWindowLogic = new AddEmployeeWindowLogic(this);
-            DataContext = addEmployeeWindowLogic;
+            logicService = new AddEmployeeWindowLogic(this);
+            DataContext = logicService;
         }
 
         private void ChooseImageButton_Click(object sender, RoutedEventArgs e) {
-            addEmployeeWindowLogic.ChooseImageFileDialog();
+            logicService.ChooseImageFileDialog();
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e) {
-            addEmployeeWindowLogic.AddEmployeeToDatabase();
+            logicService.AddEmployeeToDatabase();
         }
     }
 }
