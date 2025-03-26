@@ -15,6 +15,22 @@ namespace MyQuanLyTrangSuc.ViewModel
         private readonly SupplierService supplierService;
         private NotificationWindowLogic notificationWindowLogic;
 
+        private Supplier _supplier;
+
+        public Supplier Supplier
+        {
+            get => _supplier;
+            set
+            {
+                _supplier = value;
+                OnPropertyChanged(nameof(Supplier));
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         public EditSupplierWindowLogic(Supplier supplier)
         {
             supplierService = SupplierService.Instance;
@@ -41,22 +57,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             return true;
         }
 
-        private Supplier _supplier;
-
-        public Supplier Supplier
-        {
-            get => _supplier;
-            set
-            {
-                _supplier = value;
-                OnPropertyChanged(nameof(Supplier));
-            }
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        
 
 
     }

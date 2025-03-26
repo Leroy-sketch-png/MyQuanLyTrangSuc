@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,18 @@ namespace MyQuanLyTrangSuc.View.Windows
     /// </summary>
     public partial class EditUnitWindow : Window
     {
-        public EditUnitWindow()
+        private readonly EditUnitWindowLogic logicService;
+        public EditUnitWindow(Unit unit)
         {
             InitializeComponent();
+            logicService = new EditUnitWindowLogic(unit);
+            DataContext = logicService;  
+        }
+
+        private void saveButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool isSuccess = logicService.EditUnit();
+            if (isSuccess) this.Close();
         }
     }
 }

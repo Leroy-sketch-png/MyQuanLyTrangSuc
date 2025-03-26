@@ -24,7 +24,7 @@
                             <TextBlock Text="Unit's ID: " FontSize="28" VerticalAlignment="Center" Margin="0,0,0,5"/>
                         </StackPanel>
                         <Border BorderBrush="Black" BorderThickness="1" Padding="5" Margin="0,10,0,10">
-                            <TextBlock x:Name="IDTextBlock" Text="{Binding UnitId, Mode=OneWay}" FontSize="22" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="IDTextBlock" Text="{Binding Unit.UnitId, Mode=OneWay}" FontSize="22" VerticalAlignment="Center"/>
                         </Border>
                     </StackPanel>
 
@@ -40,7 +40,7 @@
                             <materialDesign:PackIcon Kind="AlphaUBox" Height="35" Width="35" Margin="0 2 3 0"/>
                             <TextBlock Text="Unit Name: " FontSize="28" Margin="0,0,0,5"/>
                         </StackPanel>
-                        <TextBox BorderBrush="Black" x:Name="unitNameTextBox" Text="{Binding UnitName, Mode=TwoWay}" FontSize="22" BorderThickness="1" Margin="0,10,0,10">
+                        <TextBox BorderBrush="Black" x:Name="unitNameTextBox" Text="{Binding Unit.UnitName, Mode=TwoWay}" FontSize="22" BorderThickness="1" Margin="0,10,0,10">
                             <TextBox.ToolTip>
                                 <ToolTip Foreground="Black" Background="White" Content="Please enter a valid unit name (not including numbers)"/>
                             </TextBox.ToolTip>
@@ -50,7 +50,13 @@
 
                 </Grid>
 
-                <Button Margin="0 15 0 0" x:Name="saveButton" Content="SAVE" FontSize="30" Background="#FFC1CC00" Foreground="White" Padding="10" HorizontalAlignment="Center" Width="150" Height="60"/>
+                <Button Margin="0 15 0 0" x:Name="saveButton" 
+                        Content="SAVE" FontSize="30" 
+                        Background="#FFC1CC00" Foreground="White" 
+                        Padding="10" HorizontalAlignment="Center" 
+                        Width="150" Height="60"
+                        Click="saveButton_Click"
+                        />
             </StackPanel>
         </Grid>
     </Grid>
