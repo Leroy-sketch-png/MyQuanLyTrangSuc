@@ -109,6 +109,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
+
+        //delete multiple units
         public void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             if (sender is CheckBox checkBox && checkBox.DataContext is Unit unit)
