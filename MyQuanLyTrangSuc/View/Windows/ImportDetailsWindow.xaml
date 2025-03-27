@@ -37,9 +37,9 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Index" Width="65" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
                         <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Product.Name}"/>
-                        <DataGridTextColumn Header="Type" Width="*" Binding="{Binding Product.Category.Categoryname}"/>
+                        <DataGridTextColumn Header="Category" Width="*" Binding="{Binding Product.Category.CategoryName}"/>
                         <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
-                        <DataGridTextColumn Header="Unit" Width="*" Binding="{Binding Product.Category.Unit.UnitName}"/>
+                        <DataGridTextColumn Header="Unit" Width="*" Binding="{Binding Product.Unit.UnitName}"/>
                         <DataGridTextColumn Header="Price" Width="*" Binding="{Binding Product.Price}"/>
                     </DataGrid.Columns>
                 </DataGrid>

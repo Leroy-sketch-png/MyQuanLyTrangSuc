@@ -13,6 +13,8 @@ public partial class Product
 
     public string CategoryId { get; set; }
 
+    public string UnitId { get; set; }
+
     public string Material { get; set; }
 
     public decimal? Price { get; set; }
@@ -32,4 +34,6 @@ public partial class Product
     public virtual ICollection<InvoiceDetail> InvoiceDetails { get; set; } = new List<InvoiceDetail>();
 
     public virtual ICollection<StockReport> StockReports { get; set; } = new List<StockReport>();
+
+    public virtual Unit Unit { get; set; }
 }

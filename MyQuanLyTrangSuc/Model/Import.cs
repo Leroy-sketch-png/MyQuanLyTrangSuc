@@ -11,9 +11,13 @@ public partial class Import
 
     public string SupplierId { get; set; }
 
+    public string EmployeeId { get; set; }
+
     public DateTime? Date { get; set; }
 
     public decimal? TotalAmount { get; set; }
+
+    public virtual Employee Employee { get; set; }
 
     public virtual ICollection<ImportDetail> ImportDetails { get; set; } = new List<ImportDetail>();
 

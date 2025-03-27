@@ -13,9 +13,13 @@ public partial class ServiceRecord
 
     public string CustomerId { get; set; }
 
+    public string EmployeeId { get; set; }
+
     public string ImagePath { get; set; }
 
     public virtual Customer Customer { get; set; }
+
+    public virtual Employee Employee { get; set; }
 
     public virtual ICollection<ServiceDetail> ServiceDetails { get; set; } = new List<ServiceDetail>();
 }

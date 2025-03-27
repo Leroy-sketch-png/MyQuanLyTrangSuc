@@ -2,7 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyQuanLyTrangSuc.Model;
 
@@ -14,6 +13,5 @@ public partial class Unit
 
     public bool IsNotMarketable { get; set; }
 
-    public virtual ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
-
+    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }
