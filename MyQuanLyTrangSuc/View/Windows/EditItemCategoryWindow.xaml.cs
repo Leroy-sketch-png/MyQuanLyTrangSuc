@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,18 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class EditItemCategoryWindow : Window
     {
-        public EditItemCategoryWindow()
+        private readonly EditItemCategoryWindowLogic logicService;
+        public EditItemCategoryWindow(ProductCategory productCategory)
         {
             InitializeComponent();
+            logicService = new EditItemCategoryWindowLogic(productCategory);
+            DataContext = logicService;
+        }
+
+        private void saveButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool isSuccess = logicService.EditItemCategory();
+            if (isSuccess) this.Close();
         }
     }
 }

@@ -109,5 +109,35 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             return "Added item category successfully!";
         }
 
+        //edit item category
+        public void EditItemCategory(ProductCategory itemCategory)
+        {
+            var temp = itemCategoryRepository.GetItemCategoryByID(itemCategory.CategoryId);
+            if (temp != null)
+            {
+                itemCategoryRepository.UpdateItemCategory(itemCategory);
+            }
+        }
+
+        //delete item category
+        public void DeleteItemCategory(ProductCategory selectedItem)
+        {
+            var temp = itemCategoryRepository.GetItemCategoryByID(selectedItem.CategoryId);
+            if (temp != null)
+            {
+                itemCategoryRepository.DeleteItemCategory(temp);
+            }
+        }
+
+        //search options
+        public List<ProductCategory> ItemCategoriesSearchByName(string name)
+        {
+            return itemCategoryRepository.SearchItemCategoryByName(name);
+        }
+
+        public List<ProductCategory> ItemCategoriesSearchByID(string id)
+        {
+            return itemCategoryRepository.SearchItemCategoryByID(id);
+        }
     }
 }

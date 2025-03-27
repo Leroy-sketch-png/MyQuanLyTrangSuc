@@ -42,5 +42,29 @@ namespace MyQuanLyTrangSuc.DataAccess
         {
             return context.ProductCategories.Where(i => !i.IsNotMarketable).ToList();
         }
+
+        public ProductCategory GetItemCategoryByID(string categoryId)
+        {
+            return context.ProductCategories.Find(categoryId);
+        }
+
+        public void DeleteItemCategory(ProductCategory temp)
+        {
+            if (temp != null)
+            {
+                temp.IsNotMarketable = true;
+                context.SaveChanges();
+            }
+        }
+
+        public List<ProductCategory> SearchItemCategoryByName(string name)
+        {
+            return context.ProductCategories.Where(i => i.Categoryname.Contains(name) && !i.IsNotMarketable).ToList();
+        }
+
+        public List<ProductCategory> SearchItemCategoryByID(string id)
+        {
+            return context.ProductCategories.Where(i => i.CategoryId.Contains(id) && !i.IsNotMarketable).ToList();
+        }
     }
 }
