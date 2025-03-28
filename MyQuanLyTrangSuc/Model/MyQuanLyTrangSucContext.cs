@@ -46,7 +46,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         int result = base.SaveChanges();
 
-        OnExportAdded?.Invoke(invoice);
+        OnInvoiceAdded?.Invoke(invoice);
 
         return result;
     }
@@ -97,7 +97,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     public event Action<Product> OnItemRemoved;
     public event Action OnItemsReset;
 
-    public event Action<Invoice> OnExportAdded;
+    public event Action<Invoice> OnInvoiceAdded;
     public event Action<Import> OnImportAdded;
 
 
@@ -637,7 +637,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
             //Your server goes here!
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=DESKTOP-71PN892\\SQLEXPRESS;Database=MyQuanLyTrangSuc;TrustServerCertificate=True;Trusted_Connection=True");
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=LAPTOP-CMTNMGDI\\SQLEXPRESS;Database=MyQuanLyTrangSuc;TrustServerCertificate=True;Trusted_Connection=True");
         }
     }
 }

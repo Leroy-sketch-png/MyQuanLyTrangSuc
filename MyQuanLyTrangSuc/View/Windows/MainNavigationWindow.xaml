@@ -52,8 +52,9 @@
 
                         <!--Navigation Buttons-->
                         <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}">
-                                <!--Click="OnClick_DashboardPageNavigation"-->
+                            <Button Style="{StaticResource menuButton}"
+                                    Click="OnClick_DashboardPageNavigation">
+                  
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="HomeVariant" Foreground="White" HorizontalAlignment="Left"/>
                                     <TextBlock Text=" Dashboard" Foreground="White"/>
@@ -62,8 +63,9 @@
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}">
-                                <!--Click="OnClick_ProfilePageNavigation"-->
+                            <Button Style="{StaticResource menuButton}"
+                                    Click="OnClick_ProfilePageNavigation"   >
+                                
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="AccountCircle" Foreground="White"/>
                                     <TextBlock Text=" Profile" Foreground="White"/>
@@ -72,8 +74,9 @@
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}">
-                                <!--Click="OnClick_ItemListPageNavigation"-->
+                            <Button Style="{StaticResource menuButton}"
+                                    Click="OnClick_ItemListPageNavigation">
+                                
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="Cube" Foreground="White"/>
                                     <TextBlock Text=" Jewelry" Foreground="White"/>
@@ -82,8 +85,9 @@
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}">
-                                <!--Click="OnClick_ImportRecordPageNavigation"-->
+                            <Button Style="{StaticResource menuButton}"
+                                    Click="OnClick_ImportRecordPageNavigation">
+                                
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="Import" Foreground="White"/>
                                     <TextBlock Text=" Import" Foreground="White"/>
@@ -92,8 +96,9 @@
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}">
-                                <!--Click="OnClick_ExportRecordPageNavigation"-->
+                            <Button Style="{StaticResource menuButton}"
+                                    Click="OnClick_ExportRecordPageNavigation">
+                                
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="Invoice" Foreground="White"/>
                                     <TextBlock Text=" Invoice" Foreground="White"/>
@@ -102,8 +107,9 @@
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}">
-                                <!--Click="OnClick_CustomerPageNavigation"-->
+                            <Button Style="{StaticResource menuButton}"
+                                    Click="OnClick_CustomerPageNavigation">
+                                
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="FaceAgent" Foreground="White"/>
                                     <TextBlock Text=" Customers" Foreground="White"/>
@@ -112,8 +118,9 @@
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}">
-                                <!--Click="OnClick_SupplierPageNavigation"-->
+                            <Button Style="{StaticResource menuButton}"
+                                    Click="OnClick_SupplierPageNavigation">
+                                
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="AccountTie" Foreground="White"/>
                                     <TextBlock Text=" Suppliers" Foreground="White"/>
@@ -124,8 +131,9 @@
                         <StackPanel DockPanel.Dock="Top">
                             <Button Style="{StaticResource menuButton}"
                                     x:Name="HumanResource"
-                                    Visibility="{Binding HumanResourceButtonVisibility}">
-                                <!--Click="OnClick_UserPageNavigation"-->
+                                    Visibility="{Binding HumanResourceButtonVisibility}"
+                                    Click="OnClick_UserPageNavigation">
+                                
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="AccountGroup" Foreground="White"/>
                                     <TextBlock Text=" Human Resource" Foreground="White"/>
@@ -139,8 +147,9 @@
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}">
-                                <!--Click="OnClick_LogOut"-->
+                            <Button Style="{StaticResource menuButton}"
+                                    Click="OnClick_LogOut">
+                                
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="Export" Foreground="White"/>
                                     <TextBlock Text=" Log Out" Foreground="White"/>

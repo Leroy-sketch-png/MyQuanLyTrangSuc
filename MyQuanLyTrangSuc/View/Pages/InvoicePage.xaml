@@ -8,16 +8,18 @@
       mc:Ignorable="d"
       d:DesignHeight="720" d:DesignWidth="880"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Page.Resources>
+
     <Border Background="#eff2f7" CornerRadius="30">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <!--Main Section-->
-            <Grid Grid.Column="1" HorizontalAlignment="Center">
+            <Grid Grid.Column="0" HorizontalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -61,15 +63,14 @@
                        Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
                 <!--Add Button-->
-                <Button Style="{StaticResource addButton}" Margin="0 0 20 5" Grid.RowSpan="4" Grid.Row="1" 
-                        ><!--Click="OnClick_AddRecord_ExportRecordPage"-->
+                <Button Style="{StaticResource addButton}" Margin="0 0 20 5" Grid.RowSpan="4" Grid.Row="1"
+                        Click="OnClick_AddInvoiceWindow">
                     <StackPanel Orientation="Horizontal">
                         <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11"
                                            Height="11" Margin="0 1 8 0"/>
                         <TextBlock Text="Add new record"/>
                     </StackPanel>
                 </Button>
-                <!--Click="OnClick_AddRecord_ExportRecordPage"-->
 
                 <!--Separator-->
                 <Separator Grid.Row="3" BorderBrush="#ba80d3" BorderThickness="10" Margin="5,10,30,10"/>
@@ -79,9 +80,8 @@
                     <TextBlock x:Name="searchTextBlock" Margin="15 8 0 5" VerticalAlignment="Center" Foreground="#b0b9c6"
                                IsHitTestVisible="False" Panel.ZIndex="1" Text="Search by customer"
                                Visibility="{Binding ElementName=searchTextBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0"/> <!--TextChanged="searchTextBox_TextChanged"-->
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0" TextChanged="searchTextBox_TextChanged"/>
                 </Grid>
-                <!--TextChanged="searchTextBox_TextChanged"-->
 
                 <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
                     <ComboBoxItem Content="Date"/>
@@ -89,34 +89,34 @@
                     <ComboBoxItem Content="Customer"/>
                 </ComboBox>
 
-                <!--Members DataGrid-->
-                <DataGrid x:Name="membersDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" Grid.Row="5"
-                          ItemsSource="{Binding ExportRecords}"
-                          ><!--MouseDoubleClick="OnDoubleClick_InspectRecord_ExportRecordPageDataGrid"-->
+                <!--Invoices DataGrid-->
+                <DataGrid x:Name="InvoicesDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" Grid.Row="5"
+                          ItemsSource="{Binding Invoices}"
+                          ><!--MouseDoubleClick="OnDoubleClick_InspectRecord_InvoicePageDataGrid"-->
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="False" Width="80" Binding="{Binding id_export}"/>
-                        <DataGridTextColumn Header="Date" IsReadOnly="True" Width="0.8*" Binding="{Binding date_export}"/>
-                        <DataGridTextColumn Header="Exported To" IsReadOnly="True" Width="0.9*" Binding="{Binding CUSTOMER.Name_customer}"/>
-                        <DataGridTextColumn Header="Revenue" IsReadOnly="True" Width="*" Binding="{Binding revenue_export}"/>
+                        <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="False" Width="80" Binding="{Binding InvoiceId}"/>
+                        <DataGridTextColumn Header="Date" IsReadOnly="True" Width="*" Binding="{Binding Date, StringFormat=d}"/>
+                        <DataGridTextColumn Header="Customer" IsReadOnly="True" Width="*" Binding="{Binding Customer.CustomerName}"/>
+                        <DataGridTextColumn Header="Total Amount" IsReadOnly="True" Width="*" Binding="{Binding TotalAmount}"/>
                         <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" >
+                                    <StackPanel Orientation="Horizontal">
                                         <Button Margin="0 0 3 0"
-                                                x:Name="viewButton" Style="{StaticResource gridEditButton}"><!--Click="viewButton_Click"-->
-                                            <Icon:PackIconMaterial Kind="ViewListOutline" Style="{StaticResource gridButtonIcon}"/>
+                                                x:Name="viewButton" Style="{StaticResource gridEditButton}"
+                                                ><!--Click="viewButton_Click"-->
+                                            <Icon:PackIconMaterial Kind="ViewListOutline" Style="{StaticResource gridButtonIcon}" />
                                         </Button>
-                                        <Button Margin="3 0 0 0" x:Name="printButton"  Style="{StaticResource gridEditButton}"><!--Click="printButton_Click"-->
+                                        <Button Margin="3 0 0 0" x:Name="printButton" Style="{StaticResource gridEditButton}"
+                                                ><!--Click="printButton_Click"-->
                                             <Icon:PackIconMaterial Kind="Printer" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
-                                        <!--Click="printButton_Click"-->
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                <!--MouseDoubleClick="OnDoubleClick_InspectRecord_ExportRecordPageDataGrid"-->
             </Grid>
         </Grid>
     </Border>
