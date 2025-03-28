@@ -40,7 +40,8 @@
                         <DataGridTextColumn Header="Category" Width="*" Binding="{Binding Product.Category.CategoryName}"/>
                         <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
                         <DataGridTextColumn Header="Unit" Width="*" Binding="{Binding Product.Category.Unit.UnitName}"/>
-                        <DataGridTextColumn Header="Price" Width="*" Binding="{Binding Product.Price}"/>
+                        <DataGridTextColumn Header="Price" Width="*" Binding="{Binding Price}"/>
+                        <DataGridTextColumn Header="Total" Width="*" Binding="{Binding TotalPrice}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>

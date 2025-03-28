@@ -21,14 +21,14 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class ImportDetailsWindow : Window
     {
-        MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
+        //MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
         public ImportDetailsWindow()
         {
             InitializeComponent();
 
-            Import selectedImportRecord = context.Imports.FirstOrDefault();
-            ImportDetailsWindowLogic importDetailsWindowLogic = new ImportDetailsWindowLogic(this, selectedImportRecord);
-            this.DataContext = importDetailsWindowLogic;
+            //Import selectedImportRecord = context.Imports.FirstOrDefault();
+            //ImportDetailsWindowLogic importDetailsWindowLogic = new ImportDetailsWindowLogic(this, selectedImportRecord);
+            //this.DataContext = importDetailsWindowLogic;
 
         }
         public ImportDetailsWindow(Import selectedImportRecord) {

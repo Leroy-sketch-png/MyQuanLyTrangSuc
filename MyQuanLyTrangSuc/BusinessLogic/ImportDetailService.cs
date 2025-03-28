@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MyQuanLyTrangSuc.BusinessLogic {
-    internal class ImportDetailService {
+    public class ImportDetailService {
         private readonly ImportDetailRepository importDetailRepository;
         private static ImportDetailService instance;
         public static ImportDetailService Instance { get { 

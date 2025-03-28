@@ -12,9 +12,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace MyQuanLyTrangSuc.ViewModel {
-    internal class ImportDetailsWindowLogic {
+    public class ImportDetailsWindowLogic {
 
-        private MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
 
         private readonly ImportDetailsWindow importDetailsWindowUI;
         private readonly ImportDetailService importDetailService = ImportDetailService.Instance;
@@ -35,6 +34,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
             ImportDetails = new ObservableCollection<ImportDetail>();
             importDetailService.LoadImportDetailsFromDatabase(SelectedImportRecord, ImportDetails);
         }
+
 
         //public void Print(ImportDetailsWindow printPage) {
         //    PrintDialog printDialog = new PrintDialog();
