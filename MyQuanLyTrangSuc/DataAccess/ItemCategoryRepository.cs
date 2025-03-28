@@ -24,7 +24,7 @@ namespace MyQuanLyTrangSuc.DataAccess
 
         public ProductCategory GetItemCategoryByDetails(string name)
         {
-            return context.ProductCategories.FirstOrDefault(s => s.Categoryname == name);
+            return context.ProductCategories.FirstOrDefault(s => s.CategoryName == name);
         }
 
         public void AddItemCategory(ProductCategory itemCategory)
@@ -59,7 +59,7 @@ namespace MyQuanLyTrangSuc.DataAccess
 
         public List<ProductCategory> SearchItemCategoryByName(string name)
         {
-            return context.ProductCategories.Where(i => i.Categoryname.Contains(name) && !i.IsNotMarketable).ToList();
+            return context.ProductCategories.Where(i => i.CategoryName.Contains(name) && !i.IsNotMarketable).ToList();
         }
 
         public List<ProductCategory> SearchItemCategoryByID(string id)

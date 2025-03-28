@@ -26,4 +26,10 @@ public partial class Employee
     public bool IsDeleted { get; set; }
 
     public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
+
+    public virtual ICollection<Import> Imports { get; set; } = new List<Import>();
+
+    public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+
+    public virtual ICollection<ServiceRecord> ServiceRecords { get; set; } = new List<ServiceRecord>();
 }

@@ -15,38 +15,39 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="EXPORT RECORD" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
+        <TextBlock Grid.Row="0" Text="INVOICE RECORD" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
         <DockPanel Grid.Row="1">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="40,0,0,0" HorizontalAlignment="Left">
                 <TextBlock Text="Record ID: " VerticalAlignment="Center" FontSize="16"/>
-                <TextBlock Text="{Binding SelectedExportRecord.id_export}" VerticalAlignment="Center" Margin="10,20,20,20" FontSize="16" FontWeight="Bold"/>
+                <TextBlock Text="{Binding SelectedInvoiceRecord.InvoiceId}" VerticalAlignment="Center" Margin="10,20,20,20" FontSize="16" FontWeight="Bold"/>
             </StackPanel>
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0,0,40,0" HorizontalAlignment="Right">
                 <TextBlock Text="Date: " VerticalAlignment="Center" FontSize="16"/>
-                <TextBlock Text="{Binding SelectedExportRecord.date_export}" VerticalAlignment="Center" Margin="10,20,20,20" FontWeight="Bold" FontSize="16"/>
+                <TextBlock Text="{Binding SelectedInvoiceRecord.Date}" VerticalAlignment="Center" Margin="10,20,20,20" FontWeight="Bold" FontSize="16"/>
             </StackPanel>
         </DockPanel>
         <Border Grid.Row="2" Margin="5">
-            <DataGrid Margin="5" AutoGenerateColumns="False" ItemsSource="{Binding ExportInfos}"
+            <DataGrid Margin="5" AutoGenerateColumns="False" ItemsSource="{Binding InvoiceDetails}"
                       IsReadOnly="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Index" Width="65" CanUserResize="False" Binding="{Binding ITEM.id_item}"/>
-                    <DataGridTextColumn Header="Name" Width="*" Binding="{Binding ITEM.Name_item}"/>
-                    <DataGridTextColumn Header="Type" Width="*" Binding="{Binding ITEM.Type_item}"/>
-                    <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding count_importinfo}"/>
-                    <DataGridTextColumn Header="Unit" Width="*" Binding="{Binding ITEM.Unit_item}"/>
-                    <DataGridTextColumn Header="Price" Width="*" Binding="{Binding ITEM.Price_item}"/>
+                    <DataGridTextColumn Header="Index" Width="65" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
+                    <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Product.Name}"/>
+                    <DataGridTextColumn Header="Category" Width="*" Binding="{Binding Product.Category.CategoryName}"/>
+                    <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
+                    <DataGridTextColumn Header="Unit" Width="*" Binding="{Binding Product.Category.Unit.UnitName}"/>
+                    <DataGridTextColumn Header="Price" Width="*" Binding="{Binding Price}"/>
+                    <DataGridTextColumn Header="Total" Width="*" Binding="{Binding TotalPrice}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
         <DockPanel Grid.Row="3">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="40,0,0,0" HorizontalAlignment="Left">
                 <TextBlock Text="Creator: " VerticalAlignment="Center" FontSize="16"/>
-                <TextBlock Text="{Binding SelectedExportRecord.EMPLOYEE.name_employee}" VerticalAlignment="Center" Margin="10,0,20,0" FontSize="16" FontWeight="Bold"/>
+                <TextBlock Text="{Binding SelectedInvoiceRecord.Employee.Name}" VerticalAlignment="Center" Margin="10,0,20,0" FontSize="16" FontWeight="Bold"/>
             </StackPanel>
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0,0,40,0" HorizontalAlignment="Right">
                 <TextBlock Text="To Customer: " VerticalAlignment="Center" FontSize="16"/>
-                <TextBlock Text="{Binding SelectedExportRecord.CUSTOMER.Name_customer}" VerticalAlignment="Center" Margin="10,0,20,0" FontWeight="Bold" FontSize="16"/>
+                <TextBlock Text="{Binding SelectedInvoiceRecord.Customer.CustomerName}" VerticalAlignment="Center" Margin="10,0,20,0" FontWeight="Bold" FontSize="16"/>
             </StackPanel>
         </DockPanel>
 
@@ -54,7 +55,7 @@
             <StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock Text="REVENUE: " FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding SelectedExportRecord.revenue_export}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10,0,10,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding SelectedInvoiceRecord.TotalAmount}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10,0,10,0" VerticalAlignment="Center"/>
                 </StackPanel>
                 <!--<TextBlock Text="After 4% Mark-up" FontSize="14" HorizontalAlignment="Center" Margin="10,0,10,10" FontStyle="Italic"/>-->
             </StackPanel>

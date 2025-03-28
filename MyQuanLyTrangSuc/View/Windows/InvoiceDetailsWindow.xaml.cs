@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,21 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class InvoiceDetailsWindow : Window
     {
+        MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
+
         public InvoiceDetailsWindow()
         {
             InitializeComponent();
+            Invoice selectedInvoiceRecord = context.Invoices.FirstOrDefault();
+            InvoiceDetailWindowLogic invoiceDetailWindowLogic = new InvoiceDetailWindowLogic(this, selectedInvoiceRecord);
+            this.DataContext = invoiceDetailWindowLogic;
+
         }
+        public InvoiceDetailsWindow(Invoice selectedInvoiceRecord) {
+            InitializeComponent();
+            InvoiceDetailWindowLogic invoiceDetailWindowLogic = new InvoiceDetailWindowLogic(this, selectedInvoiceRecord);
+            this.DataContext = invoiceDetailWindowLogic;
+        }
+
     }
 }

@@ -46,7 +46,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 notificationWindowLogic.LoadNotification("Error", "Item category is not found!", "BottomRight");
                 return false;
             }
-            if (!itemCategoryService.IsValidItemCategoryData(ItemCategory.Categoryname,ItemCategory.UnitId, ItemCategory.ProfitPercentage.ToString()))
+            if (!itemCategoryService.IsValidItemCategoryData(ItemCategory.CategoryName,ItemCategory.UnitId, ItemCategory.ProfitPercentage.ToString()))
             {
                 notificationWindowLogic.LoadNotification("Error", "Invalid item category data!", "BottomRight");
                 return false;

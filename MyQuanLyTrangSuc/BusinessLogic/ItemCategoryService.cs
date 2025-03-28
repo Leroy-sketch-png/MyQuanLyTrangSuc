@@ -86,7 +86,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                 if (itemCategory.IsNotMarketable)
                 {
                     itemCategory.IsNotMarketable = false;
-                    itemCategory.Categoryname = name;
+                    itemCategory.CategoryName = name;
                     itemCategory.UnitId = unitID;
                     itemCategory.ProfitPercentage = int.Parse(profitPercentage);
                     itemCategoryRepository.UpdateItemCategory(itemCategory);
@@ -98,7 +98,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             ProductCategory newItemCategory = new ProductCategory()
             {
                 CategoryId = GenerateNewItemCategoryID(),
-                Categoryname = name,
+                CategoryName = name,
                 UnitId = unitID,
                 ProfitPercentage = int.Parse(profitPercentage),
                 IsNotMarketable = false

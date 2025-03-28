@@ -1,4 +1,5 @@
-﻿using MyQuanLyTrangSuc.Model;
+﻿using MyQuanLyTrangSuc.BusinessLogic;
+using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,11 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace MyQuanLyTrangSuc.ViewModel {
-    internal class ImportDetailsWindowLogic {
+    public class ImportDetailsWindowLogic {
 
-        private MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
 
-        private ImportDetailsWindow importDetailsWindowUI;
+        private readonly ImportDetailsWindow importDetailsWindowUI;
+        private readonly ImportDetailService importDetailService = ImportDetailService.Instance;
 
         //DataContext Zone
         public Import SelectedImportRecord { get; set; }
@@ -31,15 +32,30 @@ namespace MyQuanLyTrangSuc.ViewModel {
             this.SelectedImportRecord = selectedImportRecord;
 
             ImportDetails = new ObservableCollection<ImportDetail>();
+            importDetailService.LoadImportDetailsFromDatabase(SelectedImportRecord, ImportDetails);
+        }
 
-            LoadImportDetailsFromDatabase();
-        }
-        public void LoadImportDetailsFromDatabase() {
-            List<ImportDetail> ImportDetailsFromDb = context.ImportDetails.Where(ii => ii.ImportId == SelectedImportRecord.ImportId).ToList();
-            foreach (ImportDetail ii in ImportDetailsFromDb) {
-                ImportDetails.Add(ii);
-            }
-        }
+
+        //public void Print(ImportDetailsWindow printPage) {
+        //    PrintDialog printDialog = new PrintDialog();
+
+        //    if (printDialog.ShowDialog() == true) {
+        //        // Lấy kích thước vùng in khả dụng từ máy in
+        //        double printableWidth = printDialog.PrintableAreaWidth;
+        //        double printableHeight = printDialog.PrintableAreaHeight;
+
+        //        // Vẽ nội dung của printPage vào DrawingVisual để có thể in chính xác
+        //        DrawingVisual drawingVisual = new DrawingVisual();
+        //        using (DrawingContext drawingContext = drawingVisual.RenderOpen()) {
+        //            // Tạo VisualBrush để sao chép nội dung của printPage
+        //            VisualBrush visualBrush = new VisualBrush(printPage);
+        //            drawingContext.DrawRectangle(visualBrush, null, new Rect(0, 0, printableWidth, printableHeight));
+        //        }
+
+        //        // In nội dung
+        //        printDialog.PrintVisual(drawingVisual, "Import");
+        //    }
+        //}
 
         //public void PrintImportRecord(ImportDetailsWindowUI printPage)
         //{
@@ -49,25 +65,5 @@ namespace MyQuanLyTrangSuc.ViewModel {
         //        printDialog.PrintVisual(printPage, "Import Record");
         //    }
         //}
-        public void Print(ImportDetailsWindow printPage) {
-            PrintDialog printDialog = new PrintDialog();
-
-            if (printDialog.ShowDialog() == true) {
-                // Lấy kích thước vùng in khả dụng từ máy in
-                double printableWidth = printDialog.PrintableAreaWidth;
-                double printableHeight = printDialog.PrintableAreaHeight;
-
-                // Vẽ nội dung của printPage vào DrawingVisual để có thể in chính xác
-                DrawingVisual drawingVisual = new DrawingVisual();
-                using (DrawingContext drawingContext = drawingVisual.RenderOpen()) {
-                    // Tạo VisualBrush để sao chép nội dung của printPage
-                    VisualBrush visualBrush = new VisualBrush(printPage);
-                    drawingContext.DrawRectangle(visualBrush, null, new Rect(0, 0, printableWidth, printableHeight));
-                }
-
-                // In nội dung
-                printDialog.PrintVisual(drawingVisual, "Import");
-            }
-        }
     }
 }

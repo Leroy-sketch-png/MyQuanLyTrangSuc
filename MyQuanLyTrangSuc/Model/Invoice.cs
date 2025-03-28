@@ -11,11 +11,15 @@ public partial class Invoice
 
     public string CustomerId { get; set; }
 
+    public string EmployeeId { get; set; }
+
     public DateTime? Date { get; set; }
 
     public decimal? TotalAmount { get; set; }
 
     public virtual Customer Customer { get; set; }
+
+    public virtual Employee Employee { get; set; }
 
     public virtual ICollection<InvoiceDetail> InvoiceDetails { get; set; } = new List<InvoiceDetail>();
 }
