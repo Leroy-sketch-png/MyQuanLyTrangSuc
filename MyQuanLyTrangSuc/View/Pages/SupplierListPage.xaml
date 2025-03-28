@@ -130,8 +130,8 @@
                 <DataGrid AutoGenerateColumns="False" IsReadOnly="True" 
                           CanUserSortColumns="True"
                           ItemsSource="{Binding Suppliers}" x:Name="supplierDataGrid" 
-                          Style="{DynamicResource DataGridStyle1}"  
-                          RowStyle="{DynamicResource DataGridRowStyle1}" 
+                          Style="{DynamicResource DataGridStyle1}"
+                          RowStyle="{DynamicResource DataGridRowStyle1}"
                           CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5"><!--MouseDoubleClick="supplierDataGrid_MouseDoubleClick" SelectedItem="{Binding SelectedSupplier, Mode=TwoWay}"-->
                     <DataGrid.Columns>
 
