@@ -7,12 +7,11 @@
              xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
 
-             StartupUri="View/Pages/UnitListPage.xaml"
+             StartupUri="View/Windows/AddImportWindow.xaml"
     xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
     xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
     xmlns:internal="clr-namespace:MaterialDesignThemes.Wpf.Internal;assembly=MaterialDesignThemes.Wpf">
 
-             StartupUri="View/Windows/ImportDetailsWindow.xaml">
     <Application.Resources>
 
 
