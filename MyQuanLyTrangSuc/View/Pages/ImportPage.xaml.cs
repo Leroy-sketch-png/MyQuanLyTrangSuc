@@ -1,28 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MyQuanLyTrangSuc.Model;
+using PhanMemQuanLyVatTu.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MyQuanLyTrangSuc.View
 {
     /// <summary>
-    /// Interaction logic for ImportRecordPage.xaml
+    /// Interaction logic for ImportPage.xaml
     /// </summary>
     public partial class ImportPage : Page
     {
+        private readonly ImportPageLogic logicService;
+
         public ImportPage()
         {
             InitializeComponent();
+            logicService = new ImportPageLogic(this);
+            DataContext = logicService;
+        }
+
+        private void OnClick_AddRecord_ImportRecordPage(object sender, RoutedEventArgs e)
+        {
+            logicService.LoadAddRecordWindow();
+        }
+
+        private void OnDoubleClick_InspectRecord_ExportRecordPageDataGrid(object sender, MouseButtonEventArgs e)
+        {
+            logicService.LoadImportDetailsWindow();
+        }
+
+        private void viewButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.LoadImportDetailsWindow();
+        }
+
+        private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            searchTextBlock.Text = "";
+            if (searchComboBox.SelectedItem != null)
+            {
+                string selectedCriteria = (searchComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+                switch (selectedCriteria)
+                {
+                    case "Supplier":
+                        logicService.ImportsSearchByNameOfSupplier(searchTextBox.Text);
+                        break;
+                    case "ID":
+                        logicService.ImportsSearchByID(searchTextBox.Text);
+                        break;
+                    case "Date":
+                        logicService.ImportsSearchByDate(searchTextBox.Text);
+                        break;
+                }
+            }
+            if (string.IsNullOrEmpty(searchTextBox.Text))
+            {
+                searchTextBlock.Text = "Search";
+            }
+        }
+
+        private void printButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.PrintImportRecord();
         }
     }
 }
