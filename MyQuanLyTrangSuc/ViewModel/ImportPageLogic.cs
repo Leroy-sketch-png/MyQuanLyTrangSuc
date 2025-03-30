@@ -1,5 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.BusinessLogic;
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
 using System;
@@ -15,6 +16,7 @@ namespace PhanMemQuanLyVatTu.ViewModel
     {
         private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
         private readonly ImportPage importRecordPageUI;
+        private readonly ImportService importService;
 
         // DataContext Zone
         public ObservableCollection<Import> ImportRecords { get; set; }
@@ -24,16 +26,26 @@ namespace PhanMemQuanLyVatTu.ViewModel
             this.importRecordPageUI = importRecordPageUI;
             ImportRecords = new ObservableCollection<Import>();
             LoadRecordsFromDatabase();
-            context.OnImportAdded += Context_OnImportAdded;
+            importService = ImportService.Instance;
+            //context.OnImportAdded += Context_OnImportAdded;
+            importService.OnImportAdded += ImportService_OnImportAdded;
         }
 
-        private void Context_OnImportAdded(Import import)
+        private void ImportService_OnImportAdded(Import import)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
                 ImportRecords.Add(import);
             });
         }
+
+        //private void Context_OnImportAdded(Import import)
+        //{
+        //    Application.Current.Dispatcher.Invoke(() =>
+        //    {
+        //        ImportRecords.Add(import);
+        //    });
+        //}
 
         private void LoadRecordsFromDatabase()
         {

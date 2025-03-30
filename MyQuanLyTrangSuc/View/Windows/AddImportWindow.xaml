@@ -22,14 +22,16 @@
                     <StackPanel Grid.Column="0" Margin="0,0,10,0">
                         <StackPanel Margin="0,0,0,10">
                             <TextBlock Text="Item's ID | Item's Name" FontSize="14" FontWeight="Medium"/>
-                            <ComboBox x:Name="ImportItemComboBox" FontSize="14" Margin="0,5,0,0" SelectedValuePath="ITEM" ItemsSource="{Binding Items}">
-                                <!--SelectionChanged="OnSelectionChanged_ItemComboBox_AddImportRecordWindow"-->
+                            <ComboBox x:Name="ImportItemComboBox" FontSize="14" 
+                                      Margin="0,5,0,0" SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                                      ItemsSource="{Binding Items}" SelectionChanged="ImportItemComboBox_SelectionChanged"
+                                      >
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding id_item}" />
+                                            <TextBlock Text="{Binding ProductId}"/>
                                             <TextBlock Text=" | " />
-                                            <TextBlock Text="{Binding Name_item}" />
+                                            <TextBlock Text="{Binding Name}" /> 
                                         </StackPanel>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
@@ -41,7 +43,9 @@
                         </StackPanel>
                         <StackPanel Margin="0,0,0,10">
                             <TextBlock Text="Quantity" FontSize="14" FontWeight="Medium"/>
-                            <TextBox x:Name="ImportQuantityTextBox" FontSize="14" Margin="0,5,0,0"/>
+                            <TextBox x:Name="ImportQuantityTextBox" FontSize="14" Margin="0,5,0,0"
+                                     Text="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, StringFormat=N0}"
+                                     />
                             <!--PreviewTextInput="OnPreviewTextInput_ImportQuantityTextBox_AddImportRecordWindow"
                             DataObject.Pasting="OnPasting_ImportQuantityTextBox_AddImportRecordWindow"-->
                         </StackPanel>
@@ -53,13 +57,15 @@
                         </StackPanel>
                         <StackPanel Margin="0,0,0,10">
                             <TextBlock Text="Supplier's ID | Supplier's Name" FontSize="14" FontWeight="Medium"/>
-                            <ComboBox x:Name="ImportSupplierComboBox" FontSize="14" Margin="0,5,0,0" SelectedValuePath="SUPPLIER" ItemsSource="{Binding Suppliers}">
+                            <ComboBox x:Name="ImportSupplierComboBox" FontSize="14" 
+                                      Margin="0,5,0,0" SelectedValuePath="SUPPLIER" 
+                                      ItemsSource="{Binding Suppliers}" SelectedItem="{Binding SelectedSupplier, Mode=TwoWay}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding id_supplier}" />
+                                            <TextBlock Text="{Binding SupplierId}" />
                                             <TextBlock Text=" | " />
-                                            <TextBlock Text="{Binding Name_supplier}" />
+                                            <TextBlock Text="{Binding Name}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
@@ -68,37 +74,57 @@
                     </StackPanel>
                 </Grid>
                 <DockPanel HorizontalAlignment="Stretch" Margin="0,10,0,10">
-                    <Button DockPanel.Dock="Left" Content="Add" Background="#BFDBFE" Foreground="#1E40AF" Padding="10,5" Margin="0,0,5,0"/>
-                    <!--Click="OnClick_AddImportInfo_AddExportRecordWindow"-->
-                    <Button DockPanel.Dock="Left" Content="Clear" Background="#BFDBFE" Foreground="#1E40AF" Padding="10,5" Margin="0,0,5,0"
+                    <Button DockPanel.Dock="Left" Content="Add" 
+                            Background="#BFDBFE" Foreground="#1E40AF" 
+                            Padding="10,5" Margin="0,0,5,0"
+                            Name="addImportDetailBtn" Click="addImportDetailBtn_Click"
+                            />
+                    <!--<Button DockPanel.Dock="Left" Content="Clear" Background="#BFDBFE" 
+                            Foreground="#1E40AF" Padding="10,5" Margin="0,0,5,0"
                             ToolTipService.InitialShowDelay="1000"
-                            ToolTipService.ShowDuration="10000">
-                        <!--Click="OnClick_ClearImportInfo_AddExportRecordWindow"-->
+                            ToolTipService.ShowDuration="10000"
+                            x:Name="clearImportDetailBtn"
+                            >
                         <Button.ToolTip>
                             <ToolTip>
                                 <TextBlock Text="Clear the record of the current item selected above"/>
                             </ToolTip>
                         </Button.ToolTip>
-                    </Button>
-                    <Button DockPanel.Dock="Right" Content="Apply Importing" Background="#BFDBFE" Foreground="#1E40AF" Padding="10,5" HorizontalAlignment="Right"/>
+                    </Button>-->
+                    <Button DockPanel.Dock="Right" Content="Apply Importing" 
+                            Background="#BFDBFE" Foreground="#1E40AF" 
+                            Padding="10,5" HorizontalAlignment="Right"
+                            x:Name="applyImportBtn" Click="applyImportBtn_Click"
+                            />
                     <!--Click="OnClick_ApplyImport_AddImportRecordWindow"-->
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Items" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" HorizontalAlignment="Left"/>
                     <Border DockPanel.Dock="Right" Width="150">
-                        <TextBlock FontSize="16" Text="{Binding GrandTotal}" FontWeight="Light"/>
+                        <TextBlock FontSize="16" Text="{Binding GrandTotal, StringFormat=C}" FontWeight="Light"/>
                     </Border>
                     <TextBlock DockPanel.Dock="Right" Text="Grand Total: " FontSize="16" FontWeight="Bold" HorizontalAlignment="Right"/>
                 </DockPanel>
             </StackPanel>
 
-            <DataGrid Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" Background="White" IsReadOnly="True" ItemsSource="{Binding ImportInfos}" HeadersVisibility="Column" VerticalScrollBarVisibility="Auto">
+            <DataGrid Grid.Row="1" 
+                      x:Name="importDetailsDataGrid"
+                      AutoGenerateColumns="False" 
+                      CanUserAddRows="False" 
+                      Background="White" 
+                      IsReadOnly="True" 
+                      ItemsSource="{Binding ImportDetails}" 
+                      HeadersVisibility="Column" 
+                      VerticalScrollBarVisibility="Auto"
+                      MouseDoubleClick="importDetailsDataGrid_MouseDoubleClick"
+                      >
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Index" Width="65" CanUserResize="False" Binding="{Binding ITEM.id_item}"/>
-                    <DataGridTextColumn Header="Product" Width="*" Binding="{Binding ITEM.Name_item}"/>
-                    <DataGridTextColumn Header="Category" Width="*" Binding="{Binding ITEM.Type_item}"/>
-                    <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding count_importinfo}"/>
-                    <DataGridTextColumn Header="Price" Width="*" Binding="{Binding ITEM.Price_item}"/>
+                    <DataGridTextColumn Header="Index" Width="65" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
+                    <DataGridTextColumn Header="Product" Width="*" Binding="{Binding Product.Name}"/>
+                    <DataGridTextColumn Header="Category" Width="*" Binding="{Binding Product.Category.CategoryName}"/>
+                    <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
+                    <DataGridTextColumn Header="Price" Width="*" Binding="{Binding Product.Price}"/>
+                     
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
