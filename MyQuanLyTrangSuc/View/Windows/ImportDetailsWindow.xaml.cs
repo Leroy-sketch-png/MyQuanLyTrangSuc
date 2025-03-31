@@ -17,7 +17,7 @@ using System.Windows.Shapes;
 namespace MyQuanLyTrangSuc.View
 {
     /// <summary>
-    /// Interaction logic for ImportDetailsWindow.xaml
+    /// Interaction logic for ImportDetailsWindowUI.xaml
     /// </summary>
     public partial class ImportDetailsWindow : Window
     {
