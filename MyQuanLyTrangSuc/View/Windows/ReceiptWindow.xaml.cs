@@ -21,15 +21,21 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class ReceiptWindow : Window
     {
+        MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
+        private InvoiceDetailWindowLogic logicService;
+
         public ReceiptWindow()
         {
             InitializeComponent();
+            Invoice selectedInvoiceRecord = context.Invoices.FirstOrDefault();
+            logicService = new InvoiceDetailWindowLogic(this, selectedInvoiceRecord);
+            DataContext = logicService;
+
         }
-        //private InvoiceDetailWindowLogic logicService;
         public ReceiptWindow(Invoice selectedInvoiceRecord) {
             InitializeComponent();
-            //logicService = new InvoiceDetailWindowLogic(this, selectedInvoiceRecord);
-            //DataContext = logicService;
+            logicService = new InvoiceDetailWindowLogic(this, selectedInvoiceRecord);
+            DataContext = logicService;
         }
 
         internal void Measure(System.Drawing.Size pageSize) {
@@ -37,7 +43,7 @@ namespace MyQuanLyTrangSuc.View
         }
 
         private void printButton_Click(object sender, RoutedEventArgs e) {
-            //logicService.PrintReceipt(this);
+            logicService.PrintReceipt();
             this.Activate();
         }
     }

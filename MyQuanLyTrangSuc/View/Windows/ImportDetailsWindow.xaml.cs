@@ -25,7 +25,6 @@ namespace MyQuanLyTrangSuc.View
         public ImportDetailsWindow()
         {
             InitializeComponent();
-
             //Import selectedImportRecord = context.Imports.FirstOrDefault();
             //ImportDetailsWindowLogic importDetailsWindowLogic = new ImportDetailsWindowLogic(this, selectedImportRecord);
             //this.DataContext = importDetailsWindowLogic;
