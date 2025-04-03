@@ -1,27 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MyQuanLyTrangSuc.ViewModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MyQuanLyTrangSuc.View.Windows
 {
-    /// <summary>
-    /// Interaction logic for AddServiceCategoryWindow.xaml
-    /// </summary>
     public partial class AddServiceCategoryWindow : Window
     {
+        public AddServiceCategoryWindowLogic Logic { get; }
+
         public AddServiceCategoryWindow()
         {
             InitializeComponent();
+            Logic = new AddServiceCategoryWindowLogic(this); // Inject UI reference vào Logic
+            DataContext = Logic; // Đặt DataContext để Binding hoạt động
+        }
+
+        // Button Click events gọi Logic để xử lý
+        private void OnAddCategoryButtonClick(object sender, RoutedEventArgs e)
+        {
+            Logic.AddCategory();
+        }
+
+        private void OnCancelButtonClick(object sender, RoutedEventArgs e)
+        {
+            Logic.Cancel();
         }
     }
 }
