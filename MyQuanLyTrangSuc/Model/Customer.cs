@@ -9,7 +9,7 @@ public partial class Customer
 {
     public string CustomerId { get; set; }
 
-    public string CustomerName { get; set; }
+    public string Name { get; set; }
 
     public string ContactNumber { get; set; }
 
