@@ -21,7 +21,7 @@ namespace MyQuanLyTrangSuc.DataAccess
         }
         public Customer GetCustomerByDetails(string name, string email, string phone)
         {
-            return context.Customers.FirstOrDefault(c => c.CustomerName == name && c.Email == email && c.ContactNumber == phone);
+            return context.Customers.FirstOrDefault(c => c.Name == name && c.Email == email && c.ContactNumber == phone);
         }
         public void AddCustomer(Customer customer)
         {
@@ -56,7 +56,7 @@ namespace MyQuanLyTrangSuc.DataAccess
         //for search options
         public List<Customer> SearchCustomerByName(string name)
         {
-            return context.Customers.Where(c => c.CustomerName.Contains(name) && !c.IsDeleted).ToList();
+            return context.Customers.Where(c => c.Name.Contains(name) && !c.IsDeleted).ToList();
         }
 
         public List<Customer> SearchCustomerByID(string id)

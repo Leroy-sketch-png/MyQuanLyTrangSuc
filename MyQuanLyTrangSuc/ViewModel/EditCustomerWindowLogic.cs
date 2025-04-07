@@ -46,7 +46,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 return false;
             }
 
-            if (!customerService.IsValidCustomerData(Customer.CustomerName, Customer.Email, Customer.ContactNumber))
+            if (!customerService.IsValidCustomerData(Customer.Name, Customer.Email, Customer.ContactNumber))
             {
                 notificationWindowLogic.LoadNotification("Error", "Invalid customer data!", "BottomRight");
                 return false;

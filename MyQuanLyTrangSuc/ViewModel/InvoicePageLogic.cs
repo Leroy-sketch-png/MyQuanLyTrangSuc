@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.BusinessLogic;
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -13,6 +15,7 @@ namespace MyQuanLyTrangSuc.ViewModel
     {
         private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
         private readonly InvoicePage invoicePageUI;
+        private readonly InvoiceService invoiceService;
 
         // DataContext Zone
         public ObservableCollection<Invoice> Invoices { get; set; }
@@ -22,7 +25,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             this.invoicePageUI = invoicePageUI;
             Invoices = new ObservableCollection<Invoice>();
             LoadRecordsFromDatabase();
-            context.OnInvoiceAdded += Context_OnInvoiceAdded;
+            invoiceService = InvoiceService.Instance;
+            invoiceService.OnInvoiceAdded += Context_OnInvoiceAdded;
         }
 
         private void Context_OnInvoiceAdded(Invoice invoice)
@@ -61,6 +65,16 @@ namespace MyQuanLyTrangSuc.ViewModel
             AddInvoiceWindow addInvoiceWindowUI = new AddInvoiceWindow();
             addInvoiceWindowUI.ShowDialog();
         }
+        public void LoadInvoiceDetailsWindow()
+        {
+            if (invoicePageUI.InvoicesDataGrid.SelectedItem is Invoice selectedInvoice)
+            {
+                InvoiceDetailsWindow invoiceDetailsWindowUI = new InvoiceDetailsWindow(selectedInvoice);
+                invoiceDetailsWindowUI.ShowDialog();
+            }
+        }
+
+
 
         //public void LoadInvoiceDetailsWindow()
         //{
@@ -91,7 +105,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 Invoices.Clear();
                 foreach (Invoice invoice in invoicesFromDb)
                 {
-                    if (invoice.Customer.CustomerName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (invoice.Customer.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         Invoices.Add(invoice);
                     }
@@ -158,6 +172,34 @@ namespace MyQuanLyTrangSuc.ViewModel
                     }
                 }
             });
+        }
+        public void PrintInvoiceRecord()
+        {
+            if (invoicePageUI.InvoicesDataGrid.SelectedItem is Invoice selectedInvoice)
+            {
+                var printPage = new ReceiptWindow(selectedInvoice);
+                var printDialog = new PrintDialog();
+                if (printDialog.ShowDialog() == true)
+                {
+                    printPage.ShowDialog();
+                    printDialog.PrintVisual(printPage, "Invoice Record");
+                    printPage.Close();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select an invoice record to print.", "Print Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+        }
+
+        public void LoadInvoiceWindow()
+        {
+            if (invoicePageUI.InvoicesDataGrid.SelectedItem is Invoice selectedInvoice)
+            {
+                ReceiptWindow receiptWindowUI = new ReceiptWindow(selectedInvoice);
+                receiptWindowUI.ShowDialog();
+            }
         }
     }
 }

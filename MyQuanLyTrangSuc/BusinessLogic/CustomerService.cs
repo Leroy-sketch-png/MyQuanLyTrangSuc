@@ -80,7 +80,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                 if (customer.IsDeleted)
                 {
                     customer.IsDeleted = false;
-                    customer.CustomerName = name;
+                    customer.Name = name;
                     customer.Email = email;
                     customer.ContactNumber = phone;
                     customer.DateOfBirth = birthday.HasValue ? birthday.Value : default;
@@ -96,7 +96,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             Customer newCustomer = new Customer()
             {
                 CustomerId = GenerateNewCustomerID(),
-                CustomerName = name,
+                Name = name,
                 ContactNumber = phone,
                 Email = email,
                 DateOfBirth = birthday.HasValue ? birthday.Value : default,
@@ -206,7 +206,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                         Customer cus = new Customer()
                         {
                             CustomerId = GenerateNewCustomerID(),
-                            CustomerName = name,
+                            Name = name,
                             Email = email,
                             ContactNumber = phone,
                             Address = address,

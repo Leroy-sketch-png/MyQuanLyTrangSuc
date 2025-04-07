@@ -47,7 +47,7 @@
             </StackPanel>
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0,0,40,0" HorizontalAlignment="Right">
                 <TextBlock Text="To Customer: " VerticalAlignment="Center" FontSize="16"/>
-                <TextBlock Text="{Binding SelectedInvoiceRecord.Customer.CustomerName}" VerticalAlignment="Center" Margin="10,0,20,0" FontWeight="Bold" FontSize="16"/>
+                <TextBlock Text="{Binding SelectedInvoiceRecord.Customer.Name}" VerticalAlignment="Center" Margin="10,0,20,0" FontWeight="Bold" FontSize="16"/>
             </StackPanel>
         </DockPanel>
 

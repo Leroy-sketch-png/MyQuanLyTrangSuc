@@ -91,24 +91,25 @@
 
                 <!--Invoices DataGrid-->
                 <DataGrid x:Name="InvoicesDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" Grid.Row="5"
-                          ItemsSource="{Binding Invoices}"
-                          ><!--MouseDoubleClick="OnDoubleClick_InspectRecord_InvoicePageDataGrid"-->
+                          ItemsSource="{Binding Invoices}" MouseDoubleClick="OnDoubleClick_InspectRecord_InvoicePageDataGrid"
+                          >
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="False" Width="80" Binding="{Binding InvoiceId}"/>
                         <DataGridTextColumn Header="Date" IsReadOnly="True" Width="*" Binding="{Binding Date, StringFormat=d}"/>
-                        <DataGridTextColumn Header="Customer" IsReadOnly="True" Width="*" Binding="{Binding Customer.CustomerName}"/>
+                        <DataGridTextColumn Header="Customer" IsReadOnly="True" Width="*" Binding="{Binding Customer.Name}"/>
                         <DataGridTextColumn Header="Total Amount" IsReadOnly="True" Width="*" Binding="{Binding TotalAmount}"/>
                         <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button Margin="0 0 3 0"
-                                                x:Name="viewButton" Style="{StaticResource gridEditButton}"
-                                                ><!--Click="viewButton_Click"-->
+                                        <Button Margin="0 0 3 0" Click="viewButton_Click"
+                                                x:Name="viewButton" Style="{StaticResource gridEditButton}" 
+                                                >
                                             <Icon:PackIconMaterial Kind="ViewListOutline" Style="{StaticResource gridButtonIcon}" />
                                         </Button>
-                                        <Button Margin="3 0 0 0" x:Name="printButton" Style="{StaticResource gridEditButton}"
-                                                ><!--Click="printButton_Click"-->
+                                        <Button Margin="3 0 0 0" x:Name="printButton" 
+                                                Style="{StaticResource gridEditButton}" Click="printButton_Click"
+                                                >
                                             <Icon:PackIconMaterial Kind="Printer" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>

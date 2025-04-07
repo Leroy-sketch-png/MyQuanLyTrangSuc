@@ -24,14 +24,15 @@
                     <StackPanel Grid.Column="0" Margin="0,0,10,0">
                         <StackPanel Margin="0,0,0,10">
                             <TextBlock Text="Item's ID | Item's Name" FontSize="14" FontWeight="Medium"/>
-                            <ComboBox x:Name="ExportItemComboBox" FontSize="14" Margin="0,5,0,0" SelectedValuePath="ITEM" ItemsSource="{Binding Items}">
-                                <!--SelectionChanged="OnSelectionChanged_ItemComboBox_AddExportRecordWindow"-->
+                            <ComboBox x:Name="ExportItemComboBox" FontSize="14" 
+                                      Margin="0,5,0,0" SelectedValuePath="ITEM" 
+                                      ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding id_item}" />
+                                            <TextBlock Text="{Binding ProductId}" />
                                             <TextBlock Text=" | " />
-                                            <TextBlock Text="{Binding Name_item}" />
+                                            <TextBlock Text="{Binding Name}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
@@ -43,7 +44,9 @@
                         </StackPanel>
                         <StackPanel Margin="0,0,0,10">
                             <TextBlock Text="Quantity" FontSize="14" FontWeight="Medium"/>
-                            <TextBox x:Name="ExportQuantityTextBox" FontSize="14" Margin="0,5,0,0"/>
+                            <TextBox x:Name="ExportQuantityTextBox" FontSize="14" Margin="0,5,0,0"
+                                     Text="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, StringFormat=N0}"
+                                     />
                             <!--PreviewTextInput="OnPreviewTextInput_ExportQuantityTextBox_AddExportRecordWindow"
                             DataObject.Pasting="OnPasting_ExportQuantityTextBox_AddExportRecordWindow"-->
                         </StackPanel>
@@ -55,13 +58,14 @@
                         </StackPanel>
                         <StackPanel Margin="0,0,0,10">
                             <TextBlock Text="Customer's ID | Customer's Name" FontSize="14" FontWeight="Medium"/>
-                            <ComboBox x:Name="ExportCustomerComboBox" FontSize="14" Margin="0,5,0,0" SelectedValuePath="CUSTOMER" ItemsSource="{Binding Customers}">
+                            <ComboBox x:Name="ExportCustomerComboBox" FontSize="14" Margin="0,5,0,0" SelectedValuePath="CUSTOMER" 
+                                      ItemsSource="{Binding Customers}" SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding id_customer}" />
+                                            <TextBlock Text="{Binding CustomerId}" />
                                             <TextBlock Text=" | " />
-                                            <TextBlock Text="{Binding Name_customer}" />
+                                            <TextBlock Text="{Binding Name}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
@@ -70,8 +74,13 @@
                     </StackPanel>
                 </Grid>
                 <DockPanel HorizontalAlignment="Stretch" Margin="0,10,0,10">
-                    <Button DockPanel.Dock="Left" Content="Add" Background="#BFDBFE" Foreground="#1E40AF" Padding="10,5" Margin="0,0,5,0"/>
-                    <!--Click="OnClick_AddExportInfo_AddExportRecordWindow"-->
+                    <Button DockPanel.Dock="Left" Content="Add" 
+                            Background="#BFDBFE" Foreground="#1E40AF" 
+                            Padding="10,5" Margin="0,0,5,0"
+                            Click="addInvoiceDetailBtn_Click"  x:Name="addInvoiceDetailBtn"
+                            />
+                    
+                    
                     <Button DockPanel.Dock="Left" Content="Clear" Background="#BFDBFE" Foreground="#1E40AF" Padding="10,5" Margin="0,0,5,0"
                             ToolTipService.InitialShowDelay="1000"
                             ToolTipService.ShowDuration="10000">
@@ -82,24 +91,41 @@
                             </ToolTip>
                         </Button.ToolTip>
                     </Button>
-                    <Button DockPanel.Dock="Right" Content="Apply Exporting" Background="#BFDBFE" Foreground="#1E40AF" Padding="10,5" HorizontalAlignment="Right"/>
-                    <!--Click="OnClick_ApplyExport_AddExportRecordWindow"-->
+                    <Button x:Name="applyInvoiceBtn"
+                            DockPanel.Dock="Right" 
+                            Content="Apply Exporting" 
+                            Background="#BFDBFE" 
+                            Foreground="#1E40AF" 
+                            Padding="10,5" 
+                            HorizontalAlignment="Right"
+                            Click="applyInvoiceBtn_Click"
+                            />
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Items" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" HorizontalAlignment="Left"/>
                     <Border DockPanel.Dock="Right" Width="150">
-                        <TextBlock FontSize="16" Text="{Binding GrandTotal}" FontWeight="Light"/>
+                        <TextBlock FontSize="16" Text="{Binding GrandTotal, StringFormat=C}" FontWeight="Light"/>
                     </Border>
                     <TextBlock DockPanel.Dock="Right" Text="Grand Total: " FontSize="16" FontWeight="Bold" HorizontalAlignment="Right"/>
                 </DockPanel>
             </StackPanel>
             <!-- Header DataGrid -->
-            <DataGrid Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" Background="White" IsReadOnly="True" ItemsSource="{Binding ExportInfos}" HeadersVisibility="Column" VerticalScrollBarVisibility="Auto">
+            <DataGrid x:Name="invoiceDetailsDatagrid"
+                      Grid.Row="1" 
+                      AutoGenerateColumns="False" 
+                      CanUserAddRows="False" 
+                      Background="White" 
+                      IsReadOnly="True" 
+                      ItemsSource="{Binding InvoiceDetails}" 
+                      HeadersVisibility="Column" 
+                      VerticalScrollBarVisibility="Auto"
+                      MouseDoubleClick="invoiceDetailsDatagrid_MouseDoubleClick"
+                      >
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Width="80" CanUserResize="False" Binding="{Binding id_item}"/>
-                    <DataGridTextColumn Header="Name" Width="*" Binding="{Binding ITEM.Name_item}"/>
-                    <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding Count_exportinfo}"/>
-                    <DataGridTextColumn Header="Total" Width="*" Binding="{Binding Total}"/>
+                    <DataGridTextColumn Header="ID" Width="80" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
+                    <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Product.Name}"/>
+                    <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
+                    <DataGridTextColumn Header="Total" Width="*" Binding="{Binding TotalPrice}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

@@ -24,15 +24,15 @@ namespace MyQuanLyTrangSuc.View
             logicService.LoadAddInvoiceWindow();
         }
 
-        //private void OnDoubleClick_InspectRecord_InvoicePageDataGrid(object sender, MouseButtonEventArgs e)
-        //{
-        //    logicService.LoadInvoiceDetailsWindow();
-        //}
+        private void OnDoubleClick_InspectRecord_InvoicePageDataGrid(object sender, MouseButtonEventArgs e)
+        {
+            logicService.LoadInvoiceDetailsWindow();
+        }
 
-        //private void viewButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    logicService.LoadExportDetailsWindow();
-        //}
+        private void viewButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.LoadInvoiceDetailsWindow();
+        }
 
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -59,9 +59,9 @@ namespace MyQuanLyTrangSuc.View
             }
         }
 
-        //private void printButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    logicService.LoadReceiptWindow();
-        //}
+        private void printButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.LoadInvoiceWindow();
+        }
     }
 }

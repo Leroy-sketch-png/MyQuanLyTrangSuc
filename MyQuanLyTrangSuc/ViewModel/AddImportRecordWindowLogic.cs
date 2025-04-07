@@ -126,7 +126,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 ProductId = SelectedItem.ProductId,
                 Quantity = Quantity,
                 Price = SelectedItem.Price,
-                TotalPrice = (decimal)(Quantity * SelectedItem.Price),
+                TotalPrice = (Quantity * SelectedItem.Price),
                 Product = SelectedItem
             };
             ImportDetails.Add(importDetail);
