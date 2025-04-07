@@ -195,7 +195,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasColumnName("contactNumber");
             entity.Property(e => e.CustomerName)
                 .HasMaxLength(255)
-                .HasColumnName("customerName");
+                .HasColumnName("name");
             entity.Property(e => e.DateOfBirth)
                 .HasColumnType("datetime")
                 .HasColumnName("dateOfBirth");
@@ -640,4 +640,5 @@ public partial class MyQuanLyTrangSucContext : DbContext
             optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=LAPTOP-TNOFNAMI\\SQLEXPRESS;Database=MyQuanLyTrangSuc;TrustServerCertificate=True;Trusted_Connection=True");
         }
     }
+
 }

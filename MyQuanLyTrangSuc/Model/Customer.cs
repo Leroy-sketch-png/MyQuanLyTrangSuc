@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyQuanLyTrangSuc.Model;
 
@@ -9,6 +10,7 @@ public partial class Customer
 {
     public string CustomerId { get; set; }
 
+    [Column("name")]
     public string CustomerName { get; set; }
 
     public string ContactNumber { get; set; }
