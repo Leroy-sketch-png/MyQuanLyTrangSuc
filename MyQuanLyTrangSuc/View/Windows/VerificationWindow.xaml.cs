@@ -31,7 +31,6 @@ namespace MyQuanLyTrangSuc.View
 
         private void sendButton_Click(object sender, RoutedEventArgs e)
         {
-
             resetPasswordLogic.SendCode(emailTextBox);
         }
 

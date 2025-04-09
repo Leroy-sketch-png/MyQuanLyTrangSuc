@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MyQuanLyTrangSuc.DataAccess {
-    internal class ImportDetailRepository {
+    public class ImportDetailRepository {
         MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
         public List<ImportDetail> LoadImportDetailsFromDatabase(Import SelectedImportRecord) {
             List<ImportDetail> ImportDetailsFromDb = context.ImportDetails.Where(ii => ii.ImportId == SelectedImportRecord.ImportId).ToList();

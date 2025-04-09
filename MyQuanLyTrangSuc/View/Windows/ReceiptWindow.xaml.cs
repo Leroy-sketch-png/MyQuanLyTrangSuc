@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,30 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class ReceiptWindow : Window
     {
+        MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
+        private InvoiceDetailWindowLogic logicService;
+
         public ReceiptWindow()
         {
             InitializeComponent();
+            Invoice selectedInvoiceRecord = context.Invoices.FirstOrDefault();
+            logicService = new InvoiceDetailWindowLogic(this, selectedInvoiceRecord);
+            DataContext = logicService;
+
+        }
+        public ReceiptWindow(Invoice selectedInvoiceRecord) {
+            InitializeComponent();
+            logicService = new InvoiceDetailWindowLogic(this, selectedInvoiceRecord);
+            DataContext = logicService;
+        }
+
+        internal void Measure(System.Drawing.Size pageSize) {
+            throw new NotImplementedException();
+        }
+
+        private void printButton_Click(object sender, RoutedEventArgs e) {
+            logicService.PrintReceipt();
+            this.Activate();
         }
     }
 }

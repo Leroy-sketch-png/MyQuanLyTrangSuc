@@ -17,18 +17,17 @@ using System.Windows.Shapes;
 namespace MyQuanLyTrangSuc.View
 {
     /// <summary>
-    /// Interaction logic for ImportDetailsWindow.xaml
+    /// Interaction logic for ImportDetailsWindowUI.xaml
     /// </summary>
     public partial class ImportDetailsWindow : Window
     {
-        MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
+        //MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
         public ImportDetailsWindow()
         {
             InitializeComponent();
-
-            Import selectedImportRecord = context.Imports.FirstOrDefault();
-            ImportDetailsWindowLogic importDetailsWindowLogic = new ImportDetailsWindowLogic(this, selectedImportRecord);
-            this.DataContext = importDetailsWindowLogic;
+            //Import selectedImportRecord = context.Imports.FirstOrDefault();
+            //ImportDetailsWindowLogic importDetailsWindowLogic = new ImportDetailsWindowLogic(this, selectedImportRecord);
+            //this.DataContext = importDetailsWindowLogic;
 
         }
         public ImportDetailsWindow(Import selectedImportRecord) {
