@@ -85,6 +85,15 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         return result;
     }
+    public int SaveChangesAdded(Service service)
+    {
+
+        int result = base.SaveChanges();
+
+        OnServiceAdded?.Invoke(service);
+
+        return result;
+    }
     public void ResetEmployees() {
         OnEmployeesReset?.Invoke();
     }
@@ -103,6 +112,8 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
     public event Action<Employee> OnEmployeeAdded;
     public event Action OnEmployeesReset;
+
+    public event Action<Service> OnServiceAdded;
 
     public virtual DbSet<Account> Accounts { get; set; }
 
@@ -637,7 +648,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
             //Your server goes here!
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=VIET-ANH;Database=MyQuanLyTrangSuc;TrustServerCertificate=True;Trusted_Connection=True");
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=VIET-ANH;Database=MyQuanLyTrangSuc2;TrustServerCertificate=True;Trusted_Connection=True");
         }
     }
 }
