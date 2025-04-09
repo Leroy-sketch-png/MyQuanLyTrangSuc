@@ -1,27 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MyQuanLyTrangSuc.Model;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MyQuanLyTrangSuc.View.Windows
 {
-    /// <summary>
-    /// Interaction logic for EditServiceCategoryWindow.xaml
-    /// </summary>
     public partial class EditServiceCategoryWindow : Window
     {
-        public EditServiceCategoryWindow()
+        private EditServiceWindowLogic _logic;
+
+        public EditServiceCategoryWindow(Service serviceToEdit)
         {
             InitializeComponent();
+            _logic = new EditServiceWindowLogic(this, serviceToEdit);
+            this.DataContext = serviceToEdit; // Binding trực tiếp với service gốc
         }
     }
 }
