@@ -10,7 +10,7 @@
         Title="EditServiceCategoryWindow" Height="500" Width="500">
     <Grid>
         <Grid Background="#F2F2F2">
-            <TextBlock Text="EDITING SERVICE TYPE..." FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 20 0 20"/>
+            <TextBlock Text="EDITING SERVICE" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 20 0 20"/>
             <StackPanel Margin="40,90,40,20">
                 <Grid Margin="0,0,0,-10">
                     <Grid.ColumnDefinitions>
@@ -36,7 +36,7 @@
                             <TextBlock Text="Name: " FontSize="26" VerticalAlignment="Center" Margin="0,0,0,5"/>
                         </StackPanel>
                         <TextBox x:Name="nameTextBox"
-                         Text="{Binding ServiceName, Mode=TwoWay}"
+                         Text="{Binding ServiceName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                          FontSize="22"
                          Padding="5"
                          BorderBrush="Black"
@@ -62,9 +62,14 @@
                             <materialDesign:PackIcon Kind="AlphaUBox" Height="30" Width="30" Margin="0 2 3 0"/>
                             <TextBlock Text="Unit Price: " FontSize="26" Margin="0,0,0,5"/>
                         </StackPanel>
-                        <TextBox BorderBrush="Black" x:Name="unitPriceTextBox" Text="{Binding ServicePrice, Mode=TwoWay}" FontSize="22" BorderThickness="1" Margin="0,0,0,10">
+                        <TextBox BorderBrush="Black" 
+                             x:Name="unitPriceTextBox" 
+                             Text="{Binding ServicePrice, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+                             FontSize="22" 
+                             BorderThickness="1" 
+                             Margin="0,0,0,10">
                             <TextBox.ToolTip>
-                                <ToolTip Foreground="Black" Background="White" Content="Please enter a valid price "/>
+                                <ToolTip Foreground="Black" Background="White" Content="Please enter a valid price (must be greater than 0)"/>
                             </TextBox.ToolTip>
                         </TextBox>
                     </StackPanel>
@@ -76,7 +81,7 @@
                             <TextBlock Text="More info: " FontSize="26" Margin="0,0,0,5"/>
                         </StackPanel>
                         <TextBox BorderBrush="Black" x:Name="moreInfoTextBox" 
-                             Text="{Binding MoreInfo, Mode=TwoWay}" 
+                             Text="{Binding MoreInfo, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                              FontSize="22" BorderThickness="1" Height="80"
                              Margin="0,0,0,10" AcceptsReturn="True"
                              TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" MaxLength="200">
@@ -85,7 +90,16 @@
                 </Grid>
 
                 <!--Save Button-->
-                <Button x:Name="saveButton" Margin="0 20 0 0" Content="SAVE" FontSize="24" Background="#FFC1CC00" Foreground="White" Padding="5" HorizontalAlignment="Center" Width="160" Height="50" />
+                <Button x:Name="saveButton" 
+                    Margin="0 20 0 0" 
+                    Content="SAVE" 
+                    FontSize="24" 
+                    Background="#FFC1CC00" 
+                    Foreground="White" 
+                    Padding="5" 
+                    HorizontalAlignment="Center" 
+                    Width="160" 
+                    Height="50" />
             </StackPanel>
         </Grid>
     </Grid>
