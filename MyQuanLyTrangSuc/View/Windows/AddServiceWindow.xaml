@@ -7,93 +7,111 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="AddServiceCategoryWindow" Height="500" Width="500">
-    <Grid>
-        <Grid Background="#F2F2F2">
-            <TextBlock Text="ADDING SERVICE TYPE..." FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 20 0 20"/>
-            <StackPanel Margin="40,90,40,20">
-                <Grid Margin="0,0,0,-10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+        Title="AddServiceCategoryWindow" Height="400" Width="500">
+    <Grid Background="#F2F2F2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-                    <!-- Column 1 -->
-                    <StackPanel Grid.Column="0" Margin="0,0,20,30">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="AlphaIBox" Margin="0 2 3 0" Height="30" Width="30"/>
-                            <TextBlock Text="Service's ID: " FontSize="26" VerticalAlignment="Center" Margin="0,0,0,5"/>
-                        </StackPanel>
-                        <Border BorderBrush="Black" BorderThickness="1" Padding="5" Margin="0,0,0,10">
-                            <TextBlock x:Name="IDTextBlock" Text="{Binding Service.ServiceId, Mode=OneWay}" FontSize="22" VerticalAlignment="Center"/>
-                        </Border>
+        <!-- Header -->
+        <TextBlock Text="ADDING SERVICE TYPE" 
+                   FontSize="24" 
+                   FontWeight="Bold" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Top" 
+                   Margin="0,20,0,10"
+                   Grid.Row="0"/>
+
+        <!-- Main Content -->
+        <StackPanel Margin="30,0,30,20" Grid.Row="1">
+            <!-- ID Section -->
+            <StackPanel Margin="0,0,0,15" HorizontalAlignment="Center" Orientation="Horizontal">
+                <TextBlock Text="ID: " FontSize="20" Margin="0,0,10,0"/>
+                <TextBlock x:Name="IDTextBlock" 
+                           Text="{Binding Service.ServiceId}" 
+                           FontSize="16" 
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Name and Price -->
+            <Grid Margin="0,0,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Name -->
+                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <materialDesign:PackIcon Kind="RenameBox" Margin="0,0,5,0" Height="20" Width="20"/>
+                        <TextBlock Text="Name:" FontSize="16"/>
                     </StackPanel>
-
-                    <!-- Column 2 -->
-                    <StackPanel Grid.Column="1" Margin="20,0,0,30">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="RenameBox" Margin="0 2 3 0" Height="30" Width="30"/>
-                            <TextBlock Text="Name: " FontSize="26" VerticalAlignment="Center" Margin="0,0,0,5"/>
-                        </StackPanel>
-                        <TextBox x:Name="nameTextBox"
+                    <TextBox x:Name="nameTextBox"
                              Text="{Binding Service.ServiceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             FontSize="22"
+                             FontSize="14"
                              Padding="5"
                              BorderBrush="Black"
+                             BorderThickness="1">
+                        <TextBox.ToolTip>
+                            <ToolTip Content="Please enter a valid name (not including numbers)."/>
+                        </TextBox.ToolTip>
+                    </TextBox>
+                </StackPanel>
+
+                <!-- Price -->
+                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <materialDesign:PackIcon Kind="CurrencyUsd" Margin="0,0,5,0" Height="20" Width="20"/>
+                        <TextBlock Text="Price:" FontSize="16"/>
+                    </StackPanel>
+                    <TextBox x:Name="unitPriceTextBox" 
+                             Text="{Binding Service.ServicePrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             FontSize="14" 
+                             Padding="5"
+                             BorderBrush="Black" 
                              BorderThickness="1"
-                             Margin="0,0,0,10"
-                             VerticalAlignment="Center">
-                            <TextBox.ToolTip>
-                                <ToolTip Foreground="Black" Background="White" Content="Please enter a valid name (not including numbers)."/>
-                            </TextBox.ToolTip>
-                        </TextBox>
-                    </StackPanel>
-                </Grid>
+                             PreviewTextInput="OnPreviewTextInput_PriceTextBox"
+                             DataObject.Pasting="OnPasting_PriceTextBox">
+                        <TextBox.ToolTip>
+                            <ToolTip Content="Please enter a valid price"/>
+                        </TextBox.ToolTip>
+                    </TextBox>
+                </StackPanel>
+            </Grid>
 
-                <Grid Margin="0,20,0,-10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <!--Service Price-->
-                    <StackPanel Grid.Column="0" Margin="0,0,20,30">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="AlphaUBox" Height="30" Width="30" Margin="0 2 3 0"/>
-                            <TextBlock Text="Unit Price: " FontSize="26" Margin="0,0,0,5"/>
-                        </StackPanel>
-                        <TextBox BorderBrush="Black" x:Name="unitPriceTextBox" 
-                                 Text="{Binding Service.ServicePrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                 FontSize="22" BorderThickness="1" Margin="0,0,0,10"
-                                 PreviewTextInput="OnPreviewTextInput_PriceTextBox"
-                                 DataObject.Pasting="OnPasting_PriceTextBox">
-                            <TextBox.ToolTip>
-                                <ToolTip Foreground="Black" Background="White" Content="Please enter a valid price "/>
-                            </TextBox.ToolTip>
-                        </TextBox>
-                    </StackPanel>
-
-                    <!--More Info-->
-                    <StackPanel Grid.Column="1" Margin="20,0,0,0">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Margin="0 0 3 1" Kind="PhoneOutline" VerticalAlignment="Center" Height="30" Width="30"/>
-                            <TextBlock Text="More info: " FontSize="26" Margin="0,0,0,5"/>
-                        </StackPanel>
-                        <TextBox BorderBrush="Black" x:Name="moreInfoTextBox" 
-                                 Text="{Binding Service.MoreInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                 FontSize="22" BorderThickness="1" Height="80"
-                                 Margin="0,0,0,10" AcceptsReturn="True"
-                                 TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" MaxLength="200">
-                        </TextBox>
-                    </StackPanel>
-                </Grid>
-
-                <!--Add Button-->
-                <Button x:Name="addButton" Margin="0 20 0 0" Content="ADD" FontSize="24" 
-                        Background="#FFC1CC00" Foreground="White" Padding="5" 
-                        HorizontalAlignment="Center" Width="160" Height="50"
-                        Command="{Binding AddServiceCommand}"/>
+            <!-- More Info (adjusted to fit better) -->
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                    <materialDesign:PackIcon Kind="InformationOutline" Margin="0,0,5,0" Height="20" Width="20"/>
+                    <TextBlock Text="More Info:" FontSize="16"/>
+                    <TextBlock Text="(max 200 chars)" FontSize="12" FontStyle="Italic" Margin="5,0,0,0" Foreground="Gray"/>
+                </StackPanel>
+                <TextBox x:Name="moreInfoTextBox" 
+                         Text="{Binding Service.MoreInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         FontSize="14" 
+                         Padding="5"
+                         BorderBrush="Black" 
+                         BorderThickness="1" 
+                         Height="80"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap" 
+                         VerticalScrollBarVisibility="Auto" 
+                         MaxLength="200"/>
             </StackPanel>
-        </Grid>
+
+            <!-- Add Button -->
+            <Button x:Name="addButton" 
+                    Content="ADD" 
+                    FontSize="20" 
+                    Background="#FFC1CC00" 
+                    Foreground="White" 
+                    Padding="10,5" 
+                    HorizontalAlignment="Center" 
+                    Width="120" 
+                    Height="40"
+                    Margin="0,20,0,0"
+                    Command="{Binding AddServiceCommand}"/>
+        </StackPanel>
     </Grid>
 </Window>
