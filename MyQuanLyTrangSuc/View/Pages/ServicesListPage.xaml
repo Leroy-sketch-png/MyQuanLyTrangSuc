@@ -115,7 +115,7 @@
                 </ComboBox>
 
                 <!--Employees DataGrid-->
-                <DataGrid ItemsSource="{Binding Services}" SelectedItem="{Binding SelectedServices}" x:Name="servicesDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
+                <DataGrid ItemsSource="{Binding Services}" SelectedItem="{Binding SelectedServices}" x:Name="servicesDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5" SelectionChanged="servicesDataGrid_SelectionChanged">
                     <!-- SelectionChanged="employeesDataGrid_SelectionChanged" -->
                     <DataGrid.Columns>
                         <!--ID-->

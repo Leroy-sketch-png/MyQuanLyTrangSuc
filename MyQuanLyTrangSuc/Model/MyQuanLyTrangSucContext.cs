@@ -85,11 +85,21 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         return result;
     }
+
+    public int SaveChangesAdded(Service service)
+    {
+        int result = base.SaveChanges();
+        OnServiceAdded?.Invoke(service);
+        return result;
+    }
+
+
     public void ResetEmployees() {
         OnEmployeesReset?.Invoke();
     }
     #region ALL THE TABLES
     public event Action<Customer> OnCustomerAdded;
+    
     public event Action<Supplier> OnSupplierAdded;
     public event Action<Supplier> OnSupplierEdited;
 
@@ -100,6 +110,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     public event Action<Invoice> OnInvoiceAdded;
     public event Action<Import> OnImportAdded;
 
+    public event Action<Service> OnServiceAdded;
 
     public event Action<Employee> OnEmployeeAdded;
     public event Action OnEmployeesReset;

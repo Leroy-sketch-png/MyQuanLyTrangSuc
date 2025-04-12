@@ -16,26 +16,26 @@ using System.Windows.Controls;
 
 namespace MyQuanLyTrangSuc.BusinessLogic
 {
-    public class CustomerService
+    public class ServicesService
     {
-        private readonly CustomerRepository customerRepository;
-        private readonly string prefix = "KH";
-        public event Action<Customer> OnCustomerAdded; //add or update
-        public event Action<Customer> OnCustomerUpdated; //edit
+        private readonly ServiceRepository serviceRepository;
+        private readonly string prefix = "DV"; //Dich vu
+        public event Action<Service> OnServiceAdded; //add or update
+        public event Action<Service> OnServiceUpdated; //edit
 
         //singleton
-        private static CustomerService _instance;
-        public static CustomerService Instance => _instance ??= new CustomerService();
+        private static ServicesService _instance;
+        public static ServicesService Instance => _instance ??= new ServicesService();
 
 
-        public CustomerService()
+        public ServicesService()
         {
-            customerRepository = new CustomerRepository();
+            serviceRepository = new ServiceRepository();
         }
 
         public string GenerateNewCustomerID()
         {
-            string lastID = customerRepository.GetLastCustomerID();
+            string lastID = serviceRepository.GetLastServiceID();
             int newNumber = 1;
 
             if (!string.IsNullOrEmpty(lastID) && lastID.StartsWith(prefix))
@@ -48,103 +48,93 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             }
             return $"{prefix}{newNumber:D3}";
         }
+
         public bool IsValidName(string name)
         {
             return !string.IsNullOrEmpty(name) && name.All(c => char.IsLetter(c) || char.IsWhiteSpace(c));
         }
 
-        public bool IsValidEmail(string email)
+        public bool IsValidPrice(decimal? price)
         {
-            var gmailPattern = @"^(?!.*\.\.)[a-zA-Z0-9._%+-]+(?<!\.)@gmail\.com$";
-            return Regex.IsMatch(email, gmailPattern);
+            return price.HasValue && price.Value >= 0;
         }
 
-        public bool IsValidTelephoneNumber(string phoneNumber)
+        public bool IsValidCustomerData(string name, decimal? price)
         {
-            return !string.IsNullOrEmpty(phoneNumber) && phoneNumber.All(char.IsDigit) && phoneNumber.Length >= 10 && phoneNumber.Length <= 15;
+            return IsValidName(name) && IsValidPrice(price);
         }
 
-        public bool IsValidCustomerData(string name, string email, string phone)
+        //add new service
+        public string AddOrUpdateService(string name, decimal? price, string moreInfo)
         {
-            return IsValidName(name) && IsValidEmail(email) && IsValidTelephoneNumber(phone);
-        }
+            var service = serviceRepository.GetServicesByDetails(name, price, moreInfo);
 
-        //add new customer
-        public string AddOrUpdateCustomer(string name, string email, string phone, string address, DateTime? birthday, string gender)
-        {
-            var customer = customerRepository.GetCustomerByDetails(name, email, phone);
-
-            if (customer != null)
+            if (service != null)
             {
-                if (customer.IsDeleted)
+                if (service.IsDeleted)
                 {
-                    customer.IsDeleted = false;
-                    customer.CustomerName = name;
-                    customer.Email = email;
-                    customer.ContactNumber = phone;
-                    customer.DateOfBirth = birthday.HasValue ? birthday.Value : default;
-                    customer.Gender = gender;
-                    customer.Address = address;
+                    service.IsDeleted = false;
+                    service.ServiceName = name;
+                    service.ServicePrice = price;
+                    service.MoreInfo = moreInfo;
 
-                    customerRepository.UpdateCustomer(customer);
-                    return "Restored customer successfully!";
+                    serviceRepository.UpdateService(service);
+                    return "Restored service successfully!";
                 }
-                return "Customer already exists!";
+                return "Service already exists!";
             }
 
-            Customer newCustomer = new Customer()
+            Service newService = new Service()
             {
-                CustomerId = GenerateNewCustomerID(),
-                CustomerName = name,
-                ContactNumber = phone,
-                Email = email,
-                DateOfBirth = birthday.HasValue ? birthday.Value : default,
-                Gender = gender,
-                Address = address,
+                ServiceId = GenerateNewCustomerID(),
+                ServiceName = name,
+                ServicePrice = price,
+                MoreInfo = moreInfo,
                 IsDeleted = false
             };
-            customerRepository.AddCustomer(newCustomer);
-            OnCustomerAdded?.Invoke(newCustomer);
-            return "Added customer successfully!";
+            serviceRepository.AddService(newService);
+            OnServiceAdded?.Invoke(newService);
+            return "Added service successfully!";
         }
 
-        //Get list of customers
-        public List<Customer> GetListOfCustomers()
+        //Get list of services
+        public List<Service> GetListOfServices()
         {
-            return customerRepository.GetListOfCustomers();
+            return serviceRepository.GetListOfServices();
         }
 
-        //Edit customer
-        public void EditCustomer(Customer customer)
+        //Edit service
+        public void EditService(Service service)
         {
-            var temp = customerRepository.GetCustomerByID(customer.CustomerId);
+            var temp = serviceRepository.GetServiceByID(service.ServiceId);
             if (temp != null)
             {
-                customerRepository.UpdateCustomer(temp);
+                serviceRepository.UpdateService(temp);
             }
         }
 
-        //Delete customer
-        public void DeleteCustomer(Customer selectedItem)
+        //Delete service
+        public void DeleteService(Service selectedItem)
         {
-            var temp = customerRepository.GetCustomerByID(selectedItem.CustomerId);
+            var temp = serviceRepository.GetServiceByID(selectedItem.ServiceId);
             if (temp != null)
             {
-                customerRepository.DeleteCustomer(selectedItem);
+                serviceRepository.DeleteService(selectedItem);
             }
         }
 
-        //search functions
-        public List<Customer> SuppliersSearchByName(string name)
+        //Search functions
+        public List<Service> ServicesSearchByName(string name)
         {
-            return customerRepository.SearchCustomerByName(name);
+            return serviceRepository.SearchServiceByName(name);
         }
 
-        public List<Customer> SuppliersSearchByID(string id)
+        public List<Service> ServicesSearchByID(string id)
         {
-            return customerRepository.SearchCustomerByID(id);
+            return serviceRepository.SearchServiceByID(id);
         }
 
+        /*
         //import excel files
         public void ImportExcelFile()
         {
@@ -230,8 +220,9 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             }
 
         }
+        */
 
-
+        /*
         //export excel file
         public void ExportExcelFile(DataGrid customersDataGrid)
         {
@@ -354,5 +345,6 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                 MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        */
     }
 }
