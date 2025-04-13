@@ -1,6 +1,5 @@
 ﻿using MyQuanLyTrangSuc.Model;
 using System;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -8,13 +7,16 @@ namespace MyQuanLyTrangSuc.View.Windows
 {
     public class EditServiceWindowLogic
     {
-        private readonly EditServiceCategoryWindow _window;
-        private readonly Service _originalService;
+        private readonly EditServiceWindow _window;
+        private Service _currentService;
+        private const string SuccessMessage = "Service updated successfully!";
+        private const string SuccessTitle = "Success";
+        private bool _isProcessing = false;
 
-        public EditServiceWindowLogic(EditServiceCategoryWindow window, Service serviceToEdit)
+        public EditServiceWindowLogic(EditServiceWindow window, Service serviceToEdit)
         {
             _window = window;
-            _originalService = serviceToEdit; // Làm việc trực tiếp với service gốc
+            _currentService = serviceToEdit ?? throw new ArgumentNullException(nameof(serviceToEdit));
 
             InitializeEvents();
             SetupInitialData();
@@ -23,75 +25,73 @@ namespace MyQuanLyTrangSuc.View.Windows
         private void InitializeEvents()
         {
             _window.saveButton.Click += SaveButton_Click;
-            _window.nameTextBox.LostFocus += ValidateNameField;
             _window.unitPriceTextBox.LostFocus += ValidatePriceField;
+
+            if (_window.serviceComboBox != null)
+            {
+                _window.serviceComboBox.SelectionChanged += ServiceComboBox_SelectionChanged;
+            }
+        }
+
+        private void ServiceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isProcessing) return;
+
+            if (_window.serviceComboBox.SelectedItem is Service selectedService)
+            {
+                _currentService = selectedService;
+                UpdateFormData();
+            }
         }
 
         private void SetupInitialData()
         {
-            // Hiển thị dữ liệu ban đầu
-            _window.IDTextBlock.Text = _originalService.ServiceId;
-            _window.nameTextBox.Text = _originalService.ServiceName;
-            _window.unitPriceTextBox.Text = _originalService.ServicePrice.ToString();
-            _window.moreInfoTextBox.Text = _originalService.MoreInfo;
+            UpdateFormData();
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        private void UpdateFormData()
         {
-            if (ValidateAllFields())
+            _window.IDTextBlock.Text = _currentService.ServiceId;
+            _window.nameTextBox.Text = _currentService.ServiceName;
+            _window.unitPriceTextBox.Text = _currentService.ServicePrice.ToString();
+            _window.moreInfoTextBox.Text = _currentService.MoreInfo;
+        }
+
+        
+
+        private void UpdateCurrentService()
+        {
+            // Update all fields including name
+            _currentService.ServiceName = _window.nameTextBox.Text.Trim();
+
+            if (decimal.TryParse(_window.unitPriceTextBox.Text, out decimal price))
             {
-                // Cập nhật giá trị từ UI vào service gốc
-                _originalService.ServiceName = _window.nameTextBox.Text;
-
-                if (decimal.TryParse(_window.unitPriceTextBox.Text, out decimal price))
-                {
-                    _originalService.ServicePrice = price;
-                }
-
-                _originalService.MoreInfo = _window.moreInfoTextBox.Text;
-
-                _window.DialogResult = true;
-                _window.Close();
+                _currentService.ServicePrice = price;
             }
+
+            _currentService.MoreInfo = _window.moreInfoTextBox.Text?.Trim();
         }
 
         private bool ValidateAllFields()
         {
-            bool isValid = true;
-
-            if (!ValidateName())
-            {
-                _window.nameTextBox.Focus();
-                isValid = false;
-            }
-
-            if (!ValidatePrice())
-            {
-                _window.unitPriceTextBox.Focus();
-                isValid = false;
-            }
-
-            return isValid;
-        }
-
-        private void ValidateNameField(object sender, RoutedEventArgs e)
-        {
-            ValidateName();
+            return ValidateName() && ValidatePrice();
         }
 
         private bool ValidateName()
         {
-            string name = _window.nameTextBox.Text;
-
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(_window.nameTextBox.Text))
             {
-                ShowErrorMessage("Tên dịch vụ không được để trống.");
+                ShowErrorMessage("Service name cannot be empty.");
                 return false;
             }
 
-            if (Regex.IsMatch(name, @"\d"))
+            // Check for duplicate name (excluding current service)
+            var db = MyQuanLyTrangSucContext.Instance;
+            if (db.Services.Any(s =>
+                s.ServiceId != _currentService.ServiceId &&
+                s.ServiceName.ToLower() == _window.nameTextBox.Text.Trim().ToLower()))
             {
-                ShowErrorMessage("Tên dịch vụ không được chứa số.");
+                ShowErrorMessage("Service name already exists.");
                 return false;
             }
 
@@ -107,13 +107,13 @@ namespace MyQuanLyTrangSuc.View.Windows
         {
             if (!decimal.TryParse(_window.unitPriceTextBox.Text, out decimal price))
             {
-                ShowErrorMessage("Giá dịch vụ phải là số.");
+                ShowErrorMessage("Price must be a valid number.");
                 return false;
             }
 
             if (price <= 0)
             {
-                ShowErrorMessage("Giá dịch vụ phải lớn hơn 0.");
+                ShowErrorMessage("Price must be greater than 0.");
                 return false;
             }
 
@@ -122,9 +122,45 @@ namespace MyQuanLyTrangSuc.View.Windows
 
         private void ShowErrorMessage(string message)
         {
-            MessageBox.Show(message, "Lỗi nhập liệu",
-                          MessageBoxButton.OK,
-                          MessageBoxImage.Warning);
+            if (!_isProcessing)
+            {
+                MessageBox.Show(message, "Validation Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
+        }
+
+        private async void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isProcessing) return;
+
+            _isProcessing = true;
+
+            try
+            {
+                if (ValidateAllFields())
+                {
+                    UpdateCurrentService();
+
+                    // Save to database
+                    var db = MyQuanLyTrangSucContext.Instance;
+                    db.SaveChangesEdited(_currentService);
+                    // Update form with latest data
+                    UpdateFormData();
+                    MessageBox.Show(SuccessMessage, SuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                    await Task.Yield();  // Đảm bảo UI thread xử lý đóng cửa sổ ngay
+                    _window.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving service: {ex.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                _isProcessing = false;
+            }
         }
     }
 }
