@@ -34,7 +34,7 @@ namespace MyQuanLyTrangSuc.View
 
         private void OnClick_Remove_ItemUserControl(object sender, RoutedEventArgs e)
         {
-            logicService.RemoveItemFromDatabase();
+            logicService.RemoveProductFromDatabase();
         }
         /*
         private void OnMouseDoubleClick_UserControl(object sender, MouseButtonEventArgs e)
@@ -49,7 +49,7 @@ namespace MyQuanLyTrangSuc.View
             if (result == MessageBoxResult.Yes)
                 logicService.ExportExcelFile("Ngày Nhập");
             else if (result == MessageBoxResult.No)
-                logicService.ExportExcelFile("Ngày Xuất");
+                logicService.ExportExcelFile("Ngày Xuất Hóa Đơn");
         }
     }
 }
