@@ -13,6 +13,8 @@ namespace MyQuanLyTrangSuc.View.Windows
         private const string SuccessTitle = "Success";
         private bool _isProcessing = false;
 
+        public Service CurrentService => _currentService;
+
         public EditServiceWindowLogic(EditServiceWindow window, Service serviceToEdit)
         {
             _window = window;
@@ -27,21 +29,7 @@ namespace MyQuanLyTrangSuc.View.Windows
             _window.saveButton.Click += SaveButton_Click;
             _window.unitPriceTextBox.LostFocus += ValidatePriceField;
 
-            if (_window.serviceComboBox != null)
-            {
-                _window.serviceComboBox.SelectionChanged += ServiceComboBox_SelectionChanged;
-            }
-        }
-
-        private void ServiceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_isProcessing) return;
-
-            if (_window.serviceComboBox.SelectedItem is Service selectedService)
-            {
-                _currentService = selectedService;
-                UpdateFormData();
-            }
+            
         }
 
         private void SetupInitialData()
