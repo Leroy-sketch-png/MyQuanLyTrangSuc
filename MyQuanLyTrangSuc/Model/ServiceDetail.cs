@@ -17,6 +17,8 @@ public partial class ServiceDetail
 
     public decimal? Prepaid { get; set; }
 
+    public decimal? Unpaid { get; set; }
+
     public DateTime? DueDay { get; set; }
 
     public string Status { get; set; }
