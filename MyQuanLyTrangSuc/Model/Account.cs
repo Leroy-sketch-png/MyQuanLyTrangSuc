@@ -7,15 +7,13 @@ namespace MyQuanLyTrangSuc.Model;
 
 public partial class Account
 {
-    public string AccountId { get; set; }
-
-    public string EmployeeId { get; set; }
-
     public string Username { get; set; }
 
-    public string PasswordHash { get; set; }
+    public string Password { get; set; }
 
-    public string Role { get; set; }
+    public int GroupId { get; set; }
 
-    public virtual Employee Employee { get; set; }
+    public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
+
+    public virtual UserGroup Group { get; set; }
 }

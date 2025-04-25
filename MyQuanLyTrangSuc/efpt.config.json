@@ -27,6 +27,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Functions]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Import]",
          "ObjectType": 0
       },
@@ -47,11 +51,23 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Permission]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Product]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[ProductCategory]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RevenueReport]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RevenueReportDetail]",
          "ObjectType": 0
       },
       {
@@ -71,11 +87,19 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[StockReportDetail]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Supplier]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[Unit]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserGroup]",
          "ObjectType": 0
       }
    ],
