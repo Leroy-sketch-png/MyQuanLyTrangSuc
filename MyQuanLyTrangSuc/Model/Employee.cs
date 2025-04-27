@@ -23,13 +23,15 @@ public partial class Employee
 
     public string Gender { get; set; }
 
-    public bool IsDeleted { get; set; }
+    public string Username { get; set; }
 
-    public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
+    public bool IsDeleted { get; set; }
 
     public virtual ICollection<Import> Imports { get; set; } = new List<Import>();
 
     public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 
     public virtual ICollection<ServiceRecord> ServiceRecords { get; set; } = new List<ServiceRecord>();
+
+    public virtual Account UsernameNavigation { get; set; }
 }
