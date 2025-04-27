@@ -11,9 +11,11 @@ public partial class RevenueReportDetail
 
     public string ProductId { get; set; }
 
-    public decimal? BeginRevenue { get; set; }
+    public int? Quantity { get; set; }
 
-    public decimal? FinishRevenue { get; set; }
+    public decimal? Revenue { get; set; }
+
+    public decimal? Percentage { get; set; }
 
     public virtual Product Product { get; set; }
 

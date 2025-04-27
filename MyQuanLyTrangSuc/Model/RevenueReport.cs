@@ -11,7 +11,5 @@ public partial class RevenueReport
 
     public DateTime? MonthYear { get; set; }
 
-    public decimal? TotalBeginRevenue { get; set; }
-
-    public decimal? TotalFinishRevenue { get; set; }
+    public decimal? TotalRevenue { get; set; }
 }
