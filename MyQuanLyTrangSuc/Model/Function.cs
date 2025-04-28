@@ -13,5 +13,5 @@ public partial class Function
 
     public string ScreenToLoad { get; set; }
 
-    public virtual ICollection<UserGroup> Groups { get; set; } = new List<UserGroup>();
+    public virtual ICollection<Permission> Permissions { get; set; } = new List<Permission>();
 }
