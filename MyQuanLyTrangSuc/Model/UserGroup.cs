@@ -13,5 +13,5 @@ public partial class UserGroup
 
     public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
 
-    public virtual ICollection<Function> Functions { get; set; } = new List<Function>();
+    public virtual ICollection<Permission> Permissions { get; set; } = new List<Permission>();
 }
