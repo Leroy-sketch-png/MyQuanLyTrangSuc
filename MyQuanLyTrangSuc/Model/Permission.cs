@@ -13,6 +13,8 @@ public partial class Permission
 
     public int FunctionId { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public virtual Function Function { get; set; }
 
     public virtual UserGroup Group { get; set; }

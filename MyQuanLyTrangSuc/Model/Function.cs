@@ -13,5 +13,7 @@ public partial class Function
 
     public string ScreenToLoad { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public virtual ICollection<Permission> Permissions { get; set; } = new List<Permission>();
 }

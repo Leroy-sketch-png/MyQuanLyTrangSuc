@@ -13,6 +13,8 @@ public partial class Account
 
     public int GroupId { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 
     public virtual UserGroup Group { get; set; }

@@ -1,0 +1,65 @@
+﻿<Window x:Class="MyQuanLyTrangSuc.View.Windows.EditUserGroupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MyQuanLyTrangSuc.View.Windows"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="EditUserGroupWindow" Height="300" Width="450">
+    <Grid>
+        <Grid Background="#F2F2F2">
+            <TextBlock Text="EDITING USER GROUP..." FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,20"/>
+            <StackPanel Margin="40,70,40,20">
+                <Grid Margin="0,0,0,-10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Column 1 -->
+                    <StackPanel Grid.Column="0" Margin="0,0,20,30">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Label" Margin="0 2 3 0" Height="30" Width="30"/>
+                            <TextBlock Text="List: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                        </StackPanel>
+                        <Border BorderBrush="Black" BorderThickness="1" Padding="5" Margin="0,0,0,10">
+                            <ComboBox x:Name="UserGroupComboBox"
+                                  ItemsSource="{Binding UserGroups}"
+                                  SelectedItem="{Binding SelectedUserGroup, Mode=TwoWay}"
+                                  FontSize="20"
+                                  VerticalAlignment="Center"
+                                  Height="35"/>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Column 2 -->
+                    <StackPanel Grid.Column="1" Margin="20,0,0,30">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="RenameBox" Margin="0 2 3 0" Height="30" Width="30"/>
+                            <TextBlock Text="Name: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                        </StackPanel>
+                        <TextBox x:Name="NameTextBox"
+                         Text="{Binding UserGroup.GroupName, Mode=TwoWay}"
+                         FontSize="20"
+                         Padding="5"
+                         BorderBrush="Black"
+                         BorderThickness="1"
+                         Margin="0,0,0,10"
+                         VerticalAlignment="Center">
+                            <TextBox.ToolTip>
+                                <ToolTip Foreground="Black" Background="White" Content="Please enter a valid full name (not including numbers)."/>
+                            </TextBox.ToolTip>
+                        </TextBox>
+                    </StackPanel>
+                </Grid>
+
+
+
+
+                <Button x:Name="editButton" Content="EDIT" FontSize="24" Background="#FFC1CC00" Foreground="White" Padding="5" HorizontalAlignment="Center" Width="120" Height="50" Click="editButton_Click"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
