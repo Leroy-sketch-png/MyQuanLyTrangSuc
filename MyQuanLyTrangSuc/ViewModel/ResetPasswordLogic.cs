@@ -111,7 +111,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             var employee = context.Employees.FirstOrDefault(emp => emp.Email == email);
             if (employee != null)
             {
-                var account = context.Accounts.FirstOrDefault(acc => acc.Username == employee.Username);
+                var account = context.Accounts.FirstOrDefault(acc => acc.Username == employee.Account.Username);
                 if (account != null)
                 {
                     if (account.Password == newPassword)

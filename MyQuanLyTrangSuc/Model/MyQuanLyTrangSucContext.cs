@@ -23,7 +23,6 @@ public partial class MyQuanLyTrangSucContext : DbContext
         : base(options) {
     }
 
-
     public int SaveChangesAdded(Product product) {
 
         int result = base.SaveChanges();
@@ -101,6 +100,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     public event Action<Customer> OnCustomerAdded;
     public event Action<Supplier> OnSupplierAdded;
     public event Action<Supplier> OnSupplierEdited;
+    public event Action<Account> OnAccountAdded;
 
     public event Action<Product> OnItemAdded;
     public event Action<Product> OnItemRemoved;
@@ -164,9 +164,10 @@ public partial class MyQuanLyTrangSucContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Username).HasName("PK__Account__536C85E54B4E0963");
+            entity.HasKey(e => e.AccountId).HasName("PK__Account__536C85E54B4E0963");
 
             entity.ToTable("Account");
+            entity.HasIndex(a => a.Username).IsUnique();
 
             entity.Property(e => e.Username).HasMaxLength(50);
             entity.Property(e => e.GroupId).HasColumnName("GroupID");
@@ -255,13 +256,14 @@ public partial class MyQuanLyTrangSucContext : DbContext
             entity.Property(e => e.Position)
                 .HasMaxLength(255)
                 .HasColumnName("position");
-            entity.Property(e => e.Username)
+            entity.Property(e => e.AccountId)
                 .HasMaxLength(50)
-                .HasColumnName("username");
+                .HasColumnName("accountId");
 
-            entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Employees)
-                .HasForeignKey(d => d.Username)
-                .HasConstraintName("fk_employee_users");
+            entity.HasOne(d => d.Account)
+                .WithMany(p => p.Employees)
+                .HasForeignKey(d => d.AccountId)
+                .HasConstraintName("fk_employee_account");
         });
 
         modelBuilder.Entity<Function>(entity =>

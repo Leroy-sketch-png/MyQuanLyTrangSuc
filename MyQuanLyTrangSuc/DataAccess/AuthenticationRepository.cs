@@ -1,4 +1,5 @@
-﻿using MyQuanLyTrangSuc.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,10 +52,43 @@ namespace MyQuanLyTrangSuc.DataAccess
         {
             return context.UserGroups.Where(ug => ug.GroupName.Contains(name) && !ug.IsDeleted).ToList();
         }
-        
-        public List<UserGroup> SearchUserGroupByID(string id)
+
+
+
+        // Account 
+        public List<Account> GetListOfAccounts()
         {
-            return context.UserGroups.Where(ug => ug.GroupId.ToString().Contains(id) && !ug.IsDeleted).ToList();
+            return context.Accounts.Where(a => !a.IsDeleted).ToList();
+        }
+
+        public bool ExistsUsername(string username)
+        {
+            return context.Accounts.Any(a => a.Username.ToLower() == username.ToLower() && !a.IsDeleted);
+        }
+
+        public void AddAccount(Account account)
+        {
+            context.Accounts.Add(account);
+            context.SaveChanges();
+        }
+
+        public Account GetAccountById(int accountId)
+        {
+            return context.Accounts.FirstOrDefault(a => a.AccountId == accountId && !a.IsDeleted);
+        }
+
+        public void UpdateAccount(Account updated)
+        {
+            context.SaveChanges();
+        }
+
+        public void DeletedAccount(Account account)
+        {
+            if (account != null)
+            {
+                account.IsDeleted = true;
+                context.SaveChanges();
+            }
         }
     }
 }

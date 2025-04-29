@@ -14,7 +14,9 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         private AuthenticationRepository authenticationRepository;
 
         public event Action<UserGroup> OnUserGroupAdded; 
-        public event Action<UserGroup> OnUserGroupUpdated; 
+        public event Action<UserGroup> OnUserGroupUpdated;
+        public event Action<Account> OnAccountAdded;
+        public event Action<Account> OnAccountUpdated;
 
         // singleton
         private static AuthenticationService _instance;
@@ -26,6 +28,8 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         }
 
         // User Group
+
+        //read
         public List<UserGroup> GetListOfUserGroups()
         {
             return authenticationRepository.GetListOfUserGroups();
@@ -69,5 +73,73 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             authenticationRepository.DeletedUserGroup(userGroup);
         }
 
+        // Account
+
+        // read
+        public List<Account> GetListOfAccounts()
+        {
+            return authenticationRepository.GetListOfAccounts();
+        }
+
+        // add
+        public string AddAccount(Account account)
+        {
+            account.Password = BCrypt.Net.BCrypt.HashPassword(account.Password);
+
+            bool exists = authenticationRepository.ExistsUsername(account.Username);
+
+            if (exists)
+            {
+                return "Username already exists!";
+            }
+            authenticationRepository.AddAccount(account);
+            OnAccountAdded?.Invoke(account);
+            return "Account created successfully!";
+
+        }
+
+        public bool ValidateLogin(string username, string plainPassword)
+        {
+            var acc = authenticationRepository.GetListOfAccounts().FirstOrDefault(a => a.Username == username && !a.IsDeleted);
+            if (acc == null)
+            {
+                return false;
+            }
+            return BCrypt.Net.BCrypt.Verify(plainPassword, acc.Password);
+        }
+
+        public bool UpdateAccount(Account account)
+        {
+            var existing = authenticationRepository.GetAccountById(account.AccountId);
+            if (existing == null)
+                return false;
+
+            bool usernameTaken = authenticationRepository.GetListOfAccounts().Any(a => a.Username.Equals(account.Username, StringComparison.OrdinalIgnoreCase) && a.AccountId != account.AccountId && !a.IsDeleted);
+
+            if (usernameTaken)
+                return false;
+
+            existing.Username = account.Username;
+
+            if (!string.IsNullOrWhiteSpace(account.Password))
+                existing.Password = BCrypt.Net.BCrypt.HashPassword(account.Password);
+
+            existing.GroupId = account.GroupId;
+            existing.Group = account.Group;
+
+
+            authenticationRepository.UpdateAccount(existing);
+
+
+            OnAccountUpdated?.Invoke(existing);
+
+            return true;
+        }
+
+        // delete 
+        public void DeleteAccount(Account account)
+        {
+            authenticationRepository.DeletedAccount(account);
+        }
     }
 }
