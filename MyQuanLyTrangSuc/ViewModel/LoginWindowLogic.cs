@@ -62,21 +62,21 @@ namespace MyQuanLyTrangSuc.ViewModel
                 {
                     string password = passwordBox.Password;
 
-                    var account = context.Accounts.FirstOrDefault(a => a.Username == userName && a.PasswordHash == password);
+                    var account = context.Accounts.FirstOrDefault(a => a.Username == userName && a.Password == password);
 
                     if (account != null)
                     {
-                        WpfApplication.Current.Resources["CurrentUserID"] = account.EmployeeId;
+                         WpfApplication.Current.Resources["CurrentUserID"] = account.Username;
 
-                        string role = account.Role;
-                        if (role == "user")
+                        string groupName = account.Group.GroupName;
+                        if (groupName == "user")
                         {
                             var mainWindow = new MainNavigationWindow();
                             mainWindow.Show();
                             loginWindow.Close();
                             notificationLogic.LoadNotification("Success", "You have logged in!", "BottomRight");
                         }
-                        else if (role == "admin")
+                        else if (groupName == "admin")
                         {
                             var mainWindow = new MainNavigationWindow();
                             mainWindow.Show();

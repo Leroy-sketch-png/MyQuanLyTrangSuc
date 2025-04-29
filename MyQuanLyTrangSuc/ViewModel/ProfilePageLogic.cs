@@ -99,7 +99,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             if (account != null)
             {
-                var employee = account.Employee;
+                var employee = context.Employees.FirstOrDefault(e => e.Username == username);
 
                 if (employee != null)
                 {
@@ -125,7 +125,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             var account = context.Accounts.FirstOrDefault(a => a.Username == username);
             if (account != null)
             {
-                var employee = context.Employees.FirstOrDefault(e => e.EmployeeId == account.EmployeeId);
+                var employee = context.Employees.FirstOrDefault(e => e.Username == account.Username);
                 if (employee != null)
                 {
                     bool isUpdated = false;
@@ -198,7 +198,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             if (account != null)
             {
-                var employee = account.Employee;
+                var employee = account.Employees.FirstOrDefault(e => e.Username == username);
 
                 if (employee != null)
                 {

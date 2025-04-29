@@ -84,10 +84,10 @@ namespace MyQuanLyTrangSuc.ViewModel
         public void Authentification()
         {
             string currentUserID = (string)System.Windows.Application.Current.Resources["CurrentUserID"];
-            var user = context.Accounts.FirstOrDefault(u => u.EmployeeId == currentUserID);
+            var user = context.Accounts.FirstOrDefault(u => u.Username == currentUserID);
             if (user != null)
             {
-                CurrentUserRole = user.Role;
+                CurrentUserRole = user.Group.GroupName;
             }
         }
 

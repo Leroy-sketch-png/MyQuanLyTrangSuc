@@ -111,16 +111,16 @@ namespace MyQuanLyTrangSuc.ViewModel
             var employee = context.Employees.FirstOrDefault(emp => emp.Email == email);
             if (employee != null)
             {
-                var account = context.Accounts.FirstOrDefault(acc => acc.EmployeeId == employee.EmployeeId);
+                var account = context.Accounts.FirstOrDefault(acc => acc.Username == employee.Username);
                 if (account != null)
                 {
-                    if (account.PasswordHash == newPassword)
+                    if (account.Password == newPassword)
                     {
                         notificationWindowLogic.LoadNotification("Error", "The new password cannot be the same as the old one!", "BottomRight");
                         return;
                     }
 
-                    account.PasswordHash = newPassword;
+                    account.Password = newPassword;
 
                     try
                     {
