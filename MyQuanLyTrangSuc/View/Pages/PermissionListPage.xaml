@@ -67,11 +67,11 @@
 
                 <!--Page Title-->
                 <TextBlock Text="Permission" Grid.Row="1" FontSize="32" FontWeight="SemiBold"
-                   Margin="0 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
+                   Margin="15 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
                     <!--Add Button-->
-                    <Button x:Name="addButton" Style="{StaticResource addButton}"
+                    <Button Click="addButton_Click" x:Name="addButton" Style="{StaticResource addButton}"
                     Grid.RowSpan="4" Grid.Row="1" >
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="15"
@@ -87,30 +87,30 @@
 
                 <!--Filter TextBox-->
                 <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
-                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0" FontSize="20"/>
+                    <TextBox TextChanged="searchTextBox_TextChanged" x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0" FontSize="20"/>
                 </Grid>
 
 
                 <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220,0,0,0" HorizontalAlignment="Left" Width="120">
-                    <ComboBoxItem Content="Name"/>
-                    <ComboBoxItem Content="ID"/>
+                    <ComboBoxItem Content="Group Name"/>
+                    <ComboBoxItem Content="Function Name"/>
                 </ComboBox>
 
-                <!--Suppliers DataGrid-->
+                <!--Permissions DataGrid-->
                 <DataGrid AutoGenerateColumns="False" IsReadOnly="True" 
                   CanUserSortColumns="True"
-                  ItemsSource="{Binding Suppliers}" x:Name="supplierDataGrid" 
+                  ItemsSource="{Binding Permissions}" x:Name="permissionDataGrid" 
                   Style="{DynamicResource DataGridStyle1}"  
                   RowStyle="{DynamicResource DataGridRowStyle1}" 
-                  SelectedItem="{Binding SelectedSupplier, Mode=TwoWay}"
+                  SelectedItem="{Binding SelectedPermission, Mode=TwoWay}"
                   CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
                     <DataGrid.Columns>
 
                         <!--Group ID-->
-                        <DataGridTextColumn Binding="{Binding SupplierId}" Header="Group ID" IsReadOnly="True" CanUserResize="False" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding GroupId}" Header="Group ID" IsReadOnly="True" CanUserResize="False" Width="*"/>
 
                         <!--Group Name-->
-                        <DataGridTextColumn Header="Group Name" Width="*" Binding="{Binding Name}" CanUserResize="False" IsReadOnly="True">
+                        <DataGridTextColumn Header="Group Name" Width="*" Binding="{Binding Group.GroupName}" CanUserResize="False" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -119,7 +119,7 @@
                         </DataGridTextColumn>
 
                         <!--Function ID-->
-                        <DataGridTextColumn Header="Function ID" Width="*" Binding="{Binding Name}" CanUserResize="False" IsReadOnly="True">
+                        <DataGridTextColumn Header="Function ID" Width="*" Binding="{Binding FunctionId}" CanUserResize="False" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -128,7 +128,7 @@
                         </DataGridTextColumn>
                         
                         <!--Function Name-->
-                        <DataGridTextColumn Header="Function Name" Width="*" Binding="{Binding Name}" CanUserResize="False" IsReadOnly="True">
+                        <DataGridTextColumn Header="Function Name" Width="*" Binding="{Binding Function.FunctionName}" CanUserResize="False" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -141,11 +141,11 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button x:Name="editButton" Style="{StaticResource gridEditButton}" >
+                                        <Button Click="editButton_Click" x:Name="editButton" Style="{StaticResource gridEditButton}" >
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
-                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0" >
+                                        <Button Click="deleteButton_Click" x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0" >
                                             <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 

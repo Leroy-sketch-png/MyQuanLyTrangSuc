@@ -17,6 +17,8 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         public event Action<UserGroup> OnUserGroupUpdated;
         public event Action<Account> OnAccountAdded;
         public event Action<Account> OnAccountUpdated;
+        public event Action<Permission> OnPermissionAdded;
+        public event Action<Permission> OnPermissionUpdated;
 
         // singleton
         private static AuthenticationService _instance;
@@ -153,6 +155,57 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         public Account GetAccountWithGroupByUsername(string username)
         {
             return authenticationRepository.GetAccountByUsernameIncludeGroup(username);
+        }
+
+        // Permission
+        public List<Permission> GetListOfPermissions()
+        {
+            return authenticationRepository.GetListOfPermissions();
+        }
+
+        public List<Function> GetListOfFunctions()
+        {
+            return authenticationRepository.GetListOfFunctions();
+
+        }
+
+        public bool AddPermission(int selectedValue1, int selectedValue2)
+        {
+            var permission = authenticationRepository.GetListOfPermissions().FirstOrDefault(p => p.GroupId == selectedValue1 && p.FunctionId == selectedValue2);
+            if (permission != null)
+            {
+                return false;
+            }
+            else
+            {
+                var newPermission = new Permission
+                {
+                    GroupId = selectedValue1,
+                    FunctionId = selectedValue2,
+                    IsDeleted = false
+                };
+                authenticationRepository.AddPermission(newPermission);
+                OnPermissionAdded?.Invoke(newPermission);
+                return true;
+            }
+        }
+
+        public bool UpdatePermission(Permission permission)
+        {
+            var existing = authenticationRepository.GetPermissionById(permission.PermissionId);
+            if (existing == null)
+                return false;
+            existing.GroupId = permission.GroupId;
+            existing.FunctionId = permission.FunctionId;
+            authenticationRepository.UpdatePermission(existing);
+            OnPermissionUpdated?.Invoke(existing);
+            return true;
+
+        }
+
+        public void DeletePermission(Permission selectedItem)
+        {
+            authenticationRepository.DeletePermission(selectedItem);
         }
     }
 }

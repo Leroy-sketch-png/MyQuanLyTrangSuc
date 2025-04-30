@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using MyQuanLyTrangSuc.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Security.RightsManagement;
 using System.Text;
 using System.Threading.Tasks;
@@ -96,6 +98,44 @@ namespace MyQuanLyTrangSuc.DataAccess
             return context.Accounts
                        .Include(a => a.Group)
                        .FirstOrDefault(a => a.Username == username && !a.IsDeleted); 
+        }
+
+        // Permission
+        public List<Permission> GetListOfPermissions()
+        {
+            return context.Permissions.Include(p => p.Function).ToList();
+        }
+
+        public List<Function> GetListOfFunctions()
+        {
+            return context.Functions.ToList();
+        }
+
+        public void AddPermission(Permission permission)
+        {
+            context.Permissions.Add(permission);
+            context.SaveChanges();
+        }
+
+        public bool UpdatePermission(Permission permission)
+        {
+            context.Permissions.Update(permission);
+            context.SaveChanges();
+            return true;
+        }
+
+        public Permission GetPermissionById(int permissionId)
+        {
+            return context.Permissions.FirstOrDefault(a => a.PermissionId == permissionId && !a.IsDeleted);
+        }
+
+        public void DeletePermission(Permission selectedItem)
+        {
+            if (selectedItem != null)
+            {
+                selectedItem.IsDeleted = true;
+                context.SaveChanges();
+            }
         }
     }
 }

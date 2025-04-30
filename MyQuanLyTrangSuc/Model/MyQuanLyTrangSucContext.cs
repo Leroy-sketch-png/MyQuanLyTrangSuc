@@ -268,6 +268,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<Function>(entity =>
         {
+            entity.ToTable("Functions");
             entity.HasKey(e => e.FunctionId).HasName("PK__Function__31ABFAF86F0F7071");
 
             entity.Property(e => e.FunctionName)
@@ -442,13 +443,16 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
             entity.Property(e => e.FunctionId).HasColumnName("FunctionID");
             entity.Property(e => e.GroupId).HasColumnName("GroupID");
+            entity.Property(e => e.IsDeleted).HasColumnName("IsDeleted");
 
-            entity.HasOne(d => d.Function).WithMany(p => p.Permissions)
+            entity.HasOne(d => d.Function)
+                .WithMany(p => p.Permissions)
                 .HasForeignKey(d => d.FunctionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_permissions_functions");
 
-            entity.HasOne(d => d.Group).WithMany(p => p.Permissions)
+            entity.HasOne(d => d.Group)
+                .WithMany(p => p.Permissions)
                 .HasForeignKey(d => d.GroupId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_permissions_usergroups");
