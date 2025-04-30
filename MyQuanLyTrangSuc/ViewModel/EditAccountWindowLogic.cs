@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -60,7 +61,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             SelectedUserGroup = UserGroups.FirstOrDefault(g => g.GroupId == Account.GroupId);
         }
 
-        public bool EditAccount()
+        public bool EditAccount(PasswordBox password = null)
         {
             if (_account == null)
             {
@@ -76,6 +77,10 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             //MessageBox.Show(SelectedUserGroup.GroupName);
             Account.Group = SelectedUserGroup;
+            string newPlainPassword = password?.Password;
+            Account.Password = newPlainPassword;
+
+
             bool res = authenticationService.UpdateAccount(Account);
             if (res)
                 notificationWindowLogic.LoadNotification("Success", "Update account successfully", "BottomRight");

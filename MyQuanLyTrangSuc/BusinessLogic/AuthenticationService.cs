@@ -92,6 +92,14 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             {
                 return "Username already exists!";
             }
+            if (!string.IsNullOrEmpty(account.Password))
+            {
+                account.Password = BCrypt.Net.BCrypt.HashPassword(account.Password);
+            }
+            else
+            {
+                return "Password cannot be empty!";
+            }
             authenticationRepository.AddAccount(account);
             OnAccountAdded?.Invoke(account);
             return "Account created successfully!";
@@ -140,6 +148,11 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         public void DeleteAccount(Account account)
         {
             authenticationRepository.DeletedAccount(account);
+        }
+
+        public Account GetAccountWithGroupByUsername(string username)
+        {
+            return authenticationRepository.GetAccountByUsernameIncludeGroup(username);
         }
     }
 }

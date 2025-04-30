@@ -20,11 +20,8 @@ public partial class Account: INotifyPropertyChanged
         get => _username;
         set
         {
-            if (_username != null)
-            {
                 _username = value;
                 OnPropertyChanged();
-            }
         }
     }
 

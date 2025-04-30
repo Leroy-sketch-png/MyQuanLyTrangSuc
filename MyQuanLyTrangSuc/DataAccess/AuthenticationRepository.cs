@@ -90,5 +90,12 @@ namespace MyQuanLyTrangSuc.DataAccess
                 context.SaveChanges();
             }
         }
+
+        public Account GetAccountByUsernameIncludeGroup(string username)
+        {
+            return context.Accounts
+                       .Include(a => a.Group)
+                       .FirstOrDefault(a => a.Username == username && !a.IsDeleted); 
+        }
     }
 }

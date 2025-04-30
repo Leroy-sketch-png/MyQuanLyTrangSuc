@@ -31,7 +31,7 @@ namespace MyQuanLyTrangSuc.View.Windows
 
         private void editButton_Click(object sender, RoutedEventArgs e)
         {
-            bool isSuccess = logicService.EditAccount();
+            bool isSuccess = logicService.EditAccount(PasswordBox);
             if (isSuccess) this.Close();
         }
     }
