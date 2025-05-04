@@ -4,22 +4,24 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
       mc:Ignorable="d"
       d:DesignHeight="720" d:DesignWidth="880">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Background="White">
-            <Button Content="BACK" Width="200" FontSize="25" Margin="10,10,0,0" Height="45" HorizontalAlignment="Left" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+            <Button Content="BACK" Width="200" FontSize="25" Margin="10,10,0,0" Height="45"
+                    HorizontalAlignment="Left" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"
+                    Click="OnClick_Back_EmployeePropertiesPage">
                 <Button.Effect>
                     <DropShadowEffect/>
                 </Button.Effect>
             </Button>
-            <!-- Header -->
+
             <DockPanel>
-                <TextBlock DockPanel.Dock="Left" Text="Employee's Info" FontSize="36" FontWeight="Bold" Foreground="Black" Margin="20" HorizontalAlignment="Left"/>
-                <Button x:Name="editButton" Content="Modify?" FontWeight="Bold" HorizontalAlignment="Right" Width="160" Margin="20,20,40,20" FontSize="18"/>
-                <!--Click="OnClick_Edit_EmployeePropertiesPage"-->
+                <TextBlock DockPanel.Dock="Left" Text="Employee's Info" FontSize="36" FontWeight="Bold"
+                           Foreground="Black" Margin="20" HorizontalAlignment="Left"/>
+                <Button x:Name="editButton" Content="Modify?" FontWeight="Bold" HorizontalAlignment="Right" Width="160"
+                        Margin="20,20,40,20" FontSize="18" Click="OnClick_Edit_EmployeePropertiesPage"/>
             </DockPanel>
             <Separator BorderBrush="#623ed0" BorderThickness="5" Margin="5,0,50,20"/>
 
@@ -28,111 +30,115 @@
                     <ColumnDefinition Width="0.56*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="0.7*"/>
-                </Grid.RowDefinitions>
 
                 <!-- Image Section -->
-                <Border Width="314" Height="314" Grid.Column="0" Grid.Row="0" BorderBrush="PeachPuff" Padding="0" Margin="0" BorderThickness="31" CornerRadius="314">
+                <Border  Width="314" Height="314" Grid.Column="0" BorderBrush="PeachPuff" BorderThickness="31"
+                        CornerRadius="314">
                     <Grid>
-                        <Ellipse Width="250" Height="{Binding Width, RelativeSource={RelativeSource Self}}">
+                        <Ellipse  x:Name="inputEmployeeImage" Width="250" Height="250">
                             <Ellipse.Fill>
-                                <ImageBrush x:Name="userImageBrush" ImageSource="{Binding Imagepath_employee}"/>
+                                <ImageBrush ImageSource="{Binding ImagePath}"/>
                             </Ellipse.Fill>
                         </Ellipse>
-                        <Button x:Name="inputEmployeeImage" Background="Transparent" BorderBrush="Transparent" Height="250"
-                        materialDesign:ButtonAssist.CornerRadius="314"
-                        Visibility="Collapsed"/>
-                        <!--Click="OnClick_EditImage_EmployeePropertiesPage"-->
+                        <Button Background="Transparent" BorderBrush="Transparent" Height="250"
+                                materialDesign:ButtonAssist.CornerRadius="314" Visibility="Collapsed"
+                                Click="OnClick_EditImage_EmployeePropertiesPage"/>
                     </Grid>
-
                 </Border>
 
-                <Border Grid.Column="1" Grid.Row="0" Padding="10" CornerRadius="10" BorderBrush="LightGray" BorderThickness="1">
+                <Border Grid.Column="1" Padding="10" CornerRadius="10" BorderBrush="LightGray" BorderThickness="1">
                     <StackPanel Background="#F0F0F0" Margin="10">
                         <Border Background="#ba80d3" CornerRadius="10" Padding="10" Margin="0, 0, 0, 10">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <materialDesign:PackIcon Kind="AccountBoxOutline" Width="37" Height="37" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" />
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="AccountBoxOutline" Width="37" Height="37" />
                                 <Grid>
-                                    <TextBlock x:Name="employeeName" FontSize="32" Text="{Binding Name_employee, Mode=OneWay}" Foreground="White" FontWeight="Bold" TextAlignment="Center"
-                                       Visibility="Visible"/>
-                                    <TextBox x:Name="inputEmployeeName" FontSize="28" Text="{Binding Name_employee, Mode=TwoWay}" Foreground="White" FontWeight="Bold" TextAlignment="Center"
-                                     Visibility="Collapsed">
+                                    <TextBlock x:Name="employeeName" Text="{Binding Name}" FontSize="32" Foreground="White"
+                                               FontWeight="Bold" TextAlignment="Center" Visibility="Visible"/>
+                                    <TextBox x:Name="inputEmployeeName" Text="{Binding Name, Mode=TwoWay}" FontSize="28" Foreground="White"
+                                             FontWeight="Bold" TextAlignment="Center" Visibility="Collapsed">
                                         <TextBox.ToolTip>
-                                            <ToolTip Foreground="Black" Background="White" Content="Please enter a valid full name (not including numbers)."/>
+                                            <ToolTip Content="Please enter a valid full name (no numbers)."
+                                                    Foreground="Black" Background="White"/>
                                         </TextBox.ToolTip>
                                     </TextBox>
                                 </Grid>
                             </StackPanel>
                         </Border>
-                        <TextBlock x:Name="employeeID" FontSize="25" Text="{Binding id_employee}" Foreground="DarkGray" TextAlignment="Center" Margin="0, 0, 0, 5"/>
-                        <StackPanel Orientation="Horizontal" Margin="10, 0, 0, 5">
-                            <materialDesign:PackIcon Kind="CakeVariantOutline" Width="25" Height="25" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                            <TextBlock FontSize="20" Text="Birthday: " Foreground="Black" VerticalAlignment="Center" />
+
+                        <TextBlock Text="{Binding EmployeeId}" FontSize="25" Foreground="DarkGray" TextAlignment="Center" Margin="0,0,0,5"/>
+
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,5">
+                            <materialDesign:PackIcon Kind="CakeVariantOutline" Width="25" Height="25" />
+                            <TextBlock Text="Birthday: " FontSize="20" Foreground="Black" VerticalAlignment="Center" />
                             <Grid>
-                                <TextBlock x:Name="employeeBirthday" FontSize="20" Text="{Binding str_birthday_employee, Mode=OneWay}" Foreground="DarkGreen" FontWeight="Bold"
-                                   Visibility="Visible"/>
-                                <DatePicker x:Name="inputEmployeeBirthday" FontSize="20" Text="{Binding Birthday_employee, Mode=TwoWay}"
-                                   materialDesign:TextFieldAssist.HasClearButton="True"
-                                   Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                                   Visibility="Collapsed"/>
+                                <TextBlock x:Name="employeeBirthday" Text="{Binding DateOfBirth, StringFormat='{}{0:MMM dd, yyyy}'}" FontSize="20"
+                                           Foreground="DarkGreen" FontWeight="Bold" Visibility="Visible"/>
+                                <DatePicker x:Name="inputEmployeeBirthday" SelectedDate="{Binding DateOfBirth, Mode=TwoWay}" FontSize="20"
+                                            materialDesign:TextFieldAssist.HasClearButton="True"
+                                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                            Visibility="Collapsed"/>
                             </Grid>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10, 0, 0, 5">
-                            <materialDesign:PackIcon Kind="Email" Width="25" Height="25" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                            <TextBlock FontSize="20" Text="Email: " Foreground="Black" VerticalAlignment="Center" />
+
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,5">
+                            <materialDesign:PackIcon Kind="Email" Width="25" Height="25" />
+                            <TextBlock Text="Email: " FontSize="20" Foreground="Black" VerticalAlignment="Center" />
                             <Grid>
-                                <TextBlock x:Name="employeeEmail" FontSize="20" Text="{Binding Email_employee, Mode=OneWay}" Foreground="#4682B4" FontWeight="SemiBold"
-                                   Visibility="Visible"/>
-                                <TextBox x:Name="inputEmployeeEmail" FontSize="20" Text="{Binding Email_employee, Mode=TwoWay}" Foreground="#4682B4" FontWeight="SemiBold"
-                                 Visibility="Collapsed">
+                                <TextBlock x:Name="employeeEmail" Text="{Binding Email}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Visible"/>
+                                <TextBox x:Name="inputEmployeeEmail" Text="{Binding Email, Mode=TwoWay}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Collapsed">
                                     <TextBox.ToolTip>
-                                        <ToolTip Foreground="Black" Background="White" Content="Please enter a valid email address (e.g., example@mail.com)."/>
+                                        <ToolTip Content="Please enter a valid email (e.g. example@mail.com)."
+                                                Foreground="Black" Background="White"/>
                                     </TextBox.ToolTip>
                                 </TextBox>
                             </Grid>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10, 0, 0, 5">
-                            <materialDesign:PackIcon Kind="Phone" Width="25" Height="25" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                            <TextBlock FontSize="20" Text="Phone: " Foreground="Black" VerticalAlignment="Center" />
+
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,5">
+                            <materialDesign:PackIcon Kind="Phone" Width="25" Height="25" />
+                            <TextBlock Text="Phone: " FontSize="20" Foreground="Black" VerticalAlignment="Center" />
                             <Grid>
-                                <TextBlock x:Name="employeePhone" FontSize="20" Text="{Binding Tel_employee, Mode=OneWay}" Foreground="#4682B4" FontWeight="SemiBold"
-                                   Visibility="Visible"/>
-                                <TextBox x:Name="inputEmployeePhone" FontSize="20" Text="{Binding Tel_employee, Mode=TwoWay}" Foreground="#4682B4" FontWeight="SemiBold"
-                                 Visibility="Collapsed">
+                                <TextBlock x:Name="employeePhone" Text="{Binding ContactNumber}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Visible"/>
+                                <TextBox x:Name="inputEmployeePhone" Text="{Binding ContactNumber, Mode=TwoWay}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Collapsed">
                                     <TextBox.ToolTip>
-                                        <ToolTip Foreground="Black" Background="White" Content="Please enter a valid phone number (e.g., 123-456-7890) - 10 to 15 digits"/>
+                                        <ToolTip Content="Enter a valid phone (10–15 digits)." Foreground="Black" Background="White"/>
                                     </TextBox.ToolTip>
                                 </TextBox>
                             </Grid>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10, 0, 0, 5">
-                            <materialDesign:PackIcon Kind="GenderMaleFemale" Width="25" Height="25" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                            <TextBlock FontSize="20" Text="Gender: " Foreground="Black" VerticalAlignment="Center" />
+
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,5">
+                            <materialDesign:PackIcon Kind="GenderMaleFemale" Width="25" Height="25" />
+                            <TextBlock Text="Gender: " FontSize="20" Foreground="Black" VerticalAlignment="Center" />
                             <Grid>
-                                <TextBlock x:Name="employeeGender" FontSize="20" Text="{Binding Gender_employee, Mode=OneWay}" Foreground="#4682B4" FontWeight="SemiBold"
-                                   Visibility="Visible"/>
-                                <ComboBox x:Name="inputEmployeeGender" FontSize="20" Text="{Binding Gender_employee, Mode=TwoWay}" Foreground="#4682B4" FontWeight="SemiBold"
-                                  Visibility="Collapsed">
-                                    <ComboBoxItem>Male</ComboBoxItem>
-                                    <ComboBoxItem>Female</ComboBoxItem>
+                                <TextBlock x:Name="employeeGender" Text="{Binding Gender}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Visible"/>
+                                <ComboBox x:Name="inputEmployeeGender"
+          Visibility="Collapsed"
+          FontSize="20"
+          Foreground="#4682B4"
+          FontWeight="SemiBold"
+          SelectedValuePath="Content"
+          SelectedValue="{Binding Gender, Mode=TwoWay}">
+                                    <ComboBoxItem Content="male"/>
+                                    <ComboBoxItem Content="female"/>
                                 </ComboBox>
+
                             </Grid>
                         </StackPanel>
                     </StackPanel>
                 </Border>
             </Grid>
 
-            <!-- Description Section -->
-            <Border BorderBrush="Black" BorderThickness="1" Margin="0, 20, 0, 0">
+            <Border BorderBrush="Black" BorderThickness="1" Margin="0,20,0,0">
                 <TextBlock Text="---MORE ABOUT ME---" FontSize="20" Margin="10" HorizontalAlignment="Center"/>
             </Border>
-            <Grid Width="{Binding ElementName=UserPropertiesPage, Path=ActualWidth}">
-                <TextBox x:Name="employeeDescription" AcceptsReturn="True" SpellCheck.IsEnabled="True" Text="{Binding Moreinfo_employee, Mode=TwoWay}" FontSize="20" TextWrapping="Wrap" Margin="10"
-                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                     IsReadOnly="True"/>
+
+            <Grid>
+                <TextBox x:Name="employeeDescription" Text="{Binding Description, Mode=TwoWay}" AcceptsReturn="True" SpellCheck.IsEnabled="True"
+                         FontSize="20" TextWrapping="Wrap" Margin="10" IsReadOnly="True"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
             </Grid>
-            <!-- Footer -->
+
             <TextBlock Text="© 2024 DELTA STEEL" FontSize="14" Foreground="Gray" HorizontalAlignment="Center" Margin="20"/>
         </StackPanel>
     </ScrollViewer>

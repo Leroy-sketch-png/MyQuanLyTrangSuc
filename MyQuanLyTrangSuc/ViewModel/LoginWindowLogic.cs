@@ -68,41 +68,41 @@ namespace MyQuanLyTrangSuc.ViewModel
             //        {
             //            WpfApplication.Current.Resources["CurrentUserID"] = account.EmployeeId;
 
-            //            string role = account.Role;
-            //            if (role == "user")
-            //            {
-            //                var mainWindow = new MainNavigationWindow();
-            //                mainWindow.Show();
-            //                loginWindow.Close();
-            //                notificationLogic.LoadNotification("Success", "You have logged in!", "BottomRight");
-            //            }
-            //            else if (role == "admin")
-            //            {
-            //                var mainWindow = new MainNavigationWindow();
-            //                mainWindow.Show();
-            //                loginWindow.Close();
-            //                notificationLogic.LoadNotification("Success", "You have logged in!", "BottomRight");
-            //            }
-            //            else
-            //            {
-            //                notificationLogic.LoadNotification("Error", "You do not have the necessary permissions to access this application!", "BottomRight");
-            //            }
-            //        }
-            //        else
-            //        {
-            //            notificationLogic.LoadNotification("Error", "Invalid credentials. Please try again.", "BottomRight");
-            //        }
-            //    }
-            //    else
-            //    {
-            //        notificationLogic.LoadNotification("Error", "Please enter both username and password.", "BottomRight");
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine("Error: " + ex.Message);
-            //    notificationLogic.LoadNotification("Error", $"An error occurred: {ex.Message}", "BottomRight");
-            //}
+                        string role = account.Role;
+                        if (role == "user") 
+                        {
+                            var mainWindow = new MainNavigationWindow();
+                            mainWindow.Show();
+                            loginWindow.Close();
+                            notificationLogic.LoadNotification("Success", "You have logged in!", "BottomRight");
+                        }
+                        else if (role == "admin")
+                        {
+                            var mainWindow = new MainNavigationWindow();
+                            mainWindow.Show();
+                            loginWindow.Close();
+                            notificationLogic.LoadNotification("Success", "You have logged in!", "BottomRight");
+                        }
+                        else
+                        {
+                            notificationLogic.LoadNotification("Error", "You do not have the necessary permissions to access this application!", "BottomRight");
+                        }
+                    }
+                    else
+                    {
+                        notificationLogic.LoadNotification("Error", "Invalid credentials. Please try again.", "BottomRight");
+                    }
+                }
+                else
+                {
+                    notificationLogic.LoadNotification("Error", "Please enter both username and password.", "BottomRight");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                notificationLogic.LoadNotification("Error", $"An error occurred: {ex.Message}", "BottomRight");
+            }
         }
     }
 }
