@@ -1,32 +1,56 @@
 ﻿<Page x:Class="MyQuanLyTrangSuc.View.ItemPropertiesPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
-      mc:Ignorable="d"
-      d:DesignHeight="720" d:DesignWidth="880">
+      mc:Ignorable="d" 
+      d:DesignHeight="720" d:DesignWidth="880"
+      x:Name="ItemPropertiesPageUI">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
         <StackPanel Background="White">
-            <Button Content="BACK" Width="200" FontSize="25" Margin="10,10,0,0" Height="45" HorizontalAlignment="Left" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
-                <!-- Click="OnClick_Back_ItemPropertiesPage" -->
+
+            <!-- Back Button -->
+            <Button Content="BACK"
+                    Width="200" Height="45"
+                    FontSize="25"
+                    Margin="10,10,0,0"
+                    HorizontalAlignment="Left"
+                    Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"
+                    Click="OnClick_Back_ItemPropertiesPage">
                 <Button.Effect>
-                    <DropShadowEffect/>
+                    <DropShadowEffect />
                 </Button.Effect>
             </Button>
+
             <!-- Header -->
             <StackPanel>
                 <DockPanel>
-                    <TextBlock DockPanel.Dock="Left" Text="Item's Properties" FontSize="36" FontWeight="Bold" Foreground="Black" Margin="20" HorizontalAlignment="Left"/>
-                    <Button x:Name="editButton" Content="Edit?" FontWeight="Bold" HorizontalAlignment="Right" Width="160" Margin="20,20,40,20" FontSize="18"
-                            Background="#FFC1CC00"/>
-                    <!-- Click="OnClick_Edit_ItemPropertiesPage" -->
+                    <TextBlock DockPanel.Dock="Left"
+                               Text="Item's Properties"
+                               FontSize="36"
+                               FontWeight="Bold"
+                               Foreground="Black"
+                               Margin="20"
+                               HorizontalAlignment="Left"/>
+                    <Button x:Name="editButton"
+                            Content="Edit?"
+                            Width="160"
+                            Margin="20,20,40,20"
+                            FontSize="18"
+                            FontWeight="Bold"
+                            HorizontalAlignment="Right"
+                            Click="OnClick_Edit_ItemPropertiesPage"/>
                 </DockPanel>
-                <Separator BorderBrush="#FFC1CC00" BorderThickness="5" Margin="5,0,50,20"/>
+                <Separator BorderBrush="#623ed0"
+                           BorderThickness="5"
+                           Margin="5,0,50,20"/>
             </StackPanel>
-            <!-- Main Content -->
+
+            <!-- Main Grid -->
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="300" MinWidth="160" MaxWidth="480"/>
@@ -37,90 +61,230 @@
                     <RowDefinition Height="400"/>
                 </Grid.RowDefinitions>
 
-                <!-- Image Section -->
-                <Border Grid.Column="0" Grid.Row="0" BorderBrush="PeachPuff" BorderThickness="10" Margin="0" CornerRadius="10">
+                <!-- Image Display -->
+                <Border Grid.Column="0"
+                        BorderBrush="PeachPuff"
+                        BorderThickness="10"
+                        Padding="0"
+                        Margin="0"
+                        CornerRadius="10">
                     <Grid x:Name="itemImageGrid">
-                        <Image x:Name="itemImage" Source="{Binding Imagepath_item}"/>
-                        <Button x:Name="inputItemImage" Background="Transparent" BorderBrush="Transparent" BorderThickness="10" Height="{Binding ElementName=itemImageGrid, Path=ActualHeight}"
-                                materialDesign:ButtonAssist.CornerRadius="10"
-                                Visibility="Collapsed"/>
-                        <!-- Click="OnClick_EditImage_ItemPropertiesPage" -->
+                        <Image x:Name="itemImage"
+                               Source="{Binding SelectedProduct.ImagePath}"/>
+                        <Button x:Name="inputItemImage"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                Height="{Binding ElementName=itemImageGrid, Path=ActualHeight}"
+                                Visibility="Collapsed"
+                                Click="OnClick_EditImage_ItemPropertiesPage"/>
                     </Grid>
                 </Border>
-                <GridSplitter Grid.Column="1" Grid.Row="0" Width="5" HorizontalAlignment="Stretch" Background="#F0F0F0" BorderBrush="Black" BorderThickness="1"/>
-                <!-- Details Section -->
-                <StackPanel Grid.Column="2" Grid.Row="0" Background="#F0F0F0" Margin="10">
-                    <Border Background="#FFC1CC00" CornerRadius="10" BorderBrush="Black" BorderThickness="10" Margin="0, 0, 0, 10">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <materialDesign:PackIcon Kind="CubeOutline" Width="37" Height="37" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" />
+
+                <GridSplitter Grid.Column="1"
+                              Width="5"
+                              Background="#623ed0"
+                              HorizontalAlignment="Stretch"/>
+
+                <!-- Details Panel -->
+                <StackPanel Grid.Column="2"
+                            Background="#F0F0F0"
+                            Margin="10">
+
+                    <!-- Name -->
+                    <Border Background="#ba80d3"
+                            CornerRadius="10"
+                            Padding="10"
+                            Margin="0,0,0,10">
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <materialDesign:PackIcon Kind="CubeOutline"
+                                                     Width="37"
+                                                     Height="37"/>
                             <Grid>
-                                <TextBlock x:Name="itemName" FontSize="32" Text="{Binding Name_item, Mode=OneWay}" Foreground="White" FontWeight="Bold" TextAlignment="Center"
+                                <TextBlock x:Name="itemName"
+                                           Text="{Binding SelectedProduct.Name}"
+                                           FontSize="32"
+                                           FontWeight="Bold"
+                                           Foreground="White"
+                                           TextAlignment="Center"
                                            Visibility="Visible"/>
-                                <TextBox x:Name="inputItemName" FontSize="28" Text="{Binding Name_item, Mode=TwoWay}" Foreground="White" FontWeight="Bold" TextAlignment="Center"
+                                <TextBox x:Name="inputItemName"
+                                         Text="{Binding SelectedProduct.Name, Mode=TwoWay}"
+                                         FontSize="28"
+                                         FontWeight="Bold"
+                                         Foreground="White"
+                                         TextAlignment="Center"
                                          Visibility="Collapsed"/>
                             </Grid>
                         </StackPanel>
                     </Border>
-                    <TextBlock x:Name="itemID" FontSize="25" Text="{Binding id_item}" Foreground="DarkGray" TextAlignment="Center" Margin="0, 0, 0, 10"/>
-                    <StackPanel Orientation="Horizontal" Margin="10, 0, 0, 15">
-                        <materialDesign:PackIcon Kind="CakeVariantOutline" Width="35" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                        <TextBlock FontSize="25" Text="Birthday: " Foreground="Black" VerticalAlignment="Center" />
+
+                    <!-- ID -->
+                    <TextBlock x:Name="itemID"
+                               Text="{Binding SelectedProduct.ProductId}"
+                               FontSize="25"
+                               Foreground="DarkGray"
+                               TextAlignment="Center"
+                               Margin="0,0,0,10"/>
+
+                    <!-- Category -->
+                    <StackPanel Orientation="Horizontal"
+                                Margin="10,0,0,15">
+                        <materialDesign:PackIcon Kind="ShapePlus"
+                                                 Width="35"
+                                                 Height="35"/>
+                        <TextBlock Text="Category: "
+                                   FontSize="25"
+                                   FontStyle="Italic"
+                                   Foreground="Black"/>
                         <Grid>
-                            <TextBlock x:Name="itemBirthday" FontSize="25" Text="{Binding str_birthday_item, Mode=OneWay}" Foreground="DarkGreen" FontWeight="Bold"
+                            <TextBlock x:Name="itemCategory"
+                                       Text="{Binding SelectedProduct.Category.CategoryName}"
+                                       FontSize="25"
+                                       FontWeight="SemiBold"
+                                       Foreground="#4682B4"
                                        Visibility="Visible"/>
-                            <DatePicker x:Name="inputItemBirthday" FontSize="25" Text="{Binding Birthday_item, Mode=TwoWay}"
-                                        materialDesign:TextFieldAssist.HasClearButton="True"
-                                        Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                                        Visibility="Collapsed"/>
+                            <ComboBox x:Name="inputItemCategory"
+                                      Text="{Binding SelectedProduct.Category.CategoryName, Mode=TwoWay}"
+                                      FontSize="25"
+                                      FontWeight="SemiBold"
+                                      Foreground="#4682B4"
+                                      IsEditable="True"
+                                      Visibility="Collapsed"
+                                      SelectionChanged="OnCategorySelectionChanged"/>
                         </Grid>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="10, 0, 0, 15">
-                        <materialDesign:PackIcon Kind="Email" Width="35" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                        <TextBlock FontSize="25" Text="Email: " Foreground="Black" VerticalAlignment="Center" />
+
+                    <!-- Unit -->
+                    <StackPanel Orientation="Horizontal"
+                                Margin="10,0,0,15">
+                        <materialDesign:PackIcon Kind="AlphaUBoxOutline"
+                                                 Width="35"
+                                                 Height="35"/>
+                        <TextBlock Text="Unit: "
+                                   FontSize="25"
+                                   FontStyle="Italic"
+                                   Foreground="Black"/>
                         <Grid>
-                            <TextBlock x:Name="itemEmail" FontSize="25" Text="{Binding Email_item, Mode=OneWay}" Foreground="#4682B4" FontWeight="SemiBold"
+                            <TextBlock x:Name="itemUnit"
+                                       Text="{Binding SelectedProduct.Category.Unit.UnitName}"
+                                       FontSize="25"
+                                       FontWeight="SemiBold"
+                                       Foreground="#4682B4"
                                        Visibility="Visible"/>
-                            <TextBox x:Name="inputItemEmail" FontSize="25" Text="{Binding Email_item, Mode=TwoWay}" Foreground="#4682B4" FontWeight="SemiBold"
-                                     Visibility="Collapsed"/>
+                            <ComboBox x:Name="inputItemUnit"
+                                      Text="{Binding SelectedProduct.Category.Unit.UnitName, Mode=TwoWay}"
+                                      FontSize="25"
+                                      FontWeight="SemiBold"
+                                      Foreground="#4682B4"
+                                      IsEditable="True"
+                                      Visibility="Collapsed"/>
                         </Grid>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="10, 0, 0, 15">
-                        <materialDesign:PackIcon Kind="Phone" Width="35" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                        <TextBlock FontSize="25" Text="Phone: " Foreground="Black" />
+
+                    <!-- Price -->
+                    <StackPanel Orientation="Horizontal"
+                                Margin="10,0,0,15">
+                        <materialDesign:PackIcon Kind="CurrencyUsd"
+                                                 Width="35"
+                                                 Height="35"/>
+                        <TextBlock Text="Price per Unit: "
+                                   FontSize="25"
+                                   Foreground="Black"/>
                         <Grid>
-                            <TextBlock x:Name="itemPhone" FontSize="25" Text="{Binding Tel_item, Mode=OneWay}" Foreground="#4682B4" FontWeight="SemiBold"
+                            <TextBlock x:Name="itemPrice"
+                                       Text="{Binding SelectedProduct.Price}"
+                                       FontSize="25"
+                                       FontWeight="Bold"
+                                       Foreground="DarkGreen"
                                        Visibility="Visible"/>
-                            <TextBox x:Name="inputItemPhone" FontSize="25" Text="{Binding Tel_item, Mode=TwoWay}" Foreground="#4682B4" FontWeight="SemiBold"
-                                     Visibility="Collapsed"/>
+                            <TextBox x:Name="inputItemPrice"
+                                     Text="{Binding SelectedProduct.Price, Mode=TwoWay}"
+                                     FontSize="25"
+                                     FontWeight="Bold"
+                                     Foreground="DarkGreen"
+                                     Visibility="Collapsed"
+                                     PreviewTextInput="OnPreviewTextInput_PriceTextBox_ItemPropertiesPageUI"
+                                     DataObject.Pasting="OnPasting_PriceTextBox_ItemPropertiesPageUI"/>
                         </Grid>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="10, 0, 0, 15">
-                        <materialDesign:PackIcon Kind="GenderMaleFemale" Width="35" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                        <TextBlock FontSize="25" Text="Gender: " Foreground="Black" />
+
+                    <!-- Stock -->
+                    <StackPanel Orientation="Horizontal"
+                                Margin="10,0,0,15">
+                        <materialDesign:PackIcon Kind="TallyMark3"
+                                                 Width="35"
+                                                 Height="35"/>
+                        <TextBlock Text="Stock: "
+                                   FontSize="25"
+                                   Foreground="Black"/>
                         <Grid>
-                            <TextBlock x:Name="itemGender" FontSize="25" Text="{Binding Gender_item, Mode=OneWay}" Foreground="#4682B4" FontWeight="SemiBold"
+                            <TextBlock x:Name="itemStock"
+                                       Text="{Binding SelectedProduct.Quantity}"
+                                       FontSize="25"
+                                       FontWeight="Bold"
+                                       Foreground="#8B0000"
                                        Visibility="Visible"/>
-                            <ComboBox x:Name="inputItemGender" FontSize="25" Text="{Binding Gender_item, Mode=TwoWay}" Foreground="#4682B4" FontWeight="SemiBold"
-                                      Visibility="Collapsed">
-                                <ComboBoxItem>Male</ComboBoxItem>
-                                <ComboBoxItem>Female</ComboBoxItem>
-                            </ComboBox>
+                            <TextBox x:Name="inputItemStock"
+                                     Text="{Binding SelectedProduct.Quantity, Mode=TwoWay}"
+                                     FontSize="25"
+                                     FontWeight="Bold"
+                                     Foreground="#8B0000"
+                                     Visibility="Collapsed"
+                                     PreviewTextInput="OnPreviewTextInput_StockTextBox_ItemPropertiesPageUI"
+                                     DataObject.Pasting="OnPasting_StockTextBox_ItemPropertiesPageUI"/>
                         </Grid>
                     </StackPanel>
+
+                    <!-- Status -->
+                    <StackPanel Orientation="Horizontal"
+                                Margin="10,0,0,15">
+                        <materialDesign:PackIcon Kind="ListStatus"
+                                                 Width="35"
+                                                 Height="35"/>
+                        <TextBlock Text="Status: "
+                                   FontSize="25"
+                                   Foreground="Black"/>
+                        <Grid>
+                            <TextBlock x:Name="itemStatus"
+                                       Text="{Binding SelectedProduct.Status}"
+                                       FontSize="25"
+                                       FontWeight="Bold"
+                                       Foreground="Blue"/>
+                        </Grid>
+                    </StackPanel>
+
                 </StackPanel>
             </Grid>
 
             <!-- Description Section -->
-            <Border BorderBrush="Black" BorderThickness="1" Margin="0, 20, 0, 0">
-                <TextBlock Text="---Item Description---" FontSize="20" Margin="10" HorizontalAlignment="Center"/>
+            <Border BorderBrush="Black"
+                    BorderThickness="1"
+                    Margin="0,20,0,0">
+                <TextBlock Text="---Item Description---"
+                           FontSize="20"
+                           Margin="10"
+                           HorizontalAlignment="Center"/>
             </Border>
-            <Grid Width="{Binding ElementName=ItemPropertiesPage, Path=ActualWidth}">
-                <TextBox x:Name="itemDescription" AcceptsReturn="True" SpellCheck.IsEnabled="True" Text="{Binding Moreinfo_item, Mode=TwoWay}" FontSize="20" TextWrapping="Wrap" Margin="10"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         IsReadOnly="True"/>
+            <Grid Width="{Binding ElementName=ItemPropertiesPageUI, Path=ActualWidth}">
+                <TextBox x:Name="itemDescription"
+                         Text="{Binding SelectedProduct.MoreInfo, Mode=TwoWay}"
+                         FontSize="20"
+                         TextWrapping="Wrap"
+                         Margin="10"
+                         AcceptsReturn="True"
+                         SpellCheck.IsEnabled="True"
+                         IsReadOnly="True"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
             </Grid>
+
             <!-- Footer -->
-            <TextBlock Text="© 2024 DELTA STEEL" FontSize="14" Foreground="Gray" HorizontalAlignment="Center" Margin="20"/>
+            <TextBlock Text="© 2025 KRYSTAL"
+                       FontSize="14"
+                       Foreground="Gray"
+                       HorizontalAlignment="Center"
+                       Margin="20"/>
         </StackPanel>
     </ScrollViewer>
 </Page>

@@ -69,7 +69,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                         WpfApplication.Current.Resources["CurrentUserID"] = account.EmployeeId;
 
                         string role = account.Role;
-                        if (role == "user")
+                        if (role == "user") 
                         {
                             var mainWindow = new MainNavigationWindow();
                             mainWindow.Show();

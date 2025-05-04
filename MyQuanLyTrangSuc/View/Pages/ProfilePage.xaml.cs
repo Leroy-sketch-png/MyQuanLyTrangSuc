@@ -1,12 +1,8 @@
 ﻿using System;
-using MyQuanLyTrangSuc.View;
+using System.Windows;
+using System.Windows.Controls;
 using MyQuanLyTrangSuc.ViewModel;
 using MyQuanLyTrangSuc.Model;
-using System.Windows.Controls;
-using WpfApplication = System.Windows.Application;
-using System.Windows;
-
-
 
 namespace MyQuanLyTrangSuc.View
 {
@@ -30,17 +26,13 @@ namespace MyQuanLyTrangSuc.View
 
             name = username;
 
-            profilePageLogic = new ProfilePageLogic(this);
-            profilePageLogic.ProfileLoad(username);
-
-            
+            // Pass the username into the ViewModel constructor
+            profilePageLogic = new ProfilePageLogic(this, username);
         }
-
 
         private void OnClick_ProfileUpdate(object sender, RoutedEventArgs e)
         {
-            string currentUserID = (string)Application.Current.Resources["CurrentUserID"];
-            profilePageLogic.ProfileUpdate(name);
+            profilePageLogic.ProfileUpdate();
         }
 
         private void OnClick_ProfilePictureChange(object sender, RoutedEventArgs e)
@@ -48,21 +40,16 @@ namespace MyQuanLyTrangSuc.View
             profilePageLogic.ChooseImageFileDialog();
         }
 
-
-        // Event handler to cancel unsaved changes
-        private void OnClick_CancelUpdate(object sender, EventArgs e)
+        private void OnClick_CancelUpdate(object sender, RoutedEventArgs e)
         {
-            string currentUserID = (string)Application.Current.Resources["CurrentUserID"];
-            profilePageLogic.CancelUpdate(name);
+            profilePageLogic.CancelUpdate();
         }
 
-        // Event handler for resetting password
-        private void resetPassWordButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void resetPassWordButton_Click(object sender, RoutedEventArgs e)
         {
-            // Validate EmailTextBox input before proceeding
             if (string.IsNullOrWhiteSpace(EmailTextBox.Text))
             {
-                System.Windows.MessageBox.Show("Email cannot be empty!", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                MessageBox.Show("Email cannot be empty!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
