@@ -5,13 +5,11 @@ using System.Collections.Generic;
 
 namespace MyQuanLyTrangSuc.Model;
 
-public partial class StockReport
+public partial class RevenueReport
 {
-    public string StockReportId { get; set; }
+    public string RevenueReportId { get; set; }
 
     public DateTime? MonthYear { get; set; }
 
-    public int? TotalBeginStock { get; set; }
-
-    public int? TotalFinishStock { get; set; }
+    public decimal? TotalRevenue { get; set; }
 }

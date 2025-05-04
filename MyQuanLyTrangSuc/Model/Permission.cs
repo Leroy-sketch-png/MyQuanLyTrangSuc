@@ -5,15 +5,15 @@ using System.Collections.Generic;
 
 namespace MyQuanLyTrangSuc.Model;
 
-public partial class Account
+public partial class Permission
 {
-    public string Username { get; set; }
-
-    public string Password { get; set; }
+    public int PermissionId { get; set; }
 
     public int GroupId { get; set; }
 
-    public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
+    public int FunctionId { get; set; }
+
+    public virtual Function Function { get; set; }
 
     public virtual UserGroup Group { get; set; }
 }
