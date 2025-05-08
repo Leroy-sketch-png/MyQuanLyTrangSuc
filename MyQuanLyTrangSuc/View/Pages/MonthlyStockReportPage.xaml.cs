@@ -23,7 +23,7 @@ namespace MyQuanLyTrangSuc.View
         public MonthlyStockReportPage()
         {
             InitializeComponent();
-            _logic = new MonthlyStockReportPageLogic();
+            _logic = new MonthlyStockReportPageLogic(this);
             this.DataContext = _logic;
         }
 
@@ -52,10 +52,10 @@ namespace MyQuanLyTrangSuc.View
             _logic.FilterReports(searchTextBox.Text, searchComboBox.SelectedIndex);
         }
 
-        private void StockReportDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            _logic.OnReportSelected();
-        }
+        //private void StockReportDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    _logic.OnMonthReportSelected();
+        //}
 
         private void ViewButton_Click(object sender, RoutedEventArgs e)
         {
