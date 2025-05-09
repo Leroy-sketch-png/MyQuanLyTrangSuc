@@ -83,12 +83,12 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void Authentification()
         {
-            string currentUserID = (string)System.Windows.Application.Current.Resources["CurrentUserID"];
-            var user = context.Accounts.FirstOrDefault(u => u.EmployeeId == currentUserID);
-            if (user != null)
-            {
-                CurrentUserRole = user.Role;
-            }
+            //string currentUserID = (string)System.Windows.Application.Current.Resources["CurrentUserID"];
+            //var user = context.Accounts.FirstOrDefault(u => u.EmployeeId == currentUserID);
+            //if (user != null)
+            //{
+            //    CurrentUserRole = user.Role;
+            //}
         }
 
         private void UpdateVisibility()
