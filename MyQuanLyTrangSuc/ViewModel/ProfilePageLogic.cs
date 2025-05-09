@@ -90,75 +90,75 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void ProfileLoad(string username)
         {
-            if (string.IsNullOrEmpty(username))
-            {
-                throw new Exception("No user is logged in.");
-            }
+            //if (string.IsNullOrEmpty(username))
+            //{
+            //    throw new Exception("No user is logged in.");
+            //}
 
-            var account = context.Accounts.FirstOrDefault(a => a.Username == username);
+            //var account = context.Accounts.FirstOrDefault(a => a.Username == username);
 
-            if (account != null)
-            {
-                var employee = account.Employee;
+            //if (account != null)
+            //{
+            //    var employee = account.Employee;
 
-                if (employee != null)
-                {
-                    ProfileName = employee.Name;
-                    ProfilePhone = employee.ContactNumber;
-                    ProfileEmail = employee.Email;
-                    ProfileGender = employee.Gender;
-                    DateOfBirth = employee.DateOfBirth;
-                }
-                else
-                {
-                    Console.WriteLine("Employee not found.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Account not found.");
-            }
+            //    if (employee != null)
+            //    {
+            //        ProfileName = employee.Name;
+            //        ProfilePhone = employee.ContactNumber;
+            //        ProfileEmail = employee.Email;
+            //        ProfileGender = employee.Gender;
+            //        DateOfBirth = employee.DateOfBirth;
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("Employee not found.");
+            //    }
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Account not found.");
+            //}
         }
 
         public void ProfileUpdate(string username)
         {
-            var account = context.Accounts.FirstOrDefault(a => a.Username == username);
-            if (account != null)
-            {
-                var employee = context.Employees.FirstOrDefault(e => e.EmployeeId == account.EmployeeId);
-                if (employee != null)
-                {
-                    bool isUpdated = false;
-                        employee.Name = ProfileName;       
-                        if (ProfilePhone.Any(char.IsLetter))
-                        {
-                            MessageBox.Show("Invalid phone number!");
-                        }
-                        else
-                        {
-                            employee.ContactNumber = ProfilePhone;
-                            isUpdated = true;
-                        }
+            //var account = context.Accounts.FirstOrDefault(a => a.Username == username);
+            //if (account != null)
+            //{
+            //    var employee = context.Employees.FirstOrDefault(e => e.EmployeeId == account.EmployeeId);
+            //    if (employee != null)
+            //    {
+            //        bool isUpdated = false;
+            //            employee.Name = ProfileName;       
+            //            if (ProfilePhone.Any(char.IsLetter))
+            //            {
+            //                MessageBox.Show("Invalid phone number!");
+            //            }
+            //            else
+            //            {
+            //                employee.ContactNumber = ProfilePhone;
+            //                isUpdated = true;
+            //            }
                    
-                        if (!ProfileEmail.Contains('@'))
-                        {
-                            MessageBox.Show("Invalid email!");
-                        }
-                        else
-                        {
-                            employee.Email = ProfileEmail;
-                        }
+            //            if (!ProfileEmail.Contains('@'))
+            //            {
+            //                MessageBox.Show("Invalid email!");
+            //            }
+            //            else
+            //            {
+            //                employee.Email = ProfileEmail;
+            //            }
                     
-                        employee.Gender = ProfileGender;
-                        isUpdated = true;
+            //            employee.Gender = ProfileGender;
+            //            isUpdated = true;
                     
-                        employee.DateOfBirth = DateOfBirth.Value;
-                    MessageBox.Show("The profile has been updated!");
-                    context.Entry(employee).State = EntityState.Modified;
-                        context.SaveChanges();
+            //            employee.DateOfBirth = DateOfBirth.Value;
+            //        MessageBox.Show("The profile has been updated!");
+            //        context.Entry(employee).State = EntityState.Modified;
+            //            context.SaveChanges();
 
-                    }
-                }
+            //        }
+            //    }
             }
         
 
@@ -194,29 +194,29 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void CancelUpdate(string username)
         {
-            var account = context.Accounts.FirstOrDefault(a => a.Username == username);
+            //var account = context.Accounts.FirstOrDefault(a => a.Username == username);
 
-            if (account != null)
-            {
-                var employee = account.Employee;
+            //if (account != null)
+            //{
+            //    var employee = account.Employee;
 
-                if (employee != null)
-                {
-                    ProfileName = employee.Name;
-                    ProfilePhone = employee.ContactNumber;
-                    ProfileEmail = employee.Email;
-                    ProfileGender = employee.Gender;
-                    DateOfBirth = employee.DateOfBirth;
-                }
-                else
-                {
-                    Console.WriteLine("Employee not found.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Account not found.");
-            }
+            //    if (employee != null)
+            //    {
+            //        ProfileName = employee.Name;
+            //        ProfilePhone = employee.ContactNumber;
+            //        ProfileEmail = employee.Email;
+            //        ProfileGender = employee.Gender;
+            //        DateOfBirth = employee.DateOfBirth;
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("Employee not found.");
+            //    }
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Account not found.");
+            //}
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

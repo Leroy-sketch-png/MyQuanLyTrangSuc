@@ -94,57 +94,56 @@ namespace MyQuanLyTrangSuc.ViewModel
         }
         public void ResetPassword(PasswordBox newPasswordBox, PasswordBox confirmPasswordBox, string email)
         {
-            string newPassword = newPasswordBox.Password.Trim();
-            string confirmPassword = confirmPasswordBox.Password.Trim();
+            //string newPassword = newPasswordBox.Password.Trim();
+            //string confirmPassword = confirmPasswordBox.Password.Trim();
 
-            if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
-            {
-                notificationWindowLogic.LoadNotification("Error", "Please fill in all fields!", "BottomRight");
-                return;
-            }
+            //if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
+            //{
+            //    notificationWindowLogic.LoadNotification("Error", "Please fill in all fields!", "BottomRight");
+            //    return;
+            //}
 
-            if (newPassword != confirmPassword)
-            {
-                notificationWindowLogic.LoadNotification("Error", "The new password and confirmation password do not match!", "BottomRight");
-                return;
-            }
-            var employee = context.Employees.FirstOrDefault(emp => emp.Email == email);
-            if (employee != null)
-            {
-                var account = context.Accounts.FirstOrDefault(acc => acc.EmployeeId == employee.EmployeeId);
-                if (account != null)
-                {
-                    if (account.PasswordHash == newPassword)
-                    {
-                        notificationWindowLogic.LoadNotification("Error", "The new password cannot be the same as the old one!", "BottomRight");
-                        return;
-                    }
+            //if (newPassword != confirmPassword)
+            //{
+            //    notificationWindowLogic.LoadNotification("Error", "The new password and confirmation password do not match!", "BottomRight");
+            //    return;
+            //}
+            //var employee = context.Employees.FirstOrDefault(emp => emp.Email == email);
+            //if (employee != null)
+            //{
+            //    var account = context.Accounts.FirstOrDefault(acc => acc.EmployeeId == employee.EmployeeId);
+            //    if (account != null)
+            //    {
+            //        if (account.PasswordHash == newPassword)
+            //        {
+            //            notificationWindowLogic.LoadNotification("Error", "The new password cannot be the same as the old one!", "BottomRight");
+            //            return;
+            //        }
 
-                    account.PasswordHash = newPassword;
+            //        account.PasswordHash = newPassword;
 
-                    try
-                    {
-                        context.SaveChanges();
-                        notificationWindowLogic.LoadNotification("Success", "Password has been reset successfully!", "BottomRight");
-                        flag = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        notificationWindowLogic.LoadNotification("Error", $"An error occured while saving changes: {ex.Message}!", "BottomRight");
-                    }
+            //        try
+            //        {
+            //            context.SaveChanges();
+            //            notificationWindowLogic.LoadNotification("Success", "Password has been reset successfully!", "BottomRight");
+            //            flag = true;
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            notificationWindowLogic.LoadNotification("Error", $"An error occured while saving changes: {ex.Message}!", "BottomRight");
+            //        }
 
-                }
-                else
-                {
-                    notificationWindowLogic.LoadNotification("Error", "Account not found in database!", "BottomRight");
-                }
+            //    }
+            //    else
+            //    {
+            //        notificationWindowLogic.LoadNotification("Error", "Account not found in database!", "BottomRight");
+            //    }
 
-            }
-            else
-            {
-                notificationWindowLogic.LoadNotification("Error", "The provided email not found!", "BottomRight");
-            }
-
+            //}
+            //else
+            //{
+            //    notificationWindowLogic.LoadNotification("Error", "The provided email not found!", "BottomRight");
+            //}
         }
     }
 }

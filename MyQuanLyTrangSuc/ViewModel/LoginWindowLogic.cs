@@ -56,53 +56,53 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void Login(PasswordBox passwordBox)
         {
-            try
-            {
-                if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(passwordBox.Password))
-                {
-                    string password = passwordBox.Password;
+            //try
+            //{
+            //    if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(passwordBox.Password))
+            //    {
+            //        string password = passwordBox.Password;
 
-                    var account = context.Accounts.FirstOrDefault(a => a.Username == userName && a.PasswordHash == password);
+            //        var account = context.Accounts.FirstOrDefault(a => a.Username == userName && a.PasswordHash == password);
 
-                    if (account != null)
-                    {
-                        WpfApplication.Current.Resources["CurrentUserID"] = account.EmployeeId;
+            //        if (account != null)
+            //        {
+            //            WpfApplication.Current.Resources["CurrentUserID"] = account.EmployeeId;
 
-                        string role = account.Role;
-                        if (role == "user")
-                        {
-                            var mainWindow = new MainNavigationWindow();
-                            mainWindow.Show();
-                            loginWindow.Close();
-                            notificationLogic.LoadNotification("Success", "You have logged in!", "BottomRight");
-                        }
-                        else if (role == "admin")
-                        {
-                            var mainWindow = new MainNavigationWindow();
-                            mainWindow.Show();
-                            loginWindow.Close();
-                            notificationLogic.LoadNotification("Success", "You have logged in!", "BottomRight");
-                        }
-                        else
-                        {
-                            notificationLogic.LoadNotification("Error", "You do not have the necessary permissions to access this application!", "BottomRight");
-                        }
-                    }
-                    else
-                    {
-                        notificationLogic.LoadNotification("Error", "Invalid credentials. Please try again.", "BottomRight");
-                    }
-                }
-                else
-                {
-                    notificationLogic.LoadNotification("Error", "Please enter both username and password.", "BottomRight");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-                notificationLogic.LoadNotification("Error", $"An error occurred: {ex.Message}", "BottomRight");
-            }
+            //            string role = account.Role;
+            //            if (role == "user")
+            //            {
+            //                var mainWindow = new MainNavigationWindow();
+            //                mainWindow.Show();
+            //                loginWindow.Close();
+            //                notificationLogic.LoadNotification("Success", "You have logged in!", "BottomRight");
+            //            }
+            //            else if (role == "admin")
+            //            {
+            //                var mainWindow = new MainNavigationWindow();
+            //                mainWindow.Show();
+            //                loginWindow.Close();
+            //                notificationLogic.LoadNotification("Success", "You have logged in!", "BottomRight");
+            //            }
+            //            else
+            //            {
+            //                notificationLogic.LoadNotification("Error", "You do not have the necessary permissions to access this application!", "BottomRight");
+            //            }
+            //        }
+            //        else
+            //        {
+            //            notificationLogic.LoadNotification("Error", "Invalid credentials. Please try again.", "BottomRight");
+            //        }
+            //    }
+            //    else
+            //    {
+            //        notificationLogic.LoadNotification("Error", "Please enter both username and password.", "BottomRight");
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine("Error: " + ex.Message);
+            //    notificationLogic.LoadNotification("Error", $"An error occurred: {ex.Message}", "BottomRight");
+            //}
         }
     }
 }
