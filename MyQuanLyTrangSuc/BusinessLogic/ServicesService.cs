@@ -33,7 +33,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             serviceRepository = new ServiceRepository();
         }
 
-        public string GenerateNewCustomerID()
+        public string GenerateNewServiceID()
         {
             string lastID = serviceRepository.GetLastServiceID();
             int newNumber = 1;
@@ -59,7 +59,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             return price.HasValue && price.Value >= 0;
         }
 
-        public bool IsValidCustomerData(string name, decimal? price)
+        public bool IsValidServiceData(string name, decimal? price)
         {
             return IsValidName(name) && IsValidPrice(price);
         }
@@ -86,7 +86,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
 
             Service newService = new Service()
             {
-                ServiceId = GenerateNewCustomerID(),
+                ServiceId = GenerateNewServiceID(),
                 ServiceName = name,
                 ServicePrice = price,
                 MoreInfo = moreInfo,
@@ -134,7 +134,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             return serviceRepository.SearchServiceByID(id);
         }
 
-        /*
+        
         //import excel files
         public void ImportExcelFile()
         {
@@ -156,12 +156,17 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             }
 
             DataTable dt = new DataTable();
-            dt.Columns.Add("Name");
-            dt.Columns.Add("Email");
-            dt.Columns.Add("ContactNumber");
-            dt.Columns.Add("Address");
-            dt.Columns.Add("Birthday");
-            dt.Columns.Add("Gender");
+            dt.Columns.Add("ID");
+            dt.Columns.Add("Created Date");
+            dt.Columns.Add("Customer");
+            /*
+            // do 4 trường này được tính toán / suy luận ra từ ServiceDetail, nên không lưu trữ
+            dt.Columns.Add("Total");
+            dt.Columns.Add("Prepaid");
+            dt.Columns.Add("Remain");
+            dt.Columns.Add("Status");
+            */
+            // dt.Columns.Add("Operation"); // chưa rõ là gì, do trong biểu mẫu 4 không có trường nào tương ứng
             try
             {
                 //Open excel file
@@ -177,17 +182,11 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                     try
                     {
                         int j = 1;
-                        string name = workSheet.Cells[i, j++].Text;
-                        string email = workSheet.Cells[i, j++].Text;
-                        string phone = workSheet.Cells[i, j++].Text;
-                        string address = workSheet.Cells[i, j++].Text;
-                        string birthday = workSheet.Cells[i, j++].Text;
-                        string gender = workSheet.Cells[i, j++].Text;
+                        string id = workSheet.Cells[i, j++].Text;
+                        string created_date = workSheet.Cells[i, j++].Text;
+                        string customer = workSheet.Cells[i, j++].Text;
 
-                        //MessageBox.Show($"Row {i}: {name}, {email}, {phone}, {address}");
-
-
-                        if (!IsValidCustomerData(name, email, phone))
+                        if (!IsValidServicesData(id, created_date, customer))
                         {
                             MessageBox.Show($"Invalid data at row {i}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             continue;
@@ -220,7 +219,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             }
 
         }
-        */
+        
 
         /*
         //export excel file
