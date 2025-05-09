@@ -22,6 +22,12 @@ namespace MyQuanLyTrangSuc.DataAccess
             return lastID;
         }
 
+        public string GetLastServiceRecordID()
+        {
+            var lastID = context.ServiceRecords.OrderByDescending(c => c.ServiceRecordId).Select(c => c.ServiceRecordId).FirstOrDefault();
+            return lastID;
+        }
+
         public Service GetServicesByDetails(string name, decimal? price, string moreInfo)
         {
             return context.Services.FirstOrDefault(c => c.ServiceName == name && c.ServicePrice == price && c.MoreInfo == moreInfo);
@@ -36,6 +42,12 @@ namespace MyQuanLyTrangSuc.DataAccess
         public void UpdateService(Service service)
         {
             context.SaveChangesAdded(service);
+        }
+
+        public void AddServiceRecord(ServiceRecord serviceRecord)
+        {
+            context.ServiceRecords.Add(serviceRecord);
+            context.SaveChangesAdded(serviceRecord);
         }
 
         public List<Service> GetListOfServices()

@@ -114,18 +114,18 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        /*
+        
         //Import excel file
         public void ImportExcelFile()
         {
             servicesService.ImportExcelFile();
         }
-
+        
         //Export excel file
-        public void ExportExcelFile(DataGrid customersDataGrid)
+        public void ExportExcelFile(DataGrid servicesDataGrid)
         {
-            servicesService.ExportExcelFile(customersDataGrid);
+            servicesService.ExportExcelFile(servicesDataGrid);
         }
-        */
+        
     }
 }

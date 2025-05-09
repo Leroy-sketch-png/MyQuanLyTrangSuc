@@ -17,6 +17,14 @@ public partial class ServiceRecord
 
     public string ImagePath { get; set; }
 
+    public decimal? Total { get; set; }
+    
+    public decimal? Prepaid { get; set; }
+    
+    public decimal? Remain { get; set; }
+   
+    public string Status { get; set; }
+
     public virtual Customer Customer { get; set; }
 
     public virtual Employee Employee { get; set; }

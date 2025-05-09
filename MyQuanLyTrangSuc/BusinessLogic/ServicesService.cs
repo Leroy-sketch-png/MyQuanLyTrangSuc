@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.IdentityModel.Tokens;
+using Microsoft.Win32;
 using MyQuanLyTrangSuc.DataAccess;
 using MyQuanLyTrangSuc.Model;
 using OfficeOpenXml;
@@ -18,10 +19,14 @@ namespace MyQuanLyTrangSuc.BusinessLogic
 {
     public class ServicesService
     {
+        private readonly CustomerService customerService;
         private readonly ServiceRepository serviceRepository;
-        private readonly string prefix = "DV"; //Dich vu
+        private readonly string prefix1 = "DV"; //Dich vu
+        private readonly string prefix2 = "PDV"; //Phieu dich vu
         public event Action<Service> OnServiceAdded; //add or update
         public event Action<Service> OnServiceUpdated; //edit
+        public event Action<ServiceRecord> OnServiceRecordAdded;
+        public event Action<ServiceRecord> OnServiceRecordUpdated;
 
         //singleton
         private static ServicesService _instance;
@@ -38,15 +43,31 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             string lastID = serviceRepository.GetLastServiceID();
             int newNumber = 1;
 
-            if (!string.IsNullOrEmpty(lastID) && lastID.StartsWith(prefix))
+            if (!string.IsNullOrEmpty(lastID) && lastID.StartsWith(prefix1))
             {
-                string numericPart = lastID.Substring(prefix.Length);
+                string numericPart = lastID.Substring(prefix1.Length);
                 if (int.TryParse(numericPart, out int parsedNumber))
                 {
                     newNumber = parsedNumber + 1;
                 }
             }
-            return $"{prefix}{newNumber:D3}";
+            return $"{prefix1}{newNumber:D3}";
+        }
+
+        public string GenerateNewServiceRecordID()
+        {
+            string lastID = serviceRepository.GetLastServiceRecordID();
+            int newNumber = 1;
+
+            if (!string.IsNullOrEmpty(lastID) && lastID.StartsWith(prefix2))
+            {
+                string numericPart = lastID.Substring(prefix2.Length);
+                if (int.TryParse(numericPart, out int parsedNumber))
+                {
+                    newNumber = parsedNumber + 1;
+                }
+            }
+            return $"{prefix2}{newNumber:D3}";
         }
 
         public bool IsValidName(string name)
@@ -63,6 +84,13 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         {
             return IsValidName(name) && IsValidPrice(price);
         }
+
+        /*
+        public bool IsValidServiceRecordData(string id) //, string customer_name
+        {
+            return IsValidName(id); // && IsValidCustomerName(customer_name)
+        }
+        */
 
         //add new service
         public string AddOrUpdateService(string name, decimal? price, string moreInfo)
@@ -159,14 +187,11 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             dt.Columns.Add("ID");
             dt.Columns.Add("Created Date");
             dt.Columns.Add("Customer");
-            /*
-            // do 4 trường này được tính toán / suy luận ra từ ServiceDetail, nên không lưu trữ
             dt.Columns.Add("Total");
             dt.Columns.Add("Prepaid");
             dt.Columns.Add("Remain");
             dt.Columns.Add("Status");
-            */
-            // dt.Columns.Add("Operation"); // chưa rõ là gì, do trong biểu mẫu 4 không có trường nào tương ứng
+
             try
             {
                 //Open excel file
@@ -185,26 +210,42 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                         string id = workSheet.Cells[i, j++].Text;
                         string created_date = workSheet.Cells[i, j++].Text;
                         string customer = workSheet.Cells[i, j++].Text;
+                        string total = workSheet.Cells[i, j++].Text;
+                        string prepaid = workSheet.Cells[i, j++].Text;
+                        string remain = workSheet.Cells[i, j++].Text;
+                        string status = workSheet.Cells[i, j++].Text;
 
-                        if (!IsValidServicesData(id, created_date, customer))
+                        /*
+                        // Tìm Customer theo tên
+                        var customer = CustomerRepository.GetCustomerByName(customerName);
+                        if (customer == null)
+                        {
+                            MessageBox.Show($"Customer '{customerName}' not found at row {i}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            continue;
+                        }
+                        */
+                        
+                        /*
+                        if (!IsValidServiceRecordData(id))
                         {
                             MessageBox.Show($"Invalid data at row {i}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             continue;
                         }
-                        Customer cus = new Customer()
+                        */
+
+                        ServiceRecord serRec = new ServiceRecord()
                         {
-                            CustomerId = GenerateNewCustomerID(),
-                            CustomerName = name,
-                            Email = email,
-                            ContactNumber = phone,
-                            Address = address,
-                            DateOfBirth = DateTime.Parse(birthday),
-                            Gender = gender,
-                            IsDeleted = false
+                            ServiceRecordId = GenerateNewServiceRecordID(),
+                            CreateDate = DateTime.Parse(created_date),
+                            CustomerId = customer, //smell sth not good here
+                            Total = decimal.TryParse(total, out var t) ? t : null,
+                            Prepaid = decimal.TryParse(prepaid, out var p) ? p : null,
+                            Remain = decimal.TryParse(remain, out var r) ? r : null,
+                            Status = status
                         };
                         //MessageBox.Show(sup.SupplierId + " " + sup.Name);
-                        customerRepository.AddCustomer(cus);
-                        OnCustomerAdded.Invoke(cus);
+                        serviceRepository.AddServiceRecord(serRec);
+                        OnServiceRecordAdded.Invoke(serRec);
                     }
                     catch (Exception e)
                     {
@@ -221,9 +262,9 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         }
         
 
-        /*
+        
         //export excel file
-        public void ExportExcelFile(DataGrid customersDataGrid)
+        public void ExportExcelFile(DataGrid serviceRecordsDataGrid)
         {
             string filePath = "";
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -251,14 +292,14 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                     p.Workbook.Properties.Author = "NMCNPM";
 
                     //Title
-                    p.Workbook.Properties.Title = "Customer Report";
+                    p.Workbook.Properties.Title = "Service Record Report";
 
                     //Sheet
-                    p.Workbook.Worksheets.Add("Customer Sheet");
+                    p.Workbook.Worksheets.Add("Service Record Sheet");
 
                     ExcelWorksheet ws = p.Workbook.Worksheets[0];
 
-                    ws.Name = "Customer Sheet";
+                    ws.Name = "Service Record Sheet";
 
                     //Default font size
                     ws.Cells.Style.Font.Size = 12;
@@ -267,11 +308,11 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                     ws.Cells.Style.Font.Name = "Cambria";
 
                     //List of column header
-                    string[] arrColumnHeader = { "ID", "Name", "Email", "Telephone", "Address", "Birthday", "Gender" };
+                    string[] arrColumnHeader = { "ID", "Created Date", "Customer", "Total", "Prepaid", "Remain", "Status" };
                     var countColumnHeader = arrColumnHeader.Count();
 
                     //Merge, bold, center
-                    ws.Cells[1, 1].Value = "Supplier List";
+                    ws.Cells[1, 1].Value = "Service Record List";
                     ws.Cells[1, 1, 1, countColumnHeader].Merge = true;
                     ws.Cells[1, 1, 1, countColumnHeader].Style.Font.Bold = true;
                     ws.Cells[1, 1, 1, countColumnHeader].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -296,7 +337,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                     }
 
                     rowIndex = 3;
-                    foreach (var item in customersDataGrid.Items)
+                    foreach (var item in serviceRecordsDataGrid.Items)
                     {
                         colIndex = 1;
                         foreach (var columnName in arrColumnHeader)
@@ -304,7 +345,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                             System.Windows.Controls.DataGridColumn targetColumn = null;
 
                             // Check valid column
-                            foreach (var column in customersDataGrid.Columns)
+                            foreach (var column in serviceRecordsDataGrid.Columns)
                             {
                                 if (column.Header != null && column.Header.ToString() == columnName)
                                 {
@@ -344,6 +385,6 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                 MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        */
+        
     }
 }

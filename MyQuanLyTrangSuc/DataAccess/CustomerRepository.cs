@@ -1,4 +1,5 @@
-﻿using MyQuanLyTrangSuc.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,6 @@ namespace MyQuanLyTrangSuc.DataAccess
         {
             return context.Customers.Find(id);
         }
-
 
         //delete
         public void DeleteCustomer(Customer temp)

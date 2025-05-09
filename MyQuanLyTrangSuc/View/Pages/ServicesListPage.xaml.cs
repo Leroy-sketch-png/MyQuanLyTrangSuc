@@ -65,16 +65,16 @@ namespace MyQuanLyTrangSuc.View
             }
         }
 
-        /*
+        
         private void importExcelFileButton_Click(object sender, RoutedEventArgs e)
         {
             logicService.ImportExcelFile();
         }
-
+        
         private void exportExcelFileButton_Click(object sender, RoutedEventArgs e)
         {
-            logicService.ExportExcelFile(customersDataGrid);
+            logicService.ExportExcelFile(servicesDataGrid);
         }
-        */
+        
     }
 }
