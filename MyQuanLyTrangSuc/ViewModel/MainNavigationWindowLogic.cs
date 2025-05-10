@@ -1,52 +1,44 @@
-﻿using MyQuanLyTrangSuc.View;
-using MyQuanLyTrangSuc.Model;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using static System.Net.Mime.MediaTypeNames;
+using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.View;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
     public class MainNavigationWindowLogic : INotifyPropertyChanged
     {
-        private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
+        private readonly MyQuanLyTrangSucContext _context = MyQuanLyTrangSucContext.Instance;
 
-        // Static instance
+        // Static singleton instance
         private static MainNavigationWindowLogic instance;
         public static MainNavigationWindowLogic Instance
         {
             get
             {
                 if (instance != null)
-                {
                     Console.WriteLine(instance.ToString());
-                }
                 else
-                {
                     Console.WriteLine("NULL");
-                }
                 return instance;
             }
         }
 
-        // Dependency, the logic when static instance initialized always have the corresponding UI
-        private MainNavigationWindow mainNavigationWindowUI;
+        private readonly MainNavigationWindow _ui;
 
+        // Private constructors
         private MainNavigationWindowLogic() { }
-
         private MainNavigationWindowLogic(MainNavigationWindow mainNavigationWindowUI)
         {
-            this.mainNavigationWindowUI = mainNavigationWindowUI;
+            _ui = mainNavigationWindowUI;
+            // Immediately authenticate once UI is set
+            Authentification();
         }
 
-        // Instance by default is null, use Initialize for constructor is private and need to be called outside the class
+        // Public initializer
         public static bool Initialize(MainNavigationWindow mainNavigationWindowUI)
         {
             if (instance == null)
@@ -61,7 +53,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         private string _currentUserRole;
         public string CurrentUserRole
         {
-            get { return _currentUserRole; }
+            get => _currentUserRole;
             set
             {
                 _currentUserRole = value;
@@ -73,7 +65,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         private Visibility _humanResourceButtonVisibility;
         public Visibility HumanResourceButtonVisibility
         {
-            get { return _humanResourceButtonVisibility; }
+            get => _humanResourceButtonVisibility;
             set
             {
                 _humanResourceButtonVisibility = value;
@@ -81,48 +73,52 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
+        /// <summary>
+        /// Loads the current user's role by looking up the stored Username in resources.
+        /// </summary>
         public void Authentification()
         {
-            //string currentUserID = (string)System.Windows.Application.Current.Resources["CurrentUserID"];
-            //var user = context.Accounts.FirstOrDefault(u => u.EmployeeId == currentUserID);
-            //if (user != null)
-            //{
-            //    CurrentUserRole = user.Role;
-            //}
+            string currentUsername = (string)Application.Current.Resources["CurrentUserID"];
+            if (string.IsNullOrEmpty(currentUsername))
+            {
+                CurrentUserRole = "user";
+                return;
+            }
+
+            // Lookup Account by Username and include its Group
+            var account = _context.Accounts
+                .Include(a => a.Group)
+                .FirstOrDefault(a => a.Username == currentUsername);
+
+            // Use the group name (or default to "user")
+            CurrentUserRole = account?.Group?.GroupName ?? "user";
         }
 
         private void UpdateVisibility()
         {
-            HumanResourceButtonVisibility = (CurrentUserRole == "user ") ? Visibility.Collapsed : Visibility.Visible;
+            // Show Human Resource button only for non-"user" roles
+            HumanResourceButtonVisibility =
+                !string.Equals(CurrentUserRole, "user", StringComparison.OrdinalIgnoreCase)
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
         }
 
-        // INotifyPropertyChanged implementation
+        // INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
-
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        // Different for not singleton
-        public void LoadItemPropertiesPage(ItemPropertiesPage itemPropertiesPageUI)
-        {
-            mainNavigationWindowUI.MainFrame.Navigate(itemPropertiesPageUI);
-        }
+        // Navigation methods
+        public void LoadItemPropertiesPage(ItemPropertiesPage page)
+            => _ui.MainFrame.Navigate(page);
 
-        public void LoadEmployeePropertiesPage(EmployeePropertiesPage employeePropertiesPageUI)
-        {
-            mainNavigationWindowUI.MainFrame.Navigate(employeePropertiesPageUI);
-        }
+        public void LoadEmployeePropertiesPage(EmployeePropertiesPage page)
+            => _ui.MainFrame.Navigate(page);
 
         public void LoadItemListPage()
-        {
-            mainNavigationWindowUI.MainFrame.Navigate(mainNavigationWindowUI.ItemListPage);
-        }
+            => _ui.MainFrame.Navigate(_ui.ItemListPage);
 
         public void LoadEmployeeListPage()
-        {
-            mainNavigationWindowUI.MainFrame.Navigate(mainNavigationWindowUI.EmployeeListPage);
-        }
+            => _ui.MainFrame.Navigate(_ui.EmployeeListPage);
     }
 }
