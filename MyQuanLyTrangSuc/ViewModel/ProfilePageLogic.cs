@@ -16,16 +16,12 @@ namespace MyQuanLyTrangSuc.ViewModel
         private readonly ProfilePage profilePageUI;
         private readonly string _username;
 
-        // Updated constructor to accept username (here: EmployeeId) and set DataContext first
         public ProfilePageLogic(ProfilePage profilePageUI, string username)
         {
             this.profilePageUI = profilePageUI ?? throw new ArgumentNullException(nameof(profilePageUI));
             _username = username ?? throw new ArgumentNullException(nameof(username));
 
-            // 1) Set the DataContext before loading any bound properties
             profilePageUI.DataContext = this;
-
-            // 2) Load initial profile values
             ProfileLoad();
         }
 
@@ -73,10 +69,9 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void ProfileLoad()
         {
-            // Treat _username as EmployeeId
             var emp = context.Employees
                 .AsNoTracking()
-                .FirstOrDefault(e => e.EmployeeId == _username);
+                .FirstOrDefault(e => e.Username == _username);
 
             if (emp == null)
             {
@@ -94,9 +89,8 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void ProfileUpdate()
         {
-            // Treat _username as EmployeeId
             var emp = context.Employees
-                .FirstOrDefault(e => e.EmployeeId == _username);
+                .FirstOrDefault(e => e.Username == _username);
 
             if (emp == null) return;
 
@@ -119,6 +113,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             else emp.Email = ProfileEmail;
 
             emp.Gender = ProfileGender;
+
             if (DateOfBirth.HasValue)
                 emp.DateOfBirth = DateOfBirth.Value;
             else
@@ -158,9 +153,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 ProfileImagePath = dlg.FileName;
 
-                // Treat _username as EmployeeId
                 var emp = context.Employees
-                    .FirstOrDefault(e => e.EmployeeId == _username);
+                    .FirstOrDefault(e => e.Username == _username);
 
                 if (emp == null) return;
 

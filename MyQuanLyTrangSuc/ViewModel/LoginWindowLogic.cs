@@ -1,108 +1,103 @@
-﻿using MyQuanLyTrangSuc.Model;
-using MyQuanLyTrangSuc.View;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
-using static System.Net.Mime.MediaTypeNames;
-using WpfApplication = System.Windows.Application;
+using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.View;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
-    class LoginWindowLogic
+    public class LoginWindowLogic
     {
-        private readonly NotificationWindowLogic notificationLogic = new NotificationWindowLogic();
-        private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
-     
-        //Data context binding zone
-        public string userName { get; set; }
-        private const string USER = "user ";
-        private const string ADMIN = "admin";
-        //
+        private readonly LoginWindow _view;
+        private readonly MyQuanLyTrangSucContext _context = MyQuanLyTrangSucContext.Instance;
+        private readonly NotificationWindowLogic _notification;
 
-        private LoginWindow loginWindow;
+        public string Username { get; set; }
 
-        public LoginWindowLogic()
+        public LoginWindowLogic(LoginWindow view)
         {
+            _view = view ?? throw new ArgumentNullException(nameof(view));
+            _notification = new NotificationWindowLogic();
         }
 
-        public LoginWindowLogic(LoginWindow loginWindow)   
-        {
-            this.loginWindow = loginWindow;
-        }
-
-        public void ChangeToDarkTheme(Border rightBorder, Border leftBorder)
-        {
-            rightBorder.Background = new SolidColorBrush(Color.FromArgb(255, 39, 46, 60)); // #FF272E3C
-            leftBorder.Background = new SolidColorBrush(Colors.White); // White
-        }
-
-        public void ChangeToLightTheme(Border rightBorder, Border leftBorder)
-        {
-            rightBorder.Background = new SolidColorBrush(Colors.White); // White
-            leftBorder.Background = new SolidColorBrush(Color.FromArgb(255, 39, 46, 60)); // #FF272E3C
-        }
-
-        public void LoadVerificationWindow()
-        {
-            VerificationWindow window = new VerificationWindow();
-            window.Show();
-        }
-
+        /// <summary>
+        /// Called by the view when the Login button is clicked.
+        /// </summary>
         public void Login(PasswordBox passwordBox)
         {
+            // 1) Read credentials
+            string enteredUsername = Username?.Trim();
+            string enteredPassword = passwordBox?.Password ?? string.Empty;
+
+            if (string.IsNullOrEmpty(enteredUsername))
+            {
+                MessageBox.Show("Please enter a username.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            if (string.IsNullOrEmpty(enteredPassword))
+            {
+                MessageBox.Show("Please enter a password.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             try
             {
-                if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(passwordBox.Password))
+                // 2) Look up the account (include Group so Main logic can use it)
+                var account = _context.Accounts
+                    .Include(a => a.Group)
+                    .FirstOrDefault(a => a.Username == enteredUsername && a.Password == enteredPassword);
+
+                if (account == null)
                 {
-                    string password = passwordBox.Password;
-
-                    var account = context.Accounts.FirstOrDefault(a => a.Username == userName && a.PasswordHash == password);
-
-                    if (account != null)
-                    {
-                        WpfApplication.Current.Resources["CurrentUserID"] = account.EmployeeId;
-
-                        string role = account.Role;
-                        if (role == "user") 
-                        {
-                            var mainWindow = new MainNavigationWindow();
-                            mainWindow.Show();
-                            loginWindow.Close();
-                            notificationLogic.LoadNotification("Success", "You have logged in!", "BottomRight");
-                        }
-                        else if (role == "admin")
-                        {
-                            var mainWindow = new MainNavigationWindow();
-                            mainWindow.Show();
-                            loginWindow.Close();
-                            notificationLogic.LoadNotification("Success", "You have logged in!", "BottomRight");
-                        }
-                        else
-                        {
-                            notificationLogic.LoadNotification("Error", "You do not have the necessary permissions to access this application!", "BottomRight");
-                        }
-                    }
-                    else
-                    {
-                        notificationLogic.LoadNotification("Error", "Invalid credentials. Please try again.", "BottomRight");
-                    }
+                    _notification.LoadNotification("Error", "Invalid credentials", "BottomRight");
+                    return;
                 }
-                else
-                {
-                    notificationLogic.LoadNotification("Error", "Please enter both username and password.", "BottomRight");
-                }
+
+                // 3) Store the Username as the current user
+                Application.Current.Resources["CurrentUserID"] = account.Username;
+
+                // 4) Initialize main navigation and open the main window
+                var mainWindow = new MainNavigationWindow();
+                MainNavigationWindowLogic.Initialize(mainWindow);
+                mainWindow.Show();
+
+                // 5) Close the login window
+                _view.Close();
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
-                notificationLogic.LoadNotification("Error", $"An error occurred: {ex.Message}", "BottomRight");
+                MessageBox.Show($"An error occurred during login: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        /// <summary>
+        /// Optional: show the Forgot Password / Verification window.
+        /// </summary>
+        public void LoadVerificationWindow()
+        {
+            var verify = new VerificationWindow();
+            verify.ShowDialog();
+        }
+
+        /// <summary>
+        /// Switches to dark theme in your login view.
+        /// </summary>
+        public void ChangeToDarkTheme(Border rightBorder, Border leftBorder)
+        {
+            rightBorder.Background = Brushes.Black;
+            leftBorder.Background = Brushes.Black;
+        }
+
+        /// <summary>
+        /// Switches to light theme.
+        /// </summary>
+        public void ChangeToLightTheme(Border rightBorder, Border leftBorder)
+        {
+            rightBorder.Background = Brushes.WhiteSmoke;
+            leftBorder.Background = Brushes.WhiteSmoke;
         }
     }
 }
