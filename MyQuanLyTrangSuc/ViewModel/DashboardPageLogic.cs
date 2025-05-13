@@ -13,30 +13,32 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
-
+using System.Windows.Media;
+using static MyQuanLyTrangSuc.ViewModel.DashboardPageLogic;
+using System.Globalization;
+using System.Windows.Data;
 namespace MyQuanLyTrangSuc.ViewModel {
-    public class DashboardPageLogic {
-
+    public class DashboardPageLogic : INotifyPropertyChanged {
         private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
         private readonly DashboardPage dashboardPage;
 
         private readonly TotalProductSold totalProductSold;
         private readonly RevenueCalculator revenueCalculator;
-
         private Func<double, string> DateFormatter;
         private Func<double, string> NetFormatter;
-        private SeriesCollection SeriesCollection;
-        private LineSeries lineSeries;
+        public SeriesCollection SeriesCollection { get; set; }
+
+        private LineSeries positiveSeries, negativeSeries;
 
         private DateTime? selectedFromDate;
         private DateTime? selectedUntilDate;
 
-        //DataContext Zone
         public DateTime? SelectedFromDate {
             get => selectedFromDate;
             set {
                 if (value != selectedFromDate) {
                     selectedFromDate = value;
+                    OnPropertyChanged(nameof(SelectedFromDate));
                     LoadData();
                 }
             }
@@ -47,77 +49,148 @@ namespace MyQuanLyTrangSuc.ViewModel {
             set {
                 if (value != selectedUntilDate) {
                     selectedUntilDate = value;
+                    OnPropertyChanged(nameof(SelectedUntilDate));
                     LoadData();
                 }
             }
         }
 
-        //
         public DashboardPageLogic(DashboardPage dashboardPage) {
             this.dashboardPage = dashboardPage;
 
             totalProductSold = new TotalProductSold();
             revenueCalculator = new RevenueCalculator();
 
+            // Formatters for axes
             DateFormatter = value => new DateTime((long)value).ToString("dd-MM");
             NetFormatter = value => $"{value:N}";
 
+            // Map DateTimePoint X,Y
             var dayConfig = Mappers.Xy<DateTimePoint>()
-                .X(dateModel => dateModel.DateTime.Ticks)
-                .Y(dateModel => dateModel.Value);
+                .X(dp => dp.DateTime.Ticks)
+                .Y(dp => dp.Value);
 
-            lineSeries = new LineSeries {
+            // Positive (green) line
+            positiveSeries = new LineSeries {
+                Title = ">= 0",
                 Values = new ChartValues<DateTimePoint>(),
-                Configuration = dayConfig
+                Configuration = dayConfig,
+                Stroke = Brushes.Green,
+                Fill = Brushes.Transparent,
             };
 
-            SeriesCollection = new SeriesCollection { lineSeries };
+            // Negative (red) line
+            negativeSeries = new LineSeries {
+                Title = "< 0",
+                Values = new ChartValues<DateTimePoint>(),
+                Configuration = dayConfig,
+                Stroke = Brushes.Red,
+                Fill = Brushes.Transparent,
+            };
 
-            selectedFromDate = DateTime.Now;
-            selectedUntilDate = DateTime.Now;
+            SeriesCollection = new SeriesCollection
+            {
+                positiveSeries,
+                negativeSeries
+            };
 
+            // Default range: one month ago -> today
+            selectedFromDate = DateTime.Today.AddMonths(-1);
+            selectedUntilDate = DateTime.Today;
+
+            // Initial load & binding
+            LoadData();
             BindDataToUI();
         }
 
         private void LoadData() {
-            lineSeries.Values.Clear();
+            positiveSeries.Values.Clear();
+            negativeSeries.Values.Clear();
+
             if (selectedFromDate == null || selectedUntilDate == null) return;
 
             var importData = context.Imports
                 .Where(i => i.Date >= selectedFromDate && i.Date <= selectedUntilDate)
-                .Select(i => new { i.Date, Value = -i.TotalAmount })
+                .Select(i => new { Date = i.Date.Value, Value = -i.TotalAmount })
                 .ToList();
 
             var exportData = context.Invoices
                 .Where(e => e.Date >= selectedFromDate && e.Date <= selectedUntilDate)
-                .Select(e => new { e.Date, Value = e.TotalAmount })
+                .Select(e => new { Date = e.Date.Value, Value = e.TotalAmount })
                 .ToList();
 
-            var combinedData = importData
-                .Select(i => new DateTimePoint(i.Date ?? DateTime.MinValue, (double)i.Value))
-                .Concat(exportData.Select(e => new DateTimePoint(e.Date ?? DateTime.MinValue, (double)e.Value)))
-                .OrderBy(dp => dp.DateTime)
+            var combined = importData
+                .Select(i => new DateTimePoint(i.Date, (double)i.Value))
+                .Concat(exportData.Select(e => new DateTimePoint(e.Date, (double)e.Value)))
+                .OrderBy(pt => pt.DateTime)
                 .ToList();
 
-            double cumulativeValue = 0;
-            foreach (var dataPoint in combinedData) {
-                cumulativeValue += dataPoint.Value;
-                lineSeries.Values.Add(new DateTimePoint(dataPoint.DateTime, cumulativeValue));
+            double cumulative = 0;
+
+            var from = selectedFromDate.Value;
+            positiveSeries.Values.Add(new DateTimePoint(from, 0));
+            negativeSeries.Values.Add(new DateTimePoint(from, double.NaN));
+
+            // track that our last sign was non-negative
+            bool? prevPositive = true;
+
+            foreach (var pt in combined) {
+                cumulative += pt.Value;
+                bool currPositive = cumulative >= 0;
+
+                // On sign change, add a zero point to both series to connect at zero
+                if (prevPositive.HasValue && currPositive != prevPositive.Value) {
+                    var zeroPoint = new DateTimePoint(pt.DateTime, 0);
+                    positiveSeries.Values.Add(zeroPoint);
+                    negativeSeries.Values.Add(zeroPoint);
+                }
+
+                // Add the real point and gap opposite series
+                if (currPositive) {
+                    positiveSeries.Values.Add(new DateTimePoint(pt.DateTime, cumulative));
+                    negativeSeries.Values.Add(new DateTimePoint(pt.DateTime, double.NaN));
+                } else {
+                    negativeSeries.Values.Add(new DateTimePoint(pt.DateTime, cumulative));
+                    positiveSeries.Values.Add(new DateTimePoint(pt.DateTime, double.NaN));
+                }
+
+                prevPositive = currPositive;
+            }
+
+            // Plateau out to the "until" date
+            if (combined.Any()) {
+                var lastDate = combined.Last().DateTime;
+                if (lastDate < selectedUntilDate.Value) {
+                    bool lastPositive = cumulative >= 0;
+                    if (prevPositive.HasValue && lastPositive != prevPositive.Value) {
+                        var zeroPoint = new DateTimePoint(selectedUntilDate.Value, 0);
+                        positiveSeries.Values.Add(zeroPoint);
+                        negativeSeries.Values.Add(zeroPoint);
+                    }
+
+                    var plateau = new DateTimePoint(selectedUntilDate.Value, cumulative);
+                    if (cumulative >= 0)
+                        positiveSeries.Values.Add(plateau);
+                    else
+                        negativeSeries.Values.Add(plateau);
+                }
             }
         }
 
         private void BindDataToUI() {
             dashboardPage.DataContext = this;
-
             dashboardPage.NetChart.Series = SeriesCollection;
-            dashboardPage.NetChartAxisX.LabelFormatter = DateFormatter;
-            dashboardPage.NetChartAxisY.LabelFormatter = NetFormatter;
+            dashboardPage.NetChart.AxisX[0].LabelFormatter = DateFormatter;
+            dashboardPage.NetChart.AxisY[0].LabelFormatter = NetFormatter;
+            dashboardPage.NetChart.LegendLocation = LegendLocation.None;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string name) {
+        protected void OnPropertyChanged(string name) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
+
+
+
 
         public class RevenueCalculator {
             private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
@@ -232,6 +305,23 @@ namespace MyQuanLyTrangSuc.ViewModel {
                 if (recentCustomers.Count > 3)
                     eighthTextBlock.Text = $"{recentCustomers[3]?.Customer?.Name}";
             }
+        }
+
+    }
+    public class ZeroOrNaNToVisibilityConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+            if (value is double d) {
+                // collapse if NaN or exactly zero
+                return (double.IsNaN(d) || d == 0.0)
+                    ? Visibility.Collapsed
+                    : Visibility.Visible;
+            }
+            // fallback: visible
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+            throw new NotImplementedException();
         }
     }
 }
