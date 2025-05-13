@@ -46,8 +46,8 @@ namespace MyQuanLyTrangSuc.View
         private void editButton_Click(object sender, RoutedEventArgs e)
         {
             // Assuming you have a method to load employee properties page
-            // logicService.LoadEmployeePropertiesPage();
-            MessageBox.Show("Edit functionality is not implemented yet.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+            logicService.LoadEmployeePropertiesPage();
+            //MessageBox.Show("Edit functionality is not implemented yet.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         // Search functionality

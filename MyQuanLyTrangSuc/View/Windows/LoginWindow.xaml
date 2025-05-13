@@ -203,12 +203,12 @@
                                     Margin="75 0">
 
                     <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                     Name="UsernameBox"
-                                     Text="{Binding userName}"
-                                     materialDesign:HintAssist.Hint="Username"
-                                     materialDesign:HintAssist.FloatingOffset="0,-20"
-                                     BorderBrush="#c5c8cc"
-                                     BorderThickness="0 0 0 1.5">
+         Name="UsernameBox"
+         Text="{Binding Username, Mode=TwoWay}"
+         materialDesign:HintAssist.Hint="Username"
+         materialDesign:HintAssist.FloatingOffset="0,-20"
+         BorderBrush="#c5c8cc"
+         BorderThickness="0 0 0 1.5">
                         <TextBox.Resources>
                             <Style TargetType="TextBlock" BasedOn="{StaticResource LightHintStyle}" x:Key="DynamicHintStyle">
                                 <Style.Triggers>
@@ -222,6 +222,7 @@
                             </Style>
                         </TextBox.Resources>
                     </TextBox>
+
 
                     <PasswordBox Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
                                      Name="PasswordBox"

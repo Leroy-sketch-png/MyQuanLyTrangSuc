@@ -1,29 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Mail;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using MyQuanLyTrangSuc.View;
+using Microsoft.Win32;
 using MyQuanLyTrangSuc.Model;
-using Microsoft.Xaml.Behaviors.Media;
-using System.Text.RegularExpressions;
+using MyQuanLyTrangSuc.View;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
     class ResetPasswordLogic
     {
-        //Verify
+        // Verify
         public string randomCode { get; set; }
         public static string to;
         public static bool flag;
 
-        //Reset
-        private MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
-        private NotificationWindowLogic notificationWindowLogic = new NotificationWindowLogic();
+        // Reset
+        private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
+        private readonly NotificationWindowLogic notificationWindowLogic = new NotificationWindowLogic();
 
         private bool IsValidEmail(string email)
         {
@@ -33,117 +30,115 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void SendCode(TextBox emailTextBox)
         {
-            if (!IsValidEmail(emailTextBox.Text))
+            if (string.IsNullOrEmpty(emailTextBox.Text) || !IsValidEmail(emailTextBox.Text))
             {
                 notificationWindowLogic.LoadNotification("Error", "Invalid email", "BottomRight");
                 return;
             }
-            string from, pass, messageBody;
+
             Random rand = new Random();
-            randomCode = rand.Next(999999).ToString();
-            MailMessage message = new MailMessage();
-            if (string.IsNullOrEmpty(emailTextBox.Text))
+            randomCode = rand.Next(999999).ToString("D6"); // always 6 digits
+
+            var message = new MailMessage
             {
-                notificationWindowLogic.LoadNotification("Error", "Please fill in all fields!", "BottomRight");
-                return;
-            }
+                From = new MailAddress("ngominhtri9107@gmail.com"),
+                Subject = "Password Reset Code",
+                Body = $"Your reset code is: {randomCode}"
+            };
             to = emailTextBox.Text;
-            from = "ngominhtri9107@gmail.com";
-            pass = "zguvjxsbfykomlsg";
-            messageBody = "Your reset code is " + randomCode;
             message.To.Add(to);
-            message.From = new MailAddress(from);
-            message.Body = messageBody;
-            message.Subject = "Password Reseting Code";
-            SmtpClient smtp = new SmtpClient("smtp.gmail.com");
-            smtp.EnableSsl = true;
-            smtp.Port = 587;
-            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtp.UseDefaultCredentials = false;
-            smtp.Credentials = new NetworkCredential(from, pass);
+
+            var smtp = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                EnableSsl = true,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential("ngominhtri9107@gmail.com", "zguvjxsbfykomlsg"),
+                DeliveryMethod = SmtpDeliveryMethod.Network
+            };
+
             try
             {
                 smtp.Send(message);
-                notificationWindowLogic.LoadNotification("Success", "Code send successfully!", "BottomRight");
-
+                notificationWindowLogic.LoadNotification("Success", "Code sent successfully!", "BottomRight");
             }
             catch (Exception ex)
             {
-                notificationWindowLogic.LoadNotification("Success", ex.Message, "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", $"Failed to send code: {ex.Message}", "BottomRight");
             }
         }
 
         public void VerifyCode(TextBox codeTextBox, TextBox emailTextBox)
         {
-            if (randomCode == codeTextBox.Text)
+            if (string.IsNullOrWhiteSpace(codeTextBox.Text))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Please enter the code!", "BottomRight");
+            }
+            else if (codeTextBox.Text == randomCode)
             {
                 to = emailTextBox.Text;
-                ResetPasswordWindow window = new ResetPasswordWindow(emailTextBox.Text);
+                var window = new ResetPasswordWindow(emailTextBox.Text);
                 window.Show();
                 flag = true;
-            }
-            else if (codeTextBox.Text == "")
-            {
-                notificationWindowLogic.LoadNotification("Error", "Please fill in all fields!", "BottomRight");
-
             }
             else
             {
                 notificationWindowLogic.LoadNotification("Error", "Wrong code!", "BottomRight");
             }
         }
+
         public void ResetPassword(PasswordBox newPasswordBox, PasswordBox confirmPasswordBox, string email)
         {
-            //string newPassword = newPasswordBox.Password.Trim();
-            //string confirmPassword = confirmPasswordBox.Password.Trim();
+            string newPassword = newPasswordBox.Password?.Trim();
+            string confirmPassword = confirmPasswordBox.Password?.Trim();
 
-            //if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
-            //{
-            //    notificationWindowLogic.LoadNotification("Error", "Please fill in all fields!", "BottomRight");
-            //    return;
-            //}
+            if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Please fill in all fields!", "BottomRight");
+                return;
+            }
+            if (newPassword != confirmPassword)
+            {
+                notificationWindowLogic.LoadNotification("Error", "Passwords do not match!", "BottomRight");
+                return;
+            }
 
-            //if (newPassword != confirmPassword)
-            //{
-            //    notificationWindowLogic.LoadNotification("Error", "The new password and confirmation password do not match!", "BottomRight");
-            //    return;
-            //}
-            //var employee = context.Employees.FirstOrDefault(emp => emp.Email == email);
-            //if (employee != null)
-            //{
-            //    var account = context.Accounts.FirstOrDefault(acc => acc.EmployeeId == employee.EmployeeId);
-            //    if (account != null)
-            //    {
-            //        if (account.PasswordHash == newPassword)
-            //        {
-            //            notificationWindowLogic.LoadNotification("Error", "The new password cannot be the same as the old one!", "BottomRight");
-            //            return;
-            //        }
+            // 1) Find the employee by email
+            var employee = context.Employees.FirstOrDefault(emp => emp.Email == email);
+            if (employee == null)
+            {
+                notificationWindowLogic.LoadNotification("Error", "Email not found!", "BottomRight");
+                return;
+            }
 
-            //        account.PasswordHash = newPassword;
+            // 2) Lookup the account by the employee's Username navigation property
+            var account = context.Accounts
+                .FirstOrDefault(acc => acc.Username == employee.Username);
+            if (account == null)
+            {
+                notificationWindowLogic.LoadNotification("Error", "Account not found!", "BottomRight");
+                return;
+            }
 
-            //        try
-            //        {
-            //            context.SaveChanges();
-            //            notificationWindowLogic.LoadNotification("Success", "Password has been reset successfully!", "BottomRight");
-            //            flag = true;
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            notificationWindowLogic.LoadNotification("Error", $"An error occured while saving changes: {ex.Message}!", "BottomRight");
-            //        }
+            // 3) Prevent resetting to the same password
+            if (account.Password == newPassword)
+            {
+                notificationWindowLogic.LoadNotification("Error", "New password cannot match the old one!", "BottomRight");
+                return;
+            }
 
-            //    }
-            //    else
-            //    {
-            //        notificationWindowLogic.LoadNotification("Error", "Account not found in database!", "BottomRight");
-            //    }
-
-            //}
-            //else
-            //{
-            //    notificationWindowLogic.LoadNotification("Error", "The provided email not found!", "BottomRight");
-            //}
+            // 4) Apply change and save
+            account.Password = newPassword;
+            try
+            {
+                context.SaveChanges();
+                notificationWindowLogic.LoadNotification("Success", "Password has been reset successfully!", "BottomRight");
+                flag = true;
+            }
+            catch (Exception ex)
+            {
+                notificationWindowLogic.LoadNotification("Error", $"Error saving changes: {ex.Message}", "BottomRight");
+            }
         }
     }
 }

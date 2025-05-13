@@ -78,18 +78,20 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="1">
-                    <ComboBox x:Name="Gender" VerticalAlignment="Top" materialDesign:HintAssist.Hint="Gender"
-                              Text="{Binding ProfileGender, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              Margin="60 0 250 0" SelectedItem="{Binding ProfileGender, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              Style="{StaticResource MaterialDesignFloatingHintComboBox}">
-                        <ComboBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <VirtualizingStackPanel />
-                            </ItemsPanelTemplate>
-                        </ComboBox.ItemsPanel>
-                        <ComboBoxItem>Male</ComboBoxItem>
-                        <ComboBoxItem>Female</ComboBoxItem>
+                    <ComboBox x:Name="Gender"
+          VerticalAlignment="Top"
+          materialDesign:HintAssist.Hint="Gender"
+          Margin="60 0 250 0"
+          SelectedValue="{Binding ProfileGender, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+          Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                        <ComboBox.ItemsSource>
+                            <x:Array Type="{x:Type sys:String}" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                <sys:String>male</sys:String>
+                                <sys:String>female</sys:String>
+                            </x:Array>
+                        </ComboBox.ItemsSource>
                     </ComboBox>
+
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Grid.Column="0">
@@ -99,11 +101,14 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Grid.Column="1">
-                    <DatePicker Text="{Binding DateOfBirth}" x:Name="DateOfBirth" materialDesign:HintAssist.Hint="Date of birth"
-                                Margin="60 0 250 0"
-                                SelectedDate="{Binding DateOfBirth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                materialDesign:TextFieldAssist.HasClearButton="True"
-                                Style="{StaticResource MaterialDesignFloatingHintDatePicker}"/>
+                    <DatePicker
+    x:Name="DateOfBirth"
+    SelectedDate="{Binding DateOfBirth, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+    materialDesign:HintAssist.Hint="Date of birth"
+    materialDesign:TextFieldAssist.HasClearButton="True"
+    Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+    Margin="60 0 250 0"/>
+
                 </StackPanel>
             </Grid>
 
