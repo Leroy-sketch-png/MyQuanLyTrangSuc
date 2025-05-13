@@ -6,10 +6,14 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
+      xmlns:conv="clr-namespace:MyQuanLyTrangSuc.ViewModel"
       mc:Ignorable="d" 
       d:DesignHeight="720" d:DesignWidth="880"
       Title="DashboardUI"
       Background="Transparent">
+    <Page.Resources>
+        <conv:ZeroOrNaNToVisibilityConverter x:Key="ZeroOrNaNToVisibilityConverter"/>
+    </Page.Resources>
 
     <Grid Margin="0 20 20 20">
         <Grid.ColumnDefinitions>
@@ -32,8 +36,8 @@
                     <Border Width="50" Height="50" CornerRadius="10" Margin="5 0 15 0" DockPanel.Dock="Left">
                         <Border.Background>
                             <LinearGradientBrush>
-                                <GradientStop Color="#7e5fdc" Offset="0"/>
-                                <GradientStop Color="#7e5fdc" Offset="1"/>
+                                <GradientStop Color="#FF747525" Offset="0"/>
+                                <GradientStop Color="#FF20232E" Offset="0.485"/>
                             </LinearGradientBrush>
                         </Border.Background>
 
@@ -64,7 +68,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="ChartLine" Width="40" Height="40" Margin="0 0 10 0"
-                                                 Foreground="#7e5fdc"/>
+                                                 Foreground="#FF20232E"/>
                             <TextBlock Text="Daily Revenue" Style="{StaticResource titleText}" Width="185"
                                    VerticalAlignment="Center"/>
                         </StackPanel>
@@ -82,7 +86,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="ClipboardList" Width="40" Height="40" Margin="0 0 10 0"
-                                                 Foreground="#7e5fdc"/>
+                                                 Foreground="#FF20232E"/>
                             <TextBlock Text="Daily Items Sold" Style="{StaticResource titleText}" Width="185"
                                    VerticalAlignment="Center"/>
                         </StackPanel>
@@ -119,38 +123,70 @@
                                     Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
 
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal">
-                        <Border Width="12" Height="12" Background="#0074ff" CornerRadius="3"/>
-                        <TextBlock Text="Income" VerticalAlignment="Center" Margin="7 0 20 0" Foreground="#6c879a" FontWeight="Bold"/>
+                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="12" Height="12" CornerRadius="3">
+                                <Border.Background>
+                                    <SolidColorBrush Color="{DynamicResource Secondary700}"/>
+                                </Border.Background>
+                            </Border>
+                            <TextBlock Text="Up Trend" VerticalAlignment="Center" Margin="7 0 20 0" Foreground="#6c879a" FontWeight="Bold"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="12" Height="12" CornerRadius="3" Background="Red"/>
+                            <TextBlock Text="Down Trend" VerticalAlignment="Center" Margin="7 0 20 0" Foreground="#6c879a" FontWeight="Bold"/>
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
                 <!--Legends-->
 
                 <!--Chart-->
-                <lvc:CartesianChart x:Name="NetChart" Margin="5,40,0,0" LegendLocation="None">
+                <lvc:CartesianChart x:Name="NetChart"
+                    Margin="5,40,0,0"
+                    LegendLocation="None">
+
                     <lvc:CartesianChart.DataTooltip>
-                        <lvc:DefaultTooltip Background="Red" Foreground="#ffffff" BulletSize="10" Opacity="0.7"/>
+                        <lvc:DefaultTooltip
+    Background="Red"
+    Foreground="White"
+    Opacity="0.7"
+    BulletSize="0"
+    ShowSeries="False"
+    ShowTitle="True">
+                            <lvc:DefaultTooltip.ContentTemplate>
+                                <DataTemplate>
+                                    <TextBlock
+          Text="{Binding Point.Y, StringFormat='Money: {0:N0} VND'}"
+          Visibility="{Binding Point.Y, Converter={StaticResource ZeroOrNaNToVisibilityConverter}}"
+          Margin="5"/>
+                                </DataTemplate>
+                            </lvc:DefaultTooltip.ContentTemplate>
+                        </lvc:DefaultTooltip>
                     </lvc:CartesianChart.DataTooltip>
+
                     <lvc:CartesianChart.AxisX>
                         <lvc:Axis Title="Date"
-                                  x:Name="NetChartAxisX"
-                                  Foreground="#90a3b2" 
-                                  ShowLabels="True">
-                            <!--LabelFormatter="{Binding DateFormatter}"-->
-                        </lvc:Axis>
+              x:Name="NetChartAxisX"
+              Foreground="#90a3b2"
+              ShowLabels="True"
+              LabelFormatter="{Binding DateFormatter}"/>
                     </lvc:CartesianChart.AxisX>
-                    <lvc:CartesianChart.AxisY>
-                        <lvc:Axis Title="Value"
-                                  x:Name="NetChartAxisY"
-                                  Foreground="#90a3b2" 
-                                  ShowLabels="True" >
-                            <!--LabelFormatter="{Binding YFormatter}"-->
 
-                        </lvc:Axis>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis Title="VND"
+              x:Name="NetChartAxisY"
+              Foreground="#90a3b2"
+              ShowLabels="True"
+              LabelFormatter="{Binding NetFormatter}"/>
                     </lvc:CartesianChart.AxisY>
+
                     <lvc:CartesianChart.Series>
-                        <lvc:LineSeries Title="Net Value" Fill="Transparent" StrokeThickness="3" PointGeometrySize="0">
-                            <!--Values="{Binding SeriesCollection}">-->
+                        <lvc:LineSeries
+      Title="Net Value"
+      Fill="Transparent"
+      StrokeThickness="3"
+      PointGeometrySize="0"
+      Values="{Binding SeriesCollection}">
                             <lvc:LineSeries.Stroke>
                                 <LinearGradientBrush>
                                     <GradientStop Color="#ffffff" Offset="0.06"/>
@@ -161,7 +197,7 @@
                         </lvc:LineSeries>
                     </lvc:CartesianChart.Series>
                 </lvc:CartesianChart>
-                <!--Chart-->
+
 
 
             </Grid>
@@ -196,12 +232,26 @@
                             <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
 
-                        <Border Background="#7e5fdc" CornerRadius="4 0 0 4">
-                            <TextBlock Text="ITEM" TextAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#ffffff"/>
+                        <Border CornerRadius="4 0 0 4">
+                            <TextBlock Text="ITEM" TextAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#ffffff">
+                                <TextBlock.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF747525" Offset="0"/>
+                                        <GradientStop Color="#FF20232E" Offset="0.485"/>
+                                    </LinearGradientBrush>
+                                </TextBlock.Background>
+                            </TextBlock>
                         </Border>
 
-                        <Border Grid.Column="1" Background="#7e5fdc" CornerRadius="0 4 4 0">
-                            <TextBlock Text="REVENUE" TextAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#ffffff"/>
+                        <Border Grid.Column="1" CornerRadius="0 4 4 0">
+                            <TextBlock Text="REVENUE" TextAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#ffffff">
+                                <TextBlock.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF747525" Offset="0"/>
+                                        <GradientStop Color="#FF20232E" Offset="0.485"/>
+                                    </LinearGradientBrush>
+                                </TextBlock.Background>
+                            </TextBlock>
                         </Border>
 
                         <TextBlock Name="firstItem" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Row="1"/>
@@ -241,12 +291,26 @@
                             <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
 
-                        <Border Background="#7e5fdc" CornerRadius="4 0 0 4">
-                            <TextBlock Text="TOP" TextAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#ffffff"/>
+                        <Border CornerRadius="4 0 0 4">
+                            <TextBlock Text="TOP" TextAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#ffffff">
+                                <TextBlock.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF747525" Offset="0"/>
+                                        <GradientStop Color="#FF20232E" Offset="0.485"/>
+                                    </LinearGradientBrush>
+                                </TextBlock.Background>
+                            </TextBlock>
                         </Border>
 
-                        <Border Grid.Column="1" Background="#7e5fdc" CornerRadius="0 4 4 0">
-                            <TextBlock Text="NAME" TextAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#ffffff"/>
+                        <Border Grid.Column="1" CornerRadius="0 4 4 0">
+                            <TextBlock Text="NAME" TextAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#ffffff">
+                                <TextBlock.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF747525" Offset="0"/>
+                                        <GradientStop Color="#FF20232E" Offset="0.485"/>
+                                    </LinearGradientBrush>
+                                </TextBlock.Background>
+                            </TextBlock>
                         </Border>
 
 
