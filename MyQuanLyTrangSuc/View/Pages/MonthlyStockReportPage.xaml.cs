@@ -1,76 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MyQuanLyTrangSuc.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using MyQuanLyTrangSuc.ViewModel;
 
 namespace MyQuanLyTrangSuc.View
 {
     public partial class MonthlyStockReportPage : Page
     {
-        private MonthlyStockReportPageLogic _logic;
+        private MonthlyStockReportPageLogic logicService;
 
         public MonthlyStockReportPage()
         {
             InitializeComponent();
-            _logic = new MonthlyStockReportPageLogic(this);
-            this.DataContext = _logic;
+            logicService = new MonthlyStockReportPageLogic(this);
+            this.DataContext = logicService;
         }
 
-        private void GenerateReportButton_Click(object sender, RoutedEventArgs e)
+        private void OnDoubleClick_InspectReport_MonthlyStockReportPageDataGrid(object sender, MouseButtonEventArgs e)
         {
-            _logic.GenerateMonthlyReport();
+            logicService.LoadReportDetailsWindow();
         }
 
-        private void ImportExcelFileButton_Click(object sender, RoutedEventArgs e)
+        private void viewButton_Click(object sender, RoutedEventArgs e)
         {
-            _logic.ImportFromExcel();
+            logicService.LoadReportDetailsWindow();
         }
 
-        private void ExportExcelFileButton_Click(object sender, RoutedEventArgs e)
+        private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            _logic.ExportToExcel();
+            searchTextBlock.Text = "";
+            if (searchComboBox.SelectionBoxItem.ToString() == "Month")
+                logicService.ReportsSearchByMonth(searchTextBox.Text);
+            else if (searchComboBox.SelectionBoxItem.ToString() == "Year")
+                logicService.ReportsSearchByYear(searchTextBox.Text);
+            if (searchTextBox.Text == "")
+                searchTextBlock.Text = "Search by month/year";
         }
 
-        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void exportExcelFileButton_Click(object sender, RoutedEventArgs e)
         {
-            _logic.FilterReports(searchTextBox.Text, searchComboBox.SelectedIndex);
-        }
-
-        private void SearchComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            _logic.FilterReports(searchTextBox.Text, searchComboBox.SelectedIndex);
-        }
-
-        //private void StockReportDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    _logic.OnMonthReportSelected();
-        //}
-
-        private void ViewButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.DataContext is MonthlyStockReportViewModel report)
-            {
-                _logic.ViewReportDetails(report);
-            }
-        }
-
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.DataContext is MonthlyStockReportViewModel report)
-            {
-                _logic.DeleteReport(report);
-            }
+            logicService.ExportToExcel();
         }
     }
 }
