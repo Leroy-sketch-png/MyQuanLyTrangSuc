@@ -35,6 +35,9 @@ namespace MyQuanLyTrangSuc.BusinessLogic {
             }
             return $"{prefix}{newNumber:D3}";
         }
+        public List<Service> GetListOfServices() {
+            return serviceRecordRepository.GetListOfServices();
+        }
 
         public List<Customer> GetListOfCustomers() {
             return serviceRecordRepository.GetListOfCustomers();
@@ -53,8 +56,8 @@ namespace MyQuanLyTrangSuc.BusinessLogic {
             OnServiceRecordAdded?.Invoke(serviceRecord);
         }
 
-        public int GenerateNewServiceDetailStt() {
-            return serviceRecordRepository.GetLastServiceDetailStt();
+        public int GenerateNewServiceDetailID() {
+            return serviceRecordRepository.GetLastServiceDetailID();
         }
     }
 }

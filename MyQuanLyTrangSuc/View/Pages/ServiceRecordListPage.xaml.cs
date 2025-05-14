@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,12 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class ServiceRecordListPage : Page
     {
+        private readonly ServiceRecordListPageLogic logicService;
         public ServiceRecordListPage()
         {
             InitializeComponent();
+            logicService = new ServiceRecordListPageLogic(this);
+            DataContext = logicService;
         }
 
         private void OnClick_AddServiceRecordWindow(object sender, RoutedEventArgs e) {
@@ -30,11 +34,11 @@ namespace MyQuanLyTrangSuc.View
         }
 
         private void OnDoubleClick_InspectRecord_ServiceRecordPageDataGrid(object sender, MouseButtonEventArgs e) {
-            logicService.LoadServiceRecordDetailsWindow();
+            //logicService.LoadServiceRecordDetailsWindow();
         }
 
         private void viewButton_Click(object sender, RoutedEventArgs e) {
-            logicService.LoadServiceRecordDetailsWindow();
+            //logicService.LoadServiceRecordDetailsWindow();
         }
 
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e) {
@@ -43,7 +47,7 @@ namespace MyQuanLyTrangSuc.View
                 string selectedCriteria = (searchComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
                 switch (selectedCriteria) {
                     case "Customer":
-                        logicService.SearchServiceRecordsByNameOfCustomer(searchTextBox.Text);
+                        logicService.SearchServiceRecordsByCustomerName(searchTextBox.Text);
                         break;
                     case "ID":
                         logicService.SearchServiceRecordsByID(searchTextBox.Text);
