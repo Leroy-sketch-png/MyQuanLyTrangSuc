@@ -94,6 +94,15 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         return result;
     }
+
+    public int SaveChangesEdited(Service service)
+    {
+        int result = base.SaveChanges();
+
+        OnServiceEdited?.Invoke(service);
+
+        return result;
+    }
     public void ResetEmployees() {
         OnEmployeesReset?.Invoke();
     }
@@ -114,6 +123,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     public event Action OnEmployeesReset;
 
     public event Action<Service> OnServiceAdded;
+    public event Action<Service> OnServiceEdited;
 
     public virtual DbSet<Account> Accounts { get; set; }
 

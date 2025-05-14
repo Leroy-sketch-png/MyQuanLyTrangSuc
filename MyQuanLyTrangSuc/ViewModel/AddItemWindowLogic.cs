@@ -7,17 +7,15 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
+using System.Collections.Generic;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
     public class AddItemWindowLogic : INotifyPropertyChanged
     {
-        // Constants
         private const string NumericPattern = "[^0-9]+";
         private const string ImageFilter = "Image files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg";
         private const string ImageDialogTitle = "Chọn ảnh sản phẩm";
-
-        // Error messages
         private const string ErrorTitle = "Lỗi";
         private const string SuccessTitle = "Thông báo";
         private const string ValidationErrorMessage = "Vui lòng nhập đầy đủ thông tin sản phẩm!";
@@ -26,7 +24,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         private readonly AddItemWindow _window;
         private readonly Regex _numericRegex;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private Product _product;
         public Product Product
@@ -39,53 +37,85 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
+        private List<ProductCategory> _categories;
+        public List<ProductCategory> Categories
+        {
+            get => _categories;
+            set
+            {
+                _categories = value;
+                OnPropertyChanged(nameof(Categories));
+            }
+        }
+
+        private ProductCategory _selectedCategory;
+        public ProductCategory SelectedCategory
+        {
+            get => _selectedCategory;
+            set
+            {
+                _selectedCategory = value;
+                if (_selectedCategory != null)
+                {
+                    Product.CategoryId = _selectedCategory.CategoryId;
+                }
+                OnPropertyChanged(nameof(SelectedCategory));
+            }
+        }
+
         public AddItemWindowLogic(AddItemWindow window)
         {
             _window = window ?? throw new ArgumentNullException(nameof(window));
             _numericRegex = new Regex(NumericPattern);
 
-            // Tạo sản phẩm mới & sinh ID khi mở cửa sổ
             Product = new Product();
+            LoadCategories();
             GenerateProductId();
         }
 
-        /// <summary>
-        /// Sinh ID sản phẩm mới khi mở cửa sổ
-        /// </summary>
+        private void LoadCategories()
+        {
+            var db = MyQuanLyTrangSucContext.Instance;
+            Categories = db.ProductCategories.ToList();
+
+            if (Categories.Any())
+            {
+                SelectedCategory = Categories.First();
+            }
+        }
+
         private void GenerateProductId()
         {
             var db = MyQuanLyTrangSucContext.Instance;
-            string newId = "SP001"; // Giá trị mặc định
+            string newId = "SP001";
 
             var lastProductId = db.Products
-                                  .Where(p => p.ProductId.StartsWith("SP"))
-                                  .OrderByDescending(p => p.ProductId)
-                                  .Select(p => p.ProductId)
-                                  .FirstOrDefault();
+                                .Where(p => p.ProductId.StartsWith("SP"))
+                                .OrderByDescending(p => p.ProductId)
+                                .Select(p => p.ProductId)
+                                .FirstOrDefault();
 
             if (!string.IsNullOrEmpty(lastProductId) && lastProductId.Length > 2)
             {
                 string lastIdNumericPart = lastProductId.Substring(2);
                 if (int.TryParse(lastIdNumericPart, out int parsedNumber))
                 {
-                    newId = $"SP{(parsedNumber + 1):D3}"; // Định dạng 3 chữ số
+                    newId = $"SP{(parsedNumber + 1):D3}";
                 }
             }
 
-            // Cập nhật ID vào Product
-            Product = new Product { ProductId = newId };
+            Product.ProductId = newId;
             OnPropertyChanged(nameof(Product));
         }
 
-        /// <summary>
-        /// Thêm sản phẩm vào database
-        /// </summary>
         public void AddProduct()
         {
             var db = MyQuanLyTrangSucContext.Instance;
 
-            // Kiểm tra dữ liệu nhập
-            if (string.IsNullOrWhiteSpace(Product.Name) || Product.Price == null || Product.Quantity == null)
+            if (string.IsNullOrWhiteSpace(Product.Name) ||
+                Product.Price == null ||
+                Product.Quantity == null ||
+                Product.CategoryId == null)
             {
                 MessageBox.Show(ValidationErrorMessage, ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -97,44 +127,38 @@ namespace MyQuanLyTrangSuc.ViewModel
                 return;
             }
 
-            // Kiểm tra trùng tên sản phẩm
             if (db.Products.Any(p => p.Name == Product.Name))
             {
                 MessageBox.Show("Tên sản phẩm đã tồn tại!", ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            // Tạo bản sao để lưu vào database
             var newProduct = new Product
             {
                 ProductId = Product.ProductId,
                 Name = Product.Name,
                 Price = Product.Price,
                 Quantity = Product.Quantity,
+                CategoryId = Product.CategoryId,
                 ImagePath = Product.ImagePath
             };
 
-            // Thêm vào database
             db.Products.Add(newProduct);
-            db.SaveChangesAdded(newProduct); // Gọi phương thức SaveChangesAdded
+            db.SaveChangesAdded(newProduct);
 
             MessageBox.Show(SuccessMessage, SuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
             _window.Close();
         }
 
-        /// <summary>
-        /// Xóa sản phẩm khỏi database
-        /// </summary>
         public void RemoveProduct()
         {
             var db = MyQuanLyTrangSucContext.Instance;
-
             var productToRemove = db.Products.FirstOrDefault(p => p.ProductId == Product.ProductId);
+
             if (productToRemove != null)
             {
                 db.Products.Remove(productToRemove);
-                db.SaveChangesRemoved(productToRemove); // Gọi phương thức SaveChangesRemoved
-
+                db.SaveChangesRemoved(productToRemove);
                 MessageBox.Show("Sản phẩm đã bị xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 _window.Close();
             }
@@ -144,20 +168,14 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        /// <summary>
-        /// Hủy thêm sản phẩm và đóng cửa sổ
-        /// </summary>
         public void Cancel()
         {
             _window.Close();
         }
 
-        /// <summary>
-        /// Chọn ảnh sản phẩm
-        /// </summary>
         public void ChooseImage()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
+            var openFileDialog = new OpenFileDialog
             {
                 Filter = ImageFilter,
                 Title = ImageDialogTitle
@@ -166,13 +184,10 @@ namespace MyQuanLyTrangSuc.ViewModel
             if (openFileDialog.ShowDialog() == true)
             {
                 Product.ImagePath = openFileDialog.FileName;
-                OnPropertyChanged(nameof(Product.ImagePath)); // Cập nhật UI
+                OnPropertyChanged(nameof(Product));
             }
         }
 
-        /// <summary>
-        /// Kiểm tra đầu vào của textbox có phải số không
-        /// </summary>
         public void ValidateNumericInput(TextCompositionEventArgs e)
         {
             if (!char.IsDigit(e.Text, 0))
@@ -181,15 +196,11 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        /// <summary>
-        /// Kiểm tra dữ liệu dán vào textbox có phải số không
-        /// </summary>
         public void ValidatePastedNumericContent(DataObjectPastingEventArgs e)
         {
             if (e.DataObject.GetDataPresent(typeof(string)))
             {
                 string pastedText = (string)e.DataObject.GetData(typeof(string));
-
                 if (!pastedText.All(char.IsDigit))
                 {
                     e.CancelCommand();
@@ -201,18 +212,12 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        /// <summary>
-        /// Reset danh sách sản phẩm
-        /// </summary>
         public void ResetProducts()
         {
             var db = MyQuanLyTrangSucContext.Instance;
             db.ResetProducts();
         }
 
-        /// <summary>
-        /// Thông báo thay đổi để cập nhật UI
-        /// </summary>
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
