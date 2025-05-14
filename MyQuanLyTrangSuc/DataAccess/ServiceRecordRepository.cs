@@ -40,6 +40,9 @@ namespace MyQuanLyTrangSuc.DataAccess {
             return context.ServiceRecords.ToList();
         }
 
+        public List<Service> GetListOfServices() {
+            return context.Services.Where(s => !s.IsDeleted).ToList();
+        }
         public List<Customer> GetListOfCustomers() {
             return context.Customers.Where(c => !c.IsDeleted).ToList();
         }
@@ -48,7 +51,7 @@ namespace MyQuanLyTrangSuc.DataAccess {
             return context.Employees.ToList();
         }
 
-        public int GetLastServiceDetailStt() {
+        public int GetLastServiceDetailID() {
             var lastStt = context.ServiceDetails
                 .OrderByDescending(sd => sd.Stt)
                 .Select(sd => sd.Stt)

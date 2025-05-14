@@ -54,8 +54,8 @@ namespace MyQuanLyTrangSuc.ViewModel {
         }
 
         public void LoadAddServiceRecordWindow() {
-            //AddServiceRecordWindow addServiceRecordWindowUI = new AddServiceRecordWindow();
-            //addServiceRecordWindowUI.ShowDialog();
+            AddServiceRecordWindow addServiceRecordWindowUI = new AddServiceRecordWindow();
+            addServiceRecordWindowUI.ShowDialog();
         }
 
         public void LoadServiceDetailsWindow() {

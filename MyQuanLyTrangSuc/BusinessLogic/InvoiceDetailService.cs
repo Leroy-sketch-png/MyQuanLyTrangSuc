@@ -23,7 +23,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic {
             invoiceDetailRepository = new InvoiceDetailRepository();
         }
 
-        public void LoadImportDetailsFromDatabase(Invoice SelectedImportRecord, ObservableCollection<InvoiceDetail> InvoiceDetails) {
+        public void LoadInvoiceDetailsFromDatabase(Invoice SelectedImportRecord, ObservableCollection<InvoiceDetail> InvoiceDetails) {
             List<InvoiceDetail> InvoiceDetailsFromDb = invoiceDetailRepository.LoadInvoiceDetailsFromDatabase(SelectedImportRecord);
             foreach (InvoiceDetail ii in InvoiceDetailsFromDb) {
                 InvoiceDetails.Add(ii);

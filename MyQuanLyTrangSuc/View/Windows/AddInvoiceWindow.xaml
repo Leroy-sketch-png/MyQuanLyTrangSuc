@@ -14,7 +14,7 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,10">
-                    <TextBlock Text="EXPORTING..." FontSize="24" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <TextBlock Text="SELLING..." FontSize="24" FontWeight="Bold" VerticalAlignment="Center"/>
                 </StackPanel>
                 <Grid>
                     <Grid.ColumnDefinitions>
