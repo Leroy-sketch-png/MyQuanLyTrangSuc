@@ -18,9 +18,9 @@ namespace MyQuanLyTrangSuc.View
     /// <summary>
     /// Interaction logic for ServicesListPage.xaml
     /// </summary>
-    public partial class ServicesListPage : Page
+    public partial class ServiceRecordListPage : Page
     {
-        public ServicesListPage()
+        public ServiceRecordListPage()
         {
             InitializeComponent();
         }
