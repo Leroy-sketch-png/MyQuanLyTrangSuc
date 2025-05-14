@@ -5,9 +5,6 @@ using System.Windows.Controls;
 
 namespace MyQuanLyTrangSuc.View
 {
-    /// <summary>
-    /// Interaction logic for AddItemWindow.xaml
-    /// </summary>
     public partial class AddItemWindow : Window
     {
         public AddItemWindowLogic Logic { get; }
@@ -15,8 +12,8 @@ namespace MyQuanLyTrangSuc.View
         public AddItemWindow()
         {
             InitializeComponent();
-            Logic = new AddItemWindowLogic(this); // Inject UI reference vào Logic
-            DataContext = Logic; // Đặt DataContext để Binding hoạt động
+            Logic = new AddItemWindowLogic(this);
+            DataContext = Logic;
         }
 
         private void OnAddItemButtonClick(object sender, RoutedEventArgs e)
@@ -34,7 +31,6 @@ namespace MyQuanLyTrangSuc.View
             Logic.ChooseImage();
         }
 
-        // Implement missing event handlers
         private void OnPreviewTextInput_PriceTextBox_AddItem(object sender, TextCompositionEventArgs e)
         {
             Logic.ValidateNumericInput(e);
