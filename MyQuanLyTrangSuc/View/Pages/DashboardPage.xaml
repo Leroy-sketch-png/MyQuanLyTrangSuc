@@ -3,12 +3,334 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
+      xmlns:conv="clr-namespace:MyQuanLyTrangSuc.ViewModel"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="DashboardPage">
+      d:DesignHeight="720" d:DesignWidth="880"
+      Title="DashboardUI"
+      Background="Transparent">
+    <Page.Resources>
+        <conv:ZeroOrNaNToVisibilityConverter x:Key="ZeroOrNaNToVisibilityConverter"/>
+    </Page.Resources>
 
-    <Grid>
-        
+    <Grid Margin="0 20 20 20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"/>
+            <RowDefinition Height="130"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--Clock-->
+        <Border Grid.Column="0" Margin="20 0 20 20" Style="{StaticResource whiteborder}">
+
+            <Grid>
+                <DockPanel>
+
+                    <Border Width="50" Height="50" CornerRadius="10" Margin="5 0 15 0" DockPanel.Dock="Left">
+                        <Border.Background>
+                            <LinearGradientBrush>
+                                <GradientStop Color="#FF747525" Offset="0"/>
+                                <GradientStop Color="#FF20232E" Offset="0.485"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+
+                        <materialDesign:PackIcon Kind="ClockTimeNine" Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                             Foreground="#ffffff"/>
+                    </Border>
+
+                    <Border Height="50">
+                        <TextBlock  Name="DateTimeTextBlock" TextAlignment="Center" FontSize="24" Foreground="Black"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Border>
+
+                </DockPanel>
+            </Grid>
+        </Border>
+        <!--Clock-->
+
+        <!--Info Card-->
+        <Grid Grid.Column="0" Grid.Row="1" Margin="10 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Daily Revenue Card-->
+            <Grid Grid.Column="0">
+                <Border Margin="10 0" Background="#ffffff" Padding="10" CornerRadius="15">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="ChartLine" Width="40" Height="40" Margin="0 0 10 0"
+                                                 Foreground="#FF20232E"/>
+                            <TextBlock Text="Daily Revenue" Style="{StaticResource titleText}" Width="185"
+                                   VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBlock x:Name="DailyRevenueTextblock" VerticalAlignment="Bottom" Margin="10 7 10 0" Height="50" FontSize="20" FontWeight="Medium"
+                                   TextAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+            <!--Daily Revenue Card-->
+
+            <!--Daily Sold Items-->
+            <Grid Grid.Column="1">
+                <Border Margin="10 0" Background="#ffffff" Padding="10" CornerRadius="15">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="ClipboardList" Width="40" Height="40" Margin="0 0 10 0"
+                                                 Foreground="#FF20232E"/>
+                            <TextBlock Text="Daily Items Sold" Style="{StaticResource titleText}" Width="185"
+                                   VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBlock x:Name="DailyCountTextblock" VerticalAlignment="Bottom" Margin="10 7 10 0" Height="50" FontSize="20" FontWeight="Medium"
+                                   TextAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+            <!--Daily Sold Items-->
+
+        </Grid>
+        <!--Info Card-->
+
+        <!--Main Chart Section-->
+        <Border Grid.Column="0" Grid.Row="2" Style="{DynamicResource whiteborder}" Margin="20 20 20 0">
+            <Grid Margin="15 5">
+                <!--Title-->
+                <TextBlock Text="Sales Figures" Style="{StaticResource titleText}"/>
+                <!--Title-->
+
+                <!--Legends-->
+                <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 8 10 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <DatePicker materialDesign:HintAssist.Hint="From" Text="" BorderThickness="1" Margin="7 0 10 0" SelectedDate="{Binding SelectedFromDate}"
+                                    materialDesign:TextFieldAssist.HasClearButton="True"
+                                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+                        <DatePicker materialDesign:HintAssist.Hint="Until" Text="" BorderThickness="1" Margin="7 0 30 0" SelectedDate="{Binding SelectedUntilDate}"
+                                    materialDesign:TextFieldAssist.HasClearButton="True"
+                                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="12" Height="12" CornerRadius="3">
+                                <Border.Background>
+                                    <SolidColorBrush Color="{DynamicResource Secondary700}"/>
+                                </Border.Background>
+                            </Border>
+                            <TextBlock Text="Up Trend" VerticalAlignment="Center" Margin="7 0 20 0" Foreground="#6c879a" FontWeight="Bold"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="12" Height="12" CornerRadius="3" Background="Red"/>
+                            <TextBlock Text="Down Trend" VerticalAlignment="Center" Margin="7 0 20 0" Foreground="#6c879a" FontWeight="Bold"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+                <!--Legends-->
+
+                <!--Chart-->
+                <lvc:CartesianChart x:Name="NetChart"
+                    Margin="5,40,0,0"
+                    LegendLocation="None">
+
+                    <lvc:CartesianChart.DataTooltip>
+                        <lvc:DefaultTooltip
+    Background="Red"
+    Foreground="White"
+    Opacity="0.7"
+    BulletSize="0"
+    ShowSeries="False"
+    ShowTitle="True">
+                            <lvc:DefaultTooltip.ContentTemplate>
+                                <DataTemplate>
+                                    <TextBlock
+          Text="{Binding Point.Y, StringFormat='Money: {0:N0} VND'}"
+          Visibility="{Binding Point.Y, Converter={StaticResource ZeroOrNaNToVisibilityConverter}}"
+          Margin="5"/>
+                                </DataTemplate>
+                            </lvc:DefaultTooltip.ContentTemplate>
+                        </lvc:DefaultTooltip>
+                    </lvc:CartesianChart.DataTooltip>
+
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Title="Date"
+              x:Name="NetChartAxisX"
+              Foreground="#90a3b2"
+              ShowLabels="True"
+              LabelFormatter="{Binding DateFormatter}"/>
+                    </lvc:CartesianChart.AxisX>
+
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis Title="VND"
+              x:Name="NetChartAxisY"
+              Foreground="#90a3b2"
+              ShowLabels="True"
+              LabelFormatter="{Binding NetFormatter}"/>
+                    </lvc:CartesianChart.AxisY>
+
+                    <lvc:CartesianChart.Series>
+                        <lvc:LineSeries
+      Title="Net Value"
+      Fill="Transparent"
+      StrokeThickness="3"
+      PointGeometrySize="0"
+      Values="{Binding SeriesCollection}">
+                            <lvc:LineSeries.Stroke>
+                                <LinearGradientBrush>
+                                    <GradientStop Color="#ffffff" Offset="0.06"/>
+                                    <GradientStop Color="#2889fc" Offset="0.5"/>
+                                    <GradientStop Color="#ffffff" Offset="0.93"/>
+                                </LinearGradientBrush>
+                            </lvc:LineSeries.Stroke>
+                        </lvc:LineSeries>
+                    </lvc:CartesianChart.Series>
+                </lvc:CartesianChart>
+
+
+
+            </Grid>
+        </Border>
+        <!--Main Chart Section-->
+
+        <!--Right Section-->
+        <Grid Grid.Column="1" Grid.RowSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+
+
+            <!--Most Consumed-->
+            <Border Style="{StaticResource whiteborder}" Grid.Row="0" Margin="0 0 0 10">
+                <StackPanel>
+                    <TextBlock Text="Most Consumed" Style="{StaticResource titleText}" Margin="0 0 0 20" FontSize="24"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="28"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
+
+                        <Border CornerRadius="4 0 0 4">
+                            <TextBlock Text="ITEM" TextAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#ffffff">
+                                <TextBlock.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF747525" Offset="0"/>
+                                        <GradientStop Color="#FF20232E" Offset="0.485"/>
+                                    </LinearGradientBrush>
+                                </TextBlock.Background>
+                            </TextBlock>
+                        </Border>
+
+                        <Border Grid.Column="1" CornerRadius="0 4 4 0">
+                            <TextBlock Text="REVENUE" TextAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#ffffff">
+                                <TextBlock.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF747525" Offset="0"/>
+                                        <GradientStop Color="#FF20232E" Offset="0.485"/>
+                                    </LinearGradientBrush>
+                                </TextBlock.Background>
+                            </TextBlock>
+                        </Border>
+
+                        <TextBlock Name="firstItem" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Row="1"/>
+                        <TextBlock Name="firstTextBlock" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Column="1" Grid.Row="1"/>
+
+                        <TextBlock Name="secondItem" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Row="2"/>
+                        <TextBlock Name="secondTextBlock" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Column="1" Grid.Row="2"/>
+
+                        <TextBlock Name="thirdItem" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Row="3"/>
+                        <TextBlock Name="thirdTextBlock" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Column="1" Grid.Row="3"/>
+
+                        <TextBlock Name="fourthItem" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Row="4"/>
+                        <TextBlock Name="fourthTextBlock" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Column="1" Grid.Row="4"/>
+
+                    </Grid>
+                </StackPanel>
+            </Border>
+            <!--Most Consumed-->
+
+            <!---->
+            <Border Style="{StaticResource whiteborder}" Grid.Row="1" Margin="0 10 0 0">
+                <StackPanel>
+
+                    <TextBlock Grid.Row="0" Text="Recent Customers" Style="{StaticResource titleText}" Margin="0 0 0 20" FontSize="24"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="28"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
+
+                        <Border CornerRadius="4 0 0 4">
+                            <TextBlock Text="TOP" TextAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#ffffff">
+                                <TextBlock.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF747525" Offset="0"/>
+                                        <GradientStop Color="#FF20232E" Offset="0.485"/>
+                                    </LinearGradientBrush>
+                                </TextBlock.Background>
+                            </TextBlock>
+                        </Border>
+
+                        <Border Grid.Column="1" CornerRadius="0 4 4 0">
+                            <TextBlock Text="NAME" TextAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#ffffff">
+                                <TextBlock.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF747525" Offset="0"/>
+                                        <GradientStop Color="#FF20232E" Offset="0.485"/>
+                                    </LinearGradientBrush>
+                                </TextBlock.Background>
+                            </TextBlock>
+                        </Border>
+
+
+                        <TextBlock Text="1" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Row="1"/>
+                        <TextBlock Name="fifthTextBlock" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Column="1" Grid.Row="1"/>
+
+                        <TextBlock Text="2" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Row="2"/>
+                        <TextBlock Name="sixthTextBlock" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Column="1" Grid.Row="2"/>
+
+                        <TextBlock Text="3" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Row="3"/>
+                        <TextBlock Name="seventhTextBlock" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Column="1" Grid.Row="3"/>
+
+                        <TextBlock Text="4" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Row="4"/>
+                        <TextBlock Name="eighthTextBlock" Style="{StaticResource titleText}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Grid.Column="1" Grid.Row="4"/>
+
+                    </Grid>
+                </StackPanel>
+            </Border>
+            <!---->
+        </Grid>
+        <!--Right Section-->
     </Grid>
 </Page>

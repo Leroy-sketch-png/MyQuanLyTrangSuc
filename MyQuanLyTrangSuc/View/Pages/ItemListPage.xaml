@@ -7,7 +7,8 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="720" d:DesignWidth="880"
-      ><!--Loaded="Page_Loaded"-->
+      Loaded="Page_Loaded"
+      >
     <Page.Resources>
         <!-- Rounded Corner Button Style -->
         <Style x:Key="RoundedButtonStyle" TargetType="Button">
@@ -43,20 +44,23 @@
                         Style="{StaticResource MaterialDesignRaisedButton}"
                         Background="#FF747525"
                         Foreground="White"
-                        /> <!--Click="OnClick_Add_ItemList"-->
+                        Click="OnClick_Add_ItemList"
+                        />
                 <!---->
 
                 <TextBox DockPanel.Dock="Right" Width="200" x:Name="SearchTextBox" materialDesign:HintAssist.Hint="Search By Name" HorizontalAlignment="Right" Margin="20,0,10,0" Height="60"
-                         /> <!--TextChanged="TextChanged_Search"-->
+                         TextChanged="TextChanged_Search"/> 
                 <ComboBox DockPanel.Dock="Right" Width="150" Style="{StaticResource MaterialDesignOutlinedComboBox}" HorizontalAlignment="Right" Margin="20,0,10,0" ItemsSource="{Binding Categories}"
                           ToolTip="Double click to clear"
-                          materialDesign:HintAssist.Hint="Category"/>
-                <!--SelectionChanged="ComboBox_SelectionChanged"--> <!--MouseDoubleClick="ComboBox_MouseDoubleClick"-->
+                          materialDesign:HintAssist.Hint="Category"
+                          SelectionChanged="ComboBox_SelectionChanged"
+                          MouseDoubleClick="ComboBox_MouseDoubleClick"/>
+                
 
             </DockPanel>
             <Border BorderBrush="Black" BorderThickness="1" Margin="10" Padding="10">
                 <ScrollViewer>
-                    <ItemsControl ItemsSource="{Binding Items, Mode=OneWay}">
+                    <ItemsControl ItemsSource="{Binding Products, Mode=OneWay}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel />
@@ -64,7 +68,7 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <!--<local:ItemUserControlUI />-->
+                                <local:ItemUserControl/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>

@@ -1,28 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using MyQuanLyTrangSuc.ViewModel;
 
 namespace MyQuanLyTrangSuc.View
 {
-    /// <summary>
-    /// Interaction logic for ItemListPage.xaml
-    /// </summary>
     public partial class ItemListPage : Page
     {
+        private readonly ItemListPageLogic _logicService;
+
         public ItemListPage()
         {
             InitializeComponent();
+            _logicService = new ItemListPageLogic();
+            DataContext = _logicService;
+        }
+
+        private void TextChanged_Search(object sender, RoutedEventArgs e)
+        {
+            _logicService.SearchItemsByName(SearchTextBox.Text);
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            _logicService.LoadProducts();
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ComboBox comboBox && comboBox.SelectedItem != null)
+            {
+                _logicService.SelectedCategory = comboBox.SelectedItem.ToString();
+            }
+        }
+
+        private void OnClick_Add_ItemList(object sender, RoutedEventArgs e)
+        {
+            _logicService.LoadAddItemWindow();
+        }
+
+        private void ComboBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is ComboBox comboBox)
+            {
+                comboBox.SelectedIndex = -1;
+                _logicService.SelectedCategory = null;
+                _logicService.LoadProducts();
+            }
         }
     }
 }

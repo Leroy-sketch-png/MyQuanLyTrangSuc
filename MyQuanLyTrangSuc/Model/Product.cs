@@ -30,4 +30,7 @@ public partial class Product
     public virtual ICollection<ImportDetail> ImportDetails { get; set; } = new List<ImportDetail>();
 
     public virtual ICollection<InvoiceDetail> InvoiceDetails { get; set; } = new List<InvoiceDetail>();
+
+    public virtual ICollection<StockReport> StockReports { get; set; } = new List<StockReport>();
+
 }

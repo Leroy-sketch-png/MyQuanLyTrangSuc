@@ -3,6 +3,9 @@
 using System;
 using System.Collections.Generic;
 
+
+
+
 namespace MyQuanLyTrangSuc.Model;
 
 public partial class Customer

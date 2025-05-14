@@ -17,6 +17,7 @@ using MyQuanLyTrangSuc.View;
 using MyQuanLyTrangSuc.ViewModel;
 using MyQuanLyTrangSuc.BusinessLogic;
 using Microsoft.EntityFrameworkCore;
+using MaterialDesignThemes.Wpf;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -66,6 +67,15 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             context.OnEmployeeAdded += Context_OnEmployeeAdded;
             context.OnEmployeesReset += Context_OnEmployeesReset;
+        }
+
+        public void LoadEmployeePropertiesPage()
+        {
+            //
+            mainNavigationWindowLogic = MainNavigationWindowLogic.Instance;
+            //
+            var selectedEmp = (Employee)employeeListPage.employeesDataGrid.SelectedItem;
+            mainNavigationWindowLogic.LoadEmployeePropertiesPage(new EmployeePropertiesPage(selectedEmp));
         }
 
         private void Context_OnEmployeesReset()
@@ -251,7 +261,9 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        public void ExportExcelFile(DataGrid employeesDataGrid)
+
+
+public void ExportExcelFile(DataGrid employeesDataGrid)
         {
             string filePath = "";
             SaveFileDialog saveFileDialog = new SaveFileDialog
