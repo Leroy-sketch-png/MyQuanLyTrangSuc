@@ -24,5 +24,42 @@ namespace MyQuanLyTrangSuc.View
         {
             InitializeComponent();
         }
+
+        private void OnClick_AddServiceRecordWindow(object sender, RoutedEventArgs e) {
+            logicService.LoadAddServiceRecordWindow();
+        }
+
+        private void OnDoubleClick_InspectRecord_ServiceRecordPageDataGrid(object sender, MouseButtonEventArgs e) {
+            logicService.LoadServiceRecordDetailsWindow();
+        }
+
+        private void viewButton_Click(object sender, RoutedEventArgs e) {
+            logicService.LoadServiceRecordDetailsWindow();
+        }
+
+        private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e) {
+            searchTextBlock.Text = "";
+            if (searchComboBox.SelectedItem != null) {
+                string selectedCriteria = (searchComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+                switch (selectedCriteria) {
+                    case "Customer":
+                        logicService.SearchServiceRecordsByNameOfCustomer(searchTextBox.Text);
+                        break;
+                    case "ID":
+                        logicService.SearchServiceRecordsByID(searchTextBox.Text);
+                        break;
+                    case "Date":
+                        logicService.SearchServiceRecordsByDate(searchTextBox.Text);
+                        break;
+                }
+            }
+            if (string.IsNullOrEmpty(searchTextBox.Text)) {
+                searchTextBlock.Text = "Search";
+            }
+        }
+
+        private void printButton_Click(object sender, RoutedEventArgs e) {
+            logicService.LoadServiceRecordWindow();
+        }
     }
 }

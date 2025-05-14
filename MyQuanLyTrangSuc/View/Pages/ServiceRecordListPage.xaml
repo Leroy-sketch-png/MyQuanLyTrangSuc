@@ -34,7 +34,7 @@
                 </Grid.RowDefinitions>
 
                 <!--Page Title-->
-                <TextBlock Text="Services Page" HorizontalAlignment="Left" VerticalAlignment="Center"
+                <TextBlock Text="Service Record Page" HorizontalAlignment="Left" VerticalAlignment="Center"
                            Margin="55 0 0 2" FontSize="16" FontWeight="SemiBold" Foreground="Blue"/>
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="33 0 0 4" Width="14" Height="14" Foreground="#ff9d00"/>
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="30 4 0 0" Width="14" Height="14" Foreground="#4880ff"/>
@@ -63,7 +63,7 @@
                 </StackPanel>
 
                 <!--Page Title-->
-                <TextBlock Text="SERVICES" Grid.Row="1" FontSize="32" FontWeight="SemiBold"
+                <TextBlock Text="SERVICE RECORDS" Grid.Row="1" FontSize="32" FontWeight="SemiBold"
                             Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
@@ -73,7 +73,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="15"
                                    Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Add new service" FontWeight="SemiBold"/>
+                            <TextBlock Text="Add new record" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
                     <!--Import Button-->
@@ -115,7 +115,7 @@
                 </ComboBox>
 
                 <!--Employees DataGrid-->
-                <DataGrid ItemsSource="{Binding Services}" SelectedItem="{Binding SelectedServices}" x:Name="servicesDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
+                <DataGrid ItemsSource="{Binding Services}" SelectedItem="{Binding SelectedServices}" x:Name="ServiceRecordsDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
                     <!-- SelectionChanged="employeesDataGrid_SelectionChanged" -->
                     <DataGrid.Columns>
                         <!--ID-->
