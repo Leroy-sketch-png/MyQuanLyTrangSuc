@@ -21,21 +21,21 @@ namespace MyQuanLyTrangSuc.View
     /// <summary>
     /// Interaction logic for MonthlyStockReportWindow.xaml
     /// </summary>
-    public partial class MonthlyStockReportWindow : Window
-    {
-        private MonthlyStockReportWindowLogic _logic;
+    //public partial class MonthlyStockReportWindow : Window
+    //{
+    //    private MonthlyStockReportWindowLogic _logic;
 
-        public MonthlyStockReportWindow()
-        {
-            InitializeComponent();
-            _logic = new MonthlyStockReportWindowLogic(this);
-            this.DataContext = _logic;
-        }
+    //    public MonthlyStockReportWindow()
+    //    {
+    //        InitializeComponent();
+    //        _logic = new MonthlyStockReportWindowLogic(this);
+    //        this.DataContext = _logic;
+    //    }
 
-        // Constructor với tham số để truyền tháng/năm cụ thể
-        public MonthlyStockReportWindow(DateTime selectedMonthYear) : this()
-        {
-            _logic.SelectedMonthYear = selectedMonthYear;
-        }
-    }
+    //    // Constructor với tham số để truyền tháng/năm cụ thể
+    //    public MonthlyStockReportWindow(DateTime selectedMonthYear) : this()
+    //    {
+    //        _logic.SelectedMonthYear = selectedMonthYear;
+    //    }
+    //}
 }
