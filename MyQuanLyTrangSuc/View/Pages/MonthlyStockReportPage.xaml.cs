@@ -55,6 +55,11 @@ namespace MyQuanLyTrangSuc.View
             logicReport.CreateOrUpdateCurrentMonthReport();
         }
 
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.CreateOrUpdateCurrentMonthReport();
+        }
+
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             searchTextBlock.Text = "";
