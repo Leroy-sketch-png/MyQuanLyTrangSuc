@@ -13,7 +13,7 @@ public partial class Import
 
     public string EmployeeId { get; set; }
 
-    public DateTime? Date { get; set; }
+    public DateTime Date { get; set; }
 
     public decimal? TotalAmount { get; set; }
 

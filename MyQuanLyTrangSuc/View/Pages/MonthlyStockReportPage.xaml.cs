@@ -26,6 +26,11 @@ namespace MyQuanLyTrangSuc.View
             logicService.LoadReportDetailsWindow();
         }
 
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.CreateOrUpdateCurrentMonthReport();
+        }
+
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             searchTextBlock.Text = "";
@@ -35,11 +40,6 @@ namespace MyQuanLyTrangSuc.View
                 logicService.ReportsSearchByYear(searchTextBox.Text);
             if (searchTextBox.Text == "")
                 searchTextBlock.Text = "Search by month/year";
-        }
-
-        private void exportExcelFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.ExportToExcel();
         }
     }
 }

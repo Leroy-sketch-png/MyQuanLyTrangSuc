@@ -1,41 +1,29 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using MyQuanLyTrangSuc.ViewModel;
 using MyQuanLyTrangSuc.Model;
-using MyQuanLyTrangSuc.View;
-using System.Windows.Navigation;
-
 namespace MyQuanLyTrangSuc.View
 {
-    /// <summary>
-    /// Interaction logic for MonthlyStockReportWindow.xaml
-    /// </summary>
     public partial class MonthlyStockReportWindow : Window
     {
-        private MonthlyStockReportWindowLogic _logic;
-
-        public MonthlyStockReportWindow()
+        public MonthlyStockReportWindow(List<StockReport> details, string title)
         {
             InitializeComponent();
-            _logic = new MonthlyStockReportWindowLogic(this);
-            this.DataContext = _logic;
+            this.DataContext = new MonthlyStockReportWindowLogic(details, title);
         }
 
-        // Constructor với tham số để truyền tháng/năm cụ thể
-        public MonthlyStockReportWindow(DateTime selectedMonthYear) : this()
+        private void PrintButton_Click(object sender, RoutedEventArgs e)
         {
-            _logic.SelectedMonthYear = selectedMonthYear;
+            // Implement print functionality
+            MessageBox.Show("Print functionality will be implemented here", "Print", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void ExportExcelButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Implement export to Excel functionality
+            MessageBox.Show("Export to Excel functionality will be implemented here", "Export", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using static MyQuanLyTrangSuc.ViewModel.MonthlyStockReportWindowLogic;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -66,16 +67,15 @@ namespace MyQuanLyTrangSuc.ViewModel
                 var detailedReports = context.StockReports
                     .Where(r => r.MonthYear.Month == month && r.MonthYear.Year == year)
                     .Join(context.Products,
-                        report => report.ProductId,
-                        product => product.ProductId,
-                        (report, product) => new
-                        {
-                            ProductName = product.Name,
-                            BeginStock = report.BeginStock,
-                            PurchaseQuantity = report.PurchaseQuantity,
-                            SalesQuantity = report.SalesQuantity,
-                            FinishStock = report.FinishStock
-                        })
+                            report => report.ProductId,
+                            product => product.ProductId,
+                            (report, product) => new StockReport // ← Sửa thành class cụ thể
+                    {
+                        BeginStock = report.BeginStock,
+                        PurchaseQuantity = report.PurchaseQuantity,
+                        SalesQuantity = report.SalesQuantity,
+                        FinishStock = report.FinishStock
+                    })
                     .ToList();
 
                 MonthlyStockReportWindow MonthlyStockReportWindow = new MonthlyStockReportWindow(detailedReports, $"{month}/{year}");
@@ -83,6 +83,100 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
+        public void CreateOrUpdateCurrentMonthReport()
+        {
+            try
+            {
+                // Lấy tháng hiện tại
+                DateTime currentDate = DateTime.Now;
+                var reportDate = new DateTime(currentDate.Year, currentDate.Month, 1);
+
+                // Lấy danh sách tất cả sản phẩm từ database
+                var products = context.Products.ToList();
+                int reportCreated = 0;
+                int reportUpdated = 0;
+
+                foreach (var product in products)
+                {
+                    // Kiểm tra xem báo cáo đã tồn tại cho sản phẩm này trong tháng hiện tại chưa
+                    var existingReport = context.StockReports
+                        .FirstOrDefault(r => r.MonthYear.Month == reportDate.Month &&
+                                             r.MonthYear.Year == reportDate.Year &&
+                                             r.ProductId == product.ProductId);
+
+                    // Lấy báo cáo tháng trước để lấy số tồn đầu kỳ
+                    var lastMonth = reportDate.AddMonths(-1);
+                    var lastMonthReport = context.StockReports
+                        .FirstOrDefault(r => r.MonthYear.Month == lastMonth.Month &&
+                                             r.MonthYear.Year == lastMonth.Year &&
+                                             r.ProductId == product.ProductId);
+
+                    // Tính toán các giá trị cho báo cáo
+                    var beginStock = lastMonthReport?.FinishStock ?? 0;
+
+                    // Tính tổng số lượng nhập trong tháng
+                    var purchaseQuantity = context.ImportDetails
+                        .Where(pd => pd.Import.Date.Month == reportDate.Month &&
+                                     pd.Import.Date.Year == reportDate.Year &&
+                                     pd.ProductId == product.ProductId)
+                        .Sum(pd => pd.Quantity ?? 0);
+
+                    // Tính tổng số lượng bán trong tháng
+                    var salesQuantity = context.InvoiceDetails
+                        .Where(od => od.Invoice.Date.Month == reportDate.Month &&
+                                     od.Invoice.Date.Year == reportDate.Year &&
+                                     od.ProductId == product.ProductId)
+                        .Sum(od => od.Quantity ?? 0);
+
+                    // Tính số tồn cuối kỳ
+                    var finishStock = beginStock + purchaseQuantity - salesQuantity;
+
+                    if (existingReport != null)
+                    {
+                        // Cập nhật báo cáo nếu đã tồn tại
+                        existingReport.BeginStock = beginStock;
+                        existingReport.PurchaseQuantity = purchaseQuantity;
+                        existingReport.SalesQuantity = salesQuantity;
+                        existingReport.FinishStock = finishStock;
+                        reportUpdated++;
+                    }
+                    else
+                    {
+                        // Tạo báo cáo mới nếu chưa tồn tại
+                        var newReport = new StockReport
+                        {
+                            MonthYear = reportDate,
+                            ProductId = product.ProductId,
+                            BeginStock = beginStock,
+                            PurchaseQuantity = purchaseQuantity,
+                            SalesQuantity = salesQuantity,
+                            FinishStock = finishStock,
+                        };
+
+                        // Thêm báo cáo mới vào database
+                        context.StockReports.Add(newReport);
+                        reportCreated++;
+                    }
+                }
+
+                // Lưu tất cả thay đổi vào database
+                context.SaveChanges();
+
+                // Cập nhật lại dữ liệu hiển thị
+                LoadReportsFromDatabase();
+
+                // Hiển thị thông báo
+                string message = $"Hoàn thành tạo báo cáo tồn kho tháng {reportDate.Month}/{reportDate.Year}:\n" +
+                                $"- Tạo mới: {reportCreated} báo cáo\n" +
+                                $"- Cập nhật: {reportUpdated} báo cáo";
+
+                MessageBox.Show(message, "Tạo báo cáo tồn kho", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tạo báo cáo tồn kho: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         public void ReportsSearchByMonth(string month)
         {
             if (!int.TryParse(month, out int monthNumber)) return;
@@ -139,52 +233,6 @@ namespace MyQuanLyTrangSuc.ViewModel
                     StockReports.Add(report);
                 }
             });
-        }
-
-        public void ExportToExcel()
-        {
-            try
-            {
-                // Implement Excel export using EPPlus or similar library
-                // Example structure:
-                /*
-                var excelPackage = new ExcelPackage();
-                var worksheet = excelPackage.Workbook.Worksheets.Add("Stock Reports");
-                
-                // Add headers
-                worksheet.Cells[1, 1] = "Month/Year";
-                worksheet.Cells[1, 2] = "Beginning Stock";
-                worksheet.Cells[1, 3] = "Purchased";
-                worksheet.Cells[1, 4] = "Sold";
-                worksheet.Cells[1, 5] = "Ending Stock";
-                
-                // Add data
-                int row = 2;
-                foreach (var report in StockReports)
-                {
-                    worksheet.Cells[row, 1] = report.MonthYear?.ToString("MM/yyyy");
-                    worksheet.Cells[row, 2] = report.BeginStock;
-                    worksheet.Cells[row, 3] = report.PurchaseQuantity;
-                    worksheet.Cells[row, 4] = report.SalesQuantity;
-                    worksheet.Cells[row, 5] = report.FinishStock;
-                    row++;
-                }
-                
-                // Save the file
-                var saveFileDialog = new SaveFileDialog();
-                if (saveFileDialog.ShowDialog() == true)
-                {
-                    FileInfo excelFile = new FileInfo(saveFileDialog.FileName);
-                    excelPackage.SaveAs(excelFile);
-                }
-                */
-
-                MessageBox.Show("Excel export would be implemented here", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error exporting to Excel: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
+        }  
     }
 }
