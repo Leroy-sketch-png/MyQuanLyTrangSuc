@@ -35,12 +35,9 @@ namespace MyQuanLyTrangSuc.View
         }
 
         private void clearServiceDetailBtn_Click(object sender, RoutedEventArgs e) {
-            //logicService.RemoveServiceDetail();
+            logicService.ClearServiceDetail();
         }
 
-        private void applyServiceRecordBtn_Click(object sender, RoutedEventArgs e) {
-
-        }
 
         private void ServiceDetailsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
             if (sender is DataGrid dataGrid && dataGrid.SelectedItem is ServiceDetail selectedDetail) {
@@ -51,6 +48,10 @@ namespace MyQuanLyTrangSuc.View
             }
 
         }
+        private void applyServiceRecordBtn_Click(object sender, RoutedEventArgs e) {
+            logicService.AddServiceRecord();
+        }
+
         // For integer-only TextBoxes (Quantity)
         private void NumberOnlyTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e) {
             e.Handled = !IsTextNumeric(e.Text);
@@ -105,5 +106,8 @@ namespace MyQuanLyTrangSuc.View
                    realText.Substring(selectionStart + selectionLength);
         }
 
+        private void PrepaidTextBox_LostFocus(object sender, RoutedEventArgs e) {
+            logicService.ValidatePrepaidInput();
+        }
     }
 }

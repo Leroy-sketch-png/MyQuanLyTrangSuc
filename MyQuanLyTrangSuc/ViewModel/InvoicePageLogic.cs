@@ -173,6 +173,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 }
             });
         }
+
         public void PrintInvoiceRecord()
         {
             if (invoicePageUI.InvoicesDataGrid.SelectedItem is Invoice selectedInvoice)
@@ -190,7 +191,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 MessageBox.Show("Please select an invoice record to print.", "Print Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
         }
 
         public void LoadInvoiceWindow()

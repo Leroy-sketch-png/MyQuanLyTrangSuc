@@ -28,26 +28,22 @@ namespace MyQuanLyTrangSuc.View
             logicService = new ServiceRecordListPageLogic(this);
             DataContext = logicService;
         }
-
+        
         private void OnClick_AddServiceRecordWindow(object sender, RoutedEventArgs e) {
             logicService.LoadAddServiceRecordWindow();
         }
-
+        
         private void OnDoubleClick_InspectRecord_ServiceRecordPageDataGrid(object sender, MouseButtonEventArgs e) {
             //logicService.LoadServiceRecordDetailsWindow();
         }
-
-        private void viewButton_Click(object sender, RoutedEventArgs e) {
-            //logicService.LoadServiceRecordDetailsWindow();
-        }
-
+        
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e) {
             searchTextBlock.Text = "";
             if (searchComboBox.SelectedItem != null) {
                 string selectedCriteria = (searchComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
                 switch (selectedCriteria) {
                     case "Customer":
-                        logicService.SearchServiceRecordsByCustomerName(searchTextBox.Text);
+                        logicService.SearchServiceRecordsByNameOfCustomer(searchTextBox.Text);
                         break;
                     case "ID":
                         logicService.SearchServiceRecordsByID(searchTextBox.Text);
@@ -63,7 +59,11 @@ namespace MyQuanLyTrangSuc.View
         }
 
         private void printButton_Click(object sender, RoutedEventArgs e) {
-            logicService.LoadServiceRecordWindow();
+            logicService.LoadServiceRecordDetailsWindow();
+        }
+
+        private void editButton_Click(object sender, RoutedEventArgs e) {
+
         }
     }
 }
