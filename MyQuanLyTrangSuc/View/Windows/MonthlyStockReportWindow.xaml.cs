@@ -1,17 +1,21 @@
-﻿using MyQuanLyTrangSuc.ViewModel;
-using System;
+﻿using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.ViewModel;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
-using MyQuanLyTrangSuc.Model;
+
 namespace MyQuanLyTrangSuc.View
 {
     public partial class MonthlyStockReportWindow : Window
     {
-        public MonthlyStockReportWindow(List<StockReport> details, string title)
+        private MonthlyStockReportWindowLogic logicReport;
+
+        public MonthlyStockReportWindow(List<StockReport> reports, string monthYear)
         {
             InitializeComponent();
-            this.DataContext = new MonthlyStockReportWindowLogic(details, title);
+
+            // Khởi tạo logic từ danh sách báo cáo đã gộp
+            logicReport = new MonthlyStockReportWindowLogic(reports, monthYear);
+            this.DataContext = logicReport;
         }
     }
 }

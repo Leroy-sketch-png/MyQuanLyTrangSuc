@@ -101,7 +101,7 @@
                     <!--SelectionChanged="employeesDataGrid_SelectionChanged"-->
                     <DataGrid.Columns>
                         <!--Month-->
-                        <DataGridTextColumn Binding="{Binding StockReport.MonthYear.Month}" Header="Month" IsReadOnly="True" CanUserResize="False" Width="*">
+                        <DataGridTextColumn Binding="{Binding MonthYear.Month}" Header="Month" IsReadOnly="True" CanUserResize="False" Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -110,7 +110,7 @@
                         </DataGridTextColumn>
 
                         <!--Year-->
-                        <DataGridTextColumn Binding="{Binding StockReport.MonthYear.Month}" Header="Year" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding MonthYear.Year}" Header="Year" IsReadOnly="True" Width="*"/>
 
                         <!--Operations-->
 
@@ -133,8 +133,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
-
+                        
                     </DataGrid.Columns>
                 </DataGrid>
 

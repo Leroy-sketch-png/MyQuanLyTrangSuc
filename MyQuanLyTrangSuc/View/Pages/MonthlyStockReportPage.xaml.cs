@@ -13,13 +13,28 @@ namespace MyQuanLyTrangSuc.View
         public MonthlyStockReportPage()
         {
             InitializeComponent();
-            logicReport = new MonthlyStockReportPageLogic();
+            logicReport = new MonthlyStockReportPageLogic(this);
             this.DataContext = logicReport;
         }
 
         private void OnDoubleClick_InspectReport_MonthlyStockReportPageDataGrid(object sender, MouseButtonEventArgs e)
         {
-            logicReport.LoadReportDetailsWindow();
+            if (StockReportDataGrid.SelectedItem is StockReport selectedReport)
+            {
+                Console.WriteLine($"Đã chọn báo cáo: Tháng {selectedReport.MonthYear.Month}/{selectedReport.MonthYear.Year}");
+
+                // Kiểm tra xem logicReport có tồn tại không
+                if (logicReport == null)
+                {
+                    Console.WriteLine("LỖI: logicReport chưa được khởi tạo!");
+                    return;
+                }
+
+                logicReport.SelectedStockReport = selectedReport; // Cập nhật SelectedStockReport
+                Console.WriteLine($"logicReport.SelectedStockReport có tồn tại không? {logicReport.SelectedStockReport != null}");
+
+                logicReport.LoadReportDetailsWindow();
+            }
         }
 
         //private void ViewButton_Click(object sender, RoutedEventArgs e)

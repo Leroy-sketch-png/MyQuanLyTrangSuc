@@ -1,4 +1,5 @@
-﻿using MyQuanLyTrangSuc.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,16 @@ namespace MyQuanLyTrangSuc.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private StockReport _selectedStockReport;
+        public StockReport SelectedStockReport
+        {
+            get => _selectedStockReport;
+            set
+            {
+                _selectedStockReport = value;
+                OnPropertyChanged();
+            }
+        }
         private ObservableCollection<StockReport> _stockReports;
         public ObservableCollection<StockReport> StockReports
         {
@@ -92,28 +103,40 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             if (monthlyStockReportPage.StockReportDataGrid.SelectedItem is StockReport selectedReport)
             {
-                // Get all reports for the selected month/year
+                Console.WriteLine($"SelectedStockReport: {selectedReport != null}");
+
                 var month = selectedReport.MonthYear.Month;
                 var year = selectedReport.MonthYear.Year;
+                string monthYear = $"{month}/{year}";
 
                 var detailedReports = context.StockReports
                     .Where(r => r.MonthYear.Month == month && r.MonthYear.Year == year)
                     .Join(context.Products,
-                            report => report.ProductId,
-                            product => product.ProductId,
-                            (report, product) => new StockReport // ← Sửa thành class cụ thể
-                    {
-                        BeginStock = report.BeginStock,
-                        PurchaseQuantity = report.PurchaseQuantity,
-                        SalesQuantity = report.SalesQuantity,
-                        FinishStock = report.FinishStock
-                    })
+                        report => report.ProductId,
+                        product => product.ProductId,
+                        (report, product) => new StockReport
+                        {
+                            ProductId = report.ProductId,
+                            BeginStock = report.BeginStock,
+                            PurchaseQuantity = report.PurchaseQuantity,
+                            SalesQuantity = report.SalesQuantity,
+                            FinishStock = report.FinishStock,
+                            Product = product // Gán thông tin sản phẩm
+                        })
                     .ToList();
 
-                MonthlyStockReportWindow MonthlyStockReportWindow = new MonthlyStockReportWindow(detailedReports, $"{month}/{year}");
-                MonthlyStockReportWindow.ShowDialog();
+                if (detailedReports.Count == 0)
+                {
+                    MessageBox.Show($"Không có báo cáo nào cho tháng {month}/{year}.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                // Mở cửa sổ hiển thị chi tiết báo cáo tồn kho
+                MonthlyStockReportWindow reportWindow = new MonthlyStockReportWindow(detailedReports, monthYear);
+                reportWindow.ShowDialog();
             }
         }
+
 
         public void CreateOrUpdateCurrentMonthReport()
         {
@@ -207,23 +230,63 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void DeleteStockReport()
         {
-            if (monthlyStockReportPage.StockReportDataGrid.SelectedItem is StockReport selectedReport)
+            if (monthlyStockReportPage == null || monthlyStockReportPage.StockReportDataGrid == null)
             {
-                var result = MessageBox.Show($"Bạn có chắc chắn muốn xóa báo cáo tháng {selectedReport.MonthYear.Month}/{selectedReport.MonthYear.Year}?",
-                                             "Xác nhận xóa",
-                                             MessageBoxButton.YesNo,
-                                             MessageBoxImage.Warning);
+                MessageBox.Show("LỖI: Trang báo cáo chưa được khởi tạo!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
-                if (result == MessageBoxResult.Yes)
+            if (monthlyStockReportPage.StockReportDataGrid.SelectedItem is not StockReport selectedReport)
+            {
+                MessageBox.Show("Vui lòng chọn một báo cáo để xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show($"Bạn có chắc chắn muốn xóa tất cả báo cáo tồn kho của tháng {selectedReport.MonthYear.Month}/{selectedReport.MonthYear.Year}?",
+                                         "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
                 {
-                    context.StockReports.Remove(selectedReport);
+                    // Tìm tất cả báo cáo của tháng/năm đó
+                    var reportsToDelete = context.StockReports.Where(r => r.MonthYear.Month == selectedReport.MonthYear.Month &&
+                                                                          r.MonthYear.Year == selectedReport.MonthYear.Year).ToList();
+
+                    if (!reportsToDelete.Any())
+                    {
+                        MessageBox.Show("Không tìm thấy báo cáo nào để xóa!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    // Xóa tất cả báo cáo tìm thấy
+                    context.StockReports.RemoveRange(reportsToDelete);
                     context.SaveChanges();
-                    StockReports.Remove(selectedReport);
-                    MessageBox.Show($"Đã xóa thành công");
+
+                    // Cập nhật danh sách hiển thị trên UI
+                    for (int i = StockReports.Count - 1; i >= 0; i--)
+                    {
+                        if (StockReports[i].MonthYear.Month == selectedReport.MonthYear.Month &&
+                            StockReports[i].MonthYear.Year == selectedReport.MonthYear.Year)
+                        {
+                            StockReports.RemoveAt(i);
+                        }
+                    }
+                    OnPropertyChanged(nameof(StockReports));
+
+                    MessageBox.Show("Đã xóa tất cả báo cáo tồn kho của tháng thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    MessageBox.Show("Dữ liệu đã bị thay đổi hoặc xóa trước đó. Hãy tải lại danh sách báo cáo!", "Lỗi đồng bộ dữ liệu", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi xóa báo cáo: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-                
         }
+
         public void ReportsSearchByMonth(string month)
         {
             if (!int.TryParse(month, out int monthNumber)) return;
