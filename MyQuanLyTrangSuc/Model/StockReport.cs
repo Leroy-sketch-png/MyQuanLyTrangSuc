@@ -11,9 +11,9 @@ public partial class StockReport
 
     public string ProductId { get; set; }
 
-    public int BeginStock { get; set; }
+    public int? BeginStock { get; set; }
 
-    public int PurchaseQuantity { get; set; }
+    public int? PurchaseQuantity { get; set; }
 
     public int SalesQuantity { get; set; }
 
