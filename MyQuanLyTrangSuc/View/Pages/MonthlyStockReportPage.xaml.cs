@@ -1,4 +1,5 @@
-﻿using MyQuanLyTrangSuc.ViewModel;
+﻿using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -7,37 +8,45 @@ namespace MyQuanLyTrangSuc.View
 {
     public partial class MonthlyStockReportPage : Page
     {
-        private MonthlyStockReportPageLogic logicService;
+        private MonthlyStockReportPageLogic logicReport;
 
         public MonthlyStockReportPage()
         {
             InitializeComponent();
-            logicService = new MonthlyStockReportPageLogic(this);
-            this.DataContext = logicService;
+            logicReport = new MonthlyStockReportPageLogic();
+            this.DataContext = logicReport;
         }
 
         private void OnDoubleClick_InspectReport_MonthlyStockReportPageDataGrid(object sender, MouseButtonEventArgs e)
         {
-            logicService.LoadReportDetailsWindow();
+            logicReport.LoadReportDetailsWindow();
         }
 
-        private void viewButton_Click(object sender, RoutedEventArgs e)
+        //private void ViewButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    logicReport.LoadReportDetailsWindow();
+        //}
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            logicService.LoadReportDetailsWindow();
+            logicReport.CreateOrUpdateCurrentMonthReport();
         }
-
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicReport.DeleteStockReport();
+        }
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            logicService.CreateOrUpdateCurrentMonthReport();
+            logicReport.CreateOrUpdateCurrentMonthReport();
         }
 
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             searchTextBlock.Text = "";
             if (searchComboBox.SelectionBoxItem.ToString() == "Month")
-                logicService.ReportsSearchByMonth(searchTextBox.Text);
+                logicReport.ReportsSearchByMonth(searchTextBox.Text);
             else if (searchComboBox.SelectionBoxItem.ToString() == "Year")
-                logicService.ReportsSearchByYear(searchTextBox.Text);
+                logicReport.ReportsSearchByYear(searchTextBox.Text);
             if (searchTextBox.Text == "")
                 searchTextBlock.Text = "Search by month/year";
         }

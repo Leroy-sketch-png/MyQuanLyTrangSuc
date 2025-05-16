@@ -39,6 +39,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
+        
         <Border Grid.Row="4" Margin="30">
             <StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -48,5 +49,36 @@
                 <TextBlock Text="After 4% Mark-up" FontSize="14" HorizontalAlignment="Center" Margin="10,0,10,10" FontStyle="Italic"/>
             </StackPanel>
         </Border>
+
+        <!--StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button x:Name="ExportExcelButton" Content="Export to Excel" Width="100" Height="30" Margin="10,0" Click="ExportExcelButton_Click">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="#4CAF50"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#388E3C"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button x:Name="PrintButton" Content="Print" Width="100" Height="30" Margin="10,0" Click="PrintButton_Click">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="#2196F3"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1976D2"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </StackPanel-->
     </Grid>
 </Window>

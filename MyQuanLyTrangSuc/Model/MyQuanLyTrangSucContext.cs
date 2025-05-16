@@ -103,6 +103,25 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         return result;
     }
+
+    public int SaveChangesAdded(StockReport stockreport)
+    {
+
+        int result = base.SaveChanges();
+
+        OnStockReportAdded?.Invoke(stockreport);
+
+        return result;
+    }
+
+    public int SaveChangesEdited(StockReport stockreport)
+    {
+        int result = base.SaveChanges();
+
+        OnStockReportEdited?.Invoke(stockreport);
+
+        return result;
+    }
     public void ResetEmployees() {
         OnEmployeesReset?.Invoke();
     }
@@ -124,6 +143,9 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
     public event Action<Service> OnServiceAdded;
     public event Action<Service> OnServiceEdited;
+
+    public event Action<StockReport> OnStockReportAdded;
+    public event Action<StockReport> OnStockReportEdited;
 
     public virtual DbSet<Account> Accounts { get; set; }
 
