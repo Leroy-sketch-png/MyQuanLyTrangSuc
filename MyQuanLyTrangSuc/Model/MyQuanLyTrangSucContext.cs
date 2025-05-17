@@ -103,6 +103,25 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         return result;
     }
+
+    public int SaveChangesAdded(StockReport stockreport)
+    {
+
+        int result = base.SaveChanges();
+
+        OnStockReportAdded?.Invoke(stockreport);
+
+        return result;
+    }
+
+    public int SaveChangesEdited(StockReport stockreport)
+    {
+        int result = base.SaveChanges();
+
+        OnStockReportEdited?.Invoke(stockreport);
+
+        return result;
+    }
     public void ResetEmployees() {
         OnEmployeesReset?.Invoke();
     }
@@ -124,6 +143,9 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
     public event Action<Service> OnServiceAdded;
     public event Action<Service> OnServiceEdited;
+
+    public event Action<StockReport> OnStockReportAdded;
+    public event Action<StockReport> OnStockReportEdited;
 
     public virtual DbSet<Account> Accounts { get; set; }
 
@@ -702,9 +724,9 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<StockReportDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("StockReportDetail");
+            entity.HasKey(e => new { e.StockReportId, e.ProductId }); // ❗ Sửa tại đây
+
+            entity.ToTable("StockReportDetail");
 
             entity.HasIndex(e => new { e.StockReportId, e.ProductId }, "UQ__StockRep__43BF809FCC6061A2").IsUnique();
 
@@ -725,7 +747,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasForeignKey(d => d.ProductId)
                 .HasConstraintName("FK__StockRepo__produ__5CD6CB2B");
 
-            entity.HasOne(d => d.StockReport).WithMany()
+            entity.HasOne(d => d.StockReport).WithMany(p => p.StockReportDetails)
                 .HasForeignKey(d => d.StockReportId)
                 .HasConstraintName("FK__StockRepo__stock__5BE2A6F2");
         });
@@ -798,7 +820,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
             //Your server goes here!
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=DESKTOP-71PN892\\SQLEXPRESS;Database=MyQuanLyTrangSuc;TrustServerCertificate=True;Trusted_Connection=True");
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=VIET-ANH;Database=MyQuanLyTrangSuc3;TrustServerCertificate=True;Trusted_Connection=True");
         }
     }
 

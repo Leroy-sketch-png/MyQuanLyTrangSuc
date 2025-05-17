@@ -1,76 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using MyQuanLyTrangSuc.ViewModel;
 
 namespace MyQuanLyTrangSuc.View
 {
-    //public partial class MonthlyStockReportPage : Page
-    //{
-    //    private MonthlyStockReportPageLogic _logic;
+    public partial class MonthlyStockReportPage : Page
+    {
+        private MonthlyStockReportPageLogic logicReport;
 
-    //    public MonthlyStockReportPage()
-    //    {
-    //        InitializeComponent();
-    //        _logic = new MonthlyStockReportPageLogic(this);
-    //        this.DataContext = _logic;
-    //    }
+        public MonthlyStockReportPage()
+        {
+            InitializeComponent();
+            logicReport = new MonthlyStockReportPageLogic(this);
+            this.DataContext = logicReport;
+        }
 
-    //    private void GenerateReportButton_Click(object sender, RoutedEventArgs e)
-    //    {
-    //        _logic.GenerateMonthlyReport();
-    //    }
+        private void OnDoubleClick_InspectReport_MonthlyStockReportPageDataGrid(object sender, MouseButtonEventArgs e)
+        {
+            if (StockReportDataGrid.SelectedItem is StockReport selectedReport)
+            {
+                Console.WriteLine($"Đã chọn báo cáo: Tháng {selectedReport.MonthYear.Month}/{selectedReport.MonthYear.Year}");
 
-    //    private void ImportExcelFileButton_Click(object sender, RoutedEventArgs e)
-    //    {
-    //        _logic.ImportFromExcel();
-    //    }
+                // Kiểm tra xem logicReport có tồn tại không
+                if (logicReport == null)
+                {
+                    Console.WriteLine("LỖI: logicReport chưa được khởi tạo!");
+                    return;
+                }
 
-    //    private void ExportExcelFileButton_Click(object sender, RoutedEventArgs e)
-    //    {
-    //        _logic.ExportToExcel();
-    //    }
+                logicReport.SelectedStockReport = selectedReport; // Cập nhật SelectedStockReport
+                Console.WriteLine($"logicReport.SelectedStockReport có tồn tại không? {logicReport.SelectedStockReport != null}");
 
-    //    private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
-    //    {
-    //        _logic.FilterReports(searchTextBox.Text, searchComboBox.SelectedIndex);
-    //    }
+                logicReport.LoadReportDetailsWindow();
+            }
+        }
 
-    //    private void SearchComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    //    {
-    //        _logic.FilterReports(searchTextBox.Text, searchComboBox.SelectedIndex);
-    //    }
+        //private void ViewButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    logicReport.LoadReportDetailsWindow();
+        //}
 
-    //    //private void StockReportDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    //    //{
-    //    //    _logic.OnMonthReportSelected();
-    //    //}
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicReport.CreateOrUpdateCurrentMonthReport();
+        }
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicReport.DeleteStockReport();
+        }
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicReport.CreateOrUpdateCurrentMonthReport();
+        }
 
-    //    private void ViewButton_Click(object sender, RoutedEventArgs e)
-    //    {
-    //        if (sender is Button button && button.DataContext is MonthlyStockReportViewModel report)
-    //        {
-    //            _logic.ViewReportDetails(report);
-    //        }
-    //    }
-
-    //    private void DeleteButton_Click(object sender, RoutedEventArgs e)
-    //    {
-    //        if (sender is Button button && button.DataContext is MonthlyStockReportViewModel report)
-    //        {
-    //            _logic.DeleteReport(report);
-    //        }
-    //    }
-    //}
+        private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            searchTextBlock.Text = "";
+            if (searchComboBox.SelectionBoxItem.ToString() == "Month")
+                logicReport.ReportsSearchByMonth(searchTextBox.Text);
+            else if (searchComboBox.SelectionBoxItem.ToString() == "Year")
+                logicReport.ReportsSearchByYear(searchTextBox.Text);
+            if (searchTextBox.Text == "")
+                searchTextBlock.Text = "Search by month/year";
+        }
+    }
 }
