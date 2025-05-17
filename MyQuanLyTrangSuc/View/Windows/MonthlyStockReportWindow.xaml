@@ -33,8 +33,8 @@
                     <DataGridTextColumn Header="ID" Width="65" Binding="{Binding ProductId}"/>
                     <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Product.Name}"/>
                     <DataGridTextColumn Header="Begin" Width="*" Binding="{Binding BeginStock}"/>
-                    <DataGridTextColumn Header="Purchased" Width="*" Binding="{Binding PurchaseQuantity}"/>
-                    <DataGridTextColumn Header="Sold" Width="*" Binding="{Binding SalesQuantity}"/>
+                    <DataGridTextColumn Header="Purchased" Width="*" Binding="{Binding ImportQuantity}"/>
+                    <DataGridTextColumn Header="Sold" Width="*" Binding="{Binding SaleQuantity}"/>
                     <DataGridTextColumn Header="Current" Width="*" Binding="{Binding FinishStock}"/>
                 </DataGrid.Columns>
             </DataGrid>

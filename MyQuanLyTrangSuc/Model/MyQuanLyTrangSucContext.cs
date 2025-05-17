@@ -724,9 +724,9 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<StockReportDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("StockReportDetail");
+            entity.HasKey(e => new { e.StockReportId, e.ProductId }); // ❗ Sửa tại đây
+
+            entity.ToTable("StockReportDetail");
 
             entity.HasIndex(e => new { e.StockReportId, e.ProductId }, "UQ__StockRep__43BF809FCC6061A2").IsUnique();
 
@@ -747,7 +747,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasForeignKey(d => d.ProductId)
                 .HasConstraintName("FK__StockRepo__produ__5CD6CB2B");
 
-            entity.HasOne(d => d.StockReport).WithMany()
+            entity.HasOne(d => d.StockReport).WithMany(p => p.StockReportDetails)
                 .HasForeignKey(d => d.StockReportId)
                 .HasConstraintName("FK__StockRepo__stock__5BE2A6F2");
         });
@@ -820,7 +820,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
             //Your server goes here!
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=VIET-ANH;Database=MyQuanLyTrangSuc2;TrustServerCertificate=True;Trusted_Connection=True");
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=VIET-ANH;Database=MyQuanLyTrangSuc3;TrustServerCertificate=True;Trusted_Connection=True");
         }
     }
 

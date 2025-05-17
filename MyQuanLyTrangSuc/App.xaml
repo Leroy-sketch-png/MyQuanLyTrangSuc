@@ -9,10 +9,8 @@
     xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
     xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
     xmlns:internal="clr-namespace:MaterialDesignThemes.Wpf.Internal;assembly=MaterialDesignThemes.Wpf"
-             StartupUri="View/Pages/MonthlyStockReportPage.xaml">
+             StartupUri="View/Windows/MonthlyStockReportWindow.xaml">
     <Application.Resources>
-
-
 
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

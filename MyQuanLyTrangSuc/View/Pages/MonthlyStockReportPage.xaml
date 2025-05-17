@@ -100,6 +100,11 @@
                 <DataGrid ItemsSource="{Binding StockReports, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedStockReport}" x:Name="StockReportDataGrid" MouseDoubleClick="OnDoubleClick_InspectReport_MonthlyStockReportPageDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5" >
                     <!--SelectionChanged="employeesDataGrid_SelectionChanged"-->
                     <DataGrid.Columns>
+
+                        <!--StockReportId-->
+                        <DataGridTextColumn Binding="{Binding StockReportId}" Header="Report Id" IsReadOnly="True" CanUserResize="False" Width="*">
+                        </DataGridTextColumn>
+
                         <!--Month-->
                         <DataGridTextColumn Binding="{Binding MonthYear.Month}" Header="Month" IsReadOnly="True" CanUserResize="False" Width="*">
                             <DataGridTextColumn.ElementStyle>
@@ -111,6 +116,12 @@
 
                         <!--Year-->
                         <DataGridTextColumn Binding="{Binding MonthYear.Year}" Header="Year" IsReadOnly="True" Width="*"/>
+
+                        <!--Year-->
+                        <DataGridTextColumn Binding="{Binding TotalBeginStock}" Header="Begin Stock" IsReadOnly="True" Width="*"/>
+
+                        <!--Year-->
+                        <DataGridTextColumn Binding="{Binding TotalFinishStock}" Header="Finish Stock" IsReadOnly="True" Width="*"/>
 
                         <!--Operations-->
 

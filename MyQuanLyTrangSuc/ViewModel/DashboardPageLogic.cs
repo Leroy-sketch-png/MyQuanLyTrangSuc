@@ -39,7 +39,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
                 if (value != selectedFromDate) {
                     selectedFromDate = value;
                     OnPropertyChanged(nameof(SelectedFromDate));
-                    LoadData();
+                    //LoadData();
                 }
             }
         }
@@ -50,7 +50,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
                 if (value != selectedUntilDate) {
                     selectedUntilDate = value;
                     OnPropertyChanged(nameof(SelectedUntilDate));
-                    LoadData();
+                    //LoadData();
                 }
             }
         }
@@ -99,83 +99,83 @@ namespace MyQuanLyTrangSuc.ViewModel {
             selectedUntilDate = DateTime.Today;
 
             // Initial load & binding
-            LoadData();
+            //LoadData();
             BindDataToUI();
         }
 
-        private void LoadData() {
-            positiveSeries.Values.Clear();
-            negativeSeries.Values.Clear();
+        //private void LoadData() {
+        //    positiveSeries.Values.Clear();
+        //    negativeSeries.Values.Clear();
 
-            if (selectedFromDate == null || selectedUntilDate == null) return;
+        //    if (selectedFromDate == null || selectedUntilDate == null) return;
 
-            var importData = context.Imports
-                .Where(i => i.Date >= selectedFromDate && i.Date <= selectedUntilDate)
-                .Select(i => new { Date = i.Date.Value, Value = -i.TotalAmount })
-                .ToList();
+        //    var importData = context.Imports
+        //        .Where(i => i.Date >= selectedFromDate && i.Date <= selectedUntilDate)
+        //        .Select(i => new { Date = i.Date.Value, Value = -i.TotalAmount })
+        //        .ToList();
 
-            var exportData = context.Invoices
-                .Where(e => e.Date >= selectedFromDate && e.Date <= selectedUntilDate)
-                .Select(e => new { Date = e.Date.Value, Value = e.TotalAmount })
-                .ToList();
+        //    var exportData = context.Invoices
+        //        .Where(e => e.Date >= selectedFromDate && e.Date <= selectedUntilDate)
+        //        .Select(e => new { Date = e.Date.Value, Value = e.TotalAmount })
+        //        .ToList();
 
-            var combined = importData
-                .Select(i => new DateTimePoint(i.Date, (double)i.Value))
-                .Concat(exportData.Select(e => new DateTimePoint(e.Date, (double)e.Value)))
-                .OrderBy(pt => pt.DateTime)
-                .ToList();
+        //    var combined = importData
+        //        .Select(i => new DateTimePoint(i.Date, (double)i.Value))
+        //        .Concat(exportData.Select(e => new DateTimePoint(e.Date, (double)e.Value)))
+        //        .OrderBy(pt => pt.DateTime)
+        //        .ToList();
 
-            double cumulative = 0;
+        //    double cumulative = 0;
 
-            var from = selectedFromDate.Value;
-            positiveSeries.Values.Add(new DateTimePoint(from, 0));
-            negativeSeries.Values.Add(new DateTimePoint(from, double.NaN));
+        //    var from = selectedFromDate.Value;
+        //    positiveSeries.Values.Add(new DateTimePoint(from, 0));
+        //    negativeSeries.Values.Add(new DateTimePoint(from, double.NaN));
 
-            // track that our last sign was non-negative
-            bool? prevPositive = true;
+        //    // track that our last sign was non-negative
+        //    bool? prevPositive = true;
 
-            foreach (var pt in combined) {
-                cumulative += pt.Value;
-                bool currPositive = cumulative >= 0;
+        //    foreach (var pt in combined) {
+        //        cumulative += pt.Value;
+        //        bool currPositive = cumulative >= 0;
 
-                // On sign change, add a zero point to both series to connect at zero
-                if (prevPositive.HasValue && currPositive != prevPositive.Value) {
-                    var zeroPoint = new DateTimePoint(pt.DateTime, 0);
-                    positiveSeries.Values.Add(zeroPoint);
-                    negativeSeries.Values.Add(zeroPoint);
-                }
+        //        // On sign change, add a zero point to both series to connect at zero
+        //        if (prevPositive.HasValue && currPositive != prevPositive.Value) {
+        //            var zeroPoint = new DateTimePoint(pt.DateTime, 0);
+        //            positiveSeries.Values.Add(zeroPoint);
+        //            negativeSeries.Values.Add(zeroPoint);
+        //        }
 
-                // Add the real point and gap opposite series
-                if (currPositive) {
-                    positiveSeries.Values.Add(new DateTimePoint(pt.DateTime, cumulative));
-                    negativeSeries.Values.Add(new DateTimePoint(pt.DateTime, double.NaN));
-                } else {
-                    negativeSeries.Values.Add(new DateTimePoint(pt.DateTime, cumulative));
-                    positiveSeries.Values.Add(new DateTimePoint(pt.DateTime, double.NaN));
-                }
+        //        // Add the real point and gap opposite series
+        //        if (currPositive) {
+        //            positiveSeries.Values.Add(new DateTimePoint(pt.DateTime, cumulative));
+        //            negativeSeries.Values.Add(new DateTimePoint(pt.DateTime, double.NaN));
+        //        } else {
+        //            negativeSeries.Values.Add(new DateTimePoint(pt.DateTime, cumulative));
+        //            positiveSeries.Values.Add(new DateTimePoint(pt.DateTime, double.NaN));
+        //        }
 
-                prevPositive = currPositive;
-            }
+        //        prevPositive = currPositive;
+        //    }
 
-            // Plateau out to the "until" date
-            if (combined.Any()) {
-                var lastDate = combined.Last().DateTime;
-                if (lastDate < selectedUntilDate.Value) {
-                    bool lastPositive = cumulative >= 0;
-                    if (prevPositive.HasValue && lastPositive != prevPositive.Value) {
-                        var zeroPoint = new DateTimePoint(selectedUntilDate.Value, 0);
-                        positiveSeries.Values.Add(zeroPoint);
-                        negativeSeries.Values.Add(zeroPoint);
-                    }
+        //    // Plateau out to the "until" date
+        //    if (combined.Any()) {
+        //        var lastDate = combined.Last().DateTime;
+        //        if (lastDate < selectedUntilDate.Value) {
+        //            bool lastPositive = cumulative >= 0;
+        //            if (prevPositive.HasValue && lastPositive != prevPositive.Value) {
+        //                var zeroPoint = new DateTimePoint(selectedUntilDate.Value, 0);
+        //                positiveSeries.Values.Add(zeroPoint);
+        //                negativeSeries.Values.Add(zeroPoint);
+        //            }
 
-                    var plateau = new DateTimePoint(selectedUntilDate.Value, cumulative);
-                    if (cumulative >= 0)
-                        positiveSeries.Values.Add(plateau);
-                    else
-                        negativeSeries.Values.Add(plateau);
-                }
-            }
-        }
+        //            var plateau = new DateTimePoint(selectedUntilDate.Value, cumulative);
+        //            if (cumulative >= 0)
+        //                positiveSeries.Values.Add(plateau);
+        //            else
+        //                negativeSeries.Values.Add(plateau);
+        //        }
+        //    }
+        //}
 
         private void BindDataToUI() {
             dashboardPage.DataContext = this;
@@ -195,35 +195,35 @@ namespace MyQuanLyTrangSuc.ViewModel {
         public class RevenueCalculator {
             private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
 
-            public decimal CalculateDailyRevenue(DateTime date) {
-                var hasRecords = context.Invoices
-                    .Any(e => e.Date.HasValue && e.Date.Value.Date == date.Date);
+            //public decimal CalculateDailyRevenue(DateTime date) {
+            //    var hasRecords = context.Invoices
+            //        .Any(e => e.Date.HasValue && e.Date.Value.Date == date.Date);
 
-                if (!hasRecords) return 0;
+            //    if (!hasRecords) return 0;
 
-                var revenue = context.Invoices
-                    .Where(e => e.Date.HasValue && e.Date.Value.Date == date.Date)
-                    .Sum(e => e.TotalAmount ?? 0);
+            //    var revenue = context.Invoices
+            //        .Where(e => e.Date.HasValue && e.Date.Value.Date == date.Date)
+            //        .Sum(e => e.TotalAmount ?? 0);
 
-                return revenue;
-            }
+            //    return revenue;
+            //}
         }
 
         public class TotalProductSold {
-            private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
+            //private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
 
-            public int TotalDailySales(DateTime date) {
-                var hasRecords = context.Invoices
-                    .Any(e => e.Date.HasValue && e.Date.Value.Date == date.Date);
+            //public int TotalDailySales(DateTime date) {
+            //    var hasRecords = context.Invoices
+            //        .Any(e => e.Date.HasValue && e.Date.Value.Date == date.Date);
 
-                if (!hasRecords) return 0;
+            //    if (!hasRecords) return 0;
 
-                var total = context.InvoiceDetails
-                    .Where(e => e.Invoice.Date.HasValue && e.Invoice.Date.Value.Date == date.Date)
-                    .Sum(e => e.Quantity ?? 0);
+            //    var total = context.InvoiceDetails
+            //        .Where(e => e.Invoice.Date.HasValue && e.Invoice.Date.Value.Date == date.Date)
+            //        .Sum(e => e.Quantity ?? 0);
 
-                return total;
-            }
+            //    return total;
+            //}
         }
 
         public DashboardPageLogic() {
@@ -232,17 +232,17 @@ namespace MyQuanLyTrangSuc.ViewModel {
         }
 
         public void UpdateDailyCountTextBox(DateTime date, TextBlock textBlock) {
-            var dailyCount = totalProductSold.TotalDailySales(date);
-            Application.Current.Dispatcher.Invoke(() => {
-                textBlock.Text = dailyCount == 0 ? "No sales today." : $"{dailyCount} PRODUCTS";
-            });
+            //var dailyCount = totalProductSold.TotalDailySales(date);
+            //Application.Current.Dispatcher.Invoke(() => {
+            //    textBlock.Text = dailyCount == 0 ? "No sales today." : $"{dailyCount} PRODUCTS";
+            //});
         }
 
         public void UpdateDailyRevenueTextBox(DateTime date, TextBlock textBlock) {
-            var dailyRevenue = revenueCalculator.CalculateDailyRevenue(date);
-            Application.Current.Dispatcher.Invoke(() => {
-                textBlock.Text = dailyRevenue == 0 ? "No sales today." : $"{dailyRevenue:N} VND";
-            });
+            //var dailyRevenue = revenueCalculator.CalculateDailyRevenue(date);
+            //Application.Current.Dispatcher.Invoke(() => {
+            //    textBlock.Text = dailyRevenue == 0 ? "No sales today." : $"{dailyRevenue:N} VND";
+            //});
         }
 
         public class MostConsumedProducts {

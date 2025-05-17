@@ -53,19 +53,19 @@ namespace MyQuanLyTrangSuc.ViewModel {
             mainNavigationWindowLogic.LoadItemPropertiesPage(new ItemPropertiesPage(item));
         }
 
-        public List<DateTime?> GetImportDates(Product item, string type)
-        {
-            if (item == null || item.ImportDetails == null)
-                return new List<DateTime?>();
+        //public List<DateTime?> GetImportDates(Product item, string type)
+        //{
+        //    if (item == null || item.ImportDetails == null)
+        //        return new List<DateTime?>();
 
-            List<DateTime?> result = new List<DateTime?>();
-            if (type == "Ngày Nhập")
-                result = item.ImportDetails.Where(info => info.Import != null && info.Import.Date.HasValue).Select(info => info.Import.Date).Distinct().ToList();
-            else
-                result = item.InvoiceDetails.Where(info => info.Invoice != null && info.Invoice.Date.HasValue).Select(info => info.Invoice.Date).Distinct().ToList();
+        //    List<DateTime?> result = new List<DateTime?>();
+        //    if (type == "Ngày Nhập")
+        //        result = item.ImportDetails.Where(info => info.Import != null && info.Import.Date.HasValue).Select(info => info.Import.Date).Distinct().ToList();
+        //    else
+        //        result = item.InvoiceDetails.Where(info => info.Invoice != null && info.Invoice.Date.HasValue).Select(info => info.Invoice.Date).Distinct().ToList();
 
-            return result;
-        }
+        //    return result;
+        //}
 
         //Export file
         public void ExportExcelFile(string type)
@@ -146,25 +146,25 @@ namespace MyQuanLyTrangSuc.ViewModel {
 
                     Product selectedItem = (Product)itemUserControlUI.DataContext;
 
-                    if (selectedItem == null)
-                    {
-                        MessageBox.Show("No item selected!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-                    var importDates = GetImportDates(selectedItem, type);
-                    rowIndex = 3;
+                    //if (selectedItem == null)
+                    //{
+                    //    MessageBox.Show("No item selected!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    //    return;
+                    //}
+                    //var importDates = GetImportDates(selectedItem, type);
+                    //rowIndex = 3;
 
-                    foreach (var date in importDates)
-                    {
-                        colIndex = 1;
-                        ws.Cells[rowIndex, colIndex++].Value = selectedItem.ProductId;
-                        ws.Cells[rowIndex, colIndex++].Value = selectedItem.Name;
-                        ws.Cells[rowIndex, colIndex++].Value = selectedItem.CategoryId;
-                        ws.Cells[rowIndex, colIndex++].Value = selectedItem.Price.HasValue ? $"{selectedItem.Price:N} VND" : "N/A";
-                        ws.Cells[rowIndex, colIndex++].Value = selectedItem.MoreInfo;
-                        ws.Cells[rowIndex, colIndex++].Value = date?.ToString("dd-MM-yyyy HH:mm:ss");
-                        rowIndex++;
-                    }
+                    //foreach (var date in importDates)
+                    //{
+                    //    colIndex = 1;
+                    //    ws.Cells[rowIndex, colIndex++].Value = selectedItem.ProductId;
+                    //    ws.Cells[rowIndex, colIndex++].Value = selectedItem.Name;
+                    //    ws.Cells[rowIndex, colIndex++].Value = selectedItem.CategoryId;
+                    //    ws.Cells[rowIndex, colIndex++].Value = selectedItem.Price.HasValue ? $"{selectedItem.Price:N} VND" : "N/A";
+                    //    ws.Cells[rowIndex, colIndex++].Value = selectedItem.MoreInfo;
+                    //    ws.Cells[rowIndex, colIndex++].Value = date?.ToString("dd-MM-yyyy HH:mm:ss");
+                    //    rowIndex++;
+                    //}
                     // Save file Excel
                     ws.Column(1).Width = 10; // ID
                     ws.Column(2).Width = 25; // Name

@@ -65,38 +65,30 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         private void LoadReportsFromDatabase()
         {
-            // Lấy tất cả dữ liệu từ database trước
-            var allReports = context.StockReports.ToList();
-            Console.WriteLine($"Số lượng báo cáo lấy từ database: {allReports.Count}");
-
-            foreach (var report in allReports)
+            try
             {
-                Console.WriteLine($"Tháng: {report.MonthYear.Month}, Năm: {report.MonthYear.Year}, Tồn kho: {report.FinishStock}");
-            }
-            // Thực hiện group by trên client side
-            var groupedReports = allReports
-                .GroupBy(r => new { r.MonthYear.Month, r.MonthYear.Year })
-                .Select(g => new StockReport
-                {
-                    MonthYear = new DateTime(g.Key.Year, g.Key.Month, 1),
-                    ProductId = "SUMMARY", // Sử dụng giá trị placeholder cho ProductId
-                    BeginStock = g.Sum(r => r.BeginStock),
-                    PurchaseQuantity = g.Sum(r => r.PurchaseQuantity),
-                    SalesQuantity = g.Sum(r => r.SalesQuantity),
-                    FinishStock = g.Sum(r => r.FinishStock)
-                })
-                .OrderByDescending(r => r.MonthYear)
-                .ToList();
+                // Sửa lại phần này: Load trực tiếp các báo cáo từ database không qua group by
+                var allReports = context.StockReports
+                    .OrderByDescending(r => r.MonthYear)
+                    .ToList();
 
-            // Cập nhật UI thông qua Dispatcher
-            Application.Current.Dispatcher.Invoke(() =>
-            {
                 StockReports.Clear();
-                foreach (var report in groupedReports)
+                foreach (var report in allReports)
                 {
-                    StockReports.Add(report);
+                    StockReports.Add(new StockReport
+                    {
+                        StockReportId = report.StockReportId, // Giữ nguyên ID
+                        MonthYear = report.MonthYear,
+                        TotalBeginStock = report.TotalBeginStock,
+                        TotalFinishStock = report.TotalFinishStock
+                    });
                 }
-            });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi khi tải báo cáo: {ex.Message}");
+                MessageBox.Show($"Lỗi khi tải báo cáo: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public void LoadReportDetailsWindow()
@@ -104,35 +96,48 @@ namespace MyQuanLyTrangSuc.ViewModel
             if (monthlyStockReportPage.StockReportDataGrid.SelectedItem is StockReport selectedReport)
             {
                 Console.WriteLine($"SelectedStockReport: {selectedReport != null}");
-
+                var stockReportId = selectedReport.StockReportId;
                 var month = selectedReport.MonthYear.Month;
                 var year = selectedReport.MonthYear.Year;
+
                 string monthYear = $"{month}/{year}";
 
-                var detailedReports = context.StockReports
-                    .Where(r => r.MonthYear.Month == month && r.MonthYear.Year == year)
+                // Lấy thông tin chi tiết từ bảng StockReportDetail
+                var detailedReports = context.StockReportDetails
+                    .Where(detail => detail.StockReportId == stockReportId)
                     .Join(context.Products,
-                        report => report.ProductId,
+                        detail => detail.ProductId,
                         product => product.ProductId,
-                        (report, product) => new StockReport
+                        (detail, product) => new
                         {
-                            ProductId = report.ProductId,
-                            BeginStock = report.BeginStock,
-                            PurchaseQuantity = report.PurchaseQuantity,
-                            SalesQuantity = report.SalesQuantity,
-                            FinishStock = report.FinishStock,
-                            Product = product // Gán thông tin sản phẩm
+                            ProductId = detail.ProductId,
+                            BeginStock = detail.BeginStock,
+                            PurchaseQuantity = detail.ImportQuantity,
+                            SalesQuantity = detail.SaleQuantity,
+                            FinishStock = detail.FinishStock,
+                            Product = product
                         })
                     .ToList();
 
                 if (detailedReports.Count == 0)
                 {
-                    MessageBox.Show($"Không có báo cáo nào cho tháng {month}/{year}.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show($"Không có chi tiết báo cáo nào cho tháng {month}/{year}.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
 
+                // Chuyển đổi sang dạng dữ liệu mà MonthlyStockReportWindow có thể hiển thị
+                var reportViewModels = detailedReports.Select(detail => new StockReportDetail
+                {
+                    ProductId = detail.ProductId,
+                    BeginStock = detail.BeginStock,
+                    ImportQuantity = detail.PurchaseQuantity,
+                    SaleQuantity = detail.SalesQuantity,
+                    FinishStock = detail.FinishStock,
+                    Product = detail.Product
+                }).ToList();
+
                 // Mở cửa sổ hiển thị chi tiết báo cáo tồn kho
-                MonthlyStockReportWindow reportWindow = new MonthlyStockReportWindow(detailedReports, monthYear);
+                MonthlyStockReportWindow reportWindow = new MonthlyStockReportWindow(reportViewModels, monthYear);
                 reportWindow.ShowDialog();
             }
         }
@@ -144,88 +149,171 @@ namespace MyQuanLyTrangSuc.ViewModel
             var reportDate = new DateTime(currentDate.Year, currentDate.Month, 1);
 
             // Kiểm tra và xác nhận với người dùng
-            if (context.StockReports.Any(r => r.MonthYear.Month == reportDate.Month && r.MonthYear.Year == reportDate.Year))
+            bool isExistingReport = context.StockReports
+                .Any(r => r.MonthYear.Month == reportDate.Month && r.MonthYear.Year == reportDate.Year);
+
+            if (isExistingReport)
             {
-                var confirmResult = MessageBox.Show($"Đã có báo cáo tồn kho cho tháng {reportDate.Month}/{reportDate.Year}. Cập nhật lại?",
-                                                 "Xác nhận",
-                                                 MessageBoxButton.YesNo,
-                                                 MessageBoxImage.Question);
+                var confirmResult = MessageBox.Show(
+                    $"Đã có báo cáo tồn kho cho tháng {reportDate.Month}/{reportDate.Year}. Cập nhật lại?",
+                    "Xác nhận",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
                 if (confirmResult != MessageBoxResult.Yes) return;
             }
 
             try
             {
-                var products = context.Products.ToList();
-                int reportCreated = 0;
-                int reportUpdated = 0;
-
-                foreach (var product in products)
+                using (var transaction = context.Database.BeginTransaction())
                 {
-                    var existingReport = context.StockReports
-                        .FirstOrDefault(r => r.MonthYear.Month == reportDate.Month &&
-                                           r.MonthYear.Year == reportDate.Year &&
-                                           r.ProductId == product.ProductId);
-
-                    // Tính BeginStock từ tổng nhập kho (ImportDetails)
-                    var beginStock = context.ImportDetails
-                        .Where(pd => pd.Import.Date < reportDate && // Tất cả nhập kho trước tháng báo cáo
-                                    pd.ProductId == product.ProductId)
-                        .Sum(pd => pd.Quantity ?? 0);
-
-                    // Tính tổng đã bán (SalesQuantity) từ InvoiceDetails
-                    var salesQuantity = context.InvoiceDetails
-                        .Where(od => od.Invoice.Date.Month == reportDate.Month &&
-                                    od.Invoice.Date.Year == reportDate.Year &&
-                                    od.ProductId == product.ProductId)
-                        .Sum(od => od.Quantity ?? 0);
-
-                    // Tính tổng nhập kho trong tháng (PurchaseQuantity)
-                    var purchaseQuantity = context.ImportDetails
-                        .Where(pd => pd.Import.Date.Month == reportDate.Month &&
-                                    pd.Import.Date.Year == reportDate.Year &&
-                                    pd.ProductId == product.ProductId)
-                        .Sum(pd => pd.Quantity ?? 0);
-
-                    // Tính tồn cuối kỳ
-                    var finishStock = beginStock + purchaseQuantity - salesQuantity;
-
-                    if (existingReport != null)
+                    try
                     {
-                        existingReport.BeginStock = beginStock;
-                        existingReport.PurchaseQuantity = purchaseQuantity;
-                        existingReport.SalesQuantity = salesQuantity;
-                        existingReport.FinishStock = finishStock;
-                        context.SaveChangesEdited(existingReport);
-                        reportUpdated++;
-                    }
-                    else
-                    {
-                        var newReport = new StockReport
+                        var products = context.Products.AsNoTracking().ToList();
+                        int totalBeginStock = 0;
+                        int totalFinishStock = 0;
+                        int detailCount = 0;
+
+                        // Xử lý báo cáo chính
+                        var stockReport = isExistingReport
+                            ? context.StockReports
+                                .Include(r => r.StockReportDetails)
+                                .First(r => r.MonthYear.Month == reportDate.Month &&
+                                           r.MonthYear.Year == reportDate.Year)
+                            : new StockReport
+                            {
+                                StockReportId = GenerateStockReportId(),
+                                MonthYear = reportDate,
+                                TotalBeginStock = 0,
+                                TotalFinishStock = 0,
+                                StockReportDetails = new List<StockReportDetail>()
+                            };
+
+                        // Xóa chi tiết cũ nếu là cập nhật
+                        if (isExistingReport)
                         {
-                            MonthYear = reportDate,
-                            ProductId = product.ProductId,
-                            BeginStock = beginStock,
-                            PurchaseQuantity = purchaseQuantity,
-                            SalesQuantity = salesQuantity,
-                            FinishStock = finishStock,
-                        };
-                        context.StockReports.Add(newReport);
-                        context.SaveChangesAdded(newReport);
-                        reportCreated++;
+                            context.StockReportDetails.RemoveRange(stockReport.StockReportDetails);
+                        }
+                        else
+                        {
+                            context.StockReports.Add(stockReport);
+                        }
+
+                        // Tạo chi tiết mới cho từng sản phẩm
+                        foreach (var product in products)
+                        {
+                            var beginStock = CalculateBeginStock(product.ProductId, reportDate);
+                            var salesQty = CalculateSalesQuantity(product.ProductId, reportDate);
+                            var purchaseQty = CalculatePurchaseQuantity(product.ProductId, reportDate);
+                            var finishStock = beginStock + purchaseQty - salesQty;
+
+                            stockReport.StockReportDetails.Add(new StockReportDetail
+                            {
+                                StockReportId = stockReport.StockReportId,
+                                ProductId = product.ProductId,
+                                BeginStock = beginStock,
+                                FinishStock = finishStock,
+                                ImportQuantity = purchaseQty,
+                                SaleQuantity = salesQty
+                            });
+
+                            totalBeginStock += beginStock;
+                            totalFinishStock += finishStock;
+                            detailCount++;
+                        }
+
+                        // Cập nhật tổng số liệu
+                        stockReport.TotalBeginStock = totalBeginStock;
+                        stockReport.TotalFinishStock = totalFinishStock;
+
+                        context.SaveChanges();
+                        transaction.Commit();
+
+                        // Hiển thị kết quả
+                        string action = isExistingReport ? "cập nhật" : "tạo mới";
+                        MessageBox.Show(
+                            $"Đã {action} thành công báo cáo tồn kho tháng {reportDate.Month}/{reportDate.Year}\n" +
+                            $"• Số sản phẩm: {detailCount}\n" +
+                            $"• Tồn đầu kỳ: {totalBeginStock}\n" +
+                            $"• Tồn cuối kỳ: {totalFinishStock}",
+                            "Thành công",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
+
+                        LoadReportsFromDatabase();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        MessageBox.Show(
+                            $"Lỗi khi xử lý báo cáo: {ex.Message}\n" +
+                            $"Vui lòng thử lại hoặc liên hệ quản trị hệ thống.",
+                            "Lỗi xử lý dữ liệu",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
+                        // Ghi log lỗi nếu cần
+                        // Logger.Error(ex, "Lỗi khi tạo/cập nhật báo cáo tồn kho");
                     }
                 }
-
-                LoadReportsFromDatabase();
-
-                MessageBox.Show($"Đã lưu báo cáo tồn kho tháng {reportDate.Month}/{reportDate.Year}\n" +
-                              $"Tạo mới: {reportCreated} | Cập nhật: {reportUpdated}",
-                              "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi lưu báo cáo: {ex.Message}\n{ex.InnerException?.Message}",
-                              "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    $"Lỗi hệ thống: {ex.Message}\n" +
+                    $"Không thể kết nối đến cơ sở dữ liệu.",
+                    "Lỗi nghiêm trọng",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
+        }
+
+        // Các phương thức hỗ trợ tính toán
+        private int CalculateBeginStock(string productId, DateTime reportDate)
+        {
+            return context.ImportDetails
+                .Join(context.Imports,
+                    detail => detail.ImportId,
+                    import => import.ImportId,
+                    (detail, import) => new { Detail = detail, Import = import })
+                .Where(joined => joined.Import.Date < reportDate && joined.Detail.ProductId == productId)
+                .Select(joined => joined.Detail.Quantity ?? 0)
+                .FirstOrDefault(); // Tránh lỗi null
+        }
+
+        private int CalculateSalesQuantity(string productId, DateTime reportDate)
+        {
+            return context.InvoiceDetails
+                .Join(context.Invoices,
+                    detail => detail.InvoiceId,
+                    invoice => invoice.InvoiceId,
+                    (detail, invoice) => new { Detail = detail, Invoice = invoice })
+                .Where(joined => joined.Invoice.Date.Month == reportDate.Month &&
+                               joined.Invoice.Date.Year == reportDate.Year &&
+                               joined.Detail.ProductId == productId)
+                .Select(joined => joined.Detail.Quantity ?? 0)
+                .DefaultIfEmpty(0) // Tránh lỗi nếu không có dữ liệu
+                .Sum();
+        }
+
+        private int CalculatePurchaseQuantity(string productId, DateTime reportDate)
+        {
+            return context.ImportDetails
+                .Join(context.Imports,
+                    detail => detail.ImportId,
+                    import => import.ImportId,
+                    (detail, import) => new { Detail = detail, Import = import })
+                .Where(joined => joined.Import.Date.Month == reportDate.Month &&
+                               joined.Import.Date.Year == reportDate.Year &&
+                               joined.Detail.ProductId == productId)
+                .Select(joined => joined.Detail.Quantity ?? 0)
+                .DefaultIfEmpty(0) // Tránh lỗi nếu không có dữ liệu
+                .Sum();
+        }
+
+        private string GenerateStockReportId()
+        {
+            var maxId = context.StockReports.Max(r => (int?)Convert.ToInt32(r.StockReportId)) ?? 0;
+            return (maxId + 1).ToString("D6");
         }
 
         public void DeleteStockReport()
@@ -272,7 +360,6 @@ namespace MyQuanLyTrangSuc.ViewModel
                             StockReports.RemoveAt(i);
                         }
                     }
-                    OnPropertyChanged(nameof(StockReports));
 
                     MessageBox.Show("Đã xóa tất cả báo cáo tồn kho của tháng thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
@@ -296,12 +383,12 @@ namespace MyQuanLyTrangSuc.ViewModel
                 .GroupBy(r => new { r.MonthYear.Month, r.MonthYear.Year })
                 .Select(g => new StockReport
                 {
-                    MonthYear = new DateTime(g.Key.Year, g.Key.Month, 1),
-                    ProductId = "SUMMARY",
-                    BeginStock = g.Sum(r => r.BeginStock),
-                    PurchaseQuantity = g.Sum(r => r.PurchaseQuantity),
-                    SalesQuantity = g.Sum(r => r.SalesQuantity),
-                    FinishStock = g.Sum(r => r.FinishStock)
+                    MonthYear = new DateTime(g.Key.Year, g.Key.Month, 1)
+                    //ProductId = "SUMMARY",
+                    //BeginStock = g.Sum(r => r.BeginStock),
+                    //PurchaseQuantity = g.Sum(r => r.PurchaseQuantity),
+                    //SalesQuantity = g.Sum(r => r.SalesQuantity),
+                    //FinishStock = g.Sum(r => r.FinishStock)
                 })
                 .OrderByDescending(r => r.MonthYear)
                 .ToList();
@@ -325,12 +412,12 @@ namespace MyQuanLyTrangSuc.ViewModel
                 .GroupBy(r => new { r.MonthYear.Month, r.MonthYear.Year })
                 .Select(g => new StockReport
                 {
-                    MonthYear = new DateTime(g.Key.Year, g.Key.Month, 1),
-                    ProductId = "SUMMARY",
-                    BeginStock = g.Sum(r => r.BeginStock),
-                    PurchaseQuantity = g.Sum(r => r.PurchaseQuantity),
-                    SalesQuantity = g.Sum(r => r.SalesQuantity),
-                    FinishStock = g.Sum(r => r.FinishStock)
+                    MonthYear = new DateTime(g.Key.Year, g.Key.Month, 1)
+                    //ProductId = "SUMMARY",
+                    //BeginStock = g.Sum(r => r.BeginStock),
+                    //PurchaseQuantity = g.Sum(r => r.PurchaseQuantity),
+                    //SalesQuantity = g.Sum(r => r.SalesQuantity),
+                    //FinishStock = g.Sum(r => r.FinishStock)
                 })
                 .OrderByDescending(r => r.MonthYear)
                 .ToList();
