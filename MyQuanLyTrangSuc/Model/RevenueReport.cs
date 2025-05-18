@@ -9,7 +9,9 @@ public partial class RevenueReport
 {
     public string RevenueReportId { get; set; }
 
-    public DateTime? MonthYear { get; set; }
+    public DateTime MonthYear { get; set; }
 
-    public decimal? TotalRevenue { get; set; }
+    public decimal TotalRevenue { get; set; }
+
+    public virtual ICollection<RevenueReportDetail> RevenueReportDetails { get; set; }
 }
