@@ -78,7 +78,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         /// </summary>
         public void Authentification()
         {
-            string currentUsername = (string)Application.Current.Resources["CurrentUserID"];
+            string currentUsername = (string)Application.Current.Resources["CurrentUsername"];
             if (string.IsNullOrEmpty(currentUsername))
             {
                 CurrentUserRole = "user";

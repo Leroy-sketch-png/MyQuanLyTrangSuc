@@ -21,7 +21,7 @@ namespace MyQuanLyTrangSuc.View
         {
             if (StockReportDataGrid.SelectedItem is StockReport selectedReport)
             {
-                Console.WriteLine($"Đã chọn báo cáo: Tháng {selectedReport.MonthYear.Month}/{selectedReport.MonthYear.Year}");
+                Console.WriteLine($"Đã chọn báo cáo: Tháng {selectedReport.MonthYear.Value.Month}/{selectedReport.MonthYear.Value.Year}");
 
                 // Kiểm tra xem logicReport có tồn tại không
                 if (logicReport == null)

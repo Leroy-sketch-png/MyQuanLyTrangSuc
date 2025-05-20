@@ -26,6 +26,8 @@ namespace MyQuanLyTrangSuc.ViewModel
         /// <summary>
         /// Called by the view when the Login button is clicked.
         /// </summary>
+        /// 
+
         public void Login(PasswordBox passwordBox)
         {
             // 1) Read credentials
@@ -56,8 +58,20 @@ namespace MyQuanLyTrangSuc.ViewModel
                     return;
                 }
 
+
+
                 // 3) Store the Username as the current user
-                Application.Current.Resources["CurrentUserID"] = account.Username;
+                var employee = _context.Employees.FirstOrDefault(e => e.Username == enteredUsername);
+
+                if (employee != null)
+                {
+                    Application.Current.Resources["CurrentUsername"] = employee.Username;
+                    Application.Current.Resources["CurrentUserID"] = employee.EmployeeId;
+                }
+                else
+                {
+                    MessageBox.Show("Employee not found.");
+                }
 
                 // 4) Initialize main navigation and open the main window
                 var mainWindow = new MainNavigationWindow();

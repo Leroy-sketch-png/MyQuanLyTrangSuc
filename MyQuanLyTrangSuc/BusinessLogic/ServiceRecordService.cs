@@ -15,6 +15,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic {
         private readonly string prefix = "SRV";
         public event Action<ServiceRecord> OnServiceRecordAdded;
         public event Action<ServiceRecord> OnServiceRecordUpdated;
+        public event Action<ServiceRecord> OnServiceRecordDeleted;
 
         // Singleton
         private static ServiceRecordService _instance;
@@ -54,6 +55,17 @@ namespace MyQuanLyTrangSuc.BusinessLogic {
         public void AddServiceRecord(ServiceRecord serviceRecord) {
             serviceRecordRepository.AddServiceRecord(serviceRecord);
             OnServiceRecordAdded?.Invoke(serviceRecord);
+        }
+
+        public void DeleteServiceDetail(ServiceDetail serviceDetail)
+        {
+            serviceRecordRepository.DeleteServiceDetail(serviceDetail);
+          
+        }
+        public void DeleteServiceRecord(ServiceRecord serviceRecord)
+        {
+            serviceRecordRepository.DeleteServiceRecord(serviceRecord);
+
         }
 
         public int GenerateNewServiceDetailID() {

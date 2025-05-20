@@ -24,6 +24,12 @@ namespace MyQuanLyTrangSuc.DataAccess {
             context.SaveChanges();
         }
 
+        public void DeleteServiceRecord(ServiceRecord serviceRecord)
+        {
+            context.ServiceRecords.Remove(serviceRecord);
+            context.SaveChanges();
+        }
+
         public void AddServiceDetail(ServiceDetail serviceDetail) {
             context.ServiceDetails.Add(serviceDetail);
             context.SaveChanges();
@@ -35,6 +41,8 @@ namespace MyQuanLyTrangSuc.DataAccess {
                 context.SaveChanges();
             }
         }
+
+
 
         public List<ServiceRecord> GetListOfServiceRecords() {
             return context.ServiceRecords.ToList();

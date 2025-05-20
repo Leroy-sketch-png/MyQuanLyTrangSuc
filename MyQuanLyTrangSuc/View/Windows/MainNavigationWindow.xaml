@@ -78,18 +78,18 @@
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
-                                <!--Category (no click yet)-->
+                                <!--Item Category-->
                                 <StackPanel x:Name="CategoryPanel" DockPanel.Dock="Top">
-                                    <Button Style="{StaticResource menuButton}" >
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_ItemCategoryListPageNavigation">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="ShapePlusOutline" Foreground="White"/>
                                             <TextBlock Text=" Categories" Foreground="White"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
-                                <!--Unit (no click yet)-->
+                                <!--Unit-->
                                 <StackPanel x:Name="Unit" DockPanel.Dock="Top">
-                                    <Button Style="{StaticResource menuButton}">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_UnitListPageNavigation">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="TallyMark3" Foreground="White"/>
                                             <TextBlock Text=" Units" Foreground="White"/>
@@ -99,7 +99,7 @@
 
                                 <!--Service-->
                                 <StackPanel x:Name="ServicePanel" DockPanel.Dock="Top">
-                                    <Button Style="{StaticResource menuButton}">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_ServiceListPageNavigation">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Microscope" Foreground="White"/>
                                             <TextBlock Text=" Services" Foreground="White"/>
@@ -127,9 +127,9 @@
                                     </Button>
                                 </StackPanel>
 
-                                <!--Month Stock (no click yet)-->
+                                <!--Month Stock-->
                                 <StackPanel x:Name="MonthStockPanel" DockPanel.Dock="Top">
-                                    <Button Style="{StaticResource menuButton}">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_MonthlyStockReportPageNavigation">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Warehouse" Foreground="White"/>
                                             <TextBlock Text=" Stock Reports" Foreground="White"/>

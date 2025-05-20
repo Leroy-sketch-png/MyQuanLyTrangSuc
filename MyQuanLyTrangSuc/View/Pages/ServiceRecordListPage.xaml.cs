@@ -62,8 +62,10 @@ namespace MyQuanLyTrangSuc.View
             logicService.LoadServiceRecordDetailsWindow();
         }
 
-        private void editButton_Click(object sender, RoutedEventArgs e) {
-
+        private void editButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.HandleServiceRecordDeleted();
         }
+
     }
 }
