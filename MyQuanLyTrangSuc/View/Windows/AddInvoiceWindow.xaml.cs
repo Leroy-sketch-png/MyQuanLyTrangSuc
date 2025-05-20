@@ -46,6 +46,12 @@ namespace MyQuanLyTrangSuc.View
             }
         }
 
+        private void addNewClientBtn_Click(object sender, RoutedEventArgs e)
+        {
+            AddCustomerWindow addCustomerWindow = new AddCustomerWindow();
+            addCustomerWindow.ShowDialog();
+        }
+
         private void applyInvoiceBtn_Click(object sender, RoutedEventArgs e)
         {
             logicService.AddInvoice();

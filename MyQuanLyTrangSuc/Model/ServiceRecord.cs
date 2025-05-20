@@ -15,7 +15,13 @@ public partial class ServiceRecord
 
     public string EmployeeId { get; set; }
 
-    public string ImagePath { get; set; }
+    public decimal? GrandTotal { get; set; }
+
+    public decimal? TotalPaid { get; set; }
+
+    public decimal? TotalUnpaid { get; set; }
+
+    public string Status { get; set; }
 
     public virtual Customer Customer { get; set; }
 

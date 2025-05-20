@@ -1,4 +1,4 @@
-﻿<Page x:Class="MyQuanLyTrangSuc.View.ServicesListPage"
+﻿<Page x:Class="MyQuanLyTrangSuc.View.ServiceRecordListPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -34,7 +34,7 @@
                 </Grid.RowDefinitions>
 
                 <!--Page Title-->
-                <TextBlock Text="Services Page" HorizontalAlignment="Left" VerticalAlignment="Center"
+                <TextBlock Text="Service Record Page" HorizontalAlignment="Left" VerticalAlignment="Center"
                            Margin="55 0 0 2" FontSize="16" FontWeight="SemiBold" Foreground="Blue"/>
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="33 0 0 4" Width="14" Height="14" Foreground="#ff9d00"/>
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="30 4 0 0" Width="14" Height="14" Foreground="#4880ff"/>
@@ -63,17 +63,17 @@
                 </StackPanel>
 
                 <!--Page Title-->
-                <TextBlock Text="SERVICES" Grid.Row="1" FontSize="32" FontWeight="SemiBold"
+                <TextBlock Text="SERVICE RECORDS" Grid.Row="1" FontSize="32" FontWeight="SemiBold"
                             Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
                     <!--Add Button-->
-                    <Button x:Name="addButton" Style="{StaticResource addButton}"  Grid.RowSpan="4" Grid.Row="1" >
-                        <!-- Click="addButton_Click" -->
+                    <Button x:Name="addButton" Style="{StaticResource addButton}"  Grid.RowSpan="4" Grid.Row="1" 
+                         Click="OnClick_AddServiceRecordWindow" >
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="15"
                                    Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Add new service" FontWeight="SemiBold"/>
+                            <TextBlock Text="Add new record" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
                     <!--Import Button-->
@@ -115,11 +115,11 @@
                 </ComboBox>
 
                 <!--Employees DataGrid-->
-                <DataGrid ItemsSource="{Binding Services}" SelectedItem="{Binding SelectedServices}" x:Name="servicesDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
+                <DataGrid ItemsSource="{Binding ServiceRecords}" SelectedItem="{Binding SelectedServiceRecord}" x:Name="ServiceRecordsDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
                     <!-- SelectionChanged="employeesDataGrid_SelectionChanged" -->
                     <DataGrid.Columns>
                         <!--ID-->
-                        <DataGridTextColumn Binding="{Binding services_servicetype}" Header="ID" IsReadOnly="True" CanUserResize="False" Width="65">
+                        <DataGridTextColumn Binding="{Binding ServiceRecordId}" Header="ID" IsReadOnly="True" CanUserResize="False" Width="80">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -128,7 +128,7 @@
                         </DataGridTextColumn>
 
                         <!--Created Date-->
-                        <DataGridTextColumn Binding="{Binding services_date, StringFormat=dd-MM-yyyy}" Header="Created Date" IsReadOnly="True" CanUserResize="False" Width="*">
+                        <DataGridTextColumn Binding="{Binding CreateDate, StringFormat=dd-MM-yyyy}" Header="Created Date" IsReadOnly="True" CanUserResize="False" Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -137,7 +137,7 @@
                         </DataGridTextColumn>
 
                         <!--Customer-->
-                        <DataGridTextColumn Header="Customer" Binding="{Binding customer_name}" Width="*" IsReadOnly="True" CanUserResize="False">
+                        <DataGridTextColumn Header="Customer" Binding="{Binding Customer.Name}" Width="*" IsReadOnly="True" CanUserResize="False">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -146,30 +146,31 @@
                         </DataGridTextColumn>
 
                         <!--Total-->
-                        <DataGridTextColumn Binding="{Binding services_total}" Header=" Total" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding GrandTotal}" Header="Total" IsReadOnly="True" Width="*"/>
 
                         <!--Prepaid-->
-                        <DataGridTextColumn Binding="{Binding services_prepaid}" Header="Prepaid" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding TotalPaid}" Header="Paid" IsReadOnly="True" Width="*"/>
 
                         <!--Remain-->
-                        <DataGridTextColumn Binding="{Binding services_remain}" Header="Remain" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding TotalUnpaid}" Header="Remained" IsReadOnly="True" Width="*"/>
 
                         <!--Status-->
-                        <DataGridTextColumn Binding="{Binding services_status}" Header="Status" IsReadOnly="True" Width="69"/>
+                        <DataGridTextColumn Binding="{Binding Status}" Header="Status" IsReadOnly="True" Width="100"/>
                         <!--Operations-->
 
                         <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button x:Name="editButton" Style="{StaticResource gridEditButton}">
-                                            <!-- Click="editButton_Click" -->
-                                            <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
+                                        <Button Margin="0 0 3 0" Click="editButton_Click"
+                                                x:Name="editButton" Style="{StaticResource gridEditButton}" 
+                                                >
+                                            <Icon:PackIconMaterial Kind="ViewListOutline" Style="{StaticResource gridButtonIcon}" />
                                         </Button>
-
-                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0">
-                                            <!-- Click="deleteButton_Click" -->
-                                            <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
+                                        <Button Margin="3 0 0 0" x:Name="printButton" 
+                                                Style="{StaticResource gridEditButton}" Click="printButton_Click"
+                                                >
+                                            <Icon:PackIconMaterial Kind="Printer" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>
                                 </DataTemplate>

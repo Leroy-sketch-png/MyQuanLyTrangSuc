@@ -7,6 +7,8 @@ namespace MyQuanLyTrangSuc.Model;
 
 public partial class ServiceDetail
 {
+    public int Stt { get; set; }
+
     public string ServiceRecordId { get; set; }
 
     public string ServiceId { get; set; }

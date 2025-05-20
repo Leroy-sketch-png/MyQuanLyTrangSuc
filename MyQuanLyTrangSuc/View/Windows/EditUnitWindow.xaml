@@ -52,7 +52,7 @@
 
                 <Button Margin="0 15 0 0" x:Name="saveButton" 
                         Content="SAVE" FontSize="30" 
-                        Background="#FFC1CC00" Foreground="White" 
+                        Background="#BFDBFE" Foreground="#1E40AF" 
                         Padding="10" HorizontalAlignment="Center" 
                         Width="150" Height="60"
                         Click="saveButton_Click"

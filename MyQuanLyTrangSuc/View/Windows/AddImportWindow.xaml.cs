@@ -51,6 +51,18 @@ namespace MyQuanLyTrangSuc.View
             }
         }
 
+        private void addNewItemBtn_Click(object sender, RoutedEventArgs e)
+        {
+            AddItemWindow addItemWindow = new AddItemWindow();
+            addItemWindow.ShowDialog();
+        }
+
+        private void addNewSupplierBtn_Click(object sender, RoutedEventArgs e)
+        {
+            AddSupplierWindow addSupplierWindow = new AddSupplierWindow();
+            addSupplierWindow.ShowDialog();
+        }
+
         private void applyImportBtn_Click(object sender, RoutedEventArgs e)
         {
             logicService.AddImport();

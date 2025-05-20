@@ -14,4 +14,6 @@ public partial class StockReport
     public int? TotalBeginStock { get; set; }
 
     public int? TotalFinishStock { get; set; }
+
+    public bool IsDeleted { get; set; }
 }

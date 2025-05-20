@@ -144,7 +144,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
                     if (dateParts.Length > 0 && int.TryParse(dateParts[0], out int day))
                     {
-                        if (invoice.Date.Value.Day != day)
+                        if (invoice.Date.Day != day)
                         {
                             match = false;
                         }
@@ -152,7 +152,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
                     if (dateParts.Length > 1 && int.TryParse(dateParts[1], out int month))
                     {
-                        if (invoice.Date.Value.Month != month)
+                        if (invoice.Date.Month != month)
                         {
                             match = false;
                         }
@@ -160,7 +160,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
                     if (dateParts.Length > 2 && int.TryParse(dateParts[2], out int year))
                     {
-                        if (invoice.Date.Value.Year != year)
+                        if (invoice.Date.Year != year)
                         {
                             match = false;
                         }
@@ -173,6 +173,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 }
             });
         }
+
         public void PrintInvoiceRecord()
         {
             if (invoicePageUI.InvoicesDataGrid.SelectedItem is Invoice selectedInvoice)
@@ -190,7 +191,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 MessageBox.Show("Please select an invoice record to print.", "Print Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
         }
 
         public void LoadInvoiceWindow()

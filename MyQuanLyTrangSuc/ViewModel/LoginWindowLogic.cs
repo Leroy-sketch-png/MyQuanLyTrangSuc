@@ -92,8 +92,8 @@ namespace MyQuanLyTrangSuc.ViewModel
         /// </summary>
         public void ChangeToDarkTheme(Border rightBorder, Border leftBorder)
         {
-            rightBorder.Background = Brushes.Black;
-            leftBorder.Background = Brushes.Black;
+            rightBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF272E3C"));
+            leftBorder.Background = Brushes.White;
         }
 
         /// <summary>
@@ -101,8 +101,8 @@ namespace MyQuanLyTrangSuc.ViewModel
         /// </summary>
         public void ChangeToLightTheme(Border rightBorder, Border leftBorder)
         {
-            rightBorder.Background = Brushes.WhiteSmoke;
-            leftBorder.Background = Brushes.WhiteSmoke;
+            rightBorder.Background = Brushes.White;
+            leftBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF272E3C"));
         }
     }
 }

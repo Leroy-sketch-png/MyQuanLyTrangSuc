@@ -12,4 +12,6 @@ public partial class RevenueReport
     public DateTime? MonthYear { get; set; }
 
     public decimal? TotalRevenue { get; set; }
+
+    public bool IsDeleted { get; set; }
 }
