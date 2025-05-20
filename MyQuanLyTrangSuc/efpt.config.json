@@ -67,7 +67,11 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[RevenueReportDetail]",
+         "Name": "[dbo].[RevenueReportProductDetail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RevenueReportServiceDetail]",
          "ObjectType": 0
       },
       {

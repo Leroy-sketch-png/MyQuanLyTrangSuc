@@ -9,11 +9,11 @@ public partial class StockReport
 {
     public string StockReportId { get; set; }
 
-    public DateTime MonthYear { get; set; }
+    public DateTime? MonthYear { get; set; }
 
-    public int TotalBeginStock { get; set; }
+    public int? TotalBeginStock { get; set; }
 
-    public int TotalFinishStock { get; set; }
+    public int? TotalFinishStock { get; set; }
 
-    public virtual ICollection<StockReportDetail> StockReportDetails { get; set; }
+    public bool IsDeleted { get; set; }
 }

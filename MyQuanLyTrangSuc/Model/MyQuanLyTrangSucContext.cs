@@ -173,7 +173,9 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
     public virtual DbSet<RevenueReport> RevenueReports { get; set; }
 
-    public virtual DbSet<RevenueReportDetail> RevenueReportDetails { get; set; }
+    public virtual DbSet<RevenueReportProductDetail> RevenueReportProductDetails { get; set; }
+
+    public virtual DbSet<RevenueReportServiceDetail> RevenueReportServiceDetails { get; set; }
 
     public virtual DbSet<Service> Services { get; set; }
 
@@ -195,7 +197,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Username).HasName("PK__Account__536C85E5F3ABA251");
+            entity.HasKey(e => e.Username).HasName("PK__Account__536C85E5CD11A983");
 
             entity.ToTable("Account");
 
@@ -213,13 +215,13 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => e.CustomerId).HasName("PK__Customer__B611CB7D18FB9AE5");
+            entity.HasKey(e => e.CustomerId).HasName("PK__Customer__B611CB7DD474EBBC");
 
             entity.ToTable("Customer");
 
-            entity.HasIndex(e => e.ContactNumber, "UQ__Customer__4F86E9D77306EC1E").IsUnique();
+            entity.HasIndex(e => e.ContactNumber, "UQ__Customer__4F86E9D70E44F0CE").IsUnique();
 
-            entity.HasIndex(e => e.Email, "UQ__Customer__AB6E616438782A5C").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Customer__AB6E6164290E0E04").IsUnique();
 
             entity.Property(e => e.CustomerId)
                 .HasMaxLength(6)
@@ -250,13 +252,13 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<Employee>(entity =>
         {
-            entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__C134C9C1284A8F3C");
+            entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__C134C9C116F00D98");
 
             entity.ToTable("Employee");
 
-            entity.HasIndex(e => e.ContactNumber, "UQ__Employee__4F86E9D722381315").IsUnique();
+            entity.HasIndex(e => e.ContactNumber, "UQ__Employee__4F86E9D7010E6D1C").IsUnique();
 
-            entity.HasIndex(e => e.Email, "UQ__Employee__AB6E6164CF81E409").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Employee__AB6E6164B87A60F3").IsUnique();
 
             entity.Property(e => e.EmployeeId)
                 .HasMaxLength(6)
@@ -297,7 +299,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<Function>(entity =>
         {
-            entity.HasKey(e => e.FunctionId).HasName("PK__Function__31ABFAF8854968DE");
+            entity.HasKey(e => e.FunctionId).HasName("PK__Function__31ABFAF891DA78B8");
 
             entity.Property(e => e.FunctionName)
                 .IsRequired()
@@ -309,7 +311,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<Import>(entity =>
         {
-            entity.HasKey(e => e.ImportId).HasName("PK__Import__2CC5AB670C1CF292");
+            entity.HasKey(e => e.ImportId).HasName("PK__Import__2CC5AB67D534D030");
 
             entity.ToTable("Import");
 
@@ -334,20 +336,20 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
             entity.HasOne(d => d.Employee).WithMany(p => p.Imports)
                 .HasForeignKey(d => d.EmployeeId)
-                .HasConstraintName("FK__Import__employee__7A672E12");
+                .HasConstraintName("FK__Import__employee__7E37BEF6");
 
             entity.HasOne(d => d.Supplier).WithMany(p => p.Imports)
                 .HasForeignKey(d => d.SupplierId)
-                .HasConstraintName("FK__Import__supplier__797309D9");
+                .HasConstraintName("FK__Import__supplier__7D439ABD");
         });
 
         modelBuilder.Entity<ImportDetail>(entity =>
         {
-            entity.HasKey(e => e.Stt).HasName("PK__ImportDe__DDDF328E746FDD80");
+            entity.HasKey(e => e.Stt).HasName("PK__ImportDe__DDDF328E2AE31392");
 
             entity.ToTable("ImportDetail");
 
-            entity.HasIndex(e => new { e.ImportId, e.ProductId }, "UQ__ImportDe__9E14A670897BB043").IsUnique();
+            entity.HasIndex(e => new { e.ImportId, e.ProductId }, "UQ__ImportDe__9E14A6709C373E82").IsUnique();
 
             entity.Property(e => e.Stt)
                 .ValueGeneratedNever()
@@ -370,16 +372,16 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
             entity.HasOne(d => d.Import).WithMany(p => p.ImportDetails)
                 .HasForeignKey(d => d.ImportId)
-                .HasConstraintName("FK__ImportDet__impor__7E37BEF6");
+                .HasConstraintName("FK__ImportDet__impor__02084FDA");
 
             entity.HasOne(d => d.Product).WithMany(p => p.ImportDetails)
                 .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK__ImportDet__produ__7F2BE32F");
+                .HasConstraintName("FK__ImportDet__produ__02FC7413");
         });
 
         modelBuilder.Entity<Invoice>(entity =>
         {
-            entity.HasKey(e => e.InvoiceId).HasName("PK__Invoice__1252416C02990C65");
+            entity.HasKey(e => e.InvoiceId).HasName("PK__Invoice__1252416C71196B2D");
 
             entity.ToTable("Invoice");
 
@@ -404,20 +406,20 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Invoices)
                 .HasForeignKey(d => d.CustomerId)
-                .HasConstraintName("FK__Invoice__custome__02084FDA");
+                .HasConstraintName("FK__Invoice__custome__05D8E0BE");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.Invoices)
                 .HasForeignKey(d => d.EmployeeId)
-                .HasConstraintName("FK__Invoice__employe__02FC7413");
+                .HasConstraintName("FK__Invoice__employe__06CD04F7");
         });
 
         modelBuilder.Entity<InvoiceDetail>(entity =>
         {
-            entity.HasKey(e => e.Stt).HasName("PK__InvoiceD__DDDF328EEC4F134D");
+            entity.HasKey(e => e.Stt).HasName("PK__InvoiceD__DDDF328E419C490B");
 
             entity.ToTable("InvoiceDetail");
 
-            entity.HasIndex(e => new { e.InvoiceId, e.ProductId }, "UQ__InvoiceD__A0834C7B539B96C8").IsUnique();
+            entity.HasIndex(e => new { e.InvoiceId, e.ProductId }, "UQ__InvoiceD__A0834C7B7856ABA2").IsUnique();
 
             entity.Property(e => e.Stt)
                 .ValueGeneratedNever()
@@ -440,11 +442,11 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
             entity.HasOne(d => d.Invoice).WithMany(p => p.InvoiceDetails)
                 .HasForeignKey(d => d.InvoiceId)
-                .HasConstraintName("FK__InvoiceDe__invoi__06CD04F7");
+                .HasConstraintName("FK__InvoiceDe__invoi__0A9D95DB");
 
             entity.HasOne(d => d.Product).WithMany(p => p.InvoiceDetails)
                 .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK__InvoiceDe__produ__07C12930");
+                .HasConstraintName("FK__InvoiceDe__produ__0B91BA14");
         });
 
         modelBuilder.Entity<Parameter>(entity =>
@@ -463,11 +465,11 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<Permission>(entity =>
         {
-            entity.HasKey(e => e.PermissionId).HasName("PK__Permissi__EFA6FB2FB76C7E3F");
+            entity.HasKey(e => e.PermissionId).HasName("PK__Permissi__EFA6FB2F3F62ADAF");
 
             entity.ToTable("Permission");
 
-            entity.HasIndex(e => new { e.GroupId, e.FunctionId }, "UQ__Permissi__87804C9AE4A7BB21").IsUnique();
+            entity.HasIndex(e => new { e.GroupId, e.FunctionId }, "UQ__Permissi__87804C9AFB0265DB").IsUnique();
 
             entity.Property(e => e.FunctionId).HasColumnName("FunctionID");
             entity.Property(e => e.GroupId).HasColumnName("GroupID");
@@ -485,7 +487,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Product__2D10D16AC8A79E84");
+            entity.HasKey(e => e.ProductId).HasName("PK__Product__2D10D16A7550EE51");
 
             entity.ToTable("Product");
 
@@ -520,7 +522,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<ProductCategory>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__ProductC__23CAF1D88ECCC210");
+            entity.HasKey(e => e.CategoryId).HasName("PK__ProductC__23CAF1D81E01E14A");
 
             entity.ToTable("ProductCategory");
 
@@ -545,7 +547,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<RevenueReport>(entity =>
         {
-            entity.HasKey(e => e.RevenueReportId).HasName("PK__RevenueR__F8164E98D77EAD66");
+            entity.HasKey(e => e.RevenueReportId).HasName("PK__RevenueR__F8164E987496DC39");
 
             entity.ToTable("RevenueReport");
 
@@ -553,6 +555,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasMaxLength(6)
                 .IsUnicode(false)
                 .HasColumnName("revenueReportId");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
             entity.Property(e => e.MonthYear)
                 .HasColumnType("datetime")
                 .HasColumnName("monthYear");
@@ -561,13 +564,13 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasColumnName("totalRevenue");
         });
 
-        modelBuilder.Entity<RevenueReportDetail>(entity =>
+        modelBuilder.Entity<RevenueReportProductDetail>(entity =>
         {
             entity
                 .HasNoKey()
-                .ToTable("RevenueReportDetail");
+                .ToTable("RevenueReportProductDetail");
 
-            entity.HasIndex(e => new { e.RevenueReportId, e.ProductId }, "UQ__RevenueR__4AC7438FEB4DEADF").IsUnique();
+            entity.HasIndex(e => new { e.RevenueReportId, e.ProductId }, "UQ__RevenueR__4AC7438FA1B54800").IsUnique();
 
             entity.Property(e => e.Percentage)
                 .HasColumnType("decimal(3, 2)")
@@ -587,16 +590,49 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
             entity.HasOne(d => d.Product).WithMany()
                 .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK__RevenueRe__produ__628FA481");
+                .HasConstraintName("FK__RevenueRe__produ__6477ECF3");
 
             entity.HasOne(d => d.RevenueReport).WithMany()
                 .HasForeignKey(d => d.RevenueReportId)
-                .HasConstraintName("FK__RevenueRe__reven__619B8048");
+                .HasConstraintName("FK__RevenueRe__reven__6383C8BA");
+        });
+
+        modelBuilder.Entity<RevenueReportServiceDetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("RevenueReportServiceDetail");
+
+            entity.HasIndex(e => new { e.RevenueReportId, e.ServiceId }, "UQ__RevenueR__1C434994F1684961").IsUnique();
+
+            entity.Property(e => e.Percentage)
+                .HasColumnType("decimal(3, 2)")
+                .HasColumnName("percentage");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.Revenue)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("revenue");
+            entity.Property(e => e.RevenueReportId)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("revenueReportId");
+            entity.Property(e => e.ServiceId)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("serviceId");
+
+            entity.HasOne(d => d.RevenueReport).WithMany()
+                .HasForeignKey(d => d.RevenueReportId)
+                .HasConstraintName("FK__RevenueRe__reven__6754599E");
+
+            entity.HasOne(d => d.Service).WithMany()
+                .HasForeignKey(d => d.ServiceId)
+                .HasConstraintName("FK__RevenueRe__servi__68487DD7");
         });
 
         modelBuilder.Entity<Service>(entity =>
         {
-            entity.HasKey(e => e.ServiceId).HasName("PK__Service__455070DF51B4547A");
+            entity.HasKey(e => e.ServiceId).HasName("PK__Service__455070DF04F2629C");
 
             entity.ToTable("Service");
 
@@ -619,11 +655,11 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<ServiceDetail>(entity =>
         {
-            entity.HasKey(e => e.Stt).HasName("PK__ServiceD__DDDF328EE4A407B6");
+            entity.HasKey(e => e.Stt).HasName("PK__ServiceD__DDDF328EEBFB29AD");
 
             entity.ToTable("ServiceDetail");
 
-            entity.HasIndex(e => new { e.ServiceRecordId, e.ServiceId }, "UQ__ServiceD__6FC5D0A9DF0D4D08").IsUnique();
+            entity.HasIndex(e => new { e.ServiceRecordId, e.ServiceId }, "UQ__ServiceD__6FC5D0A96B3E1231").IsUnique();
 
             entity.Property(e => e.Stt)
                 .ValueGeneratedNever()
@@ -655,16 +691,16 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
             entity.HasOne(d => d.Service).WithMany(p => p.ServiceDetails)
                 .HasForeignKey(d => d.ServiceId)
-                .HasConstraintName("FK__ServiceDe__servi__123EB7A3");
+                .HasConstraintName("FK__ServiceDe__servi__160F4887");
 
             entity.HasOne(d => d.ServiceRecord).WithMany(p => p.ServiceDetails)
                 .HasForeignKey(d => d.ServiceRecordId)
-                .HasConstraintName("FK__ServiceDe__servi__114A936A");
+                .HasConstraintName("FK__ServiceDe__servi__151B244E");
         });
 
         modelBuilder.Entity<ServiceRecord>(entity =>
         {
-            entity.HasKey(e => e.ServiceRecordId).HasName("PK__ServiceR__8B90D7A5F153C373");
+            entity.HasKey(e => e.ServiceRecordId).HasName("PK__ServiceR__8B90D7A501D7DF28");
 
             entity.ToTable("ServiceRecord");
 
@@ -698,16 +734,16 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
             entity.HasOne(d => d.Customer).WithMany(p => p.ServiceRecords)
                 .HasForeignKey(d => d.CustomerId)
-                .HasConstraintName("FK__ServiceRe__custo__0B91BA14");
+                .HasConstraintName("FK__ServiceRe__custo__0F624AF8");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.ServiceRecords)
                 .HasForeignKey(d => d.EmployeeId)
-                .HasConstraintName("FK__ServiceRe__emplo__0C85DE4D");
+                .HasConstraintName("FK__ServiceRe__emplo__10566F31");
         });
 
         modelBuilder.Entity<StockReport>(entity =>
         {
-            entity.HasKey(e => e.StockReportId).HasName("PK__StockRep__F16E8D8863AECF06");
+            entity.HasKey(e => e.StockReportId).HasName("PK__StockRep__F16E8D88EE89A6E8");
 
             entity.ToTable("StockReport");
 
@@ -715,6 +751,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasMaxLength(6)
                 .IsUnicode(false)
                 .HasColumnName("stockReportId");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
             entity.Property(e => e.MonthYear)
                 .HasColumnType("datetime")
                 .HasColumnName("monthYear");
@@ -724,11 +761,11 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<StockReportDetail>(entity =>
         {
-            entity.HasKey(e => new { e.StockReportId, e.ProductId }); // ❗ Sửa tại đây
+            entity
+                .HasNoKey()
+                .ToTable("StockReportDetail");
 
-            entity.ToTable("StockReportDetail");
-
-            entity.HasIndex(e => new { e.StockReportId, e.ProductId }, "UQ__StockRep__43BF809FCC6061A2").IsUnique();
+            entity.HasIndex(e => new { e.StockReportId, e.ProductId }, "UQ__StockRep__43BF809F530D93D1").IsUnique();
 
             entity.Property(e => e.BeginStock).HasColumnName("beginStock");
             entity.Property(e => e.FinishStock).HasColumnName("finishStock");
@@ -745,22 +782,22 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
             entity.HasOne(d => d.Product).WithMany()
                 .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK__StockRepo__produ__5CD6CB2B");
+                .HasConstraintName("FK__StockRepo__produ__5EBF139D");
 
-            entity.HasOne(d => d.StockReport).WithMany(p => p.StockReportDetails)
+            entity.HasOne(d => d.StockReport).WithMany()
                 .HasForeignKey(d => d.StockReportId)
-                .HasConstraintName("FK__StockRepo__stock__5BE2A6F2");
+                .HasConstraintName("FK__StockRepo__stock__5DCAEF64");
         });
 
         modelBuilder.Entity<Supplier>(entity =>
         {
-            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__DB8E62ED78B9495C");
+            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__DB8E62ED1AF4D02D");
 
             entity.ToTable("Supplier");
 
-            entity.HasIndex(e => e.ContactNumber, "UQ__Supplier__4F86E9D7A1D46265").IsUnique();
+            entity.HasIndex(e => e.ContactNumber, "UQ__Supplier__4F86E9D74CD3E897").IsUnique();
 
-            entity.HasIndex(e => e.Email, "UQ__Supplier__AB6E616433FEC18E").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Supplier__AB6E6164E951C97E").IsUnique();
 
             entity.Property(e => e.SupplierId)
                 .HasMaxLength(6)
@@ -785,7 +822,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<Unit>(entity =>
         {
-            entity.HasKey(e => e.UnitId).HasName("PK__Unit__55D7923575DC4F27");
+            entity.HasKey(e => e.UnitId).HasName("PK__Unit__55D7923577E49203");
 
             entity.ToTable("Unit");
 
@@ -801,11 +838,11 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<UserGroup>(entity =>
         {
-            entity.HasKey(e => e.GroupId).HasName("PK__UserGrou__149AF36A75C472BF");
+            entity.HasKey(e => e.GroupId).HasName("PK__UserGrou__149AF36A5F5FD2A5");
 
             entity.ToTable("UserGroup");
 
-            entity.HasIndex(e => e.GroupName, "UQ__UserGrou__6EFCD4344BD02E48").IsUnique();
+            entity.HasIndex(e => e.GroupName, "UQ__UserGrou__6EFCD43460934E45").IsUnique();
 
             entity.Property(e => e.GroupName)
                 .IsRequired()
@@ -823,5 +860,4 @@ public partial class MyQuanLyTrangSucContext : DbContext
             optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=VIET-ANH;Database=MyQuanLyTrangSuc3;TrustServerCertificate=True;Trusted_Connection=True");
         }
     }
-
 }
