@@ -90,7 +90,7 @@
 
                 <!--Add Button-->
                 <Button x:Name="addButton" Margin="0 20 0 0" Content="ADD" FontSize="24" 
-                        Background="#FFC1CC00" Foreground="White" Padding="5" 
+                        Background="#BFDBFE" Foreground="#1E40AF" Padding="5" 
                         HorizontalAlignment="Center" Width="160" Height="50"
                         Command="{Binding AddServiceCommand}"/>
             </StackPanel>

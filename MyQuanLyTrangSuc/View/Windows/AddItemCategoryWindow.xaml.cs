@@ -1,4 +1,5 @@
-﻿using MyQuanLyTrangSuc.ViewModel;
+﻿using MyQuanLyTrangSuc.View.Windows;
+using MyQuanLyTrangSuc.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,12 @@ namespace MyQuanLyTrangSuc.View
             bool isSuccess = logicService.AddItemCategory(NameTextBox.Text, profitPercentageTextBox.Text);
             if (isSuccess)
                 this.Close();
+        }
+
+        private void addNewUnitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            AddUnitWindow addUnitWindow = new AddUnitWindow();
+            addUnitWindow.ShowDialog();
         }
     }
 }

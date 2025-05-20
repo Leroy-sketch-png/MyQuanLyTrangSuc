@@ -96,7 +96,7 @@
                     </StackPanel>
                 </Grid>
 
-                <Button x:Name="editButton" Content="SAVE" FontSize="24" Background="#FFC1CC00" Foreground="White" Padding="5" HorizontalAlignment="Center" Width="120" Height="50" Click="editButton_Click"/>
+                <Button x:Name="editButton" Content="SAVE" FontSize="24" Background="#BFDBFE" Foreground="#1E40AF" Padding="5" HorizontalAlignment="Center" Width="120" Height="50" Click="editButton_Click"/>
             </StackPanel>
         </Grid>
     </Grid>

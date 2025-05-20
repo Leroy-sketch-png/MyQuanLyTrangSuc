@@ -59,5 +59,11 @@ namespace MyQuanLyTrangSuc.View
         {
             Logic.AddProduct();
         }
+
+        private void addNewCategoryBtn_Click(object sender, RoutedEventArgs e)
+        {
+            AddItemCategoryWindow addItemCategoryWindow = new AddItemCategoryWindow();
+            addItemCategoryWindow.ShowDialog();
+        }
     }
 }
