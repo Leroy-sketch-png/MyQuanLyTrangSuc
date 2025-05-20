@@ -15,6 +15,8 @@ public partial class Service
 
     public string MoreInfo { get; set; }
 
+    public string ImagePath { get; set; }
+
     public bool IsDeleted { get; set; }
 
     public virtual ICollection<ServiceDetail> ServiceDetails { get; set; } = new List<ServiceDetail>();

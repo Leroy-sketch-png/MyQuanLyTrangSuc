@@ -51,7 +51,7 @@ namespace MyQuanLyTrangSuc.DataAccess
             return context.Customers.Where(c => !c.IsDeleted).ToList();
         }
 
-        public int GetLastInvoideDetailID()
+        public int GetLastInvoiceDetailID()
         {
             var lastID = context.InvoiceDetails.OrderByDescending(i => i.Stt).Select(i => i.Stt).FirstOrDefault();
             return (lastID != null && lastID > 0) ? lastID + 1 : 1;

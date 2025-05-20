@@ -30,7 +30,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
             this.SelectedInvoiceRecord = selectedInvoiceRecord;
 
             InvoiceDetails = new ObservableCollection<InvoiceDetail>();
-            invoiceDetailService.LoadImportDetailsFromDatabase(SelectedInvoiceRecord, InvoiceDetails);
+            invoiceDetailService.LoadInvoiceDetailsFromDatabase(SelectedInvoiceRecord, InvoiceDetails);
         }
 
         public InvoiceDetailWindowLogic(ReceiptWindow receiptWindow, Invoice selectedInvoiceRecord) {
@@ -39,7 +39,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
 
             InvoiceDetails = new ObservableCollection<InvoiceDetail>();
 
-            invoiceDetailService.LoadImportDetailsFromDatabase(SelectedInvoiceRecord, InvoiceDetails);
+            invoiceDetailService.LoadInvoiceDetailsFromDatabase(SelectedInvoiceRecord, InvoiceDetails);
         }
         public void PrintReceipt() {
             PrintDialog printDialog = new PrintDialog();

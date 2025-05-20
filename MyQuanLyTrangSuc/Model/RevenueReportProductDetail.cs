@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MyQuanLyTrangSuc.Model;
 
-public partial class RevenueReportDetail
+public partial class RevenueReportProductDetail
 {
     public string RevenueReportId { get; set; }
 

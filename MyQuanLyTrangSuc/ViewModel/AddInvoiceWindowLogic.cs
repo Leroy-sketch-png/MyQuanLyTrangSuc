@@ -165,7 +165,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             invoiceService.AddInvoice(invoice);
             foreach (var detail in InvoiceDetails)
             {
-                MessageBox.Show("stt: " + detail.Stt);
+                //MessageBox.Show("stt: " + detail.Stt);
                 invoiceService.AddInvoiceDetail(detail);
             }
             notificationWindowLogic.LoadNotification("Success", "Invoice added successfully", "BottomRight");

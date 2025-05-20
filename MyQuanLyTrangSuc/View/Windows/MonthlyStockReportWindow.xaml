@@ -19,32 +19,32 @@
         <DockPanel Grid.Row="1">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="40,0,0,0" HorizontalAlignment="Left">
                 <TextBlock Text="Month: " VerticalAlignment="Center" FontSize="16"/>
-                <TextBlock Text="{Binding SelectedExportRecord.id_export}" VerticalAlignment="Center" Margin="10,20,20,20" FontSize="16" FontWeight="Bold"/>
+                <TextBlock Text="{Binding MonthDisplay}" VerticalAlignment="Center" Margin="10,20,20,20" FontSize="16" FontWeight="Bold"/>
             </StackPanel>
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0,0,40,0" HorizontalAlignment="Right">
                 <TextBlock Text="Year: " VerticalAlignment="Center" FontSize="16"/>
-                <TextBlock Text="{Binding SelectedExportRecord.date_export}" VerticalAlignment="Center" Margin="10,20,20,20" FontWeight="Bold" FontSize="16"/>
+                <TextBlock Text="{Binding YearDisplay}" VerticalAlignment="Center" Margin="10,20,20,20" FontWeight="Bold" FontSize="16"/>
             </StackPanel>
         </DockPanel>
         <Border Grid.Row="2" Margin="5">
-            <DataGrid Margin="5" AutoGenerateColumns="False" ItemsSource="{Binding ExportInfos}"
+            <DataGrid Margin="5" AutoGenerateColumns="False" ItemsSource="{Binding StockReports}"
                       IsReadOnly="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Index" Width="65" CanUserResize="False" Binding="{Binding ITEM.id_item}"/>
-                    <DataGridTextColumn Header="Name" Width="*" Binding="{Binding ITEM.Name_item}"/>
-                    <DataGridTextColumn Header="Begin" Width="*" Binding="{Binding STOCKREPORT.beginStock_stockreport}"/>
-                    <DataGridTextColumn Header="Purchased" Width="*" Binding="{Binding STOCKREPORT.Type_item}"/>
-                    <DataGridTextColumn Header="Sold" Width="*" Binding="{Binding count_importinfo}"/>
-                    <DataGridTextColumn Header="Current" Width="*" Binding="{Binding STOCKREPORT.current_stockreport}"/>
-                    <DataGridTextColumn Header="Unit" Width="*" Binding="{Binding UNIT}"/>
+                    <DataGridTextColumn Header="ID" Width="65" Binding="{Binding ProductId}"/>
+                    <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Product.Name}"/>
+                    <DataGridTextColumn Header="Begin" Width="*" Binding="{Binding BeginStock}"/>
+                    <DataGridTextColumn Header="Purchased" Width="*" Binding="{Binding ImportQuantity}"/>
+                    <DataGridTextColumn Header="Sold" Width="*" Binding="{Binding SaleQuantity}"/>
+                    <DataGridTextColumn Header="Current" Width="*" Binding="{Binding FinishStock}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
+
         <Border Grid.Row="4" Margin="30">
             <StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock Text="REVENUE: " FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding SelectedExportRecord.revenue_export}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10,0,10,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding TotalRevenue, StringFormat={}{0:N0}}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10,0,10,0" VerticalAlignment="Center"/>
                 </StackPanel>
                 <TextBlock Text="After 4% Mark-up" FontSize="14" HorizontalAlignment="Center" Margin="10,0,10,10" FontStyle="Italic"/>
             </StackPanel>
