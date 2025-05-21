@@ -132,7 +132,7 @@ namespace PhanMemQuanLyVatTu.ViewModel
 
                     if (dateParts.Length > 0 && int.TryParse(dateParts[0], out int day))
                     {
-                        if (import.Date.Day != day)
+                        if (import.Date.Value.Day != day)
                         {
                             match = false;
                         }
@@ -140,7 +140,7 @@ namespace PhanMemQuanLyVatTu.ViewModel
 
                     if (dateParts.Length > 1 && int.TryParse(dateParts[1], out int month))
                     {
-                        if (import.Date.Month != month)
+                        if (import.Date.Value.Month != month)
                         {
                             match = false;
                         }
@@ -148,7 +148,7 @@ namespace PhanMemQuanLyVatTu.ViewModel
 
                     if (dateParts.Length > 2 && int.TryParse(dateParts[2], out int year))
                     {
-                        if (import.Date.Year != year)
+                        if (import.Date.Value.Year != year)
                         {
                             match = false;
                         }

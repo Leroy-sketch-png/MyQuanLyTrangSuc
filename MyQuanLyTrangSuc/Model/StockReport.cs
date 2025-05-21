@@ -16,4 +16,5 @@ public partial class StockReport
     public int? TotalFinishStock { get; set; }
 
     public bool IsDeleted { get; set; }
+    public virtual ICollection<StockReportDetail> StockReportDetails { get; set; }
 }

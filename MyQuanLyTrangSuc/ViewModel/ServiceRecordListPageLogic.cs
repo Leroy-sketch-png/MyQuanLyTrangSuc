@@ -14,6 +14,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
         private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
         private readonly ServiceRecordService serviceRecordService;
         private readonly ServiceRecordListPage serviceRecordPageUI;
+        private readonly NotificationWindowLogic notificationWindowLogic;
 
         public ObservableCollection<ServiceRecord> ServiceRecords { get; set; }
         public ServiceRecord SelectedServiceRecord { get; set; }
@@ -25,6 +26,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
             serviceRecordService.OnServiceRecordAdded += HandleServiceRecordAdded;
             serviceRecordService.OnServiceRecordUpdated += HandleServiceRecordUpdated;
 
+            notificationWindowLogic = new NotificationWindowLogic();
             LoadServiceRecordsFromDatabase();
         }
 
@@ -62,6 +64,53 @@ namespace MyQuanLyTrangSuc.ViewModel {
                 }
             });
         }
+
+        public void HandleServiceRecordDeleted()
+        {
+            if (SelectedServiceRecord == null)
+            {
+                MessageBox.Show("Please select a record to delete.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var confirm = MessageBox.Show("Are you sure you want to delete this service record?",
+                                          "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (confirm != MessageBoxResult.Yes)
+                return;
+
+            try
+            {
+                // Load related ServiceDetails if not already loaded
+                context.Entry(SelectedServiceRecord).Collection(sr => sr.ServiceDetails).Load();
+
+                // Delete child ServiceDetails
+                foreach (var detail in SelectedServiceRecord.ServiceDetails.ToList())
+                {
+                    serviceRecordService.DeleteServiceDetail(detail);
+                    //context.ServiceDetails.Remove(detail);
+                }
+
+                // Delete the main ServiceRecord
+                serviceRecordService.DeleteServiceRecord(SelectedServiceRecord);
+                //context.ServiceRecords.Remove(SelectedServiceRecord);
+                context.SaveChanges();
+
+                // Remove from ObservableCollection so UI updates
+                Application.Current.Dispatcher.Invoke(() => {
+                    ServiceRecords.Remove(SelectedServiceRecord);
+                });
+
+                //notificationWindowLogic.LoadNotification("Success", "Service record and related details deleted successfully.", "BottomRight");
+                MessageBox.Show("Service record and related details deleted successfully.",
+                                "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to delete: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
 
         public void SearchServiceRecords(string keyword, string category) {
             var recordsFromDb = context.ServiceRecords

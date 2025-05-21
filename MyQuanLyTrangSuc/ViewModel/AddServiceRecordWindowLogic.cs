@@ -261,7 +261,8 @@ namespace MyQuanLyTrangSuc.ViewModel {
                 ServiceRecordId = NewServiceRecordId,
                 CreateDate = DateTime.Now,
                 CustomerId = SelectedCustomer?.CustomerId,                          // assuming you have SelectedCustomer bound
-                //EmployeeId = (string)Application.Current.Resources["CurrentUserID"],// or however you pull the current user
+                //EmployeeId = (string)Application.Current.Resources["
+                //"],// or however you pull the current user
                 GrandTotal = GrandTotalCost,
                 TotalPaid = GrandTotalPaid,
                 TotalUnpaid = totalUnpaid,

@@ -766,9 +766,9 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<StockReportDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("StockReportDetail");
+            entity.HasKey(e => new { e.StockReportId, e.ProductId }); // ❗ Sửa tại đây
+
+            entity.ToTable("StockReportDetail");
 
             entity.HasIndex(e => new { e.StockReportId, e.ProductId }, "UQ__StockRep__43BF809F530D93D1").IsUnique();
 
@@ -789,7 +789,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasForeignKey(d => d.ProductId)
                 .HasConstraintName("FK__StockRepo__produ__5EBF139D");
 
-            entity.HasOne(d => d.StockReport).WithMany()
+            entity.HasOne(d => d.StockReport).WithMany(p => p.StockReportDetails)
                 .HasForeignKey(d => d.StockReportId)
                 .HasConstraintName("FK__StockRepo__stock__5DCAEF64");
         });
