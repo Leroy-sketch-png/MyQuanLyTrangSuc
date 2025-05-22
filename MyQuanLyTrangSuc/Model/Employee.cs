@@ -2,8 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyQuanLyTrangSuc.Model;
 
@@ -25,6 +23,8 @@ public partial class Employee
 
     public string Gender { get; set; }
 
+    public string Username { get; set; }
+
     public bool IsDeleted { get; set; }
 
     public virtual ICollection<Import> Imports { get; set; } = new List<Import>();
@@ -32,9 +32,6 @@ public partial class Employee
     public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 
     public virtual ICollection<ServiceRecord> ServiceRecords { get; set; } = new List<ServiceRecord>();
-    
-    [Required]
-    public int AccountId { get; set; }
 
-    public virtual Account Account { get; set; }
+    public virtual Account UsernameNavigation { get; set; }
 }

@@ -127,7 +127,7 @@
                         <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="False" Width="80" Binding="{Binding CustomerId}"/>
 
                         <!--Name-->
-                        <DataGridTextColumn Header="Name" Width="*" Binding="{Binding CustomerName}" CanUserResize="False" IsReadOnly="True">
+                        <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}" CanUserResize="False" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>

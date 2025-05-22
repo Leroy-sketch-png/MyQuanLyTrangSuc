@@ -113,7 +113,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             // 2) Lookup the account by the employee's Username navigation property
             var account = context.Accounts
-                .FirstOrDefault(acc => acc.Username == employee.Account.Username);
+                .FirstOrDefault(acc => acc.Username == employee.Username);
             if (account == null)
             {
                 notificationWindowLogic.LoadNotification("Error", "Account not found!", "BottomRight");
