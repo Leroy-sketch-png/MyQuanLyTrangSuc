@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MyQuanLyTrangSuc.ViewModel
@@ -42,12 +43,24 @@ namespace MyQuanLyTrangSuc.ViewModel
             NewID = unitService.GenerateNewUnitID();
         }
 
-        //add new unit
-        public void AddUnit(string name)
+        private bool IsValidName(string name)
         {
+            return !string.IsNullOrWhiteSpace(name) && !Regex.IsMatch(name, @"\d");
+        }
+
+        //add new unit
+        public bool AddUnit(string name)
+        {
+            if (!IsValidName(name))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Tên không hợp lệ!", "BottomRight");
+                return false;
+            }
+
             string resultMessage = unitService.AddUnit(name);
             notificationWindowLogic.LoadNotification("Success", resultMessage, "BottomRight");
             GenerateNewUnitID();
+            return true;
         }
     }
 }

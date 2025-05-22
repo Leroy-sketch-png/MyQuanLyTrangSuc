@@ -67,9 +67,25 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public bool AddItemCategory(string name, string profitPercentage)
         {
-            if (!itemCategoryService.IsValidItemCategoryData(name, _selectedUnit.UnitId, profitPercentage))
+            //if (!itemCategoryService.IsValidItemCategoryData(name, _selectedUnit.UnitId, profitPercentage))
+            //{
+            //    notificationWindowLogic.LoadNotification("Error", "Invalid item category data!", "BottomRight");
+            //    return false;
+            //}
+
+            if (!itemCategoryService.IsValidName(name))
             {
-                notificationWindowLogic.LoadNotification("Error", "Invalid item category data!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Tên không hợp lệ!", "BottomRight");
+                return false;
+            }
+            if (!itemCategoryService.IsValidProfitPercentage(profitPercentage))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Phần trăm lợi nhuận không hợp lệ!", "BottomRight");
+                return false;
+            }
+            if (!itemCategoryService.IsValidUnitID(_selectedUnit.UnitId))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Unit Id không phù hợp!", "BottomRight");
                 return false;
             }
 
