@@ -11,6 +11,7 @@ using System.Windows.Media;
 using Microsoft.EntityFrameworkCore;
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
+using WpfApplication = System.Windows.Application;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -75,7 +76,8 @@ namespace MyQuanLyTrangSuc.ViewModel
 
                     if (account != null) 
                     {
-                        WpfApplication.Current.Resources["CurrentUserID"] = account.Username;
+                        WpfApplication.Current.Resources["CurrentAccountId"] = account.AccountId;
+                        WpfApplication.Current.Resources["CurrentUsername"] = account.Username;
 
                         string groupName = account.Group?.GroupName; 
 
@@ -86,7 +88,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                             loginWindow.Close();
                             notificationLogic.LoadNotification("Success", "You have logged in as User!", "BottomRight"); 
                         }
-                        else if (groupName.Equals(ADMIN)) // So sánh với hằng số ADMIN
+                        else if (groupName.Equals(ADMIN))
                         {
                             var mainWindow = new MainNavigationWindow();
                             mainWindow.Show();
@@ -110,7 +112,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
                 notificationLogic.LoadNotification("Error", $"An error occurred during login: {ex.Message}", "BottomRight"); // Thông báo lỗi chi tiết hơn
             }
         }

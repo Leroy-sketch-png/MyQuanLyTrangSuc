@@ -109,14 +109,6 @@ namespace MyQuanLyTrangSuc.BusinessLogic
 
         public bool ValidateLogin(string username, string plainPassword)
         {
-            //List<Account> list = authenticationRepository.GetListOfAccounts();
-            //foreach (var accc in list)
-            //{
-            //    MessageBox.Show(accc.Username);
-            //    MessageBox.Show(accc.Password);
-            //}
-            //string trimmedUsername = username?.Trim();
-            List<UserGroup> userGroups = authenticationRepository.GetListOfUserGroups();
             List<Account> accounts = authenticationRepository.GetListOfAccounts();
             var acc = authenticationRepository.GetAccountByUsername(username);
             if (acc == null)

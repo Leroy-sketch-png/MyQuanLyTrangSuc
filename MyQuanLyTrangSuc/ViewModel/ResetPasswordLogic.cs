@@ -118,17 +118,19 @@ namespace MyQuanLyTrangSuc.ViewModel
 
                     account.Password = newPassword;
 
-            // 4) Apply change and save
-            account.Password = newPassword;
-            try
-            {
-                context.SaveChanges();
-                notificationWindowLogic.LoadNotification("Success", "Password has been reset successfully!", "BottomRight");
-                flag = true;
-            }
-            catch (Exception ex)
-            {
-                notificationWindowLogic.LoadNotification("Error", $"Error saving changes: {ex.Message}", "BottomRight");
+                    // 4) Apply change and save
+                    account.Password = newPassword;
+                    try
+                    {
+                        context.SaveChanges();
+                        notificationWindowLogic.LoadNotification("Success", "Password has been reset successfully!", "BottomRight");
+                        flag = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        notificationWindowLogic.LoadNotification("Error", $"Error saving changes: {ex.Message}", "BottomRight");
+                    }
+                }
             }
         }
     }
