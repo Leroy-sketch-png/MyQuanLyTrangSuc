@@ -197,7 +197,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Username).HasName("PK__Account__536C85E5CD11A983");
+            entity.HasKey(e => e.AccountId).HasName("PK__Account__536C85E54B4E0963");
 
             entity.ToTable("Account");
             entity.HasIndex(a => a.Username).IsUnique();
@@ -300,7 +300,8 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<Function>(entity =>
         {
-            entity.HasKey(e => e.FunctionId).HasName("PK__Function__31ABFAF891DA78B8");
+            entity.ToTable("Functions");
+            entity.HasKey(e => e.FunctionId).HasName("PK__Function__31ABFAF86F0F7071");
 
             entity.Property(e => e.FunctionName)
                 .IsRequired()

@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 //using DocumentFormat.OpenXml.Spreadsheet;
 using MyQuanLyTrangSuc.View;
+using MyQuanLyTrangSuc.View.Pages;
 using MyQuanLyTrangSuc.ViewModel;
 using static System.Net.Mime.MediaTypeNames;
 using WpfApplication = System.Windows.Application;
@@ -42,6 +43,9 @@ namespace MyQuanLyTrangSuc.View
         private readonly MonthlyStockReportPage monthlyStockReportPageUI;
         private readonly UnitListPage unitListPageUI;
         private readonly ItemCategoryListPage itemCategoryListPageUI;
+        private readonly UserGroupListPage userGroupListPageUI;
+        private readonly AccountListPage accountListPageUI;
+        private readonly PermissionListPage permissionListPageUI;
         private string loggedInUsername = (string)WpfApplication.Current.Resources["CurrentUsername"];
 
         //Properties
@@ -76,6 +80,9 @@ namespace MyQuanLyTrangSuc.View
             monthlyStockReportPageUI = new MonthlyStockReportPage();
             unitListPageUI = new UnitListPage();
             itemCategoryListPageUI = new ItemCategoryListPage();
+            userGroupListPageUI = new UserGroupListPage();
+            accountListPageUI = new AccountListPage();
+            permissionListPageUI = new PermissionListPage();
 
             //InitializeAuthentification();
             //static instance initialized through static method
@@ -106,6 +113,9 @@ namespace MyQuanLyTrangSuc.View
             exportRecordPageUI = new InvoicePage();
             customerPageUI = new CustomerListPage();
             supplierPageUI = new SupplierListPage();
+            userGroupListPageUI = new UserGroupListPage();
+            accountListPageUI = new AccountListPage();
+            permissionListPageUI = new PermissionListPage();
 
             //InitializeAuthentification();
             //static instance initialized through static method
@@ -216,9 +226,25 @@ namespace MyQuanLyTrangSuc.View
         {
             MainFrame.Navigate(itemCategoryListPageUI);
         }
+
         private void Loaded_HomePage(object sender, RoutedEventArgs e)
         {
             //MainFrame.Navigate(dashboardPageUI);
+        }
+
+        private void OnClick_AccountPageNavigation(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(accountListPageUI);
+        }
+
+        private void OnClick_UserGroupPageNavigation(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(userGroupListPageUI);
+        }
+
+        private void OnClick_PermissionPageNavigation(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(permissionListPageUI);
         }
     }
 }

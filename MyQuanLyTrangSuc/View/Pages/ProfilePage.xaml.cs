@@ -32,7 +32,7 @@ namespace MyQuanLyTrangSuc.View
 
         private void OnClick_ProfileUpdate(object sender, RoutedEventArgs e)
         {
-            profilePageLogic.ProfileUpdate();
+            profilePageLogic.ProfileUpdate(name);
         }
 
         private void OnClick_ProfilePictureChange(object sender, RoutedEventArgs e)
@@ -42,7 +42,7 @@ namespace MyQuanLyTrangSuc.View
 
         private void OnClick_CancelUpdate(object sender, RoutedEventArgs e)
         {
-            profilePageLogic.CancelUpdate();
+            profilePageLogic.CancelUpdate(name);
         }
 
         private void resetPassWordButton_Click(object sender, RoutedEventArgs e)

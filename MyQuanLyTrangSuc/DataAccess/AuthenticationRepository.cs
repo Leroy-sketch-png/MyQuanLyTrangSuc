@@ -79,6 +79,11 @@ namespace MyQuanLyTrangSuc.DataAccess
             return context.Accounts.FirstOrDefault(a => a.AccountId == accountId && !a.IsDeleted);
         }
 
+        public Account GetAccountByUsername(String userName)
+        {
+            return context.Accounts.FirstOrDefault(a => a.Username == userName && !a.IsDeleted);
+        }
+
         public void UpdateAccount(Account updated)
         {
             context.SaveChanges();

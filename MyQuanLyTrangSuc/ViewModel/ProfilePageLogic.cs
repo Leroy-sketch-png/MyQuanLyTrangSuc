@@ -71,7 +71,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             var emp = context.Employees
                 .AsNoTracking()
-                .FirstOrDefault(e => e.Username == _username);
+                .FirstOrDefault(e => e.Account.Username == _username);
 
             if (emp == null)
             {
@@ -87,60 +87,50 @@ namespace MyQuanLyTrangSuc.ViewModel
             ProfileImagePath = emp.ImagePath;
         }
 
-        public void ProfileUpdate()
+            
+
+        public void ProfileUpdate(string username)
         {
-            var emp = context.Employees
-                .FirstOrDefault(e => e.Username == _username);
-
-            if (emp == null) return;
-
-            bool valid = true;
-
-            emp.Name = ProfileName;
-
-            if (ProfilePhone.Any(char.IsLetter))
+            var account = context.Accounts.FirstOrDefault(a => a.Username == username);
+            if (account != null)
             {
-                MessageBox.Show("Invalid phone number!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                valid = false;
+                var employee = context.Employees.FirstOrDefault(e => e.Account.Username == account.Username);
+                if (employee != null)
+                {
+                    bool isUpdated = false;
+                        employee.Name = ProfileName;       
+                        if (ProfilePhone.Any(char.IsLetter))
+                        {
+                            MessageBox.Show("Invalid phone number!");
+                        }
+                        else
+                        {
+                            employee.ContactNumber = ProfilePhone;
+                            isUpdated = true;
+                        }
+                   
+                        if (!ProfileEmail.Contains('@'))
+                        {
+                            MessageBox.Show("Invalid email!");
+                        }
+                        else
+                        {
+                            employee.Email = ProfileEmail;
+                        }
+                    
+                        employee.Gender = ProfileGender;
+                        isUpdated = true;
+                    
+                        employee.DateOfBirth = DateOfBirth.Value;
+                    MessageBox.Show("The profile has been updated!");
+                    context.Entry(employee).State = EntityState.Modified;
+                        context.SaveChanges();
+
+                    }
+                }
             }
-            else emp.ContactNumber = ProfilePhone;
+        
 
-            if (!ProfileEmail.Contains('@'))
-            {
-                MessageBox.Show("Invalid email!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                valid = false;
-            }
-            else emp.Email = ProfileEmail;
-
-            emp.Gender = ProfileGender;
-
-            if (DateOfBirth.HasValue)
-                emp.DateOfBirth = DateOfBirth.Value;
-            else
-            {
-                MessageBox.Show("Please select a valid date of birth.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                valid = false;
-            }
-
-            if (!valid) return;
-
-            try
-            {
-                context.Entry(emp).State = EntityState.Modified;
-                context.SaveChanges();
-                MessageBox.Show("Profile updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                ProfileLoad();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error saving profile: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        public void CancelUpdate()
-        {
-            ProfileLoad();
-        }
 
         public void ChooseImageFileDialog()
         {
@@ -154,7 +144,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 ProfileImagePath = dlg.FileName;
 
                 var emp = context.Employees
-                    .FirstOrDefault(e => e.Username == _username);
+                    .FirstOrDefault(e => e.Account.Username == _username);
 
                 if (emp == null) return;
 
@@ -167,8 +157,35 @@ namespace MyQuanLyTrangSuc.ViewModel
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error saving picture: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"An error occurred while saving changes: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+            }
+        }
+
+        public void CancelUpdate(string username)
+        {
+            var account = context.Accounts.FirstOrDefault(a => a.Username == username);
+
+            if (account != null)
+            {
+                var employee = account.Employees.FirstOrDefault(e => e.Account.Username == username);
+
+                if (employee != null)
+                {
+                    ProfileName = employee.Name;
+                    ProfilePhone = employee.ContactNumber;
+                    ProfileEmail = employee.Email;
+                    ProfileGender = employee.Gender;
+                    DateOfBirth = employee.DateOfBirth;
+                }
+                else
+                {
+                    Console.WriteLine("Employee not found.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Account not found.");
             }
         }
 

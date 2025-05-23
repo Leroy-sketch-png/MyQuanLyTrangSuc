@@ -11,7 +11,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 {
     public class MainNavigationWindowLogic : INotifyPropertyChanged
     {
-        private readonly MyQuanLyTrangSucContext _context = MyQuanLyTrangSucContext.Instance;
+        private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
 
         // Static singleton instance
         private static MainNavigationWindowLogic instance;
@@ -78,17 +78,17 @@ namespace MyQuanLyTrangSuc.ViewModel
         /// </summary>
         public void Authentification()
         {
-            string currentUsername = (string)Application.Current.Resources["CurrentUsername"];
-            if (string.IsNullOrEmpty(currentUsername))
+            int currentUserID = (int)System.Windows.Application.Current.Resources["CurrentAccountId"];
+            var user = context.Accounts.FirstOrDefault(u => u.AccountId == currentUserID);
+            if (user != null)
             {
-                CurrentUserRole = "user";
-                return;
+                CurrentUserRole = user.Group.GroupName;
             }
 
             // Lookup Account by Username and include its Group
-            var account = _context.Accounts
+            var account = context.Accounts
                 .Include(a => a.Group)
-                .FirstOrDefault(a => a.Username == currentUsername);
+                .FirstOrDefault(a => a.AccountId == currentUserID);
 
             // Use the group name (or default to "user")
             CurrentUserRole = account?.Group?.GroupName ?? "user";
