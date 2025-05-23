@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using Microsoft.Win32;
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
+using BCrypt.Net; // <--- Thêm dòng này
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -103,34 +104,39 @@ namespace MyQuanLyTrangSuc.ViewModel
                 return;
             }
 
-            // 1) Find the employee by email
             var employee = context.Employees.FirstOrDefault(emp => emp.Email == email);
-            if (employee == null)
+            if (employee == null) 
             {
-                var account = context.Accounts.FirstOrDefault(acc => acc.Username == employee.Account.Username);
-                if (account != null)
-                {
-                    if (account.Password == newPassword)
-                    {
-                        notificationWindowLogic.LoadNotification("Error", "The new password cannot be the same as the old one!", "BottomRight");
-                        return;
-                    }
+                notificationWindowLogic.LoadNotification("Error", "Email not found or associated with an account.", "BottomRight");
+                return; 
+            }
 
-                    account.Password = newPassword;
+            var account = context.Accounts.FirstOrDefault(acc => acc.Username == employee.Account.Username);
 
-                    // 4) Apply change and save
-                    account.Password = newPassword;
-                    try
-                    {
-                        context.SaveChanges();
-                        notificationWindowLogic.LoadNotification("Success", "Password has been reset successfully!", "BottomRight");
-                        flag = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        notificationWindowLogic.LoadNotification("Error", $"Error saving changes: {ex.Message}", "BottomRight");
-                    }
-                }
+            if (account == null)
+            {
+                notificationWindowLogic.LoadNotification("Error", "Associated account not found!", "BottomRight");
+                return;
+            }
+
+            if (BCrypt.Net.BCrypt.Verify(newPassword, account.Password)) 
+            {
+                notificationWindowLogic.LoadNotification("Error", "The new password cannot be the same as the old one!", "BottomRight");
+                return;
+            }
+
+            account.Password = BCrypt.Net.BCrypt.HashPassword(newPassword); 
+
+
+            try
+            {
+                context.SaveChanges();
+                notificationWindowLogic.LoadNotification("Success", "Password has been reset successfully!", "BottomRight");
+                flag = true;
+            }
+            catch (Exception ex)
+            {
+                notificationWindowLogic.LoadNotification("Error", $"Error saving changes: {ex.Message}", "BottomRight");
             }
         }
     }
