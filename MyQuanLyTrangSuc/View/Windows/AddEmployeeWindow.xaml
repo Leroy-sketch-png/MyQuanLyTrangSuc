@@ -98,7 +98,7 @@
                         <materialDesign:PackIcon Margin="0 2 2 0" Kind="CodeNotEqual" Width="20" Height="20"/>
                         <TextBlock Text="Position:" FontSize="16" Margin="0 0 0 5"></TextBlock>
                     </StackPanel>
-                    <ComboBox x:Name="PositionComboBox" Text="{Binding Position, Mode=TwoWay}" FontSize="14" BorderThickness="1" Margin="0,0,240,10" IsEditable="True"/>
+                    <TextBox x:Name="PositionComboBox" Text="{Binding Position, Mode=TwoWay}" FontSize="14" BorderThickness="1" Margin="0,0,240,10"/>
                 </StackPanel>
                 <!--Image Path-->
                 <StackPanel Margin="0,0,0,10">
@@ -118,7 +118,7 @@
                     </Grid>
                 </StackPanel>
 
-                <Button  x:Name="AddButton" Content="ADD" FontSize="20" Background="#FFC1CC00" Foreground="White" Padding="5" HorizontalAlignment="Center" Width="70" Height="40"
+                <Button  x:Name="AddButton" Content="ADD" FontSize="20" Background="#BFDBFE" Foreground="#1E40AF" Padding="5" HorizontalAlignment="Center" Width="70" Height="40"
                          Click="AddButton_Click"/>
                     
             </StackPanel>

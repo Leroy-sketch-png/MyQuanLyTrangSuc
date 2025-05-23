@@ -6,10 +6,11 @@
         xmlns:local="clr-namespace:MyQuanLyTrangSuc"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="MainNavigationWindow" Height="750" Width="1180" WindowStartupLocation="CenterScreen">
-    <Border Background="#FF272E3C">
-        <!--MouseDown="Border_MouseDown"-->
-        <!--MouseLeftButtonDown="Border_MouseLeftButtonDown"-->
+        Title="MainNavigationWindow" Height="750" Width="1180" WindowStartupLocation="CenterScreen"
+        Loaded="Loaded_HomePage">
+    <Border Background="#FF272E3C"
+        MouseDown="Border_MouseDown"
+        MouseLeftButtonDown="Border_MouseLeftButtonDown">
         <Grid Margin="-3,0,3,0" x:Name="LayoutRoot">
             <Grid.Background>
                 <SolidColorBrush Color="Transparent"/>
@@ -47,109 +48,180 @@
                         <TextBlock Text="Sprinkle some twinkle" Foreground="White" FontSize="20" TextAlignment="Center"
                                    DockPanel.Dock="Top" FontFamily="Californian FB"/>
 
-                        <!--Navigation Separator-->
-                        <Separator Margin="25" DockPanel.Dock="Top" Height="0.8" Background="#FFC1CC00"/>
-
-                        <!--Navigation Buttons-->
                         <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}"
-                                    Click="OnClick_DashboardPageNavigation">
-                  
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="HomeVariant" Foreground="White" HorizontalAlignment="Left"/>
-                                    <TextBlock Text=" Dashboard" Foreground="White"/>
-                                </StackPanel>
-                            </Button>
+                            <!-- Top Separator (Static) -->
+                            <Separator Margin="25" Height="0.8" Background="#FFC1CC00"/>
                         </StackPanel>
 
-                        <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}"
-                                    Click="OnClick_ProfilePageNavigation"   >
-                                
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="AccountCircle" Foreground="White"/>
-                                    <TextBlock Text=" Profile" Foreground="White"/>
+                        <!-- Scrollable Area Start -->
+                        <ScrollViewer DockPanel.Dock="Top"
+              Height="350"
+              VerticalScrollBarVisibility="Hidden"
+              HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel>
+                                <!--Dashboard-->
+                                <StackPanel x:Name="DashboardPanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_DashboardPageNavigation">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="BulletinBoard" Foreground="White" HorizontalAlignment="Left"/>
+                                            <TextBlock Text=" Dashboard" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
                                 </StackPanel>
-                            </Button>
-                        </StackPanel>
+
+                                <!--Jewelry-->
+                                <StackPanel x:Name="JewelryPanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_ItemListPageNavigation">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="DiamondStone" Foreground="White"/>
+                                            <TextBlock Text=" Jewels" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                                <!--Item Category-->
+                                <StackPanel x:Name="CategoryPanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_ItemCategoryListPageNavigation">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="ShapePlusOutline" Foreground="White"/>
+                                            <TextBlock Text=" Categories" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                                <!--Unit-->
+                                <StackPanel x:Name="Unit" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_UnitListPageNavigation">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="TallyMark3" Foreground="White"/>
+                                            <TextBlock Text=" Units" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <!--Service-->
+                                <StackPanel x:Name="ServicePanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_ServiceListPageNavigation">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Microscope" Foreground="White"/>
+                                            <TextBlock Text=" Services" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <!--Import-->
+                                <StackPanel x:Name="ImportPanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_ImportRecordPageNavigation">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Import" Foreground="White"/>
+                                            <TextBlock Text=" Imports" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <!--Invoice-->
+                                <StackPanel x:Name="InvoicePanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_ExportRecordPageNavigation">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Invoice" Foreground="White"/>
+                                            <TextBlock Text=" Invoices" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <!--Month Stock-->
+                                <StackPanel x:Name="MonthStockPanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_MonthlyStockReportPageNavigation">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Warehouse" Foreground="White"/>
+                                            <TextBlock Text=" Stock Reports" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <!--Month Revenue (no click yet)-->
+                                <StackPanel x:Name="MonthRevenuePanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="FileChartOutline" Foreground="White"/>
+                                            <TextBlock Text=" Revenue Reports" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <!--Customer-->
+                                <StackPanel x:Name="CustomerPanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_CustomerPageNavigation">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="FaceWomanShimmerOutline" Foreground="White"/>
+                                            <TextBlock Text=" Customers" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <!--Suppliers-->
+                                <StackPanel x:Name="SupplierPanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_SupplierPageNavigation">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="PackageVariantClosedPlus" Foreground="White"/>
+                                            <TextBlock Text=" Suppliers" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <!--Employees-->
+                                <StackPanel x:Name="HumanResourcePanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}" x:Name="HumanResource"
+                    Click="OnClick_UserPageNavigation">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="AccountGroup" Foreground="White"/>
+                                            <TextBlock Text=" Human Resource" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <!--Profile-->
+                                <StackPanel x:Name="ProfilePanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_ProfilePageNavigation">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="AccountCircle" Foreground="White"/>
+                                            <TextBlock Text=" Profile" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <!--Rule Settings (no click yet)-->
+                                <StackPanel x:Name="RulesSettingsPanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Alert" Foreground="White"/>
+                                            <TextBlock Text=" RULES" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <!--Permission Settings (no click yet)-->
+                                <StackPanel x:Name="PermissionSettingsPanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="AlertCircle" Foreground="White"/>
+                                            <TextBlock Text=" PERMISSION" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                            </StackPanel>
+                        </ScrollViewer>
+                        <!-- Scrollable Area End -->
 
                         <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}"
-                                    Click="OnClick_ItemListPageNavigation">
-                                
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Cube" Foreground="White"/>
-                                    <TextBlock Text=" Jewelry" Foreground="White"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-
-                        <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}"
-                                    Click="OnClick_ImportRecordPageNavigation">
-                                
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Import" Foreground="White"/>
-                                    <TextBlock Text=" Import" Foreground="White"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-
-                        <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}"
-                                    Click="OnClick_ExportRecordPageNavigation">
-                                
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Invoice" Foreground="White"/>
-                                    <TextBlock Text=" Invoice" Foreground="White"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-
-                        <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}"
-                                    Click="OnClick_CustomerPageNavigation">
-                                
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="FaceAgent" Foreground="White"/>
-                                    <TextBlock Text=" Customers" Foreground="White"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-
-                        <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}"
-                                    Click="OnClick_SupplierPageNavigation">
-                                
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="AccountTie" Foreground="White"/>
-                                    <TextBlock Text=" Suppliers" Foreground="White"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-
-                        <StackPanel DockPanel.Dock="Top">
-                            <Button Style="{StaticResource menuButton}"
-                                    x:Name="HumanResource"
-                                    Visibility="{Binding HumanResourceButtonVisibility}"
-                                    Click="OnClick_UserPageNavigation">
-                                
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="AccountGroup" Foreground="White"/>
-                                    <TextBlock Text=" Human Resource" Foreground="White"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-
-                        <StackPanel DockPanel.Dock="Top">
-                            <!--Navigation Separator-->
+                            <!-- Bottom Separator (Static) -->
                             <Separator Margin="18" Height="0.8" Background="#FFC1CC00"/>
                         </StackPanel>
+
 
                         <StackPanel DockPanel.Dock="Top">
                             <Button Style="{StaticResource menuButton}"
                                     Click="OnClick_LogOut">
-                                
+
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="Export" Foreground="White"/>
                                     <TextBlock Text=" Log Out" Foreground="White"/>

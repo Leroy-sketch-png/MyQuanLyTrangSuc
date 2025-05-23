@@ -58,10 +58,10 @@ namespace MyQuanLyTrangSuc.ViewModel {
 
             this.addEmployeeWindow = addEmployeeWindow;
 
-            this.addEmployeeWindow.PositionComboBox.ItemsSource = context.Employees
-.GroupBy(emp => emp.Position)
-.Select(group => group.Key)
-.ToList();
+//            this.addEmployeeWindow.PositionComboBox.ItemsSource = context.Employees
+//.GroupBy(emp => emp.Position)
+//.Select(group => group.Key)
+//.ToList();
         }
 
 

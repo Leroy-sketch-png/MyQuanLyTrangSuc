@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MyQuanLyTrangSuc.View.Pages
+namespace MyQuanLyTrangSuc.View
 {
     /// <summary>
     /// Interaction logic for UnitListPage.xaml

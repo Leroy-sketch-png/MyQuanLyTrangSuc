@@ -7,17 +7,18 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="AddItemCategoryWindow" Height="500" Width="500">
+        Title="AddItemCategoryWindow" Height="500" Width="620">
     <Grid Background="#F2F2F2">
         <Grid Background="#F2F2F2">
             <TextBlock Text="ADDING CATEGORY..." FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,20"/>
-            <StackPanel Margin="40,70,40,20">
+            <StackPanel Margin="20,70,10,20">
 
 
                 <Grid Margin="0,0,0,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="50" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Cột 1 -->
@@ -57,24 +58,10 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="50" />
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0" Margin="0,0,20,30">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="AlphaUBox" Height="30" Width="30" Margin="0 2 3 0"/>
-                            <TextBlock Text="UNIT ID: " FontSize="24" Margin="0,0,0,5"/>
-                        </StackPanel>
-                        <ComboBox BorderBrush="Black" x:Name="unitComboBox" 
-                                  ItemsSource="{Binding ListOfUnits}" SelectedItem="{Binding SelectedUnit, Mode=TwoWay}"
-                                  Text="{Binding SelectedUnit, Mode=TwoWay}" FontSize="20" 
-                                  BorderThickness="1" Margin="0,0,0,10"
-                                  DisplayMemberPath="UnitName"
-                                  >
-                            
-                        </ComboBox>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1" Margin="20,0,0,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Margin="0 0 3 1" Kind="Money" VerticalAlignment="Center" Height="30" Width="30"/>
                             <TextBlock Text="PROFIT: " FontSize="24" Margin="0,0,0,5"/>
@@ -85,11 +72,35 @@
                             </TextBox.ToolTip>
                         </TextBox>
                     </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="20,0,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="AlphaUBox" Height="30" Width="30" Margin="0 2 3 0"/>
+                            <TextBlock Text="UNIT ID: " FontSize="24" Margin="0,0,0,5"/>
+                        </StackPanel>
+                        <ComboBox BorderBrush="Black" x:Name="unitComboBox" 
+                                  ItemsSource="{Binding ListOfUnits}" SelectedItem="{Binding SelectedUnit, Mode=TwoWay}"
+                                  Text="{Binding SelectedUnit, Mode=TwoWay}" FontSize="20" 
+                                  BorderThickness="1" Margin="0,0,0,10"
+                                  DisplayMemberPath="UnitName"
+                                  >
+
+                        </ComboBox>
+
+                    </StackPanel>
+                    <Button Grid.Column="2"
+                        Content="+" 
+                            ToolTip="Add new client"
+                            Background="#BFDBFE" Foreground="#1E40AF" 
+                            Padding="10,5" Margin="10,-5,0,0"
+                            Name="addNewClientBtn" Click="addNewUnitBtn_Click"
+                            />
                 </Grid>
+                
 
                 <Button x:Name="addButton" Content="ADD" 
-                        FontSize="24" Background="#FFC1CC00" 
-                        Foreground="White" Padding="5" 
+                        FontSize="24" Background="#BFDBFE" 
+                        Foreground="#1E40AF" Padding="5" 
                         HorizontalAlignment="Center" Width="120" 
                         Height="50" Click="addButton_Click"/>
 
@@ -97,3 +108,4 @@
         </Grid>
     </Grid>
 </Window>
+ 

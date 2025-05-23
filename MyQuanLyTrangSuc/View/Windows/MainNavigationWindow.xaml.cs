@@ -38,7 +38,11 @@ namespace MyQuanLyTrangSuc.View
         private readonly InvoicePage exportRecordPageUI;
         private readonly CustomerListPage customerPageUI;
         private readonly SupplierListPage supplierPageUI;
-        private string loggedInUsername = (string)WpfApplication.Current.Resources["CurrentUserID"];
+        private readonly ServiceRecordListPage servicesListPageUI;
+        private readonly MonthlyStockReportPage monthlyStockReportPageUI;
+        private readonly UnitListPage unitListPageUI;
+        private readonly ItemCategoryListPage itemCategoryListPageUI;
+        private string loggedInUsername = (string)WpfApplication.Current.Resources["CurrentUsername"];
 
         //Properties
         public ItemListPage ItemListPage
@@ -68,6 +72,10 @@ namespace MyQuanLyTrangSuc.View
             exportRecordPageUI = new InvoicePage();
             customerPageUI = new CustomerListPage();
             supplierPageUI = new SupplierListPage();
+            servicesListPageUI = new ServiceRecordListPage();
+            monthlyStockReportPageUI = new MonthlyStockReportPage();
+            unitListPageUI = new UnitListPage();
+            itemCategoryListPageUI = new ItemCategoryListPage();
 
             //InitializeAuthentification();
             //static instance initialized through static method
@@ -126,7 +134,7 @@ namespace MyQuanLyTrangSuc.View
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount == 3)
+            if (e.ClickCount == 2)
             {
                 if (isMaximized)
                 {
@@ -168,7 +176,6 @@ namespace MyQuanLyTrangSuc.View
 
 
         }
-
         private void OnClick_ImportRecordPageNavigation(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(importRecordPageUI);
@@ -193,9 +200,25 @@ namespace MyQuanLyTrangSuc.View
             MainFrame.Navigate(employeeListPageUI);
 
         }
+        private void OnClick_ServiceListPageNavigation(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(servicesListPageUI);
+        }
+        private void OnClick_MonthlyStockReportPageNavigation(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(monthlyStockReportPageUI);
+        }
+        private void OnClick_UnitListPageNavigation(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(unitListPageUI);
+        }
+        private void OnClick_ItemCategoryListPageNavigation(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(itemCategoryListPageUI);
+        }
         private void Loaded_HomePage(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(dashboardPageUI);
+            //MainFrame.Navigate(dashboardPageUI);
         }
     }
 }

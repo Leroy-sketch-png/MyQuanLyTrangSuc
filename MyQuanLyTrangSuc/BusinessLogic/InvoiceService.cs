@@ -57,7 +57,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         }
         public int GenerateNewInvoiceDetailID()
         {
-           return invoiceRepository.GetLastInvoideDetailID();
+           return invoiceRepository.GetLastInvoiceDetailID();
         }
 
     }

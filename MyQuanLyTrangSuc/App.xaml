@@ -12,8 +12,6 @@
              StartupUri="View/Windows/LoginWindow.xaml">
     <Application.Resources>
 
-
-
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
@@ -535,7 +533,8 @@
                 </Style.Triggers>
             </Style>
 
-            <sys:String x:Key="CurrentUserID">US001</sys:String>
+            <sys:String x:Key="CurrentUsername">US001</sys:String>
+            <sys:String x:Key="CurrentUserID">US002</sys:String>
         </ResourceDictionary>
 
 

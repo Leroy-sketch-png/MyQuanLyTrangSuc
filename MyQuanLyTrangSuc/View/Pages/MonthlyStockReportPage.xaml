@@ -68,33 +68,16 @@
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
                     <!--Add Button-->
-                    <Button x:Name="addButton" Style="{StaticResource addButton}"  Grid.RowSpan="4" Grid.Row="1" >
-                        <!--Click="addButton_Click"-->
+                    <Button x:Name="addButton" Style="{StaticResource addButton}"  Grid.RowSpan="4" Grid.Row="1" Click="AddButton_Click">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="15"
                                    Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Add new category" FontWeight="SemiBold"/>
+                            <TextBlock Text="Add new stock report" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
-                    <!--Import Button-->
-                    <Button x:Name="importExcelFileButton"
-                            Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
-                        <!--Click="importExcelFileButton_Click"-->
-                        <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Import" FontWeight="SemiBold"/>
-                        </StackPanel>
-                    </Button>
+                    
 
-                    <!--Export Button-->
-                    <Button x:Name="exportExcelFileButton"
-                            Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
-                        <!--Click="exportExcelFileButton_Click"-->
-                        <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Export" FontWeight="SemiBold"/>
-                        </StackPanel>
-                    </Button>
+                    
                 </StackPanel>
 
                 <!--Separator-->
@@ -105,8 +88,7 @@
                     <TextBlock x:Name="searchTextBlock" Margin="15 8 0 5" VerticalAlignment="Center" Foreground="#b0b9c6"
                                 IsHitTestVisible="False" Panel.ZIndex="1" Text="Search"
                                 Visibility="{Binding ElementName=txtFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0"/>
-                    <!--TextChanged="searchTextBox_TextChanged"-->
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0" TextChanged="searchTextBox_TextChanged"/>
                 </Grid>
 
                 <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
@@ -115,11 +97,16 @@
                 </ComboBox>
 
                 <!--Stock Report DataGrid-->
-                <DataGrid ItemsSource="{Binding ServiceCategory}" SelectedItem="{Binding SelectedCategory}" x:Name="servicesDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5" >
+                <DataGrid ItemsSource="{Binding StockReports, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedStockReport}" x:Name="StockReportDataGrid" MouseDoubleClick="OnDoubleClick_InspectReport_MonthlyStockReportPageDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5" >
                     <!--SelectionChanged="employeesDataGrid_SelectionChanged"-->
                     <DataGrid.Columns>
+
+                        <!--StockReportId-->
+                        <DataGridTextColumn Binding="{Binding StockReportId}" Header="Report Id" IsReadOnly="True" CanUserResize="False" Width="*">
+                        </DataGridTextColumn>
+
                         <!--Month-->
-                        <DataGridTextColumn Binding="{Binding stockReport_month}" Header="Month" IsReadOnly="True" CanUserResize="False" Width="*">
+                        <DataGridTextColumn Binding="{Binding MonthYear.Month}" Header="Month" IsReadOnly="True" CanUserResize="False" Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -128,7 +115,13 @@
                         </DataGridTextColumn>
 
                         <!--Year-->
-                        <DataGridTextColumn Binding="{Binding stockReport_year}" Header="Year" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding MonthYear.Year}" Header="Year" IsReadOnly="True" Width="*"/>
+
+                        <!--Year-->
+                        <DataGridTextColumn Binding="{Binding TotalBeginStock}" Header="Begin Stock" IsReadOnly="True" Width="*"/>
+
+                        <!--Year-->
+                        <DataGridTextColumn Binding="{Binding TotalFinishStock}" Header="Finish Stock" IsReadOnly="True" Width="*"/>
 
                         <!--Operations-->
 
@@ -136,23 +129,22 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button x:Name="editButton" Style="{StaticResource gridEditButton}">
-                                            <!--Click="editButton_Click"-->
+                                        <Button x:Name="editButton" Style="{StaticResource gridEditButton}" Click="EditButton_Click">
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
-                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0">
-                                            <!--Click="deleteButton_Click"-->
+                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0" Click="DeleteButton_Click">
                                             <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
-
+                                        <!--Button x:Name="viewButton" Style="{StaticResource gridViewButton}" Margin="5 0 0 0" Click="ViewButton_Click">
+                                            <Icon:PackIconMaterial Kind="EyeOutline" Style="{StaticResource gridButtonIcon}"/>
+                                        </Button-->
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
-
+                        
                     </DataGrid.Columns>
                 </DataGrid>
 

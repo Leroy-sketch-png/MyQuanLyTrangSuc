@@ -3,20 +3,18 @@ using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View; // <-- Đảm bảo đã import các View cần dùng
 using MyQuanLyTrangSuc.View.Windows; // <-- Đảm bảo đã import VerificationWindow, MainNavigationWindow
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls; // Cần cho PasswordBox
 using System.Windows.Input;
 using System.Windows.Media;
-using static System.Net.Mime.MediaTypeNames;
-using WpfApplication = System.Windows.Application;
+using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.View;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
-    class LoginWindowLogic
+    public class LoginWindowLogic
     {
         private readonly NotificationWindowLogic notificationLogic = new NotificationWindowLogic();
 
@@ -27,17 +25,17 @@ namespace MyQuanLyTrangSuc.ViewModel
         private const string USER = "user"; 
         private const string ADMIN = "admin";
         //
-
         private LoginWindow loginWindow;
-
         public LoginWindowLogic()
         {
         }
+      
 
         public LoginWindowLogic(LoginWindow loginWindow)
         {
             this.loginWindow = loginWindow;
         }
+
 
         public void ChangeToDarkTheme(Border rightBorder, Border leftBorder)
         {
@@ -56,7 +54,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             VerificationWindow window = new VerificationWindow();
             window.Show();
         }
-
         public void Login(PasswordBox passwordBox) 
         {
             try
