@@ -19,32 +19,24 @@ namespace MyQuanLyTrangSuc.ViewModel
     class LoginWindowLogic
     {
         private readonly NotificationWindowLogic notificationLogic = new NotificationWindowLogic();
-        // *** KHÔNG TRUY CẬP TRỰC TIẾP DB CONTEXT TRONG VIEWMODEL ***
-        // private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance; // <-- XÓA DÒNG NÀY
 
-        // Sử dụng AuthenticationService thay vì DB Context
         private readonly AuthenticationService authenticationService = AuthenticationService.Instance;
 
 
-        //Data context binding zone
         public string userName { get; set; }
-        private const string USER = "user"; // Dùng hằng số này thay cho chuỗi "user " có dấu cách
+        private const string USER = "user"; 
         private const string ADMIN = "admin";
         //
 
         private LoginWindow loginWindow;
 
-        // Constructor mặc định (ít dùng trong MVVM với Window)
         public LoginWindowLogic()
         {
-            // Có thể cần khởi tạo service ở đây nếu không dùng singleton Instance
         }
 
-        // Constructor nhận Window (lưu ý: truyền View vào ViewModel không chuẩn MVVM tuyệt đối)
         public LoginWindowLogic(LoginWindow loginWindow)
         {
             this.loginWindow = loginWindow;
-            // authenticationService = AuthenticationService.Instance; // Khởi tạo ở đây nếu không ở trên
         }
 
         public void ChangeToDarkTheme(Border rightBorder, Border leftBorder)
@@ -65,66 +57,57 @@ namespace MyQuanLyTrangSuc.ViewModel
             window.Show();
         }
 
-        public void Login(PasswordBox passwordBox) // Lưu ý: Truyền PasswordBox vào ViewModel không chuẩn MVVM
+        public void Login(PasswordBox passwordBox) 
         {
             try
             {
-                if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(passwordBox.Password)) // Kiểm tra rỗng cả 2
+                if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(passwordBox.Password))
                 {
                     notificationLogic.LoadNotification("Error", "Please enter both username and password.", "BottomRight");
-                    return; // Thoát khỏi hàm nếu rỗng
+                    return; 
                 }
 
-                string password = passwordBox.Password; // Mật khẩu plaintext từ UI
+                string password = passwordBox.Password; 
 
-                // *** THAY THẾ LOGIC KIỂM TRA MẬT KHẨU PLAINTEXT TRỰC TIẾP DB BẰNG GỌI SERVICE ***
 
-                // Bước 1: Validate credentials bằng Service (dùng BCrypt bên trong)
                 bool isValid = authenticationService.ValidateLogin(userName, password);
 
                 if (isValid)
                 {
-                    // Bước 2: Nếu Validate thành công, lấy thông tin Account đầy đủ (kèm Group) từ Service
-                    // Cần đảm bảo hàm GetAccountWithGroupByUsername này tồn tại trong Service
-                    // và thực hiện query DB CÓ INCLUDE Navigation Property Group.
                     Account account = authenticationService.GetAccountWithGroupByUsername(userName);
 
-                    if (account != null) // Kiểm tra lại account có tồn tại không (ValidateLogin đã check rồi nhưng cẩn thận)
+                    if (account != null) 
                     {
                         WpfApplication.Current.Resources["CurrentUserID"] = account.Username;
 
-                        // Lấy Group Name từ Navigation Property đã được load
-                        string groupName = account.Group?.GroupName; // Dùng ?. để tránh lỗi nếu Group vẫn null
+                        string groupName = account.Group?.GroupName; 
 
-                        if (groupName.Equals(USER)) // So sánh với hằng số USER
+                        if (groupName.Equals(USER)) 
                         {
                             var mainWindow = new MainNavigationWindow();
                             mainWindow.Show();
                             loginWindow.Close();
-                            notificationLogic.LoadNotification("Success", "You have logged in as User!", "BottomRight"); // Thông báo cụ thể hơn
+                            notificationLogic.LoadNotification("Success", "You have logged in as User!", "BottomRight"); 
                         }
                         else if (groupName.Equals(ADMIN)) // So sánh với hằng số ADMIN
                         {
                             var mainWindow = new MainNavigationWindow();
                             mainWindow.Show();
                             loginWindow.Close();
-                            notificationLogic.LoadNotification("Success", "You have logged in as Admin!", "BottomRight"); // Thông báo cụ thể hơn
+                            notificationLogic.LoadNotification("Success", "You have logged in as Admin!", "BottomRight"); 
                         }
                         else
                         {
-                            // Xử lý các Group Name khác nếu có
                             notificationLogic.LoadNotification("Error", "Your account group does not have access permission.", "BottomRight");
                         }
                     }
                     else
                     {
-                        // Trường hợp ValidateLogin true nhưng GetAccountWithGroupByUsername lại null (rất hiếm nếu logic đúng)
                         notificationLogic.LoadNotification("Error", "Login failed unexpectedly.", "BottomRight");
                     }
                 }
                 else
                 {
-                    // Bước 3: Nếu Validate thất bại
                     notificationLogic.LoadNotification("Error", "Invalid username or password.", "BottomRight");
                 }
             }

@@ -86,7 +86,6 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         // add
         public string AddAccount(Account account)
         {
-            account.Password = BCrypt.Net.BCrypt.HashPassword(account.Password);
 
             bool exists = authenticationRepository.ExistsUsername(account.Username);
 
@@ -94,14 +93,14 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             {
                 return "Username already exists!";
             }
-            if (!string.IsNullOrEmpty(account.Password))
-            {
-                account.Password = BCrypt.Net.BCrypt.HashPassword(account.Password);
-            }
-            else
+            if (string.IsNullOrEmpty(account.Password))
             {
                 return "Password cannot be empty!";
             }
+            MessageBox.Show(account.Password);
+            String hash = BCrypt.Net.BCrypt.HashPassword(account.Password);
+            MessageBox.Show(hash);
+            account.Password = hash;
             authenticationRepository.AddAccount(account);
             OnAccountAdded?.Invoke(account);
             return "Account created successfully!";
@@ -110,12 +109,22 @@ namespace MyQuanLyTrangSuc.BusinessLogic
 
         public bool ValidateLogin(string username, string plainPassword)
         {
-            var acc = authenticationRepository.GetListOfAccounts().FirstOrDefault(a => a.Username == username && !a.IsDeleted);
+            //List<Account> list = authenticationRepository.GetListOfAccounts();
+            //foreach (var accc in list)
+            //{
+            //    MessageBox.Show(accc.Username);
+            //    MessageBox.Show(accc.Password);
+            //}
+            //string trimmedUsername = username?.Trim();
+            List<UserGroup> userGroups = authenticationRepository.GetListOfUserGroups();
+            List<Account> accounts = authenticationRepository.GetListOfAccounts();
+            var acc = authenticationRepository.GetAccountByUsername(username);
             if (acc == null)
             {
                 return false;
             }
-            return BCrypt.Net.BCrypt.Verify(plainPassword, acc.Password);
+            bool res = BCrypt.Net.BCrypt.Verify(plainPassword, acc.Password);
+            return res;
         }
 
         public bool UpdateAccount(Account account)
