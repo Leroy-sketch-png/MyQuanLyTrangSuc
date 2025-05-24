@@ -172,6 +172,11 @@
                                                 >
                                             <Icon:PackIconMaterial Kind="Printer" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
+                                        <Button Margin="3 0 0 0" x:Name="deleteButton" 
+                                                Style="{StaticResource gridRemoveButton}" Click="deleteButton_Click"
+                                                >
+                                            <Icon:PackIconMaterial Kind="DeleteEmptyOutline" Style="{StaticResource gridButtonIcon}"/>
+                                        </Button>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
