@@ -253,13 +253,13 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<Employee>(entity =>
         {
-            entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__C134C9C116F00D98");
+            entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__C134C9C126E430CC");
 
             entity.ToTable("Employee");
 
-            entity.HasIndex(e => e.ContactNumber, "UQ__Employee__4F86E9D7010E6D1C").IsUnique();
+            entity.HasIndex(e => e.ContactNumber, "UQ__Employee__4F86E9D74B031F1A").IsUnique();
 
-            entity.HasIndex(e => e.Email, "UQ__Employee__AB6E6164B87A60F3").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Employee__AB6E616425200F63").IsUnique();
 
             entity.Property(e => e.EmployeeId)
                 .HasMaxLength(6)
@@ -289,14 +289,16 @@ public partial class MyQuanLyTrangSucContext : DbContext
             entity.Property(e => e.Position)
                 .HasMaxLength(255)
                 .HasColumnName("position");
-            entity.Property(e => e.Username)
-               .HasMaxLength(50)
-               .HasColumnName("username");
+            entity.Property(e => e.AccountId)
+                .HasMaxLength(50)
+                .HasColumnName("accountId");
 
-            entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Employees)
-                .HasForeignKey(d => d.Username)
-                .HasConstraintName("fk_employee_users");
+            entity.HasOne(d => d.Account)
+                .WithMany(p => p.Employees)
+                .HasForeignKey(d => d.AccountId)
+                .HasConstraintName("fk_employee_account");
         });
+
 
         modelBuilder.Entity<Function>(entity =>
         {

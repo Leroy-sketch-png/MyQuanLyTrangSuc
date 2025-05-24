@@ -43,11 +43,21 @@ namespace MyQuanLyTrangSuc.ViewModel
         }
 
         //add new unit
-        public void AddUnit(string name)
+        public bool AddUnit(string name)
         {
             string resultMessage = unitService.AddUnit(name);
-            notificationWindowLogic.LoadNotification("Success", resultMessage, "BottomRight");
-            GenerateNewUnitID();
+            if (resultMessage.Equals("Unit already exists!"))
+            {
+                notificationWindowLogic.LoadNotification("Error", resultMessage, "BottomRight");
+                return false;
+            }
+            else
+            {
+                notificationWindowLogic.LoadNotification("Success", resultMessage, "BottomRight");
+                GenerateNewUnitID();
+                return true;
+            }
+
         }
     }
 }

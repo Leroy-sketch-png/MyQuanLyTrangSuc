@@ -7,27 +7,28 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="EditItemCategoryWindow" Height="500" Width="500">
+        Title="EditItemCategoryWindow" Height="500" Width="620">
     <Grid Background="#F2F2F2">
         <Grid Background="#F2F2F2">
             <TextBlock Text="EDITING CATEGORY..." FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,20"/>
-            <StackPanel Margin="40,70,40,20">
+            <StackPanel Margin="20,70,10,20">
 
 
                 <Grid Margin="0,0,0,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="50" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Cột 1 -->
                     <StackPanel Grid.Column="0" Margin="0,0,20,30">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="RenameBox" Margin="0 2 3 0" Height="30" Width="30"/>
+                            <materialDesign:PackIcon Kind="AlphaIBox" Margin="0 2 3 0" Height="30" Width="30"/>
                             <TextBlock Text="CATEGORY ID: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>
                         </StackPanel>
                         <Border BorderBrush="Black" BorderThickness="1" Padding="5" Margin="0,0,0,10">
-                            <TextBlock x:Name="IDTextBlock" Text="{Binding ItemCategory.CategoryId}" 
+                            <TextBlock x:Name="IDTextBlock" Text="{Binding EditedItemCategory.CategoryId}" 
                                        FontSize="20" VerticalAlignment="Center"/>
                         </Border>
                     </StackPanel>
@@ -39,7 +40,7 @@
                             <TextBlock Text="NAME: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>
                         </StackPanel>
                         <TextBox x:Name="NameTextBox" 
-                            Text="{Binding ItemCategory.Categoryname, Mode=TwoWay}" 
+                            Text="{Binding EditedItemCategory.CategoryName, Mode=TwoWay}" 
                             FontSize="20" 
                             Padding="5" 
                             BorderBrush="Black" 
@@ -47,7 +48,7 @@
                             Margin="0,0,0,10" 
                             VerticalAlignment="Center">
                             <TextBox.ToolTip>
-                                <ToolTip Foreground="Black" Background="White" Content="Please enter a valid full name (not including numbers)."/>
+                                <ToolTip Foreground="Black" Background="White" Content="Please enter a valid unit name (not including numbers)."/>
                             </TextBox.ToolTip>
                         </TextBox>
                     </StackPanel>
@@ -57,42 +58,54 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="50" />
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0" Margin="0,0,20,30">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Email" Height="30" Width="30" Margin="0 2 3 0"/>
-                            <TextBlock Text="UNIT ID: " FontSize="24" Margin="0,0,0,5"/>
+                            <materialDesign:PackIcon Margin="0 0 3 1" Kind="Money" VerticalAlignment="Center" Height="30" Width="30"/>
+                            <TextBlock Text="PROFIT: " FontSize="24" Margin="0,0,0,5"/>
                         </StackPanel>
-                        <TextBox BorderBrush="Black" x:Name="unitIDTextBox" Text="{Binding ItemCategory.UnitId, Mode=TwoWay}" FontSize="20" BorderThickness="1" Margin="0,0,0,10">
+                        <TextBox BorderBrush="Black" x:Name="profitPercentageTextBox" Text="{Binding EditedItemCategory.ProfitPercentage, Mode=TwoWay}" FontSize="20" BorderThickness="1" Margin="0,0,0,10">
                             <TextBox.ToolTip>
-                                <ToolTip Foreground="Black" Background="White" Content="Please enter a valid email address (e.g., example@mail.com)."/>
+                                <ToolTip Foreground="Black" Background="White" Content="Profit must be positive and between 0 and 100"/>
                             </TextBox.ToolTip>
                         </TextBox>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Margin="20,0,0,0">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Margin="0 0 3 1" Kind="PhoneOutline" VerticalAlignment="Center" Height="30" Width="30"/>
-                            <TextBlock Text="PROFIT: " FontSize="24" Margin="0,0,0,5"/>
+                            <materialDesign:PackIcon Kind="AlphaUBox" Height="30" Width="30" Margin="0 2 3 0"/>
+                            <TextBlock Text="UNIT ID: " FontSize="24" Margin="0,0,0,5"/>
                         </StackPanel>
-                        <TextBox BorderBrush="Black" x:Name="profitPercentageTextBox" Text="{Binding ItemCategory.ProfitPercentage, Mode=TwoWay}" FontSize="20" BorderThickness="1" Margin="0,0,0,10">
-                            <TextBox.ToolTip>
-                                <ToolTip Foreground="Black" Background="White" Content="Please enter a valid phone number (e.g., 123-456-7890) - 10 to 15 digits"/>
-                            </TextBox.ToolTip>
-                        </TextBox>
+                        <ComboBox BorderBrush="Black" x:Name="unitComboBox" 
+                                  ItemsSource="{Binding ListOfUnits, Mode=TwoWay}" SelectedItem="{Binding SelectedUnit, Mode=TwoWay}"
+                                  FontSize="20" 
+                                  BorderThickness="1" Margin="0,0,0,10"
+                                  DisplayMemberPath="UnitName"
+                                  >
+
+                        </ComboBox>
+
                     </StackPanel>
+                    <Button Grid.Column="2"
+                        Content="+" 
+                            ToolTip="Add new client"
+                            Background="#BFDBFE" Foreground="#1E40AF" 
+                            Padding="10,5" Margin="10,-5,0,0"
+                            Name="addNewUnitBtn" Click="addNewUnitBtn_Click"
+                            />
                 </Grid>
 
-                <Button x:Name="saveButton" Content="SAVE" 
-                        FontSize="24" Background="#BFDBFE" 
-                        Foreground="#1E40AF" Padding="5" 
-                        HorizontalAlignment="Center" 
-                        Width="120" Height="50"
-                        Click="saveButton_Click"
-                        />
+
+                <Button x:Name="addButton" Content="SAVE" 
+                        FontSize="24" Background="#747525" 
+                        Padding="5" 
+                        HorizontalAlignment="Center" Width="120" 
+                        Height="50" Click="saveButton_Click"/>
 
             </StackPanel>
         </Grid>
     </Grid>
 </Window>
+ 

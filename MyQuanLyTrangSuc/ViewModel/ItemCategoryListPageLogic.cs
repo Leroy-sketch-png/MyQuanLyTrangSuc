@@ -44,6 +44,23 @@ namespace MyQuanLyTrangSuc.ViewModel
             ItemCategories = new ObservableCollection<ProductCategory>();
             LoadItemCategoriesFromDatabase();
             itemCategoryService.OnItemCategoryAdded += ItemCategoryService_OnItemCategoryAdded;
+            itemCategoryService.OnItemCategoryUpdated += ItemCategoryService_OnItemCategoryUpdated;
+        }
+
+        private void ItemCategoryService_OnItemCategoryUpdated(ProductCategory updatedCategory)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var index = ItemCategories.IndexOf(ItemCategories.FirstOrDefault(c => c.CategoryId == updatedCategory.CategoryId));
+                if (index != -1)
+                {
+                    ItemCategories[index] = updatedCategory;
+                }
+                else
+                {
+                    LoadItemCategoriesFromDatabase();
+                }
+            });
         }
 
         //catch event for add new product category

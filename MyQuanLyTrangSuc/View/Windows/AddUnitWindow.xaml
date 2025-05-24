@@ -53,7 +53,7 @@
 
                 <Button Margin="0 15 0 0" x:Name="addButton" 
                         Content="ADD" FontSize="30" 
-                        Background="#BFDBFE" Foreground="#1E40AF" 
+                        Background="#747525" 
                         Padding="10" HorizontalAlignment="Center" 
                         Width="150" Height="60"
                         Click="addButton_Click"

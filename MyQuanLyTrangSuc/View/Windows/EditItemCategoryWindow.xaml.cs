@@ -1,4 +1,5 @@
 ﻿using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.View.Windows;
 using MyQuanLyTrangSuc.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,18 @@ namespace MyQuanLyTrangSuc.View
         {
             bool isSuccess = logicService.EditItemCategory();
             if (isSuccess) this.Close();
+        }
+
+
+        private void addNewUnitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            AddUnitWindow addUnitWindow = new AddUnitWindow();
+            bool? result = addUnitWindow.ShowDialog();
+
+            if (result == true)
+            {
+                logicService.LoadInitialData();
+            }
         }
     }
 }

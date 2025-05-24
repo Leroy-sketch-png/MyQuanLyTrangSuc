@@ -61,5 +61,10 @@ namespace MyQuanLyTrangSuc.DataAccess
         {
             return context.Units.Where(u => u.UnitId.Contains(id) && !u.IsNotMarketable).ToList();
         }
+
+        public bool existsByName(string name)
+        {
+            return context.Units.Any(u => u.UnitName == name && !u.IsNotMarketable);
+        }
     }
 }

@@ -132,6 +132,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             if (_selectedUnits.Count == 0)
             {
                 MessageBox.Show("Please select at least one unit to delete", "Delete Units", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
             }
 
             MessageBoxResult result = MessageBox.Show("Are you sure you want to delete these units?", "Delete Units", MessageBoxButton.YesNo, MessageBoxImage.Question);

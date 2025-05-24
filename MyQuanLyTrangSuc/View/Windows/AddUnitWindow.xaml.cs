@@ -30,8 +30,12 @@ namespace MyQuanLyTrangSuc.View.Windows
 
         private void addButton_Click(object sender, RoutedEventArgs e)
         {
-            logicService.AddUnit(unitNameTextBox.Text);
-            this.Close();
+            bool res = logicService.AddUnit(unitNameTextBox.Text);
+            if (res)
+            {
+                this.DialogResult = true;
+                this.Close();
+            }
         }
     }
 }

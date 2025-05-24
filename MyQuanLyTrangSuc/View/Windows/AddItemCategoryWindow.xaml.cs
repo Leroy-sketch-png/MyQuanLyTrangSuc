@@ -39,7 +39,12 @@ namespace MyQuanLyTrangSuc.View
         private void addNewUnitBtn_Click(object sender, RoutedEventArgs e)
         {
             AddUnitWindow addUnitWindow = new AddUnitWindow();
-            addUnitWindow.ShowDialog();
+            bool? result = addUnitWindow.ShowDialog();
+
+            if (result == true)
+            {
+                logicService.LoadInitialData();
+            }
         }
     }
 }
