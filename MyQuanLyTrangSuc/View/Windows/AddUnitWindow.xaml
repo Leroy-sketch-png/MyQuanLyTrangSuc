@@ -52,10 +52,10 @@
 
 
                 <Button Margin="0 15 0 0" x:Name="addButton" 
-                        Content="ADD" FontSize="30" 
-                        Background="#747525" 
+                        Content="ADD" FontSize="24" 
+                        Background="#BFDBFE" Foreground="#1E40AF"
                         Padding="10" HorizontalAlignment="Center" 
-                        Width="150" Height="60"
+                        Width="150" Height="50"
                         Click="addButton_Click"
                         />
             </StackPanel>

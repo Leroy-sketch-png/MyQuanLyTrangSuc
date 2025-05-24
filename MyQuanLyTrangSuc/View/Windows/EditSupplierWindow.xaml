@@ -25,7 +25,7 @@
                             <materialDesign:PackIcon Kind="RenameBox" Margin="0 2 3 0" Height="30" Width="30"/>
                             <TextBlock Text="Supplier's ID: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>
                         </StackPanel>
-                        <Border BorderBrush="Black" BorderThickness="1" Padding="5" Margin="0,0,0,10">
+                        <Border Padding="5" Margin="0,0,0,10">
                             <TextBlock x:Name="IDTextBlock" Text="{Binding Supplier.SupplierId}" FontSize="20" VerticalAlignment="Center"/>
                         </Border>
                     </StackPanel>
@@ -40,8 +40,6 @@
                                  Text="{Binding Supplier.Name, Mode=TwoWay}"
                                  FontSize="20"
                                  Padding="5"
-                                 BorderBrush="Black"
-                                 BorderThickness="1"
                                  Margin="0,0,0,10"
                                  VerticalAlignment="Center">
                             <TextBox.ToolTip>
@@ -62,7 +60,7 @@
                             <materialDesign:PackIcon Kind="Email" Height="30" Width="30" Margin="0 2 3 0"/>
                             <TextBlock Text="Email Address: " FontSize="24" Margin="0,0,0,5"/>
                         </StackPanel>
-                        <TextBox BorderBrush="Black" x:Name="EmailTextBox" Text="{Binding Supplier.Email, Mode=TwoWay}" FontSize="20" BorderThickness="1" Margin="0,0,0,10">
+                        <TextBox x:Name="EmailTextBox" Text="{Binding Supplier.Email, Mode=TwoWay}" FontSize="20" Margin="0,0,0,10">
                             <TextBox.ToolTip>
                                 <ToolTip Background="White" Foreground="Black" Content="Please enter a valid email address (e.g., example@mail.com)."/>
                             </TextBox.ToolTip>
@@ -74,7 +72,7 @@
                             <materialDesign:PackIcon Margin="0 0 3 1" Kind="PhoneOutline" VerticalAlignment="Center" Height="30" Width="30"/>
                             <TextBlock Text="Telephone: " FontSize="24" Margin="0,0,0,5"/>
                         </StackPanel>
-                        <TextBox BorderBrush="Black" x:Name="TelephoneTextBox" Text="{Binding Supplier.ContactNumber, Mode=TwoWay}" FontSize="20" BorderThickness="1" Margin="0,0,0,10">
+                        <TextBox x:Name="TelephoneTextBox" Text="{Binding Supplier.ContactNumber, Mode=TwoWay}" FontSize="20" Margin="0,0,0,10">
                             <TextBox.ToolTip>
                                 <ToolTip Background="White" Foreground="Black" Content="Please enter a valid phone number (e.g., 123-456-7890) - 10 to 15 digits"/>
                             </TextBox.ToolTip>
@@ -88,7 +86,7 @@
                             <materialDesign:PackIcon Kind="Email" Height="30" Width="30" Margin="0 2 3 0"/>
                             <TextBlock Text="Address: " FontSize="24" Margin="0,0,0,5"/>
                         </StackPanel>
-                        <TextBox BorderBrush="Black" x:Name="AddressTextBox" Text="{Binding Supplier.Address, Mode=TwoWay}" FontSize="20" BorderThickness="1" Margin="0,0,0,10">
+                        <TextBox  x:Name="AddressTextBox" Text="{Binding Supplier.Address, Mode=TwoWay}" FontSize="20" Margin="0,0,0,10">
                             <TextBox.ToolTip>
                                 <ToolTip Background="White" Foreground="Black" Content="Please enter a valid address."/>
                             </TextBox.ToolTip>
@@ -96,7 +94,7 @@
                     </StackPanel>
                 </Grid>
 
-                <Button x:Name="editButton" Content="SAVE" FontSize="24" Background="#BFDBFE" Foreground="#1E40AF" Padding="5" HorizontalAlignment="Center" Width="120" Height="50" Click="editButton_Click"/>
+                <Button x:Name="editButton" Content="SAVE" FontSize="24" Background="#BFDBFE" Foreground="#1E40AF"  Padding="5" HorizontalAlignment="Center" Width="120" Height="50" Click="editButton_Click"/>
             </StackPanel>
         </Grid>
     </Grid>

@@ -99,7 +99,7 @@
 
 
                 <Button x:Name="addButton" Content="SAVE" 
-                        FontSize="24" Background="#747525" 
+                        FontSize="24" Background="#BFDBFE" Foreground="#1E40AF"
                         Padding="5" 
                         HorizontalAlignment="Center" Width="120" 
                         Height="50" Click="saveButton_Click"/>
