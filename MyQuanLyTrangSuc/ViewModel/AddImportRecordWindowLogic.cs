@@ -113,6 +113,13 @@ namespace MyQuanLyTrangSuc.ViewModel
                 notificationWindowLogic.LoadNotification("Error", "Please choose an item", "BottomRight");
                 return;
             }
+
+            if (SelectedSupplier == null)
+            {
+                notificationWindowLogic.LoadNotification("Error", "Please choose a supplier", "BottomRight");
+                return;
+            }
+
             if (Quantity <= 0)
             {
                 notificationWindowLogic.LoadNotification("Error", "Quantity must be positive", "BottomRight");
@@ -155,6 +162,19 @@ namespace MyQuanLyTrangSuc.ViewModel
                 notificationWindowLogic.LoadNotification("Error", "Please select a supplier", "BottomRight");
                 return;
             }
+
+            if (Quantity <= 0)
+            {
+                notificationWindowLogic.LoadNotification("Error", "Quantity must be positive", "BottomRight");
+                return;
+            }
+
+            if (GrandTotal <= 0)
+            {
+                notificationWindowLogic.LoadNotification("Error", "Total amount must be greater than zero", "BottomRight");
+                return;
+            }
+
             Import import = new Import
             {
                 ImportId = NewID,

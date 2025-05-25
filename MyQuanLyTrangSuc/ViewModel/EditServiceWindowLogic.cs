@@ -1,4 +1,5 @@
 ﻿using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.ViewModel;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,7 +15,7 @@ namespace MyQuanLyTrangSuc.View.Windows
         private bool _isProcessing = false;
 
         public Service CurrentService => _currentService;
-
+        private NotificationWindowLogic notificationWindowLogic;
         public EditServiceWindowLogic(EditServiceWindow window, Service serviceToEdit)
         {
             _window = window;
@@ -79,7 +80,7 @@ namespace MyQuanLyTrangSuc.View.Windows
                 s.ServiceId != _currentService.ServiceId &&
                 s.ServiceName.ToLower() == _window.nameTextBox.Text.Trim().ToLower()))
             {
-                ShowErrorMessage("Service name already exists.");
+                notificationWindowLogic.LoadNotification("Error", "Invalid name!", "BottomRight");
                 return false;
             }
 
@@ -95,13 +96,13 @@ namespace MyQuanLyTrangSuc.View.Windows
         {
             if (!decimal.TryParse(_window.unitPriceTextBox.Text, out decimal price))
             {
-                ShowErrorMessage("Price must be a valid number.");
+                notificationWindowLogic.LoadNotification("Error", "Price must be a valid number.", "BottomRight");
                 return false;
             }
 
             if (price <= 0)
             {
-                ShowErrorMessage("Price must be greater than 0.");
+                notificationWindowLogic.LoadNotification("Error", "Price must be greater than 0.", "BottomRight");
                 return false;
             }
 
@@ -142,8 +143,7 @@ namespace MyQuanLyTrangSuc.View.Windows
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving service: {ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                notificationWindowLogic.LoadNotification("Error", "Error saving service!", "BottomRight");
             }
             finally
             {

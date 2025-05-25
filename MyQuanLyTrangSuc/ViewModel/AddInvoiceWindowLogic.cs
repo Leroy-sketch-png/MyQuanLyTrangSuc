@@ -143,6 +143,11 @@ namespace MyQuanLyTrangSuc.ViewModel
         }
         public void AddInvoice()
         {
+            if (SelectedItem == null)
+            {
+                notificationWindowLogic.LoadNotification("Error", "Please choose an item", "BottomRight");
+                return;
+            }
             if (SelectedCustomer == null)
             {
                 notificationWindowLogic.LoadNotification("Error", "Please choose a customer", "BottomRight");
