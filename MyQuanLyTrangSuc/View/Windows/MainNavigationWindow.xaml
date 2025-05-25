@@ -198,15 +198,37 @@
                                     </Button>
                                 </StackPanel>
 
-                                <!--Permission Settings (no click yet)-->
+                                <!--Permission Settings -->
                                 <StackPanel x:Name="PermissionSettingsPanel" DockPanel.Dock="Top">
-                                    <Button Style="{StaticResource menuButton}">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_PermissionPageNavigation">
                                         <StackPanel Orientation="Horizontal">
-                                            <materialDesign:PackIcon Kind="AlertCircle" Foreground="White"/>
-                                            <TextBlock Text=" PERMISSION" Foreground="White"/>
+                                            <materialDesign:PackIcon Kind="AlphaP" Foreground="White"/>
+                                            <TextBlock Text=" Permission" Foreground="White"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
+
+                                <!--User Group-->
+                                <StackPanel x:Name="UserGroupSettingsPanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_UserGroupPageNavigation">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="AccountGroup" Foreground="White"/>
+                                            <TextBlock Text=" User Group" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <!--Account-->
+                                <StackPanel x:Name="AccountSettingsPanel" DockPanel.Dock="Top">
+                                    <Button Style="{StaticResource menuButton}" Click="OnClick_AccountPageNavigation">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Account" Foreground="White"/>
+                                            <TextBlock Text=" Account" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+
 
                             </StackPanel>
                         </ScrollViewer>

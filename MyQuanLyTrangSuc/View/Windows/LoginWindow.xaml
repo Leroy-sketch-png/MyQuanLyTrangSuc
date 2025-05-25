@@ -204,7 +204,7 @@
 
                     <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
          Name="UsernameBox"
-         Text="{Binding Username, Mode=TwoWay}"
+         Text="{Binding userName, Mode=TwoWay}"
          materialDesign:HintAssist.Hint="Username"
          materialDesign:HintAssist.FloatingOffset="0,-20"
          BorderBrush="#c5c8cc"

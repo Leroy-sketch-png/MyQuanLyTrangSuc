@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using Microsoft.Win32;
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
+using BCrypt.Net; // <--- Thêm dòng này
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -103,32 +104,30 @@ namespace MyQuanLyTrangSuc.ViewModel
                 return;
             }
 
-            // 1) Find the employee by email
             var employee = context.Employees.FirstOrDefault(emp => emp.Email == email);
-            if (employee == null)
+            if (employee == null) 
             {
-                notificationWindowLogic.LoadNotification("Error", "Email not found!", "BottomRight");
-                return;
+                notificationWindowLogic.LoadNotification("Error", "Email not found or associated with an account.", "BottomRight");
+                return; 
             }
 
-            // 2) Lookup the account by the employee's Username navigation property
-            var account = context.Accounts
-                .FirstOrDefault(acc => acc.Username == employee.Username);
+            var account = context.Accounts.FirstOrDefault(acc => acc.Username == employee.Account.Username);
+
             if (account == null)
             {
-                notificationWindowLogic.LoadNotification("Error", "Account not found!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Associated account not found!", "BottomRight");
                 return;
             }
 
-            // 3) Prevent resetting to the same password
-            if (account.Password == newPassword)
+            if (BCrypt.Net.BCrypt.Verify(newPassword, account.Password)) 
             {
-                notificationWindowLogic.LoadNotification("Error", "New password cannot match the old one!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "The new password cannot be the same as the old one!", "BottomRight");
                 return;
             }
 
-            // 4) Apply change and save
-            account.Password = newPassword;
+            account.Password = BCrypt.Net.BCrypt.HashPassword(newPassword); 
+
+
             try
             {
                 context.SaveChanges();

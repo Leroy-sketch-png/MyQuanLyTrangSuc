@@ -2,18 +2,53 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace MyQuanLyTrangSuc.Model;
 
-public partial class Permission
+public partial class Permission: INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected void OnPropertyChanged([CallerMemberName] string name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
     public int PermissionId { get; set; }
 
-    public int GroupId { get; set; }
+    private int _groupId;
+    public int GroupId
+    {
+        get => _groupId;
+        set { _groupId = value; OnPropertyChanged(); }
+    }
 
-    public int FunctionId { get; set; }
+    private int _functionId;
+    public int FunctionId
+    {
+        get => _functionId;
+        set { _functionId = value; OnPropertyChanged(); }
+    }
 
-    public virtual Function Function { get; set; }
+    public bool IsDeleted { get; set; }
 
-    public virtual UserGroup Group { get; set; }
+    private Function _function;
+
+    public virtual Function Function 
+    { 
+        get => _function;
+        set
+        {
+                _function = value;
+                OnPropertyChanged();
+        }
+    }
+
+    private UserGroup _group;
+    public virtual UserGroup Group {
+        get => _group;
+        set
+        {
+                _group = value;
+                OnPropertyChanged();
+        }
+    }
 }

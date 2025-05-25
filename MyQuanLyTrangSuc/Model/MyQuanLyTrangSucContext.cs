@@ -23,7 +23,6 @@ public partial class MyQuanLyTrangSucContext : DbContext
         : base(options) {
     }
 
-
     public int SaveChangesAdded(Product product) {
 
         int result = base.SaveChanges();
@@ -129,6 +128,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     public event Action<Customer> OnCustomerAdded;
     public event Action<Supplier> OnSupplierAdded;
     public event Action<Supplier> OnSupplierEdited;
+    public event Action<Account> OnAccountAdded;
 
     public event Action<Product> OnItemAdded;
     public event Action<Product> OnItemRemoved;
@@ -197,9 +197,10 @@ public partial class MyQuanLyTrangSucContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Username).HasName("PK__Account__536C85E5CD11A983");
+            entity.HasKey(e => e.AccountId).HasName("PK__Account__536C85E54B4E0963");
 
             entity.ToTable("Account");
+            entity.HasIndex(a => a.Username).IsUnique();
 
             entity.Property(e => e.Username).HasMaxLength(50);
             entity.Property(e => e.GroupId).HasColumnName("GroupID");
@@ -289,8 +290,8 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("position");
             entity.Property(e => e.Username)
-                .HasMaxLength(50)
-                .HasColumnName("username");
+               .HasMaxLength(50)
+               .HasColumnName("username");
 
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.Username)
@@ -299,7 +300,8 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
         modelBuilder.Entity<Function>(entity =>
         {
-            entity.HasKey(e => e.FunctionId).HasName("PK__Function__31ABFAF891DA78B8");
+            entity.ToTable("Functions");
+            entity.HasKey(e => e.FunctionId).HasName("PK__Function__31ABFAF86F0F7071");
 
             entity.Property(e => e.FunctionName)
                 .IsRequired()
@@ -473,13 +475,16 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
             entity.Property(e => e.FunctionId).HasColumnName("FunctionID");
             entity.Property(e => e.GroupId).HasColumnName("GroupID");
+            entity.Property(e => e.IsDeleted).HasColumnName("IsDeleted");
 
-            entity.HasOne(d => d.Function).WithMany(p => p.Permissions)
+            entity.HasOne(d => d.Function)
+                .WithMany(p => p.Permissions)
                 .HasForeignKey(d => d.FunctionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_permissions_functions");
 
-            entity.HasOne(d => d.Group).WithMany(p => p.Permissions)
+            entity.HasOne(d => d.Group)
+                .WithMany(p => p.Permissions)
                 .HasForeignKey(d => d.GroupId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_permissions_usergroups");
@@ -857,7 +862,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
             //Your server goes here!
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=LAPTOP-CMTNMGDI\\SQLEXPRESS;Database=MyQuanLyTrangSuc;TrustServerCertificate=True;Trusted_Connection=True");
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=LAPTOP-TNOFNAMI\\SQLEXPRESS;Database=MyQuanLyTrangSuc;TrustServerCertificate=True;Trusted_Connection=True");
         }
     }
 }

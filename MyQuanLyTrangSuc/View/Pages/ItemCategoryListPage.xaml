@@ -138,7 +138,7 @@
                         <DataGridTextColumn Binding="{Binding CategoryId}" Header="ID" IsReadOnly="True" CanUserResize="False" Width="80"/>
 
                         <!--Name-->
-                        <DataGridTextColumn Binding="{Binding Categoryname}" Header="Category Name" IsReadOnly="True" CanUserResize="False" Width="*">
+                        <DataGridTextColumn Binding="{Binding CategoryName}" Header="Category Name" IsReadOnly="True" CanUserResize="False" Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>

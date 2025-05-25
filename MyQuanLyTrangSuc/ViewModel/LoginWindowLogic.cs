@@ -1,117 +1,119 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.BusinessLogic; // <-- Đảm bảo đã import AuthenticationService
+using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.View; // <-- Đảm bảo đã import các View cần dùng
+using MyQuanLyTrangSuc.View.Windows; // <-- Đảm bảo đã import VerificationWindow, MainNavigationWindow
+using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Controls; // Cần cho PasswordBox
+using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.EntityFrameworkCore;
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
+using WpfApplication = System.Windows.Application;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
     public class LoginWindowLogic
     {
-        private readonly LoginWindow _view;
-        private readonly MyQuanLyTrangSucContext _context = MyQuanLyTrangSucContext.Instance;
-        private readonly NotificationWindowLogic _notification;
+        private readonly NotificationWindowLogic notificationLogic = new NotificationWindowLogic();
 
-        public string Username { get; set; }
+        private readonly AuthenticationService authenticationService = AuthenticationService.Instance;
 
-        public LoginWindowLogic(LoginWindow view)
+
+        public string userName { get; set; }
+        private const string USER = "user"; 
+        private const string ADMIN = "admin";
+        //
+        private LoginWindow loginWindow;
+        public LoginWindowLogic()
         {
-            _view = view ?? throw new ArgumentNullException(nameof(view));
-            _notification = new NotificationWindowLogic();
+        }
+      
+
+        public LoginWindowLogic(LoginWindow loginWindow)
+        {
+            this.loginWindow = loginWindow;
         }
 
-        /// <summary>
-        /// Called by the view when the Login button is clicked.
-        /// </summary>
-        /// 
 
-        public void Login(PasswordBox passwordBox)
+        public void ChangeToDarkTheme(Border rightBorder, Border leftBorder)
         {
-            // 1) Read credentials
-            string enteredUsername = Username?.Trim();
-            string enteredPassword = passwordBox?.Password ?? string.Empty;
+            rightBorder.Background = new SolidColorBrush(Color.FromArgb(255, 39, 46, 60)); // #FF272E3C
+            leftBorder.Background = new SolidColorBrush(Colors.White); // White
+        }
 
-            if (string.IsNullOrEmpty(enteredUsername))
-            {
-                MessageBox.Show("Please enter a username.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-            if (string.IsNullOrEmpty(enteredPassword))
-            {
-                MessageBox.Show("Please enter a password.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+        public void ChangeToLightTheme(Border rightBorder, Border leftBorder)
+        {
+            rightBorder.Background = new SolidColorBrush(Colors.White); // White
+            leftBorder.Background = new SolidColorBrush(Color.FromArgb(255, 39, 46, 60)); // #FF272E3C
+        }
 
+        public void LoadVerificationWindow()
+        {
+            VerificationWindow window = new VerificationWindow();
+            window.Show();
+        }
+        public void Login(PasswordBox passwordBox) 
+        {
             try
             {
-                // 2) Look up the account (include Group so Main logic can use it)
-                var account = _context.Accounts
-                    .Include(a => a.Group)
-                    .FirstOrDefault(a => a.Username == enteredUsername && a.Password == enteredPassword);
-
-                if (account == null)
+                if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(passwordBox.Password))
                 {
-                    _notification.LoadNotification("Error", "Invalid credentials", "BottomRight");
-                    return;
+                    notificationLogic.LoadNotification("Error", "Please enter both username and password.", "BottomRight");
+                    return; 
                 }
 
+                string password = passwordBox.Password; 
 
 
-                // 3) Store the Username as the current user
-                var employee = _context.Employees.FirstOrDefault(e => e.Username == enteredUsername);
+                bool isValid = authenticationService.ValidateLogin(userName, password);
 
-                if (employee != null)
+                if (isValid)
                 {
-                    Application.Current.Resources["CurrentUsername"] = employee.Username;
-                    Application.Current.Resources["CurrentUserID"] = employee.EmployeeId;
+                    Account account = authenticationService.GetAccountWithGroupByUsername(userName);
+
+                    if (account != null) 
+                    {
+                        WpfApplication.Current.Resources["CurrentAccountId"] = account.AccountId;
+                        WpfApplication.Current.Resources["CurrentUsername"] = account.Username;
+
+                        string groupName = account.Group?.GroupName; 
+
+                        if (groupName.Equals(USER)) 
+                        {
+                            var mainWindow = new MainNavigationWindow();
+                            mainWindow.Show();
+                            loginWindow.Close();
+                            notificationLogic.LoadNotification("Success", "You have logged in as User!", "BottomRight"); 
+                        }
+                        else if (groupName.Equals(ADMIN))
+                        {
+                            var mainWindow = new MainNavigationWindow();
+                            mainWindow.Show();
+                            loginWindow.Close();
+                            notificationLogic.LoadNotification("Success", "You have logged in as Admin!", "BottomRight"); 
+                        }
+                        else
+                        {
+                            notificationLogic.LoadNotification("Error", "Your account group does not have access permission.", "BottomRight");
+                        }
+                    }
+                    else
+                    {
+                        notificationLogic.LoadNotification("Error", "Login failed unexpectedly.", "BottomRight");
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Employee not found.");
+                    notificationLogic.LoadNotification("Error", "Invalid username or password.", "BottomRight");
                 }
-
-                // 4) Initialize main navigation and open the main window
-                var mainWindow = new MainNavigationWindow();
-                MainNavigationWindowLogic.Initialize(mainWindow);
-                mainWindow.Show();
-
-                // 5) Close the login window
-                _view.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred during login: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                notificationLogic.LoadNotification("Error", $"An error occurred during login: {ex.Message}", "BottomRight"); // Thông báo lỗi chi tiết hơn
             }
-        }
-
-        /// <summary>
-        /// Optional: show the Forgot Password / Verification window.
-        /// </summary>
-        public void LoadVerificationWindow()
-        {
-            var verify = new VerificationWindow();
-            verify.ShowDialog();
-        }
-
-        /// <summary>
-        /// Switches to dark theme in your login view.
-        /// </summary>
-        public void ChangeToDarkTheme(Border rightBorder, Border leftBorder)
-        {
-            rightBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF272E3C"));
-            leftBorder.Background = Brushes.White;
-        }
-
-        /// <summary>
-        /// Switches to light theme.
-        /// </summary>
-        public void ChangeToLightTheme(Border rightBorder, Border leftBorder)
-        {
-            rightBorder.Background = Brushes.White;
-            leftBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF272E3C"));
         }
     }
 }

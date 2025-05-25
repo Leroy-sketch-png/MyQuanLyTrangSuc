@@ -2,18 +2,57 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 
 namespace MyQuanLyTrangSuc.Model;
 
-public partial class Account
+public partial class Account: INotifyPropertyChanged
 {
-    public string Username { get; set; }
+    [Key]
+    public int AccountId { get; set; }
+
+    [Required]
+    private string _username;
+    public string Username 
+    {
+        get => _username;
+        set
+        {
+                _username = value;
+                OnPropertyChanged();
+        }
+    }
 
     public string Password { get; set; }
 
     public int GroupId { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 
-    public virtual UserGroup Group { get; set; }
+
+    private UserGroup _group;
+    public virtual UserGroup Group
+    {
+        get => _group;
+        set
+        {
+            if (_group != value)
+            {
+                _group = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }

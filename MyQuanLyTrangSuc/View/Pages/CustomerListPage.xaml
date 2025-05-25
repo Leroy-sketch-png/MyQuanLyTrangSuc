@@ -104,7 +104,7 @@
                 </StackPanel>
 
                 <!--Separator-->
-                <Separator Grid.Row="3" BorderBrush="#ba80d3" BorderThickness="10" Margin="5,10,30,10"/>
+                <Separator Grid.Row="3" BorderBrush="#747525" BorderThickness="10" Margin="5,10,30,10"/>
 
                 <!--Filter TextBox-->
                 <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
@@ -127,7 +127,7 @@
                         <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="False" Width="80" Binding="{Binding CustomerId}"/>
 
                         <!--Name-->
-                        <DataGridTextColumn Header="Name" Width="*" Binding="{Binding CustomerName}" CanUserResize="False" IsReadOnly="True">
+                        <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}" CanUserResize="False" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>

@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
     <PackageReference Include="EPPlus" Version="8.0.5" />
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
     <PackageReference Include="MahApps.Metro" Version="2.4.10" />
