@@ -1,0 +1,62 @@
+﻿<Window x:Class="MyQuanLyTrangSuc.View.MonthlyRevenueReportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Height="500" Width="750">
+
+    <!--Window.Resources>
+        <local:PercentageToDisplayConverter x:Key="PercentageToDisplayConverter"/>
+    </Window.Resources-->
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="REVENUE REPORT" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
+
+        <DockPanel Grid.Row="1">
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="40,0,0,0" HorizontalAlignment="Left">
+                <TextBlock Text="Month: " VerticalAlignment="Center" FontSize="16"/>
+                <TextBlock Text="{Binding MonthDisplay}" VerticalAlignment="Center" Margin="10,20,20,20" FontSize="16" FontWeight="Bold"/>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0,0,40,0" HorizontalAlignment="Right">
+                <TextBlock Text="Year: " VerticalAlignment="Center" FontSize="16"/>
+                <TextBlock Text="{Binding YearDisplay}" VerticalAlignment="Center" Margin="10,20,20,20" FontWeight="Bold" FontSize="16"/>
+            </StackPanel>
+        </DockPanel>
+
+        <Border Grid.Row="2" Margin="5">
+            <DataGrid Grid.Row="2" ItemsSource="{Binding RevenueDisplayItems}" AutoGenerateColumns="False" IsReadOnly="True" Margin="5">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Type" Width="100" Binding="{Binding Type}"/>
+                    <DataGridTextColumn Header="ID" Width="80" Binding="{Binding Id}"/>
+                    <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
+                    <DataGridTextColumn Header="Revenue" Width="150" Binding="{Binding Revenue}"/>
+                    <DataGridTextColumn Header="Percentage" Width="*" Binding="{Binding Percentage}"/>
+                    <!--DataGridTextColumn Header="Percentage (%)" Width="*" 
+                        Binding="{Binding Percentage, Converter={StaticResource PercentageToDisplayConverter}, StringFormat={}{0:N2}}"/-->
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <Border Grid.Row="4" Margin="30">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="REVENUE: " FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding TotalRevenue, StringFormat={}{0:N0}}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10,0,10,0" VerticalAlignment="Center"/>
+                </StackPanel>
+                <TextBlock Text="After 4% Mark-up" FontSize="14" HorizontalAlignment="Center" Margin="10,0,10,10" FontStyle="Italic"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
