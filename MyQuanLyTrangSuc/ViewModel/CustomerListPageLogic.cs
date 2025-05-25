@@ -29,6 +29,9 @@ namespace MyQuanLyTrangSuc.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        private readonly HashSet<Customer> _selectedCustomers = new HashSet<Customer>();
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -118,6 +121,43 @@ namespace MyQuanLyTrangSuc.ViewModel
         public void ExportExcelFile(DataGrid customersDataGrid)
         {
             customerService.ExportExcelFile(customersDataGrid);
+        }
+
+        public void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox && checkBox.DataContext is Customer customer)
+            {
+                _selectedCustomers.Add(customer);
+            }
+        }
+
+        public void CheckBox_UnChecked(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox && checkBox.DataContext is Customer customer)
+            {
+                _selectedCustomers.Remove(customer);
+            }
+        }
+
+        public void DeleteMultipleCustomers()
+        {
+            if (_selectedCustomers.Count == 0)
+            {
+                MessageBox.Show("Please select at least one customer to delete", "Delete Customers", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete these customers?", "Delete Customers", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                foreach (var customer in _selectedCustomers)
+                {
+                    customerService.DeleteCustomer(customer);
+                    Customers.Remove(customer);
+                }
+                _selectedCustomers.Clear();
+            }
         }
     }
 }

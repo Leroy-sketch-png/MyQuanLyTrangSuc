@@ -33,7 +33,11 @@ namespace MyQuanLyTrangSuc.View
         {
             bool isSuccess = logicService.AddItemCategory(NameTextBox.Text, profitPercentageTextBox.Text);
             if (isSuccess)
+            {
+                this.DialogResult = true;
                 this.Close();
+            }
+                
         }
 
         private void addNewUnitBtn_Click(object sender, RoutedEventArgs e)

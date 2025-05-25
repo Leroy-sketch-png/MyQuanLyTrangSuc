@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Controls;
+using MyQuanLyTrangSuc.View.Windows;
 
 namespace MyQuanLyTrangSuc.View
 {
@@ -58,8 +59,15 @@ namespace MyQuanLyTrangSuc.View
 
         private void addNewCategoryBtn_Click(object sender, RoutedEventArgs e)
         {
+            //AddItemCategoryWindow addItemCategoryWindow = new AddItemCategoryWindow();
+            //addItemCategoryWindow.ShowDialog();
             AddItemCategoryWindow addItemCategoryWindow = new AddItemCategoryWindow();
-            addItemCategoryWindow.ShowDialog();
+            bool? result = addItemCategoryWindow.ShowDialog();
+
+            if (result == true)
+            {
+                Logic.LoadCategories();
+            }
         }
     }
 }

@@ -8,6 +8,8 @@ using Microsoft.Win32;
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using MyQuanLyTrangSuc.BusinessLogic;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -20,6 +22,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         private const string SuccessTitle = "Thông báo";
         private const string ValidationErrorMessage = "Vui lòng nhập đầy đủ thông tin sản phẩm!";
         private const string SuccessMessage = "Sản phẩm đã được thêm thành công!";
+        private readonly ItemCategoryService _itemCategoryService;
 
         private readonly AddItemWindow _window;
         private readonly Regex _numericRegex;
@@ -37,8 +40,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        private List<ProductCategory> _categories;
-        public List<ProductCategory> Categories
+        private ObservableCollection<ProductCategory> _categories;
+        public ObservableCollection<ProductCategory> Categories
         {
             get => _categories;
             set
@@ -69,14 +72,14 @@ namespace MyQuanLyTrangSuc.ViewModel
             _numericRegex = new Regex(NumericPattern);
 
             Product = new Product();
+            _itemCategoryService = ItemCategoryService.Instance;
             LoadCategories();
             GenerateProductId();
         }
 
-        private void LoadCategories()
+        public void LoadCategories()
         {
-            var db = MyQuanLyTrangSucContext.Instance;
-            Categories = db.ProductCategories.ToList();
+            Categories = new ObservableCollection<ProductCategory>(_itemCategoryService.GetListOfItemCategories());
 
             if (Categories.Any())
             {
@@ -218,7 +221,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             db.ResetProducts();
         }
 
-        private void OnPropertyChanged(string propertyName)
+        protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

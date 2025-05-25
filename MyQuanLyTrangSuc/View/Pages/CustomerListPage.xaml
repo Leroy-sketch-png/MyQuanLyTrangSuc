@@ -101,6 +101,15 @@
                             <TextBlock Text="Export" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
+
+                    <Button x:Name="deleteMultipleButton" Click="deleteMultipleButton_Click"
+                            Style="{StaticResource addButton}" Grid.Row="1" 
+                            Grid.RowSpan="4">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="AlphaDBox" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
+                            <TextBlock Text="Delete multiple" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
                 <!--Separator-->
@@ -122,6 +131,14 @@
                           CanUserSortColumns="True" ItemsSource="{Binding Customers}" 
                           SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}" x:Name="customersDataGrid" Style="{DynamicResource DataGridStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
                     <DataGrid.Columns>
+                        <!--Checkbox Column for Selection-->
+                        <DataGridTemplateColumn Header="✔" Width="0.5*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
                         <!--ID-->
                         <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="False" Width="80" Binding="{Binding CustomerId}"/>

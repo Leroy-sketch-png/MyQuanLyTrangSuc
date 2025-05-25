@@ -77,7 +77,7 @@
                     <StackPanel Grid.Column="2">
                         <Button Content="+" 
                             ToolTip="Add new client"
-                            Background="#BFDBFE" Foreground="#1E40AF" 
+                                Background="#BFDBFE" Foreground="#1E40AF" 
                             Padding="10,5" Margin="0,110,0,0"
                             Name="addNewClientBtn" Click="addNewClientBtn_Click"
                             />

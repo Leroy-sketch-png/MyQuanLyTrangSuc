@@ -62,14 +62,21 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         public bool IsValidEmail(string email)
         {
             var gmailPattern = @"^(?!.*\.\.)[a-zA-Z0-9._%+-]+(?<!\.)@gmail\.com$";
-            return Regex.IsMatch(email, gmailPattern);
+            return Regex.IsMatch(email, gmailPattern, RegexOptions.IgnoreCase);
         }
 
         public bool IsValidTelephoneNumber(string phoneNumber)
         {
             return !string.IsNullOrEmpty(phoneNumber) && phoneNumber.All(char.IsDigit) && phoneNumber.Length >= 10 && phoneNumber.Length <= 15;
         }
-
+        public bool IsValidAddress(string address)
+        {
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                return false;
+            }
+            return true;
+        }
         public bool IsValidSupplierData(string name, string email, string phone)
         {
             return IsValidName(name) && IsValidEmail(email) && IsValidTelephoneNumber(phone);
