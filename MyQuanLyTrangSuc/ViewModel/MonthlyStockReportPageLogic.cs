@@ -97,8 +97,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 Console.WriteLine($"SelectedStockReport: {selectedReport != null}");
                 var stockReportId = selectedReport.StockReportId;
-                var month = selectedReport.MonthYear.Month;
-                var year = selectedReport.MonthYear.Year;
+                var month = selectedReport.MonthYear.Value.Month;
+                var year = selectedReport.MonthYear.Value.Year;
 
                 string monthYear = $"{month}/{year}";
 
@@ -150,7 +150,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             // Kiểm tra và xác nhận với người dùng
             bool isExistingReport = context.StockReports
-                .Any(r => r.MonthYear.Month == reportDate.Month && r.MonthYear.Year == reportDate.Year);
+                .Any(r => r.MonthYear.Value.Month == reportDate.Month && r.MonthYear.Value.Year == reportDate.Year);
 
             if (isExistingReport)
             {
@@ -178,8 +178,8 @@ namespace MyQuanLyTrangSuc.ViewModel
                         var stockReport = isExistingReport
                             ? context.StockReports
                                 .Include(r => r.StockReportDetails)
-                                .First(r => r.MonthYear.Month == reportDate.Month &&
-                                           r.MonthYear.Year == reportDate.Year)
+                                .First(r => r.MonthYear.Value.Month == reportDate.Month &&
+                                           r.MonthYear.Value.Year == reportDate.Year)
                             : new StockReport
                             {
                                 StockReportId = GenerateStockReportId(),
@@ -287,8 +287,8 @@ namespace MyQuanLyTrangSuc.ViewModel
                     detail => detail.InvoiceId,
                     invoice => invoice.InvoiceId,
                     (detail, invoice) => new { Detail = detail, Invoice = invoice })
-                .Where(joined => joined.Invoice.Date.Month == reportDate.Month &&
-                               joined.Invoice.Date.Year == reportDate.Year &&
+                .Where(joined => joined.Invoice.Date.Value.Month == reportDate.Month &&
+                               joined.Invoice.Date.Value.Year == reportDate.Year &&
                                joined.Detail.ProductId == productId)
                 .Select(joined => joined.Detail.Quantity ?? 0)
                 .DefaultIfEmpty(0) // Tránh lỗi nếu không có dữ liệu
@@ -302,8 +302,8 @@ namespace MyQuanLyTrangSuc.ViewModel
                     detail => detail.ImportId,
                     import => import.ImportId,
                     (detail, import) => new { Detail = detail, Import = import })
-                .Where(joined => joined.Import.Date.Month == reportDate.Month &&
-                               joined.Import.Date.Year == reportDate.Year &&
+                .Where(joined => joined.Import.Date.Value.Month == reportDate.Month &&
+                               joined.Import.Date.Value.Year == reportDate.Year &&
                                joined.Detail.ProductId == productId)
                 .Select(joined => joined.Detail.Quantity ?? 0)
                 .DefaultIfEmpty(0) // Tránh lỗi nếu không có dữ liệu
@@ -330,7 +330,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 return;
             }
 
-            var result = MessageBox.Show($"Bạn có chắc chắn muốn xóa tất cả báo cáo tồn kho của tháng {selectedReport.MonthYear.Month}/{selectedReport.MonthYear.Year}?",
+            var result = MessageBox.Show($"Bạn có chắc chắn muốn xóa tất cả báo cáo tồn kho của tháng {selectedReport.MonthYear.Value.Month}/{selectedReport.MonthYear.Value.Year}?",
                                          "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
@@ -338,8 +338,8 @@ namespace MyQuanLyTrangSuc.ViewModel
                 try
                 {
                     // Tìm tất cả báo cáo của tháng/năm đó
-                    var reportsToDelete = context.StockReports.Where(r => r.MonthYear.Month == selectedReport.MonthYear.Month &&
-                                                                          r.MonthYear.Year == selectedReport.MonthYear.Year).ToList();
+                    var reportsToDelete = context.StockReports.Where(r => r.MonthYear.Value.Month == selectedReport.MonthYear.Value.Month &&
+                                                                          r.MonthYear.Value.Year == selectedReport.MonthYear.Value.Year).ToList();
 
                     if (!reportsToDelete.Any())
                     {
@@ -354,8 +354,8 @@ namespace MyQuanLyTrangSuc.ViewModel
                     // Cập nhật danh sách hiển thị trên UI
                     for (int i = StockReports.Count - 1; i >= 0; i--)
                     {
-                        if (StockReports[i].MonthYear.Month == selectedReport.MonthYear.Month &&
-                            StockReports[i].MonthYear.Year == selectedReport.MonthYear.Year)
+                        if (StockReports[i].MonthYear.Value.Month == selectedReport.MonthYear.Value.Month &&
+                            StockReports[i].MonthYear.Value.Year == selectedReport.MonthYear.Value.Year)
                         {
                             StockReports.RemoveAt(i);
                         }
@@ -379,8 +379,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             if (!int.TryParse(month, out int monthNumber)) return;
 
             var reportsFromDb = context.StockReports
-                .Where(r => r.MonthYear.Month == monthNumber)
-                .GroupBy(r => new { r.MonthYear.Month, r.MonthYear.Year })
+                .Where(r => r.MonthYear.Value.Month == monthNumber)
+                .GroupBy(r => new { r.MonthYear.Value.Month, r.MonthYear.Value.Year })
                 .Select(g => new StockReport
                 {
                     MonthYear = new DateTime(g.Key.Year, g.Key.Month, 1)
@@ -408,8 +408,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             if (!int.TryParse(year, out int yearNumber)) return;
 
             var reportsFromDb = context.StockReports
-                .Where(r => r.MonthYear.Year == yearNumber)
-                .GroupBy(r => new { r.MonthYear.Month, r.MonthYear.Year })
+                .Where(r => r.MonthYear.Value.Year == yearNumber)
+                .GroupBy(r => new { r.MonthYear.Value.Month, r.MonthYear.Value.Year })
                 .Select(g => new StockReport
                 {
                     MonthYear = new DateTime(g.Key.Year, g.Key.Month, 1)
