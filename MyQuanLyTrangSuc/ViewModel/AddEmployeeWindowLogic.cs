@@ -51,17 +51,16 @@ namespace MyQuanLyTrangSuc.ViewModel {
         //
 
         private readonly AddEmployeeWindow addEmployeeWindow;
-        public AddEmployeeWindowLogic() {
-        }
+        public AddEmployeeWindowLogic() {}
         public AddEmployeeWindowLogic(AddEmployeeWindow addEmployeeWindow) {
             notificationWindowLogic = new NotificationWindowLogic();
 
             this.addEmployeeWindow = addEmployeeWindow;
 
-//            this.addEmployeeWindow.PositionComboBox.ItemsSource = context.Employees
-//.GroupBy(emp => emp.Position)
-//.Select(group => group.Key)
-//.ToList();
+            this.addEmployeeWindow.PositionComboBox.ItemsSource = context.Employees
+                .GroupBy(emp => emp.Position)
+                .Select(group => group.Key)
+                .ToList();
         }
 
 
@@ -76,10 +75,24 @@ namespace MyQuanLyTrangSuc.ViewModel {
                 ImagePath = openFileDialog.FileName;
             }
         }
-        public void AddEmployeeToDatabase() {
-            if (!IsValidData(Name, Email, Telephone)) {
-                MessageBox.Show("Thông tin không hợp lệ! Vui lòng nhập đúng định dạng", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+
+
+        public bool AddEmployeeToDatabase() {
+            
+            if (!IsValidName(Name))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Tên không hợp lệ!", "BottomRight");
+                return false;
+            }
+            if (!IsValidEmail(Email))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Email không hợp lệ!", "BottomRight");
+                return false;
+            }
+            if (!IsValidPhone(Telephone))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Số điện thoại phải từ 10-15 chữ số!", "BottomRight");
+                return false;
             }
 
             string Gender;
@@ -102,14 +115,12 @@ namespace MyQuanLyTrangSuc.ViewModel {
                     ImagePath = ImagePath;
 
                     context.SaveChangesAdded(emp);
-
                     notificationWindowLogic.LoadNotification("Success", "Restored employee successfully!", "BottomRight");
                 } else {
                     ////Nếu nhân viên tồn tại và không bị xóa
-
                     notificationWindowLogic.LoadNotification("Warning", "Employee already exists!", "BottomRight");
                 }
-                return;
+                return true;
             }
 
             emp = new Employee() {
@@ -125,7 +136,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
             context.Employees.Add(emp);
             //context.SaveChanges();
             context.SaveChangesAdded(emp);
-
+            return true;
         }
 
         #region ID
@@ -155,24 +166,19 @@ namespace MyQuanLyTrangSuc.ViewModel {
         #region data clarity
         //Check data before adding to DB
         //Check Name_Customer
-        private bool IsValidName(string name) {
-            return !string.IsNullOrEmpty(name) && name.All(c => char.IsLetter(c) || char.IsWhiteSpace(c));
+        private bool IsValidName(string name)
+        {
+            return !string.IsNullOrWhiteSpace(name) && !Regex.IsMatch(name, @"\d");
         }
         //Check Email_Customer
-        private bool IsValidEmail(string email) {
-            var gmailPattern = @"^(?!.*\.\.)[a-zA-Z0-9._%+-]+(?<!\.)@gmail\.com$";
-            return Regex.IsMatch(email, gmailPattern);
+        private bool IsValidEmail(string email)
+        {
+            return !string.IsNullOrWhiteSpace(email) && Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
         }
         //Check Tel_Customer
-        private bool IsValidTelephoneNumber(string phoneNumber) {
-            return !string.IsNullOrEmpty(phoneNumber) && phoneNumber.All(char.IsDigit) && phoneNumber.Length >= 10 && phoneNumber.Length <= 15;
-        }
-        //Check ALL
-        private bool IsValidData(string name, string email, string telephone) {
-            if (!IsValidName(name)) return false;
-            if (!IsValidEmail(email)) return false;
-            if (!IsValidTelephoneNumber(telephone)) return false;
-            return true;
+        private bool IsValidPhone(string phone)
+        {
+            return !string.IsNullOrWhiteSpace(phone) && Regex.IsMatch(phone, @"^\d{10,15}$");
         }
         #endregion
 

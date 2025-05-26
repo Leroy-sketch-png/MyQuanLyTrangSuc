@@ -37,6 +37,21 @@ namespace MyQuanLyTrangSuc.ViewModel
             NewID = customerService.GenerateNewCustomerID();
         }
 
+        private bool IsValidName(string name)
+        {
+            return !string.IsNullOrWhiteSpace(name) && !Regex.IsMatch(name, @"\d");
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            return !string.IsNullOrWhiteSpace(email) && Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+        }
+
+        private bool IsValidPhone(string phone)
+        {
+            return !string.IsNullOrWhiteSpace(phone) && Regex.IsMatch(phone, @"^\d{10,15}$");
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
         {
@@ -44,9 +59,19 @@ namespace MyQuanLyTrangSuc.ViewModel
         }
         public bool AddCustomer(string name, string email, string phone, string address, DateTime? birthday, string gender)
         {
-            if (!customerService.IsValidCustomerData(name, email, phone))
+            if (!IsValidName(name))
             {
-                notificationWindowLogic.LoadNotification("Error", "Invalid supplier data!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Tên không hợp lệ!", "BottomRight");
+                return false;
+            }
+            if (!IsValidEmail(email))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Email không hợp lệ!", "BottomRight");
+                return false;
+            }
+            if (!IsValidPhone(phone))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Số điện thoại phải từ 10-15 chữ số!", "BottomRight");
                 return false;
             }
 

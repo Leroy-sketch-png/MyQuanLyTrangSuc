@@ -45,10 +45,24 @@ namespace MyQuanLyTrangSuc.ViewModel
                 notificationWindowLogic.LoadNotification("Error", "Customer is not found!", "BottomRight");
                 return false;
             }
-
-            if (!customerService.IsValidCustomerData(Customer.Name, Customer.Email, Customer.ContactNumber))
+            //if (!customerService.IsValidCustomerData(Customer.Name, Customer.Email, Customer.ContactNumber))
+            //{
+            //    notificationWindowLogic.LoadNotification("Error", "Invalid customer data!", "BottomRight");
+            //    return false;
+            //}
+            if (!customerService.IsValidName(Customer.Name))
             {
-                notificationWindowLogic.LoadNotification("Error", "Invalid customer data!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Invalid name!", "BottomRight");
+                return false;
+            }
+            if (!customerService.IsValidEmail(Customer.Email))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Invalid email!", "BottomRight");
+                return false;
+            }
+            if (!customerService.IsValidTelephoneNumber(Customer.ContactNumber))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Invalid contact number!", "BottomRight");
                 return false;
             }
 

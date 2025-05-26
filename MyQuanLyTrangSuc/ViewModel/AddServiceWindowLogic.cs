@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
+using System.Text.RegularExpressions;
 using MyQuanLyTrangSuc.View;
 
 namespace MyQuanLyTrangSuc.ViewModel
@@ -12,15 +12,16 @@ namespace MyQuanLyTrangSuc.ViewModel
     public class AddServiceWindowLogic : INotifyPropertyChanged
     {
         private const string NumericPattern = "[^0-9]+";
-        private const string ErrorTitle = "Error";
-        private const string SuccessTitle = "Success";
         private const string ValidationErrorMessage = "Please fill in all required fields!";
+        private const string ServiceNameErrorMessage = "Service name is required and cannot contain only numbers!";
         private const string PriceErrorMessage = "Price must be greater than 0!";
         private const string SuccessMessage = "Service added successfully!";
         private const string DuplicateNameMessage = "Service name already exists!";
+        private const string DatabaseErrorMessage = "An error occurred while saving to database!";
 
         private readonly AddServiceWindow _window;
         public event PropertyChangedEventHandler PropertyChanged;
+        private readonly NotificationWindowLogic notificationWindowLogic;
 
         private Service _service;
         public Service Service
@@ -40,6 +41,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             _window = window ?? throw new ArgumentNullException(nameof(window));
             Service = new Service();
             GenerateServiceId();
+            notificationWindowLogic = new NotificationWindowLogic();
 
             AddServiceCommand = new CommandHandler(AddService, () => true);
         }
@@ -49,70 +51,139 @@ namespace MyQuanLyTrangSuc.ViewModel
             var db = MyQuanLyTrangSucContext.Instance;
             string newId = "SV001"; // Default value
 
-            var lastServiceId = db.Services
-                                .Where(s => s.ServiceId.StartsWith("SV"))
-                                .OrderByDescending(s => s.ServiceId)
-                                .Select(s => s.ServiceId)
-                                .FirstOrDefault();
-
-            if (!string.IsNullOrEmpty(lastServiceId) && lastServiceId.Length > 2)
+            try
             {
-                string lastIdNumericPart = lastServiceId.Substring(2);
-                if (int.TryParse(lastIdNumericPart, out int parsedNumber))
+                var lastServiceId = db.Services
+                                    .Where(s => !string.IsNullOrEmpty(s.ServiceId) && s.ServiceId.StartsWith("SV"))
+                                    .OrderByDescending(s => s.ServiceId)
+                                    .Select(s => s.ServiceId)
+                                    .FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(lastServiceId) && lastServiceId.Length > 2)
                 {
-                    newId = $"SV{(parsedNumber + 1):D3}"; // Format with 3 digits
+                    string lastIdNumericPart = lastServiceId.Substring(2);
+                    if (int.TryParse(lastIdNumericPart, out int parsedNumber))
+                    {
+                        newId = $"SV{(parsedNumber + 1):D3}"; // Format with 3 digits
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                // Log error but continue with default ID
+                System.Diagnostics.Debug.WriteLine($"Error generating service ID: {ex.Message}");
             }
 
             Service.ServiceId = newId;
             OnPropertyChanged(nameof(Service));
         }
 
+        // Validate service name
+        private bool IsValidServiceName(string serviceName)
+        {
+            if (string.IsNullOrWhiteSpace(serviceName))
+                return false;
+
+            string trimmedName = serviceName.Trim();
+
+            // Check if service name contains any numbers
+            if (Regex.IsMatch(trimmedName, @"\d"))
+                return false;
+
+            // Check length (minimum 2 characters, maximum 100 characters)
+            return trimmedName.Length >= 2 && trimmedName.Length <= 100;
+        }
+
+        // Validate service price
+        private bool IsValidServicePrice(decimal? price)
+        {
+            if (!price.HasValue)
+                return false;
+
+            return price.Value > 0 && price.Value <= 999999999; // Reasonable upper limit
+        }
+
+        // Validate more info (optional field)
+        private bool IsValidMoreInfo(string moreInfo)
+        {
+            if (string.IsNullOrEmpty(moreInfo))
+                return true; // Optional field
+
+            // Check maximum length
+            return moreInfo.Trim().Length <= 500;
+        }
+
         public void AddService()
         {
             var db = MyQuanLyTrangSucContext.Instance;
 
-            // Validate input
-            if (string.IsNullOrWhiteSpace(Service.ServiceName) || Service.ServicePrice <= 0)
-            {
-                MessageBox.Show(ValidationErrorMessage, ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
+            // Comprehensive validation
+            if (!ValidateAllFields())
                 return;
-            }
-
-            // Check for duplicate
-            if (db.Services.Any(s => s.ServiceName.ToLower() == Service.ServiceName.ToLower()))
-            {
-                MessageBox.Show(DuplicateNameMessage, ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
 
             try
             {
+                // Check for duplicate service name
+                if (db.Services.Any(s => !string.IsNullOrEmpty(s.ServiceName) &&
+                                        s.ServiceName.ToLower().Trim() == Service.ServiceName.ToLower().Trim()))
+                {
+                    notificationWindowLogic.LoadNotification("Warning", DuplicateNameMessage, "BottomRight");
+                    return;
+                }
+
                 // Create and add service
                 var newService = new Service
                 {
-                    ServiceId = Service.ServiceId,
-                    ServiceName = Service.ServiceName.Trim(),
-                    ServicePrice = Service.ServicePrice,
-                    MoreInfo = Service.MoreInfo?.Trim()
+                    ServiceId = Service?.ServiceId ?? "SV001",
+                    ServiceName = Service?.ServiceName?.Trim() ?? "",
+                    ServicePrice = Service?.ServicePrice ?? 0,
+                    MoreInfo = string.IsNullOrWhiteSpace(Service?.MoreInfo) ? null : Service.MoreInfo.Trim()
                 };
 
                 db.Services.Add(newService);
                 db.SaveChangesAdded(newService);
 
-                // Show success message and close window
-                MessageBox.Show(SuccessMessage, SuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                // Show success notification and close window
+                notificationWindowLogic.LoadNotification("Success", SuccessMessage, "BottomRight");
                 _window.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}", ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                notificationWindowLogic.LoadNotification("Error", $"{DatabaseErrorMessage}\nDetails: {ex.Message}", "BottomRight");
+                System.Diagnostics.Debug.WriteLine($"Database error: {ex}");
             }
+        }
+
+        private bool ValidateAllFields()
+        {
+            // Validate service name
+            if (!IsValidServiceName(Service?.ServiceName))
+            {
+                notificationWindowLogic.LoadNotification("Error", ServiceNameErrorMessage, "BottomRight");
+                return false;
+            }
+
+            // Validate service price
+            if (!IsValidServicePrice(Service?.ServicePrice))
+            {
+                notificationWindowLogic.LoadNotification("Error", PriceErrorMessage, "BottomRight");
+                return false;
+            }
+
+            // Validate more info (optional)
+            if (!IsValidMoreInfo(Service?.MoreInfo))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Additional information is too long (maximum 500 characters)!", "BottomRight");
+                return false;
+            }
+
+            return true;
         }
 
         public void ValidateNumericInput(TextCompositionEventArgs e)
         {
-            if (!char.IsDigit(e.Text, 0))
+            // Allow digits and decimal point
+            if (!char.IsDigit(e.Text, 0) && e.Text != ".")
             {
                 e.Handled = true;
             }
@@ -123,7 +194,11 @@ namespace MyQuanLyTrangSuc.ViewModel
             if (e.DataObject.GetDataPresent(typeof(string)))
             {
                 string pastedText = (string)e.DataObject.GetData(typeof(string));
-                if (!pastedText.All(char.IsDigit))
+
+                // Allow digits and single decimal point
+                if (string.IsNullOrEmpty(pastedText) ||
+                    !Regex.IsMatch(pastedText, @"^\d*\.?\d*$") ||
+                    pastedText.Count(c => c == '.') > 1)
                 {
                     e.CancelCommand();
                 }
@@ -134,9 +209,9 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        protected virtual void OnPropertyChanged(string propertyServiceName)
+        protected virtual void OnPropertyChanged(string propertyName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyServiceName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
@@ -148,8 +223,8 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public CommandHandler(Action action, Func<bool> canExecute)
         {
-            _action = action;
-            _canExecute = canExecute;
+            _action = action ?? throw new ArgumentNullException(nameof(action));
+            _canExecute = canExecute ?? throw new ArgumentNullException(nameof(canExecute));
         }
 
         public event EventHandler CanExecuteChanged
