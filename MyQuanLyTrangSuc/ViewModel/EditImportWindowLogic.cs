@@ -6,38 +6,29 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using WpfApplication = System.Windows.Application;
 
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
-    public class AddImportRecordWindowLogic : INotifyPropertyChanged
+    public class EditImportWindowLogic : INotifyPropertyChanged
     {
         private readonly ImportService importService;
         private readonly EmployeeService employeeService;
         private readonly NotificationWindowLogic notificationWindowLogic;
 
-        public AddImportRecordWindowLogic()
-        {
-            importService = ImportService.Instance;
-            employeeService = EmployeeService.Instance;
-            notificationWindowLogic = new NotificationWindowLogic();
-            GenerateNewImportID();
-            Items = new ObservableCollection<Product>(importService.GetListOfProducts());
-            Suppliers = new ObservableCollection<Supplier>(importService.GetListOfSuppliers());
-            ImportDetails = new ObservableCollection<ImportDetail>();
-            _newImportDetailID = importService.GenerateNewImportDetailID();
-        }
+        private Import _import;
 
-        private string _newID;
-        public string NewID
+        public Import Import
         {
-            get => _newID;
-            private set
+            get => _import;
+            set
             {
-                _newID = value;
-                OnPropertyChanged();
+                _import = value;
+                OnPropertyChanged(nameof(Import));
             }
         }
 
@@ -54,6 +45,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 }
             }
         }
+
         private Supplier selectedSupplier;
         public Supplier SelectedSupplier
         {
@@ -89,6 +81,14 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
+        private int _newImportDetailID;
+        private int GenerateNewImportDetailID()
+        {
+            return _newImportDetailID++;
+        }
+
+        
+
         public ObservableCollection<Product> Items { get; set; }
         public ObservableCollection<Supplier> Suppliers { get; set; }
         public ObservableCollection<ImportDetail> ImportDetails { get; set; }
@@ -99,15 +99,19 @@ namespace MyQuanLyTrangSuc.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void GenerateNewImportID()
+        public EditImportWindowLogic(Import import)
         {
-            NewID = importService.GenerateNewImportID();
-        }
+            importService = ImportService.Instance;
+            notificationWindowLogic = new NotificationWindowLogic();
+            employeeService = EmployeeService.Instance;
+            Import = import;
 
-        private int _newImportDetailID;
-        private int GenerateNewImportDetailID()
-        {
-            return _newImportDetailID++;
+            Items = new ObservableCollection<Product>(importService.GetListOfProducts());
+            Suppliers = new ObservableCollection<Supplier>(importService.GetListOfSuppliers());
+            SelectedSupplier = Suppliers.FirstOrDefault(s => s.SupplierId == _import.SupplierId);
+            ImportDetails = new ObservableCollection<ImportDetail>(importService.GetImportDetailsByImportId(import.ImportId));
+            GrandTotal = (decimal)_import.TotalAmount;
+            _newImportDetailID = importService.GenerateNewImportDetailID();
         }
 
         public void AddImportDetail()
@@ -126,7 +130,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             if (existingDetail != null)
             {
-                GrandTotal -= (decimal)(existingDetail.Quantity * existingDetail.Price); 
+                GrandTotal -= (decimal)(existingDetail.Quantity * existingDetail.Price);
                 int index = ImportDetails.IndexOf(existingDetail);
                 ImportDetails.Remove(existingDetail);
                 existingDetail.Quantity += Quantity;
@@ -141,7 +145,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 ImportDetail importDetail = new ImportDetail
                 {
                     Stt = GenerateNewImportDetailID(),
-                    ImportId = NewID,
+                    ImportId = _import.ImportId,
                     ProductId = SelectedItem.ProductId,
                     Quantity = Quantity,
                     Price = SelectedItem.Price,
@@ -153,6 +157,8 @@ namespace MyQuanLyTrangSuc.ViewModel
 
                 notificationWindowLogic.LoadNotification("Success", $"Added product '{SelectedItem.Name}' to import list.", "BottomRight");
             }
+            Quantity = 0;
+            SelectedItem = null;
         }
 
         public void RemoveImportDetail(ImportDetail selectedDetail)
@@ -169,7 +175,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        public void AddImport()
+        public void SaveImport()
         {
             if (ImportDetails.Count == 0)
             {
@@ -181,25 +187,58 @@ namespace MyQuanLyTrangSuc.ViewModel
                 notificationWindowLogic.LoadNotification("Error", "Please select a supplier", "BottomRight");
                 return;
             }
-            Import import = new Import
+            Import.SupplierId = SelectedSupplier.SupplierId;
+            Import.Supplier = SelectedSupplier;
+            Import.TotalAmount = GrandTotal;
+            Import.Date = DateTime.Now;
+            try
             {
-                ImportId = NewID,
-                Supplier = SelectedSupplier,
-                SupplierId = SelectedSupplier.SupplierId,
-                EmployeeId = employeeService.GetEmployeeByAccountId((int)WpfApplication.Current.Resources["CurrentAccountId"]).EmployeeId,
-                Date = DateTime.Now,
-                TotalAmount = GrandTotal
-            };
-            importService.AddImport(import);
-            foreach (var importDetail in ImportDetails)
-            {
-                importService.AddImportDetail(importDetail);
-                importService.UpdateProductQuantity(importDetail.ProductId, (int)importDetail.Quantity);
+                List<ImportDetail> originalImportDetails = importService.GetImportDetailsByImportId(Import.ImportId).ToList();
+                List<ImportDetail> currentImportDetails = ImportDetails.ToList();
+                var detailsToDelete = originalImportDetails
+                                        .Where(orig => !currentImportDetails.Any(curr => curr.ProductId == orig.ProductId))
+                                        .ToList();
+                foreach (var detail in detailsToDelete)
+                {
+                    importService.RemoveImportDetail(detail.ImportId, detail.ProductId);
+                    importService.UpdateProductQuantity(detail.ProductId, -(int)detail.Quantity);
+                }
+
+                foreach (var currentDetail in currentImportDetails)
+                {
+                    var originalDetail = originalImportDetails.FirstOrDefault(orig => currentDetail.ProductId == orig.ProductId);
+
+                    if (originalDetail == null)
+                    {
+                        importService.AddImportDetail(currentDetail);
+                        importService.UpdateProductQuantity(currentDetail.ProductId, (int)currentDetail.Quantity);
+                    }
+                    else
+                    {
+                        if (originalDetail.Quantity != currentDetail.Quantity || originalDetail.Price != currentDetail.Price)
+                        {
+                            int quantityChange = (int)(currentDetail.Quantity - originalDetail.Quantity);
+                            originalDetail.Quantity = currentDetail.Quantity;
+                            originalDetail.Price = currentDetail.Price;
+                            originalDetail.TotalPrice = currentDetail.TotalPrice;
+
+                            importService.UpdateImportDetail(originalDetail); 
+                            importService.UpdateProductQuantity(currentDetail.ProductId, quantityChange);
+
+                        }
+                    }
+                }
+                importService.UpdateImport(Import);
+                notificationWindowLogic.LoadNotification("Success", "Phiếu nhập hàng đã được cập nhật thành công!", "BottomRight");
             }
-            notificationWindowLogic.LoadNotification("Success", "Import record added successfully", "BottomRight");
-            GenerateNewImportID();
-            ImportDetails.Clear();
-            GrandTotal = 0;
+            catch (Exception ex)
+            {
+                notificationWindowLogic.LoadNotification("Error", $"Lỗi khi cập nhật phiếu nhập: {ex.Message}", "BottomRight");
+                MessageBox.Show(ex.Message);
+                Console.WriteLine($"Error during SaveImport: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+            }
         }
+
     }
 }

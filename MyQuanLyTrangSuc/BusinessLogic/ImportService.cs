@@ -1,4 +1,5 @@
-﻿using MyQuanLyTrangSuc.DataAccess;
+﻿using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.DataAccess;
 using MyQuanLyTrangSuc.Model;
 using System;
 using System.Collections.Generic;
@@ -72,5 +73,31 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             itemRepository.UpdateProductQuantity(productId, quantity, true);
         }
 
+        public IEnumerable<ImportDetail> GetImportDetailsByImportId(string importId)
+        {
+            return MyQuanLyTrangSucContext.Instance.ImportDetails
+                                  .Where(id => id.ImportId == importId)
+                                  .Include(id => id.Product)
+                                  .AsNoTracking()
+                                  .ToList();
+        }
+
+        public void RemoveImportDetail(string importId, string productId)
+        {
+            importRepository.RemoveImportDetail(importId, productId);
+        }
+
+        public void UpdateImport(Import import)
+        {
+            importRepository.UpdateImport(import);
+            OnImportUpdated?.Invoke(import);
+        }
+
+        public void UpdateImportDetail(ImportDetail currentDetail)
+        {
+            importRepository.UpdateImportDetail(currentDetail);
+        }
+
+        
     }
 }

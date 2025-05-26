@@ -1,4 +1,5 @@
-﻿using MyQuanLyTrangSuc.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,5 +57,60 @@ namespace MyQuanLyTrangSuc.DataAccess
             var lastID = context.ImportDetails.OrderByDescending(i => i.Stt).Select(i => i.Stt).FirstOrDefault();
             return (lastID != null && lastID > 0) ? lastID + 1 : 1;
         }
+
+        public IEnumerable<ImportDetail> GetImportDetailsByImportId(string importId)
+        {
+            return context.ImportDetails.Where(id => id.ImportId == importId);
+        }
+
+        public void RemoveImportDetail(string importId, string productId)
+        {
+            var detailToRemove = context.ImportDetails
+                                        .FirstOrDefault(id => id.ImportId == importId && id.ProductId == productId);
+            if (detailToRemove != null)
+            {
+                context.ImportDetails.Remove(detailToRemove);
+                context.SaveChanges();
+            }
+        }
+
+        public void UpdateImport(Import import)
+        {
+            var existingImport = context.Imports.Find(import.ImportId);
+            if (existingImport != null)
+            {
+                existingImport.SupplierId = import.SupplierId;
+                existingImport.Date = import.Date; 
+                existingImport.TotalAmount = import.TotalAmount;
+                context.Imports.Update(existingImport); 
+                context.SaveChanges();
+            }
+            else
+            {
+                throw new InvalidOperationException($"Không tìm thấy phiếu nhập với ID: {import.ImportId} để cập nhật.");
+            }
+        }
+
+        public void UpdateImportDetail(ImportDetail currentDetail)
+        {
+            var existingDetail = context.ImportDetails
+                                                    .FirstOrDefault(id => id.ImportId == currentDetail.ImportId && id.ProductId == currentDetail.ProductId);
+
+            if (existingDetail != null)
+            {
+                existingDetail.Quantity = currentDetail.Quantity;
+                existingDetail.Price = currentDetail.Price; 
+                existingDetail.TotalPrice = currentDetail.TotalPrice;
+
+                context.ImportDetails.Update(existingDetail);
+                context.SaveChanges();
+            }
+            else
+            {
+                throw new InvalidOperationException($"Không tìm thấy chi tiết nhập hàng cho phiếu nhập '{currentDetail.ImportId}' và sản phẩm '{currentDetail.ProductId}' để cập nhật.");
+            }
+        }
+
+        
     }
 }

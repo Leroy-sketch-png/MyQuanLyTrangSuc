@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MyQuanLyTrangSuc.BusinessLogic;
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
+using MyQuanLyTrangSuc.View.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,6 +30,15 @@ namespace PhanMemQuanLyVatTu.ViewModel
             importService = ImportService.Instance;
             //context.OnImportAdded += Context_OnImportAdded;
             importService.OnImportAdded += ImportService_OnImportAdded;
+            importService.OnImportUpdated += ImportService_OnImportUpdated;
+        }
+
+        private void ImportService_OnImportUpdated(Import obj)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                LoadRecordsFromDatabase();
+            });
         }
 
         private void ImportService_OnImportAdded(Import import)
@@ -180,6 +190,12 @@ namespace PhanMemQuanLyVatTu.ViewModel
             {
                 MessageBox.Show("Please select an import record to print.", "Print Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        public void LoadEditImportWindow(Import selectedItem)
+        {
+            var temp = new EditImportWindow(selectedItem);
+            temp.ShowDialog();
         }
     }
 }

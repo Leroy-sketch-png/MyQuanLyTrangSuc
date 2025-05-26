@@ -104,9 +104,5 @@ namespace MyQuanLyTrangSuc.ViewModel
             notificationWindowLogic.LoadNotification("Success", "Update supplier successfully", "BottomRight");
             return true;
         }
-
-        
-
-
     }
 }
