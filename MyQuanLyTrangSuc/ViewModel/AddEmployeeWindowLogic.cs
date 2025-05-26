@@ -173,12 +173,12 @@ namespace MyQuanLyTrangSuc.ViewModel {
         //Check Email_Customer
         private bool IsValidEmail(string email)
         {
-            return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+            return !string.IsNullOrWhiteSpace(email) && Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
         }
         //Check Tel_Customer
         private bool IsValidPhone(string phone)
         {
-            return Regex.IsMatch(phone, @"^\d{10,15}$");
+            return !string.IsNullOrWhiteSpace(phone) && Regex.IsMatch(phone, @"^\d{10,15}$");
         }
         #endregion
 

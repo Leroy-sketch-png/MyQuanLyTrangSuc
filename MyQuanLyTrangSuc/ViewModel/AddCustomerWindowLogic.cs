@@ -44,12 +44,12 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         private bool IsValidEmail(string email)
         {
-            return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+            return !string.IsNullOrWhiteSpace(email) && Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
         }
 
         private bool IsValidPhone(string phone)
         {
-            return Regex.IsMatch(phone, @"^\d{10,15}$");
+            return !string.IsNullOrWhiteSpace(phone) && Regex.IsMatch(phone, @"^\d{10,15}$");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

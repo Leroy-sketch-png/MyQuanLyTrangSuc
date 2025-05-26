@@ -111,6 +111,11 @@ namespace MyQuanLyTrangSuc.ViewModel
                 notificationWindowLogic.LoadNotification("Error", "Please choose an item", "BottomRight");
                 return;
             }
+            if (SelectedCustomer == null)
+            {
+                notificationWindowLogic.LoadNotification("Error", "Please choose a customer", "BottomRight");
+                return;
+            }
             if (Quantity <= 0)
             {
                 notificationWindowLogic.LoadNotification("Error", "Quantity must be positive", "BottomRight");
