@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -37,8 +38,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        private List<ProductCategory> _categories;
-        public List<ProductCategory> Categories
+        private ObservableCollection<ProductCategory> _categories;
+        public ObservableCollection<ProductCategory> Categories
         {
             get => _categories;
             set
@@ -76,11 +77,20 @@ namespace MyQuanLyTrangSuc.ViewModel
         private void LoadCategories()
         {
             var db = MyQuanLyTrangSucContext.Instance;
-            Categories = db.ProductCategories.ToList();
+            Categories = new ObservableCollection<ProductCategory>(db.ProductCategories.ToList());
 
             if (Categories.Any())
             {
                 SelectedCategory = Categories.First();
+            }
+        }
+        public void RefreshListOfCategories()
+        {
+            var db = MyQuanLyTrangSucContext.Instance;
+            Categories.Clear();
+            foreach (var category in db.ProductCategories.ToList())
+            {
+                Categories.Add(category);
             }
         }
 

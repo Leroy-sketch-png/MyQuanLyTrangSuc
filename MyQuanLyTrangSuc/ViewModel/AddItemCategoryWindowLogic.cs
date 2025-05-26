@@ -58,7 +58,15 @@ namespace MyQuanLyTrangSuc.ViewModel
             var unitRepo = new UnitRepository();
             ListOfUnits = new ObservableCollection<Unit>(unitRepo.GetListOfUnits());
         }
-
+        public void RefreshListOfUnits()
+        {
+            var unitRepo = new UnitRepository();
+            ListOfUnits.Clear();
+            foreach (var unit in unitRepo.GetListOfUnits())
+            {
+                ListOfUnits.Add(unit);
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
         {

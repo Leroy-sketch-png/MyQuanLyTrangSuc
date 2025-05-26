@@ -14,8 +14,8 @@ namespace MyQuanLyTrangSuc.ViewModel
     {
         private readonly MyQuanLyTrangSucContext _context;
 
-        private string _selectedCategory;
-        public string SelectedCategory
+        private ProductCategory _selectedCategory;
+        public ProductCategory SelectedCategory
         {
             get => _selectedCategory;
             set
@@ -27,7 +27,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         }
 
         public ObservableCollection<Product> Products { get; set; } = new ObservableCollection<Product>();
-        public ObservableCollection<string> Categories { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<ProductCategory> Categories { get; set; } = new ObservableCollection<ProductCategory>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -55,30 +55,30 @@ namespace MyQuanLyTrangSuc.ViewModel
         private void LoadCategories()
         {
             Categories.Clear();
-            var categoriesFromDb = _context.Products
-                .Select(p => p.CategoryId)
-                .Distinct()
+
+            var distinctCategories = Products
+                .Where(p => p.Category != null)
+                .Select(p => p.Category)
+                .Distinct() // this works because EF attaches by reference
                 .ToList();
 
-            foreach (var category in categoriesFromDb)
+            foreach (var category in distinctCategories)
             {
                 Categories.Add(category);
             }
 
             OnPropertyChanged(nameof(Categories));
         }
-
         private void FilterItemsByCategory()
         {
-            if (string.IsNullOrEmpty(SelectedCategory))
+            if (SelectedCategory == null)
             {
                 LoadProducts();
                 return;
             }
 
-            var filteredProducts = _context.Products
-                .AsNoTracking()
-                .Where(p => !p.IsDeleted && p.CategoryId == SelectedCategory)
+            var filteredProducts = Products
+                .Where(p => p.Category?.CategoryId == SelectedCategory.CategoryId)
                 .ToList();
 
             Products.Clear();
@@ -118,6 +118,8 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             Window addWindow = new AddItemWindow();
             addWindow.ShowDialog();
+            LoadProducts();
+            LoadCategories();
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

@@ -40,6 +40,7 @@ namespace MyQuanLyTrangSuc.View
         {
             AddUnitWindow addUnitWindow = new AddUnitWindow();
             addUnitWindow.ShowDialog();
+            logicService.RefreshListOfUnits();
         }
     }
 }

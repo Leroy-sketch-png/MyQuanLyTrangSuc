@@ -71,7 +71,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             var emp = context.Employees
                 .AsNoTracking()
-                .FirstOrDefault(e => e.Account.Username == _username);
+                .FirstOrDefault(e => e.UsernameNavigation.Username == _username);
 
             if (emp == null)
             {
@@ -94,7 +94,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             var account = context.Accounts.FirstOrDefault(a => a.Username == username);
             if (account != null)
             {
-                var employee = context.Employees.FirstOrDefault(e => e.Account.Username == account.Username);
+                var employee = context.Employees.FirstOrDefault(e => e.UsernameNavigation.Username == account.Username);
                 if (employee != null)
                 {
                     bool isUpdated = false;
@@ -144,7 +144,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 ProfileImagePath = dlg.FileName;
 
                 var emp = context.Employees
-                    .FirstOrDefault(e => e.Account.Username == _username);
+                    .FirstOrDefault(e => e.UsernameNavigation.Username == _username);
 
                 if (emp == null) return;
 
@@ -168,7 +168,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             if (account != null)
             {
-                var employee = account.Employees.FirstOrDefault(e => e.Account.Username == username);
+                var employee = account.Employees.FirstOrDefault(e => e.UsernameNavigation.Username == username);
 
                 if (employee != null)
                 {

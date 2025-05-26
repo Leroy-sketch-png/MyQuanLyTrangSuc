@@ -51,6 +51,8 @@
                 <TextBox DockPanel.Dock="Right" Width="200" x:Name="SearchTextBox" materialDesign:HintAssist.Hint="Search By Name" HorizontalAlignment="Right" Margin="20,0,10,0" Height="60"
                          TextChanged="TextChanged_Search"/> 
                 <ComboBox DockPanel.Dock="Right" Width="150" Style="{StaticResource MaterialDesignOutlinedComboBox}" HorizontalAlignment="Right" Margin="20,0,10,0" ItemsSource="{Binding Categories}"
+                          SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                          DisplayMemberPath="CategoryName"
                           ToolTip="Double click to clear"
                           materialDesign:HintAssist.Hint="Category"
                           SelectionChanged="ComboBox_SelectionChanged"

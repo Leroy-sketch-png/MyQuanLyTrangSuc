@@ -289,12 +289,12 @@ public partial class MyQuanLyTrangSucContext : DbContext
             entity.Property(e => e.Position)
                 .HasMaxLength(255)
                 .HasColumnName("position");
-            entity.Property(e => e.Username)
+            entity.Property(e => e.AccountId)
                .HasMaxLength(50)
-               .HasColumnName("username");
+               .HasColumnName("accountId");
 
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Employees)
-                .HasForeignKey(d => d.Username)
+                .HasForeignKey(d => d.AccountId)
                 .HasConstraintName("fk_employee_users");
         });
 
@@ -870,7 +870,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
             //Your server goes here!
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=DESKTOP-D560T6T;Database=MyQuanLyTrangSucTest03;TrustServerCertificate=True;Trusted_Connection=True");
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=DESKTOP-71PN892\\SQLEXPRESS;Database=MyQuanLyTrangSuc;TrustServerCertificate=True;Trusted_Connection=True");
         }
     }
 }

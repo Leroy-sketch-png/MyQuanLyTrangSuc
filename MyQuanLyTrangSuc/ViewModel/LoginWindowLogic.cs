@@ -113,6 +113,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             catch (Exception ex)
             {
                 notificationLogic.LoadNotification("Error", $"An error occurred during login: {ex.Message}", "BottomRight"); // Thông báo lỗi chi tiết hơn
+                //MessageBox.Show(ex.Message);
             }
         }
     }
