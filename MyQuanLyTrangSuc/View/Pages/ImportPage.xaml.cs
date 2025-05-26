@@ -64,5 +64,10 @@ namespace MyQuanLyTrangSuc.View
         {
             logicService.PrintImportRecord();
         }
+
+        private void editButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

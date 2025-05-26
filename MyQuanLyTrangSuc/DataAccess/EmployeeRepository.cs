@@ -33,5 +33,10 @@ namespace MyQuanLyTrangSuc.DataAccess
         {
             context.SaveChangesAdded(employee);
         }
+
+        public Employee GetEmployeeByAccountId(int accountId)
+        {
+            return context.Employees.FirstOrDefault(e => e.AccountId == accountId && !e.IsDeleted);
+        }
     }
 }

@@ -197,7 +197,6 @@
 
                     </DataGrid.Columns>
                 </DataGrid>
-                <!--MouseDoubleClick="supplierDataGrid_MouseDoubleClick"-->
             </Grid>
         </Grid>
     </Border>

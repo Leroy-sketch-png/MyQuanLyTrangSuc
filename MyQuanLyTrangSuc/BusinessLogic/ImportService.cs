@@ -11,6 +11,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
     public class ImportService
     {
         private ImportRepository importRepository;
+        private ItemRepository itemRepository;
         private readonly string prefix = "IM";
         public event Action<Import> OnImportAdded;
         public event Action<Import> OnImportUpdated;
@@ -23,6 +24,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         public ImportService()
         {
             importRepository = new ImportRepository();
+            itemRepository = new ItemRepository();
         }
 
         public string GenerateNewImportID()
@@ -64,6 +66,11 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         {
             return importRepository.GetLastImportDetailID();
         }
-       
+
+        public void UpdateProductQuantity(string productId, int quantity)
+        {
+            itemRepository.UpdateProductQuantity(productId, quantity, true);
+        }
+
     }
 }

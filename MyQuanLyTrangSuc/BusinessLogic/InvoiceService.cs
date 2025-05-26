@@ -11,6 +11,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
     public class InvoiceService
     {
         private InvoiceRepository invoiceRepository;
+        private ItemRepository itemRepository;
         private readonly string prefix = "INV";
         public event Action<Invoice> OnInvoiceAdded;
         public event Action<Invoice> OnInvoiceUpdated;
@@ -22,6 +23,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         public InvoiceService()
         {
             invoiceRepository = new InvoiceRepository();
+            itemRepository = new ItemRepository();
         }
 
         public string GenerateNewInvoiceID()
@@ -58,6 +60,11 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         public int GenerateNewInvoiceDetailID()
         {
            return invoiceRepository.GetLastInvoiceDetailID();
+        }
+
+        public void UpdateProductQuantity(string productId, int quantity)
+        {
+            itemRepository.UpdateProductQuantity(productId, quantity ,false);
         }
 
     }

@@ -384,5 +384,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             return supplierRepository.SearchSupplierByID(id);
 
         }
+
+        
     }
 }

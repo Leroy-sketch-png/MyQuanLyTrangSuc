@@ -107,9 +107,13 @@
                                                  Click="viewButton_Click">
                                             <Icon:PackIconMaterial Kind="ViewListOutline" Style="{StaticResource gridButtonIcon}" />
                                         </Button>
-                                        <Button Margin="3 0 0 0" x:Name="printButton" Style="{StaticResource gridEditButton}"
+                                        <Button Margin="3 0 3 0" x:Name="printButton" Style="{StaticResource gridEditButton}"
                                                 Click="printButton_Click">
                                             <Icon:PackIconMaterial Kind="Printer" Style="{StaticResource gridButtonIcon}"/>
+                                        </Button>
+
+                                        <Button Margin="3 0 0 0" x:Name="editButton" Style="{StaticResource gridEditButton}" Click="editButton_Click">
+                                            <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>
                                 </DataTemplate>
