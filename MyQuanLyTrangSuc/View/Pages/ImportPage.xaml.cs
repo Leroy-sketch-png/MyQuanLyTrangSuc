@@ -69,5 +69,10 @@ namespace MyQuanLyTrangSuc.View
         {
             logicService.LoadEditImportWindow((Model.Import)importRecordsDataGrid.SelectedItem);
         }
+
+        private void deleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.DeleteImport((Model.Import)importRecordsDataGrid.SelectedItem);
+        }
     }
 }

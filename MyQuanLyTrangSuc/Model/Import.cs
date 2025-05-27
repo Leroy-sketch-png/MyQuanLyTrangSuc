@@ -22,4 +22,6 @@ public partial class Import
     public virtual ICollection<ImportDetail> ImportDetails { get; set; } = new List<ImportDetail>();
 
     public virtual Supplier Supplier { get; set; }
+
+    public bool IsDeleted { get; set; } = false;
 }

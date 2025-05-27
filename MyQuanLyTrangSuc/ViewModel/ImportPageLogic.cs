@@ -61,7 +61,7 @@ namespace PhanMemQuanLyVatTu.ViewModel
         {
             try
             {
-                List<Import> importRecordFromDb = context.Imports
+                List<Import> importRecordFromDb = context.Imports.Where(i => !i.IsDeleted)
                     .Include(i => i.Supplier) // Ensure Supplier is included
                     .ToList();
                 Application.Current.Dispatcher.Invoke(() =>
@@ -196,6 +196,16 @@ namespace PhanMemQuanLyVatTu.ViewModel
         {
             var temp = new EditImportWindow(selectedItem);
             temp.ShowDialog();
+        }
+
+        public void DeleteImport(Import selectedItem)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this import?", "Delete Import", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                importService.DeleteImport(selectedItem);
+                ImportRecords.Remove(selectedItem);
+            }
         }
     }
 }

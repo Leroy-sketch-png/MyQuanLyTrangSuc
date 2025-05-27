@@ -98,6 +98,9 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             importRepository.UpdateImportDetail(currentDetail);
         }
 
-        
+        public void DeleteImport(Import selectedItem)
+        {
+            importRepository.DeleteImport(selectedItem);
+        }
     }
 }

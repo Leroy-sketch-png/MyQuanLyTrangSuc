@@ -115,6 +115,10 @@
                                         <Button Margin="3 0 0 0" x:Name="editButton" Style="{StaticResource gridEditButton}" Click="editButton_Click">
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
+
+                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0" Click="deleteButton_Click">
+                                            <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
+                                        </Button>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

@@ -41,7 +41,7 @@ namespace MyQuanLyTrangSuc.DataAccess
         
         public List<Import> GetListOfImports()
         {
-            return context.Imports.ToList();
+            return context.Imports.Where(i => !i.IsDeleted).ToList();
         }   
         public List<Product> GetListOfProducts()
         {
@@ -87,7 +87,7 @@ namespace MyQuanLyTrangSuc.DataAccess
             }
             else
             {
-                throw new InvalidOperationException($"Không tìm thấy phiếu nhập với ID: {import.ImportId} để cập nhật.");
+                throw new InvalidOperationException($"Can not find the import with ID: {import.ImportId} to update.");
             }
         }
 
@@ -107,10 +107,17 @@ namespace MyQuanLyTrangSuc.DataAccess
             }
             else
             {
-                throw new InvalidOperationException($"Không tìm thấy chi tiết nhập hàng cho phiếu nhập '{currentDetail.ImportId}' và sản phẩm '{currentDetail.ProductId}' để cập nhật.");
+                throw new InvalidOperationException($"Can not find the import detail for record with detail ID: '{currentDetail.ImportId}' and product ID: '{currentDetail.ProductId}' to update.");
             }
         }
 
-        
+        public void DeleteImport(Import selectedItem)
+        {
+            if (selectedItem != null)
+            {
+                selectedItem.IsDeleted = true;
+                context.SaveChanges();
+            }
+        }
     }
 }

@@ -97,9 +97,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             {
                 return "Password cannot be empty!";
             }
-            MessageBox.Show(account.Password);
             String hash = BCrypt.Net.BCrypt.HashPassword(account.Password);
-            MessageBox.Show(hash);
             account.Password = hash;
             authenticationRepository.AddAccount(account);
             OnAccountAdded?.Invoke(account);
