@@ -1,4 +1,5 @@
-﻿using MyQuanLyTrangSuc.DataAccess;
+﻿using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.DataAccess;
 using MyQuanLyTrangSuc.Model;
 using System;
 using System.Collections.Generic;
@@ -67,5 +68,34 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             itemRepository.UpdateProductQuantity(productId, quantity ,false);
         }
 
+        public IEnumerable<InvoiceDetail> GetInvoiceDetailsByInvoiceId(string invoiceId)
+        {
+            return MyQuanLyTrangSucContext.Instance.InvoiceDetails
+                                  .Where(id => id.InvoiceId == invoiceId)
+                                  .Include(id => id.Product)
+                                  .AsNoTracking()
+                                  .ToList();
+        }
+
+        public void RemoveInvoiceDetail(string invoiceId, string productId)
+        {
+           invoiceRepository.RemoveInvoiceDetail(invoiceId, productId);
+        }
+
+        public void UpdateInvoiceDetail(InvoiceDetail originalDetail)
+        {
+            invoiceRepository.UpdateInvoiceDetail(originalDetail);
+        }
+
+        public void UpdateInvoice(Invoice invoice)
+        {
+            invoiceRepository.UpdateInvoice(invoice);
+            OnInvoiceUpdated?.Invoke(invoice);
+        }
+
+        public void DeleteInvoice(Invoice selectedItem)
+        {
+           invoiceRepository.DeleteInvoice(selectedItem);
+        }
     }
 }

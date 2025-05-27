@@ -90,10 +90,11 @@ namespace MyQuanLyTrangSuc.ViewModel
                 }
             }
         }
-        public decimal TotalPrice => SelectedItem?.Price* Quantity ?? 0;
+        //public decimal TotalPrice => SelectedItem?.Price* Quantity ?? 0;
         public ObservableCollection<Product> Items { get; set; }
         public ObservableCollection<Customer> Customers { get; set; }
         public ObservableCollection<InvoiceDetail> InvoiceDetails { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -120,9 +121,12 @@ namespace MyQuanLyTrangSuc.ViewModel
                 notificationWindowLogic.LoadNotification("Error", "Quantity must be positive", "BottomRight");
                 return;
             }
-            if (SelectedItem.Quantity < Quantity) 
+           
+            var productInItems = Items.FirstOrDefault(p => p.ProductId == SelectedItem.ProductId);
+
+            if (productInItems != null && productInItems.Quantity < Quantity)
             {
-                notificationWindowLogic.LoadNotification("Error", $"Not enough stock for '{SelectedItem.Name}'. Available: {SelectedItem.Quantity}", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", $"Not enough stock for '{SelectedItem.Name}'. Available: {productInItems.Quantity}", "BottomRight");
                 return;
             }
 
@@ -130,24 +134,25 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             if (existingDetail != null)
             {
-                if (SelectedItem.Quantity < (existingDetail.Quantity + Quantity))
+                if (productInItems != null && productInItems.Quantity < (existingDetail.Quantity + Quantity))
                 {
-                    notificationWindowLogic.LoadNotification("Error", $"Not enough stock for '{SelectedItem.Name}'. Available: {SelectedItem.Quantity}", "BottomRight");
+                    notificationWindowLogic.LoadNotification("Error", $"Not enough stock to add more '{SelectedItem.Name}'. Available: {productInItems.Quantity}", "BottomRight");
                     return;
                 }
 
-                GrandTotal -= (decimal)(existingDetail.TotalPrice); 
-
+                GrandTotal -= (decimal)(existingDetail.Quantity * existingDetail.Price);
                 int index = InvoiceDetails.IndexOf(existingDetail);
-
                 InvoiceDetails.Remove(existingDetail);
-
                 existingDetail.Quantity += Quantity;
-                existingDetail.TotalPrice = (existingDetail.Quantity * existingDetail.Price); 
-
+                existingDetail.TotalPrice = (existingDetail.Quantity * existingDetail.Price);
                 InvoiceDetails.Insert(index, existingDetail);
+                GrandTotal += (decimal)(existingDetail.Quantity * existingDetail.Price);
+                if (SelectedItem == productInItems) 
+                {
+                    SelectedItem.Quantity -= Quantity; 
+                    OnPropertyChanged(nameof(SelectedItem)); 
+                }
 
-                GrandTotal += (decimal)(existingDetail.TotalPrice);
                 notificationWindowLogic.LoadNotification("Success", $"Updated quantity for product '{SelectedItem.Name}'. New quantity: {existingDetail.Quantity}", "BottomRight");
             }
             else
@@ -165,8 +170,15 @@ namespace MyQuanLyTrangSuc.ViewModel
                 InvoiceDetails.Add(invoiceDetail);
                 GrandTotal += (decimal)(invoiceDetail.TotalPrice);
 
+                if (SelectedItem == productInItems) 
+                {
+                    SelectedItem.Quantity -= Quantity; 
+                    OnPropertyChanged(nameof(SelectedItem));
+                }
+
                 notificationWindowLogic.LoadNotification("Success", $"Added product '{SelectedItem.Name}' to invoice list.", "BottomRight");
             }
+            Quantity = 0;
 
         }
         public void RemoveInvoiceDetail(InvoiceDetail selectedDetail)
@@ -176,11 +188,20 @@ namespace MyQuanLyTrangSuc.ViewModel
                 InvoiceDetails.Remove(selectedDetail);
                 GrandTotal -= (decimal)(selectedDetail.TotalPrice);
                 notificationWindowLogic.LoadNotification("Success", $"Removed product '{selectedDetail.Product?.Name}' from invoice list.", "BottomRight");
-
-                for (int i = 0; i < InvoiceDetails.Count; i++)
+                var productInItems = Items.FirstOrDefault(p => p.ProductId == selectedDetail.ProductId);
+                if (productInItems != null)
                 {
-                    InvoiceDetails[i].Stt = i + 1;
+                    productInItems.Quantity += (int)selectedDetail.Quantity;
+                    if (SelectedItem == productInItems) 
+                    {
+                        OnPropertyChanged(nameof(SelectedItem)); 
+                    }
                 }
+
+                //for (int i = 0; i < InvoiceDetails.Count; i++)
+                //{
+                //    InvoiceDetails[i].Stt = i + 1;
+                //}
             }
         }
         public void AddInvoice()
@@ -235,6 +256,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             GrandTotal = 0;
             Items = new ObservableCollection<Product>(invoiceService.GetListOfProducts());
             OnPropertyChanged(nameof(Items));
+            SelectedItem = null;
+            Quantity = 0;
         }
 
 

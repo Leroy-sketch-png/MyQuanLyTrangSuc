@@ -93,9 +93,7 @@ namespace MyQuanLyTrangSuc.DataAccess
 
         public void UpdateImportDetail(ImportDetail currentDetail)
         {
-            var existingDetail = context.ImportDetails
-                                                    .FirstOrDefault(id => id.ImportId == currentDetail.ImportId && id.ProductId == currentDetail.ProductId);
-
+            var existingDetail = context.ImportDetails.FirstOrDefault(id => id.ImportId == currentDetail.ImportId && id.ProductId == currentDetail.ProductId);
             if (existingDetail != null)
             {
                 existingDetail.Quantity = currentDetail.Quantity;

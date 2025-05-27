@@ -63,5 +63,15 @@ namespace MyQuanLyTrangSuc.View
         {
             logicService.LoadInvoiceWindow();
         }
+
+        private void editButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.LoadEditInvoiceWindow((Model.Invoice)invoicesDataGrid.SelectedItem);
+        }
+
+        private void deleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.DeleteInvoice((Model.Invoice)invoicesDataGrid.SelectedItem);
+        }
     }
 }

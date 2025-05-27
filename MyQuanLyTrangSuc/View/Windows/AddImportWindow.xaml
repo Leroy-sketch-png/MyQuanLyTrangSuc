@@ -124,18 +124,17 @@
                       AutoGenerateColumns="False" 
                       CanUserAddRows="False" 
                       Background="White" 
-                      IsReadOnly="True" 
                       ItemsSource="{Binding ImportDetails}" 
                       HeadersVisibility="Column" 
                       VerticalScrollBarVisibility="Auto"
                       MouseDoubleClick="importDetailsDataGrid_MouseDoubleClick" Margin="0,0,0,67"
                       >
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Index" Width="65" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
-                    <DataGridTextColumn Header="Product" Width="*" Binding="{Binding Product.Name}"/>
-                    <DataGridTextColumn Header="Category" Width="*" Binding="{Binding Product.Category.CategoryName}"/>
-                    <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
-                    <DataGridTextColumn Header="Price" Width="*" Binding="{Binding Product.Price}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Index" Width="65" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Product" Width="*" Binding="{Binding Product.Name}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Category" Width="*" Binding="{Binding Product.Category.CategoryName}"/>
+                    <DataGridTextColumn IsReadOnly="False" Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Price" Width="*" Binding="{Binding Product.Price}"/>
                      
                 </DataGrid.Columns>
             </DataGrid>

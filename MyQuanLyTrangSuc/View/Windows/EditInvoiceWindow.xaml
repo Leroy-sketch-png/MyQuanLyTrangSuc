@@ -1,12 +1,17 @@
-﻿<Window x:Class="MyQuanLyTrangSuc.View.AddInvoiceWindow"
+﻿<Window x:Class="MyQuanLyTrangSuc.View.Windows.EditInvoiceWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MyQuanLyTrangSuc.View.Windows"
+        mc:Ignorable="d"
         ResizeMode="NoResize"
         Height="620" Width="650"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="SingleBorderWindow">
+        WindowStyle="SingleBorderWindow"
+        Title="EditInvoiceWindow">
     <Border Background="White" CornerRadius="10" Padding="5"
-            BorderBrush="Gray" BorderThickness="1">
+        BorderBrush="Gray" BorderThickness="1">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="275"/>
@@ -31,18 +36,18 @@
                         <StackPanel Margin="0,0,0,10">
                             <TextBlock Text="Quantity" FontSize="14" FontWeight="Medium"/>
                             <TextBox x:Name="ExportQuantityTextBox" FontSize="14" Margin="0,5,0,0"
-                                     Text="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, StringFormat=N0}"
-                                     />
+                                 Text="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, StringFormat=N0}"
+                                 />
                             <!--PreviewTextInput="OnPreviewTextInput_ExportQuantityTextBox_AddExportRecordWindow"
-                            DataObject.Pasting="OnPasting_ExportQuantityTextBox_AddExportRecordWindow"-->
+                        DataObject.Pasting="OnPasting_ExportQuantityTextBox_AddExportRecordWindow"-->
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Margin="10,0,0,0">
                         <StackPanel Margin="0,0,10,10">
                             <TextBlock Text="Item's ID | Item's Name" FontSize="14" FontWeight="Medium"/>
                             <ComboBox x:Name="ExportItemComboBox" FontSize="14" 
-                                      Margin="0,5,0,0" SelectedValuePath="ITEM" 
-                                      ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}">
+                                  Margin="0,5,0,0" SelectedValuePath="ITEM" 
+                                  ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -61,7 +66,7 @@
                         <StackPanel Margin="0,0,10,10">
                             <TextBlock Text="Customer's ID | Customer's Name" FontSize="14" FontWeight="Medium"/>
                             <ComboBox x:Name="ExportCustomerComboBox" FontSize="14" Margin="0,5,0,0" SelectedValuePath="CUSTOMER" 
-                                      ItemsSource="{Binding Customers}" SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}">
+                                  ItemsSource="{Binding Customers}" SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -76,24 +81,24 @@
                     </StackPanel>
                     <StackPanel Grid.Column="2">
                         <Button Content="+" 
-                            ToolTip="Add new client"
-                                Background="#BFDBFE" Foreground="#1E40AF" 
-                            Padding="10,5" Margin="0,110,0,0"
-                            Name="addNewClientBtn" Click="addNewClientBtn_Click"
-                            />
+                        ToolTip="Add new client"
+                            Background="#BFDBFE" Foreground="#1E40AF" 
+                        Padding="10,5" Margin="0,110,0,0"
+                        Name="addNewClientBtn" Click="addNewClientBtn_Click"
+                        />
                     </StackPanel>
                 </Grid>
                 <DockPanel HorizontalAlignment="Stretch" Margin="0,10,0,10">
                     <Button DockPanel.Dock="Left" Content="Add" 
-                            Background="#BFDBFE" Foreground="#1E40AF" 
-                            Padding="10,5" Margin="0,0,0,0"
-                            Click="addInvoiceDetailBtn_Click"  x:Name="addInvoiceDetailBtn" Width="90"
-                            />
-                    
-                    
+                        Background="#BFDBFE" Foreground="#1E40AF" 
+                        Padding="10,5" Margin="0,0,0,0"
+                        Click="addInvoiceDetailBtn_Click"  x:Name="addInvoiceDetailBtn" Width="90"
+                        />
+
+
                     <Button DockPanel.Dock="Right" Content="Clear" Background="#BFDBFE" Foreground="#1E40AF" Padding="10,5" Margin="0,0,0,0"
-                            ToolTipService.InitialShowDelay="1000"
-                            ToolTipService.ShowDuration="10000" Width="90">
+                        ToolTipService.InitialShowDelay="1000"
+                        ToolTipService.ShowDuration="10000" Width="90">
                         <!--Click="OnClick_ClearExportInfo_AddExportRecordWindow"-->
                         <Button.ToolTip>
                             <ToolTip>
@@ -113,15 +118,15 @@
             </StackPanel>
             <!-- Header DataGrid -->
             <DataGrid x:Name="invoiceDetailsDatagrid"
-                      Grid.Row="1" 
-                      AutoGenerateColumns="False" 
-                      CanUserAddRows="False" 
-                      Background="White" 
-                      ItemsSource="{Binding InvoiceDetails}" 
-                      HeadersVisibility="Column" 
-                      VerticalScrollBarVisibility="Auto"
-                      MouseDoubleClick="invoiceDetailsDatagrid_MouseDoubleClick" Margin="0,0,0,67"
-                      >
+                  Grid.Row="1" 
+                  AutoGenerateColumns="False" 
+                  CanUserAddRows="False" 
+                  Background="White" 
+                  ItemsSource="{Binding InvoiceDetails}" 
+                  HeadersVisibility="Column" 
+                  VerticalScrollBarVisibility="Auto"
+                  MouseDoubleClick="invoiceDetailsDatagrid_MouseDoubleClick" Margin="0,0,0,67"
+                  >
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True" Header="ID" Width="80" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
                     <DataGridTextColumn IsReadOnly="True" Header="Name" Width="*" Binding="{Binding Product.Name}"/>
@@ -130,14 +135,14 @@
                 </DataGrid.Columns>
             </DataGrid>
             <Button x:Name="applyInvoiceBtn" Grid.Row="1"
-                            DockPanel.Dock="Right" 
-                            Content="Apply Exporting" 
-                            Background="#BFDBFE" 
-                            Foreground="#1E40AF" 
-                            Padding="10,5" 
-                            HorizontalAlignment="Right"
-                            Click="applyInvoiceBtn_Click" Margin="0,230,0,24" RenderTransformOrigin="0.479,-0.562"
-                            />
+                        DockPanel.Dock="Right" 
+                        Content="Save" 
+                        Background="#BFDBFE" 
+                        Foreground="#1E40AF" 
+                        Padding="10,5" 
+                        HorizontalAlignment="Right"
+                        Click="applyInvoiceBtn_Click" Margin="0,230,0,24" RenderTransformOrigin="0.479,-0.562"
+                        />
         </Grid>
     </Border>
 </Window>

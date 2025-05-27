@@ -90,7 +90,7 @@
                 </ComboBox>
 
                 <!--Invoices DataGrid-->
-                <DataGrid x:Name="InvoicesDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" Grid.Row="5"
+                <DataGrid x:Name="invoicesDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" Grid.Row="5"
                           ItemsSource="{Binding Invoices}" MouseDoubleClick="OnDoubleClick_InspectRecord_InvoicePageDataGrid"
                           >
                     <DataGrid.Columns>
@@ -111,6 +111,13 @@
                                                 Style="{StaticResource gridEditButton}" Click="printButton_Click"
                                                 >
                                             <Icon:PackIconMaterial Kind="Printer" Style="{StaticResource gridButtonIcon}"/>
+                                        </Button>
+                                        <Button Margin="3 0 0 0" x:Name="editButton" Style="{StaticResource gridEditButton}" Click="editButton_Click">
+                                            <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
+                                        </Button>
+
+                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0" Click="deleteButton_Click">
+                                            <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>
                                 </DataTemplate>

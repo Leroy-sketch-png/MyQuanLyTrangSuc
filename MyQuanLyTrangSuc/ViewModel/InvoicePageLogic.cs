@@ -2,6 +2,7 @@
 using MyQuanLyTrangSuc.BusinessLogic;
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
+using MyQuanLyTrangSuc.View.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,10 +27,11 @@ namespace MyQuanLyTrangSuc.ViewModel
             Invoices = new ObservableCollection<Invoice>();
             LoadRecordsFromDatabase();
             invoiceService = InvoiceService.Instance;
-            invoiceService.OnInvoiceAdded += Context_OnInvoiceAdded;
+            invoiceService.OnInvoiceAdded += InvoiceService_OnInvoiceAdded; ;
+            invoiceService.OnInvoiceUpdated += InvoiceService_OnInvoiceUpdated;
         }
 
-        private void Context_OnInvoiceAdded(Invoice invoice)
+        private void InvoiceService_OnInvoiceAdded(Invoice invoice)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -37,11 +39,21 @@ namespace MyQuanLyTrangSuc.ViewModel
             });
         }
 
+        private void InvoiceService_OnInvoiceUpdated(Invoice invoice)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                LoadRecordsFromDatabase();
+            });
+        }
+
+       
+
         private void LoadRecordsFromDatabase()
         {
             try
             {
-                List<Invoice> invoicesFromDb = context.Invoices
+                List<Invoice> invoicesFromDb = context.Invoices.Where(i => !i.IsDeleted)
                     .Include(i => i.Customer) // Ensure Customer data is included
                     .ToList();
 
@@ -67,7 +79,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         }
         public void LoadInvoiceDetailsWindow()
         {
-            if (invoicePageUI.InvoicesDataGrid.SelectedItem is Invoice selectedInvoice)
+            if (invoicePageUI.invoicesDataGrid.SelectedItem is Invoice selectedInvoice)
             {
                 InvoiceDetailsWindow invoiceDetailsWindowUI = new InvoiceDetailsWindow(selectedInvoice);
                 invoiceDetailsWindowUI.ShowDialog();
@@ -176,7 +188,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void PrintInvoiceRecord()
         {
-            if (invoicePageUI.InvoicesDataGrid.SelectedItem is Invoice selectedInvoice)
+            if (invoicePageUI.invoicesDataGrid.SelectedItem is Invoice selectedInvoice)
             {
                 var printPage = new ReceiptWindow(selectedInvoice);
                 var printDialog = new PrintDialog();
@@ -195,10 +207,26 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void LoadInvoiceWindow()
         {
-            if (invoicePageUI.InvoicesDataGrid.SelectedItem is Invoice selectedInvoice)
+            if (invoicePageUI.invoicesDataGrid.SelectedItem is Invoice selectedInvoice)
             {
                 ReceiptWindow receiptWindowUI = new ReceiptWindow(selectedInvoice);
                 receiptWindowUI.ShowDialog();
+            }
+        }
+
+        public void LoadEditInvoiceWindow(Invoice selectedItem)
+        {
+            var temp = new EditInvoiceWindow(selectedItem);
+            temp.ShowDialog();
+        }
+
+        public void DeleteInvoice(Invoice selectedItem)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this invoice?", "Delete Import", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                invoiceService.DeleteInvoice(selectedItem);
+                Invoices.Remove(selectedItem);
             }
         }
     }

@@ -22,4 +22,6 @@ public partial class Invoice
     public virtual Employee Employee { get; set; }
 
     public virtual ICollection<InvoiceDetail> InvoiceDetails { get; set; } = new List<InvoiceDetail>();
+
+    public bool IsDeleted { get; set; } = false;
 }

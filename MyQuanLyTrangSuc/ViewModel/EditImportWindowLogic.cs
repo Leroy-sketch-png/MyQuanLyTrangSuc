@@ -87,8 +87,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             return _newImportDetailID++;
         }
 
-        
-
         public ObservableCollection<Product> Items { get; set; }
         public ObservableCollection<Supplier> Suppliers { get; set; }
         private ObservableCollection<ImportDetail> _importDetails;
