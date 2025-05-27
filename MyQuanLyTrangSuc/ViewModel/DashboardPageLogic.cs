@@ -1,22 +1,23 @@
-﻿using LiveCharts.Configurations;
+﻿using LiveCharts;
+using LiveCharts.Configurations;
 using LiveCharts.Defaults;
 using LiveCharts.Wpf;
-using LiveCharts;
+using MahApps.Metro.Controls;
 using Microsoft.EntityFrameworkCore;
-using MyQuanLyTrangSuc.View;
 using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 using static MyQuanLyTrangSuc.ViewModel.DashboardPageLogic;
-using System.Globalization;
-using System.Windows.Data;
 namespace MyQuanLyTrangSuc.ViewModel {
     public class DashboardPageLogic : INotifyPropertyChanged {
         private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
@@ -119,12 +120,31 @@ namespace MyQuanLyTrangSuc.ViewModel {
                 .Select(e => new { Date = e.Date.Value, Value = e.TotalAmount })
                 .ToList();
 
+            var serviceData = context.ServiceRecords
+                .Where(s => s.CreateDate >= selectedFromDate && s.CreateDate <= selectedUntilDate)
+                .Select(s => new { Date = s.CreateDate.Value, Value = s.GrandTotal })
+                .ToList();
+
             var combined = importData
                 .Select(i => new DateTimePoint(i.Date, (double)i.Value))
                 .Concat(exportData.Select(e => new DateTimePoint(e.Date, (double)e.Value)))
+                .Concat(serviceData.Select(s => new DateTimePoint(s.Date, (double)s.Value)))
                 .OrderBy(pt => pt.DateTime)
                 .ToList();
 
+            if (!combined.Any())
+            {
+                // No data? Plot a flat zero line between from..until to prevent axis error
+                positiveSeries.Values.Add(new DateTimePoint(selectedFromDate.Value, 0));
+                positiveSeries.Values.Add(new DateTimePoint(selectedUntilDate.Value, 0));
+
+                // Still fill negativeSeries with NaNs so they align visually
+                negativeSeries.Values.Add(new DateTimePoint(selectedFromDate.Value, double.NaN));
+                negativeSeries.Values.Add(new DateTimePoint(selectedUntilDate.Value, double.NaN));
+
+                // you can optionally skip negativeSeries here
+                return;
+            }
             double cumulative = 0;
 
             var from = selectedFromDate.Value;

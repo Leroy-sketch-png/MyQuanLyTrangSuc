@@ -44,7 +44,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 var recordsFromDb = context.ServiceRecords
                     .Include(sr => sr.Customer)
                     .Include(sr => sr.Employee)
-                    .Include(sr => sr.ServiceDetails) // Bao gồm ServiceDetails để tính toán GrandTotal nếu cần
+                    .Include(sr => sr.ServiceDetails)
                     .ToList();
 
                 Application.Current.Dispatcher.Invoke(() =>
@@ -77,15 +77,13 @@ namespace MyQuanLyTrangSuc.ViewModel
                 var existing = ServiceRecords.FirstOrDefault(r => r.ServiceRecordId == updatedRecord.ServiceRecordId);
                 if (existing != null)
                 {
-                    // Cập nhật các thuộc tính của đối tượng hiện có
                     existing.Customer = updatedRecord.Customer;
                     existing.Employee = updatedRecord.Employee;
                     existing.CreateDate = updatedRecord.CreateDate;
                     existing.GrandTotal = updatedRecord.GrandTotal;
                     existing.TotalPaid = updatedRecord.TotalPaid;
                     existing.TotalUnpaid = updatedRecord.TotalUnpaid;
-                    existing.Status = updatedRecord.Status; // Cập nhật trạng thái
-                    // Nếu ServiceRecord triển khai INotifyPropertyChanged, UI sẽ tự động cập nhật
+                    existing.Status = updatedRecord.Status;
                 }
             });
         }
@@ -169,7 +167,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 ServiceRecordDetailWindow detailsWindow = new ServiceRecordDetailWindow(SelectedServiceRecord);
 
-                // Đăng ký lắng nghe sự kiện từ ViewModel của cửa sổ chi tiết
                 if (detailsWindow.DataContext is ServiceRecordDetailLogic detailLogic)
                 {
                     detailLogic.ServiceRecordCompleted += HandleServiceRecordCompleted;
@@ -177,7 +174,6 @@ namespace MyQuanLyTrangSuc.ViewModel
 
                 detailsWindow.ShowDialog();
 
-                // Hủy đăng ký sự kiện khi cửa sổ đóng để tránh rò rỉ bộ nhớ
                 if (detailsWindow.DataContext is ServiceRecordDetailLogic closedDetailLogic)
                 {
                     closedDetailLogic.ServiceRecordCompleted -= HandleServiceRecordCompleted;
@@ -185,17 +181,13 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        // Phương thức xử lý sự kiện khi ServiceRecord được đánh dấu là hoàn tất
         private void HandleServiceRecordCompleted(ServiceRecord completedRecord)
         {
-            // Đảm bảo cập nhật trên UI thread
             Application.Current.Dispatcher.Invoke(() =>
             {
                 var existing = ServiceRecords.FirstOrDefault(r => r.ServiceRecordId == completedRecord.ServiceRecordId);
                 if (existing != null)
                 {
-                    // Cập nhật các thuộc tính của đối tượng 'existing' trong ObservableCollection
-                    // Vì ServiceRecord đã triển khai INotifyPropertyChanged, UI sẽ tự động cập nhật
                     existing.Status = completedRecord.Status;
                     existing.TotalPaid = completedRecord.TotalPaid;
                     existing.TotalUnpaid = completedRecord.TotalUnpaid;
@@ -215,10 +207,11 @@ namespace MyQuanLyTrangSuc.ViewModel
                 MessageBox.Show("Please select a record to print.", "Print Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+
         public void SearchServiceRecordsByNameOfCustomer(string name)
         {
             List<ServiceRecord> serviceRecordsFromDb = context.ServiceRecords
-                .Include(i => i.Customer) // Ensure Customer data is included
+                .Include(i => i.Customer)
                 .ToList();
 
             Application.Current.Dispatcher.Invoke(() =>
@@ -294,8 +287,10 @@ namespace MyQuanLyTrangSuc.ViewModel
                 }
             });
         }
+
         public void ExportServiceRecordsToExcel()
         {
+            //OfficeOpenXml.ExcelPackage.License = OfficeOpenXml.LicenseContext.NonCommercial;
             if (ServiceRecords == null || !ServiceRecords.Any())
             {
                 MessageBox.Show("No records available to export.", "Export", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -312,13 +307,10 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 try
                 {
-                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
                     using (var package = new ExcelPackage())
                     {
                         var worksheet = package.Workbook.Worksheets.Add("ServiceRecords");
 
-                        // Headers
                         worksheet.Cells[1, 1].Value = "ID";
                         worksheet.Cells[1, 2].Value = "Customer Name";
                         worksheet.Cells[1, 3].Value = "Employee Name";
@@ -335,7 +327,6 @@ namespace MyQuanLyTrangSuc.ViewModel
                             range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
                         }
 
-                        // Data
                         int row = 2;
                         foreach (var record in ServiceRecords)
                         {
@@ -350,10 +341,8 @@ namespace MyQuanLyTrangSuc.ViewModel
                             row++;
                         }
 
-                        // Auto-fit columns
                         worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
-                        // Save to file
                         var fileInfo = new FileInfo(saveFileDialog.FileName);
                         package.SaveAs(fileInfo);
 
@@ -367,5 +356,4 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
     }
-
 }

@@ -83,6 +83,7 @@ namespace MyQuanLyTrangSuc.View
             userGroupListPageUI = new UserGroupListPage();
             accountListPageUI = new AccountListPage();
             permissionListPageUI = new PermissionListPage();
+            OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
             //InitializeAuthentification();
             //static instance initialized through static method
@@ -117,6 +118,7 @@ namespace MyQuanLyTrangSuc.View
             accountListPageUI = new AccountListPage();
             permissionListPageUI = new PermissionListPage();
 
+            OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             //InitializeAuthentification();
             //static instance initialized through static method
             if (MainNavigationWindowLogic.Initialize(this))

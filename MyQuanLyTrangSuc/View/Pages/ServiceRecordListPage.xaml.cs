@@ -71,5 +71,10 @@ namespace MyQuanLyTrangSuc.View
         {
             logicService.HandleServiceRecordDeleted();
         }
+
+        private void exportExcelFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.ExportServiceRecordsToExcel();
+        }
     }
 }

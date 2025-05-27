@@ -60,6 +60,7 @@ namespace MyQuanLyTrangSuc.View
         {
             AddItemCategoryWindow addItemCategoryWindow = new AddItemCategoryWindow();
             addItemCategoryWindow.ShowDialog();
+            Logic.RefreshListOfCategories();
         }
     }
 }

@@ -23,7 +23,7 @@ public partial class Employee
 
     public string Gender { get; set; }
 
-    public string Username { get; set; }
+    public int AccountId { get; set; }
 
     public bool IsDeleted { get; set; }
 
