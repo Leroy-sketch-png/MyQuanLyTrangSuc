@@ -139,7 +139,7 @@
                     <DataGridTextColumn IsReadOnly="True" Header="Product" Width="*" Binding="{Binding Product.Name}"/>
                     <DataGridTextColumn IsReadOnly="True" Header="Category" Width="*" Binding="{Binding Product.Category.CategoryName}"/>
                     <DataGridTextColumn IsReadOnly="False" Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="Price" Width="*" Binding="{Binding Product.Price}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Price" Width="*" Binding="{Binding Price}"/>
 
                 </DataGrid.Columns>
             </DataGrid>

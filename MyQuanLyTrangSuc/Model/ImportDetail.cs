@@ -31,21 +31,21 @@ public partial class ImportDetail: INotifyPropertyChanged
         }
     }
 
-    private decimal? _price;
+    //private decimal? _price;
 
-    public decimal? Price
-    {
-        get => _price;
-        set
-        {
-            if (_price != value)
-            {
-                _price = value;
-                OnPropertyChanged();
-                CalculateTotalPrice(); 
-            }
-        }
-    }
+    public decimal? Price { get; set; }
+    
+        //get => _price;
+        //set
+        //{
+        //    if (_price != value)
+        //    {
+        //        _price = value;
+        //        OnPropertyChanged();
+        //        CalculateTotalPrice(); 
+        //    }
+        //}
+    
 
     private decimal? _totalPrice;
 
