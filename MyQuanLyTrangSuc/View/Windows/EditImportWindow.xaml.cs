@@ -31,12 +31,24 @@ namespace MyQuanLyTrangSuc.View.Windows
 
         private void addNewItemBtn_Click(object sender, RoutedEventArgs e)
         {
+            AddItemWindow addItemWindow = new AddItemWindow();
+            bool? result = addItemWindow.ShowDialog();
 
+            if (result == true)
+            {
+                logicService.LoadInitialData();
+            }
         }
 
         private void addNewSupplierBtn_Click(object sender, RoutedEventArgs e)
         {
+            AddSupplierWindow addSupplierWindow = new AddSupplierWindow();
+            bool? result = addSupplierWindow.ShowDialog();
 
+            if (result == true)
+            {
+                logicService.LoadInitialData();
+            }
         }
 
         private void addImportDetailBtn_Click(object sender, RoutedEventArgs e)

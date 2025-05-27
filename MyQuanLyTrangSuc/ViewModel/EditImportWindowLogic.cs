@@ -87,8 +87,26 @@ namespace MyQuanLyTrangSuc.ViewModel
             return _newImportDetailID++;
         }
 
-        public ObservableCollection<Product> Items { get; set; }
-        public ObservableCollection<Supplier> Suppliers { get; set; }
+        public ObservableCollection<Product> _items;
+        public ObservableCollection<Product> Items
+        {
+            get => _items;
+            set
+            {
+                _items = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<Supplier> _suppliers;
+        public ObservableCollection<Supplier> Suppliers
+        {
+            get => _suppliers;
+            set
+            {
+                _suppliers = value;
+                OnPropertyChanged();
+            }
+        }
         private ObservableCollection<ImportDetail> _importDetails;
         public ObservableCollection<ImportDetail> ImportDetails
         {
@@ -281,5 +299,10 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
+        public void LoadInitialData()
+        {
+            Suppliers = new ObservableCollection<Supplier>(importService.GetListOfSuppliers());
+            Items = new ObservableCollection<Product>(importService.GetListOfProducts());
+        }
     }
 }

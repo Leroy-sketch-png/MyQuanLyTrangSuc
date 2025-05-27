@@ -111,7 +111,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             OnPropertyChanged(nameof(Product));
         }
 
-        public void AddProduct()
+        public bool AddProduct()
         {
             var db = MyQuanLyTrangSucContext.Instance;
 
@@ -121,19 +121,19 @@ namespace MyQuanLyTrangSuc.ViewModel
                 Product.CategoryId == null)
             {
                 MessageBox.Show(ValidationErrorMessage, ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+                return false;
             }
 
             if (Product.Price <= 0 || Product.Quantity <= 0)
             {
                 MessageBox.Show("Giá và số lượng phải lớn hơn 0!", ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+                return false;
             }
 
             if (db.Products.Any(p => p.Name == Product.Name))
             {
                 MessageBox.Show("Tên sản phẩm đã tồn tại!", ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+                return false;
             }
 
             var newProduct = new Product
@@ -150,7 +150,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             db.SaveChangesAdded(newProduct);
 
             MessageBox.Show(SuccessMessage, SuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
-            _window.Close();
+            //_window.Close();
+            return true;
         }
 
         public void RemoveProduct()

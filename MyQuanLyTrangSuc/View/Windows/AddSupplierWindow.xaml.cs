@@ -32,7 +32,11 @@ namespace MyQuanLyTrangSuc.View
         {
             bool isSuccess = logicService.AddSupplier(NameTextBox.Text, EmailTextBox.Text, TelephoneTextBox.Text, AddressTextBox.Text);
             if (isSuccess)
+            {
+                this.DialogResult = true;
                 this.Close();
+            }
+               
         }
     }
 }

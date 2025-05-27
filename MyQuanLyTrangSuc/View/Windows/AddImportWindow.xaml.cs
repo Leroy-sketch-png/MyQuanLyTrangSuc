@@ -1,4 +1,5 @@
 ﻿using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.View.Windows;
 using MyQuanLyTrangSuc.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -54,13 +55,23 @@ namespace MyQuanLyTrangSuc.View
         private void addNewItemBtn_Click(object sender, RoutedEventArgs e)
         {
             AddItemWindow addItemWindow = new AddItemWindow();
-            addItemWindow.ShowDialog();
+            bool? result = addItemWindow.ShowDialog();
+
+            if (result == true)
+            {
+                logicService.LoadInitialData();
+            }
         }
 
         private void addNewSupplierBtn_Click(object sender, RoutedEventArgs e)
         {
             AddSupplierWindow addSupplierWindow = new AddSupplierWindow();
-            addSupplierWindow.ShowDialog();
+            bool? result = addSupplierWindow.ShowDialog();
+
+            if (result == true)
+            {
+                logicService.LoadInitialData();
+            }
         }
 
         private void applyImportBtn_Click(object sender, RoutedEventArgs e)

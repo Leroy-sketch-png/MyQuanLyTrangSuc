@@ -88,9 +88,26 @@ namespace MyQuanLyTrangSuc.ViewModel
                 }
             }
         }
-
-        public ObservableCollection<Product> Items { get; set; }
-        public ObservableCollection<Supplier> Suppliers { get; set; }
+        public ObservableCollection<Product> _items;
+        public ObservableCollection<Product> Items
+        {
+            get => _items;
+            set
+            {
+                _items = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<Supplier> _suppliers;
+        public ObservableCollection<Supplier> Suppliers 
+        {
+            get => _suppliers;
+            set
+            {
+                _suppliers = value;
+                OnPropertyChanged();
+            }
+        }
         public ObservableCollection<ImportDetail> ImportDetails { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -200,6 +217,12 @@ namespace MyQuanLyTrangSuc.ViewModel
             GenerateNewImportID();
             ImportDetails.Clear();
             GrandTotal = 0;
+        }
+
+        public void LoadInitialData()
+        {
+            Suppliers = new ObservableCollection<Supplier>(importService.GetListOfSuppliers());
+            Items = new ObservableCollection<Product>(importService.GetListOfProducts());
         }
     }
 }

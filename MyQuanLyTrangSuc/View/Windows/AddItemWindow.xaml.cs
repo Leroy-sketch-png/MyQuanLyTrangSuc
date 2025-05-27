@@ -19,7 +19,12 @@ namespace MyQuanLyTrangSuc.View
 
         private void OnAddItemButtonClick(object sender, RoutedEventArgs e)
         {
-            Logic.AddProduct();
+            bool res = Logic.AddProduct();
+            if (res)
+            {
+                this.DialogResult = true;
+                this.Close();
+            }
         }
 
         private void OnCancelButtonClick(object sender, RoutedEventArgs e)
@@ -54,7 +59,12 @@ namespace MyQuanLyTrangSuc.View
 
         private void OnClick_Add_AddItem(object sender, RoutedEventArgs e)
         {
-            Logic.AddProduct();
+            bool res = Logic.AddProduct();
+            if (res)
+            {
+                this.DialogResult = true;
+                this.Close();
+            }
         }
 
         private void addNewCategoryBtn_Click(object sender, RoutedEventArgs e)
