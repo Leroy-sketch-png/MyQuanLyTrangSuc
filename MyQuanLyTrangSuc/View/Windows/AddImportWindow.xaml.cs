@@ -39,19 +39,6 @@ namespace MyQuanLyTrangSuc.View
         {
             logicService.AddImportDetail();
         }
-
-        private void importDetailsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is DataGrid dataGrid && dataGrid.SelectedItem is ImportDetail selectedDetail)
-            {
-                if (MessageBox.Show($"Do you want to remove this import detail",
-                                    "Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                {
-                    logicService.RemoveImportDetail(selectedDetail);
-                }
-            }
-        }
-
         private void addNewItemBtn_Click(object sender, RoutedEventArgs e)
         {
             AddItemWindow addItemWindow = new AddItemWindow();
@@ -77,6 +64,21 @@ namespace MyQuanLyTrangSuc.View
         private void applyImportBtn_Click(object sender, RoutedEventArgs e)
         {
             logicService.AddImport();
+        }
+
+        private void deleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                if (button.DataContext is ImportDetail selectedDetail)
+                {
+                    if (MessageBox.Show($"Do you want to remove this import detail?",
+                                        "Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    {
+                        logicService.RemoveImportDetail(selectedDetail);
+                    }
+                }
+            }
         }
     }
 }

@@ -92,7 +92,17 @@ namespace MyQuanLyTrangSuc.ViewModel
         }
         //public decimal TotalPrice => SelectedItem?.Price* Quantity ?? 0;
         public ObservableCollection<Product> Items { get; set; }
-        public ObservableCollection<Customer> Customers { get; set; }
+
+        private ObservableCollection<Customer> _customers;
+        public ObservableCollection<Customer> Customers
+        {
+            get => _customers;
+            set
+            {
+                    _customers = value;
+                    OnPropertyChanged();
+            }
+        }
         public ObservableCollection<InvoiceDetail> InvoiceDetails { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -260,6 +270,9 @@ namespace MyQuanLyTrangSuc.ViewModel
             Quantity = 0;
         }
 
-
+        public void LoadInitialData()
+        {
+            Customers = new ObservableCollection<Customer>(invoiceService.GetListOfCustomers());
+        }
     }
 }

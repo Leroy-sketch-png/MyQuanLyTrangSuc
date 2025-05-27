@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         ResizeMode="NoResize"
         Height="600" Width="650"
+        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         WindowStartupLocation="CenterScreen"
         WindowStyle="SingleBorderWindow">
     <Border Background="White" CornerRadius="10" Padding="5"
@@ -127,7 +129,7 @@
                       ItemsSource="{Binding ImportDetails}" 
                       HeadersVisibility="Column" 
                       VerticalScrollBarVisibility="Auto"
-                      MouseDoubleClick="importDetailsDataGrid_MouseDoubleClick" Margin="0,0,0,67"
+                      Margin="0,0,0,67"
                       >
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True" Header="Index" Width="65" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
@@ -135,7 +137,29 @@
                     <DataGridTextColumn IsReadOnly="True" Header="Category" Width="*" Binding="{Binding Product.Category.CategoryName}"/>
                     <DataGridTextColumn IsReadOnly="False" Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
                     <DataGridTextColumn IsReadOnly="True" Header="Price" Width="*" Binding="{Binding Product.Price}"/>
-                     
+                    <DataGridTemplateColumn Width="*">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="{x:Type DataGridColumnHeader}">
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="Action" FontWeight="Medium"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.HeaderTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button x:Name="deleteButton" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource gridRemoveButton}" Click="deleteButton_Click">
+                                    <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
                 </DataGrid.Columns>
             </DataGrid>
             <Button Grid.Row="1"

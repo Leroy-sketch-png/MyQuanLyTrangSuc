@@ -34,27 +34,34 @@ namespace MyQuanLyTrangSuc.View
             logicService.AddInvoiceDetail();
         }
 
-        private void invoiceDetailsDatagrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is DataGrid dataGrid && dataGrid.SelectedItem is InvoiceDetail selectedDetail)
-            {
-                if (MessageBox.Show($"Do you want to remove this invoice detail",
-                                    "Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                {
-                    logicService.RemoveInvoiceDetail(selectedDetail);
-                }
-            }
-        }
-
         private void addNewClientBtn_Click(object sender, RoutedEventArgs e)
         {
             AddCustomerWindow addCustomerWindow = new AddCustomerWindow();
-            addCustomerWindow.ShowDialog();
+            bool? res = addCustomerWindow.ShowDialog();
+            if (res == true)
+            {
+                logicService.LoadInitialData();
+            }
         }
 
         private void applyInvoiceBtn_Click(object sender, RoutedEventArgs e)
         {
             logicService.AddInvoice();
+        }
+
+        private void deleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                if (button.DataContext is InvoiceDetail selectedDetail)
+                {
+                    if (MessageBox.Show($"Do you want to remove this invoice detail?",
+                                        "Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    {
+                        logicService.RemoveInvoiceDetail(selectedDetail);
+                    }
+                }
+            }
         }
     }
 }

@@ -86,7 +86,17 @@ namespace MyQuanLyTrangSuc.ViewModel
         }
 
         public ObservableCollection<Product> Items { get; set; }
-        public ObservableCollection<Customer> Customers { get; set; }
+
+        private ObservableCollection<Customer> _customers;
+        public ObservableCollection<Customer> Customers
+        {
+            get => _customers;
+            set
+            {
+                _customers = value;
+                OnPropertyChanged();
+            }
+        }
 
         private ObservableCollection<InvoiceDetail> _invoiceDetails;
         public ObservableCollection<InvoiceDetail> InvoiceDetails
@@ -316,6 +326,11 @@ namespace MyQuanLyTrangSuc.ViewModel
                 Console.WriteLine($"Error during SaveInvoice: {ex.Message}");
                 Console.WriteLine($"Stack Trace: {ex.StackTrace}");
             }
+        }
+
+        public void LoadInitialData()
+        {
+            Customers = new ObservableCollection<Customer>(invoiceService.GetListOfCustomers());
         }
     }
 }

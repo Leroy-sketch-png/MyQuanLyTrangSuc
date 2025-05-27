@@ -4,6 +4,8 @@
         ResizeMode="NoResize"
         Height="620" Width="650"
         WindowStartupLocation="CenterScreen"
+        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         WindowStyle="SingleBorderWindow">
     <Border Background="White" CornerRadius="10" Padding="5"
             BorderBrush="Gray" BorderThickness="1">
@@ -84,23 +86,23 @@
                     </StackPanel>
                 </Grid>
                 <DockPanel HorizontalAlignment="Stretch" Margin="0,10,0,10">
-                    <Button DockPanel.Dock="Left" Content="Add" 
+                    <Button DockPanel.Dock="Left" Content="Add" HorizontalAlignment="Left"
                             Background="#BFDBFE" Foreground="#1E40AF" 
                             Padding="10,5" Margin="0,0,0,0"
                             Click="addInvoiceDetailBtn_Click"  x:Name="addInvoiceDetailBtn" Width="90"
                             />
                     
                     
-                    <Button DockPanel.Dock="Right" Content="Clear" Background="#BFDBFE" Foreground="#1E40AF" Padding="10,5" Margin="0,0,0,0"
+                    <!--<Button DockPanel.Dock="Right" Content="Clear" Background="#BFDBFE" Foreground="#1E40AF" Padding="10,5" Margin="0,0,0,0"
                             ToolTipService.InitialShowDelay="1000"
                             ToolTipService.ShowDuration="10000" Width="90">
-                        <!--Click="OnClick_ClearExportInfo_AddExportRecordWindow"-->
+                        --><!--Click="OnClick_ClearExportInfo_AddExportRecordWindow"--><!--
                         <Button.ToolTip>
                             <ToolTip>
                                 <TextBlock Text="Clear the record of the current item selected above"/>
                             </ToolTip>
                         </Button.ToolTip>
-                    </Button>
+                    </Button>-->
 
                 </DockPanel>
                 <DockPanel>
@@ -120,13 +122,36 @@
                       ItemsSource="{Binding InvoiceDetails}" 
                       HeadersVisibility="Column" 
                       VerticalScrollBarVisibility="Auto"
-                      MouseDoubleClick="invoiceDetailsDatagrid_MouseDoubleClick" Margin="0,0,0,67"
+                      Margin="0,0,0,67"
                       >
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True" Header="ID" Width="80" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
                     <DataGridTextColumn IsReadOnly="True" Header="Name" Width="*" Binding="{Binding Product.Name}"/>
                     <DataGridTextColumn IsReadOnly="False" Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
                     <DataGridTextColumn IsReadOnly="True" Header="Total" Width="*" Binding="{Binding TotalPrice}"/>
+                    <DataGridTemplateColumn Width="*">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="{x:Type DataGridColumnHeader}">
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="Action" FontWeight="Medium"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.HeaderTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button x:Name="deleteButton" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource gridRemoveButton}" Click="deleteButton_Click">
+                                    <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
                 </DataGrid.Columns>
             </DataGrid>
             <Button x:Name="applyInvoiceBtn" Grid.Row="1"
