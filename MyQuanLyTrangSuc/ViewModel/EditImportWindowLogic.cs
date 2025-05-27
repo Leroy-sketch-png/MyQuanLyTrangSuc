@@ -91,7 +91,35 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public ObservableCollection<Product> Items { get; set; }
         public ObservableCollection<Supplier> Suppliers { get; set; }
-        public ObservableCollection<ImportDetail> ImportDetails { get; set; }
+        private ObservableCollection<ImportDetail> _importDetails;
+        public ObservableCollection<ImportDetail> ImportDetails
+        {
+            get => _importDetails;
+            set
+            {
+                if (_importDetails != value)
+                {
+                    if (_importDetails != null)
+                    {
+                        foreach (var detail in _importDetails)
+                        {
+                            detail.PropertyChanged -= ImportDetail_PropertyChanged;
+                        }
+                    }
+
+                    _importDetails = value;
+
+                    if (_importDetails != null)
+                    {
+                        foreach (var detail in _importDetails)
+                        {
+                            detail.PropertyChanged += ImportDetail_PropertyChanged;
+                        }
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -113,7 +141,18 @@ namespace MyQuanLyTrangSuc.ViewModel
             GrandTotal = (decimal)_import.TotalAmount;
             _newImportDetailID = importService.GenerateNewImportDetailID();
         }
+        private void ImportDetail_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ImportDetail.TotalPrice))
+            {
+                CalculateGrandTotal();
+            }
+        }
 
+        private void CalculateGrandTotal()
+        {
+            GrandTotal = (decimal)ImportDetails.Sum(detail => detail.TotalPrice);
+        }
         public void AddImportDetail()
         {
             if (SelectedItem == null)
@@ -130,13 +169,13 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             if (existingDetail != null)
             {
-                GrandTotal -= (decimal)(existingDetail.Quantity * existingDetail.Price);
+                //GrandTotal -= (decimal)(existingDetail.Quantity * existingDetail.Price);
                 int index = ImportDetails.IndexOf(existingDetail);
                 ImportDetails.Remove(existingDetail);
                 existingDetail.Quantity += Quantity;
-                existingDetail.TotalPrice = (existingDetail.Quantity * existingDetail.Price);
+                //existingDetail.TotalPrice = (existingDetail.Quantity * existingDetail.Price);
                 ImportDetails.Insert(index, existingDetail);
-                GrandTotal += (decimal)(existingDetail.Quantity * existingDetail.Price);
+                //GrandTotal += (decimal)(existingDetail.Quantity * existingDetail.Price);
 
                 notificationWindowLogic.LoadNotification("Success", $"Updated quantity for product '{SelectedItem.Name}'. New quantity: {existingDetail.Quantity}", "BottomRight");
             }
@@ -148,12 +187,14 @@ namespace MyQuanLyTrangSuc.ViewModel
                     ImportId = _import.ImportId,
                     ProductId = SelectedItem.ProductId,
                     Quantity = Quantity,
-                    Price = SelectedItem.Price,
-                    TotalPrice = (Quantity * SelectedItem.Price),
+                    Price = (decimal)SelectedItem.Price,
+                    //TotalPrice = (decimal)(Quantity * SelectedItem.Price),
                     Product = SelectedItem
                 };
                 ImportDetails.Add(importDetail);
-                GrandTotal += (decimal)(importDetail.Quantity * importDetail.Price);
+                //GrandTotal += (decimal)(importDetail.Quantity * importDetail.Price);
+                importDetail.PropertyChanged += ImportDetail_PropertyChanged;
+
 
                 notificationWindowLogic.LoadNotification("Success", $"Added product '{SelectedItem.Name}' to import list.", "BottomRight");
             }
@@ -166,7 +207,9 @@ namespace MyQuanLyTrangSuc.ViewModel
             if (ImportDetails.Contains(selectedDetail))
             {
                 ImportDetails.Remove(selectedDetail);
-                GrandTotal -= (decimal)(selectedDetail.Quantity * selectedDetail.Price);
+                selectedDetail.PropertyChanged -= ImportDetail_PropertyChanged;
+                CalculateGrandTotal();
+                //GrandTotal -= (decimal)(selectedDetail.Quantity * selectedDetail.Price);
                 notificationWindowLogic.LoadNotification("Success", $"Removed product '{selectedDetail.Product?.Name}' from import list.", "BottomRight");
                 //for (int i = 0; i < ImportDetails.Count; i++)
                 //{
@@ -229,11 +272,11 @@ namespace MyQuanLyTrangSuc.ViewModel
                     }
                 }
                 importService.UpdateImport(Import);
-                notificationWindowLogic.LoadNotification("Success", "Phiếu nhập hàng đã được cập nhật thành công!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Success", "Update import record successfully", "BottomRight");
             }
             catch (Exception ex)
             {
-                notificationWindowLogic.LoadNotification("Error", $"Lỗi khi cập nhật phiếu nhập: {ex.Message}", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", $"Error while updating import record: {ex.Message}", "BottomRight");
                 MessageBox.Show(ex.Message);
                 Console.WriteLine($"Error during SaveImport: {ex.Message}");
                 Console.WriteLine($"Stack Trace: {ex.StackTrace}");

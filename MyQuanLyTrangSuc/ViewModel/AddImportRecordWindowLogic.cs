@@ -144,8 +144,8 @@ namespace MyQuanLyTrangSuc.ViewModel
                     ImportId = NewID,
                     ProductId = SelectedItem.ProductId,
                     Quantity = Quantity,
-                    Price = SelectedItem.Price,
-                    TotalPrice = (Quantity * SelectedItem.Price),
+                    Price = (decimal)SelectedItem.Price,
+                    TotalPrice = (decimal)(Quantity * SelectedItem.Price),
                     Product = SelectedItem
                 };
                 ImportDetails.Add(importDetail);
