@@ -53,7 +53,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             StockReports = new ObservableCollection<StockReport>();
             LoadReportsFromDatabase();
-            Console.WriteLine($"Số lượng báo cáo tồn kho: {StockReports.Count}");
+            Console.WriteLine($"Stock Report Quantity: {StockReports.Count}");
         }
 
         public MonthlyStockReportPageLogic(MonthlyStockReportPage monthlyStockReportPage)
@@ -86,8 +86,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Lỗi khi tải báo cáo: {ex.Message}");
-                MessageBox.Show($"Lỗi khi tải báo cáo: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                Console.WriteLine($"Error loading report: {ex.Message}");
+                MessageBox.Show($"Error loading report: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -121,7 +121,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
                 if (detailedReports.Count == 0)
                 {
-                    MessageBox.Show($"Không có chi tiết báo cáo nào cho tháng {month}/{year}.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show($"No available stock report for {month}/{year}.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
 
@@ -155,8 +155,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             if (isExistingReport)
             {
                 var confirmResult = MessageBox.Show(
-                    $"Đã có báo cáo tồn kho cho tháng {reportDate.Month}/{reportDate.Year}. Cập nhật lại?",
-                    "Xác nhận",
+                    $"Existed report for {reportDate.Month}/{reportDate.Year}. Update?",
+                    "Confirm",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question);
 
@@ -230,13 +230,13 @@ namespace MyQuanLyTrangSuc.ViewModel
                         transaction.Commit();
 
                         // Hiển thị kết quả
-                        string action = isExistingReport ? "cập nhật" : "tạo mới";
+                        string action = isExistingReport ? "Updated" : "Created new";
                         MessageBox.Show(
-                            $"Đã {action} thành công báo cáo tồn kho tháng {reportDate.Month}/{reportDate.Year}\n" +
-                            $"• Số sản phẩm: {detailCount}\n" +
-                            $"• Tồn đầu kỳ: {totalBeginStock}\n" +
-                            $"• Tồn cuối kỳ: {totalFinishStock}",
-                            "Thành công",
+                            $" Succesfully {action} stock report for {reportDate.Month}/{reportDate.Year}\n" +
+                            $"• Product quantity: {detailCount}\n" +
+                            $"• Begin Stock: {totalBeginStock}\n" +
+                            $"• Finish Stock: {totalFinishStock}",
+                            "Success",
                             MessageBoxButton.OK,
                             MessageBoxImage.Information);
 
@@ -246,9 +246,9 @@ namespace MyQuanLyTrangSuc.ViewModel
                     {
                         transaction.Rollback();
                         MessageBox.Show(
-                            $"Lỗi khi xử lý báo cáo: {ex.Message}\n" +
-                            $"Vui lòng thử lại hoặc liên hệ quản trị hệ thống.",
-                            "Lỗi xử lý dữ liệu",
+                            $"Error handling report: {ex.Message}\n" +
+                            $"Please try again or contact the system administrator..",
+                            "Error handling data",
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
                         // Ghi log lỗi nếu cần
@@ -259,9 +259,9 @@ namespace MyQuanLyTrangSuc.ViewModel
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"Lỗi hệ thống: {ex.Message}\n" +
-                    $"Không thể kết nối đến cơ sở dữ liệu.",
-                    "Lỗi nghiêm trọng",
+                    $"System error: {ex.Message}\n" +
+                    $"Unable to connect to the database.",
+                    "Fatal Error",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
@@ -320,18 +320,18 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             if (monthlyStockReportPage == null || monthlyStockReportPage.StockReportDataGrid == null)
             {
-                MessageBox.Show("LỖI: Trang báo cáo chưa được khởi tạo!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Error: The report page has not been initialized!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (monthlyStockReportPage.StockReportDataGrid.SelectedItem is not StockReport selectedReport)
             {
-                MessageBox.Show("Vui lòng chọn một báo cáo để xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please choose a report to be deleted!", "Notification", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            var result = MessageBox.Show($"Bạn có chắc chắn muốn xóa tất cả báo cáo tồn kho của tháng {selectedReport.MonthYear.Value.Month}/{selectedReport.MonthYear.Value.Year}?",
-                                         "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = MessageBox.Show($"You are sure you want to delete all stock reports for the month {selectedReport.MonthYear.Value.Month}/{selectedReport.MonthYear.Value.Year}?",
+                                         "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
@@ -343,7 +343,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
                     if (!reportsToDelete.Any())
                     {
-                        MessageBox.Show("Không tìm thấy báo cáo nào để xóa!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("No reports found to delete!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
 
@@ -361,15 +361,15 @@ namespace MyQuanLyTrangSuc.ViewModel
                         }
                     }
 
-                    MessageBox.Show("Đã xóa tất cả báo cáo tồn kho của tháng thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Successfully deleted all stock reports for the month!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    MessageBox.Show("Dữ liệu đã bị thay đổi hoặc xóa trước đó. Hãy tải lại danh sách báo cáo!", "Lỗi đồng bộ dữ liệu", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("The data has been modified or deleted previously. Please reload the report list!", "Data synchronization error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Lỗi khi xóa báo cáo: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"\"Error deleting report: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

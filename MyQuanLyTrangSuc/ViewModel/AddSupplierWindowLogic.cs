@@ -46,9 +46,19 @@ namespace MyQuanLyTrangSuc.ViewModel
         }
         public bool AddSupplier(string name, string email, string phone, string address)
         {
-            if (!supplierService.IsValidSupplierData(name, email, phone))
+            if (!supplierService.IsValidName(name))
             {
-                notificationWindowLogic.LoadNotification("Error", "Invalid supplier data!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Invalid supplier name!", "BottomRight");
+                return false;
+            }
+            if (!supplierService.IsValidEmail(email))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Invalid email format!", "BottomRight");
+                return false;
+            }
+            if (!supplierService.IsValidTelephoneNumber(phone))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Invalid phone number!", "BottomRight");
                 return false;
             }
 

@@ -12,6 +12,7 @@ namespace MyQuanLyTrangSuc
     {
         public App()
         {
+            ExcelPackage.License.SetNonCommercialPersonal("MyQuanLyTrangSuc");
         }
     }
 }

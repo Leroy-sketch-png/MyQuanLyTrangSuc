@@ -76,5 +76,10 @@ namespace MyQuanLyTrangSuc.View
         {
             logicService.ExportServiceRecordsToExcel();
         }
+
+        private void importExcelFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.ImportServiceRecordsFromExcel();
+        }
     }
 }

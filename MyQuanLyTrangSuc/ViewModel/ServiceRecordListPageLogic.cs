@@ -288,6 +288,61 @@ namespace MyQuanLyTrangSuc.ViewModel
             });
         }
 
+        public List<ServiceRecord> ImportServiceRecordsFromExcel()
+        {
+            var importedRecords = new List<ServiceRecord>();
+
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Excel files (*.xlsx)|*.xlsx"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+
+                    using (var package = new ExcelPackage(new FileInfo(openFileDialog.FileName)))
+                    {
+                        var worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                        if (worksheet == null)
+                        {
+                            MessageBox.Show("No worksheet found.");
+                            return importedRecords;
+                        }
+
+                        int row = 2; // Assuming row 1 is the header
+                        while (worksheet.Cells[row, 1].Value != null)
+                        {
+                            var record = new ServiceRecord
+                            {
+                                ServiceRecordId = worksheet.Cells[row, 1].Text,
+                                Customer = new Customer { Name = worksheet.Cells[row, 2].Text },
+                                Employee = new Employee { Name = worksheet.Cells[row, 3].Text },
+                                CreateDate = DateTime.TryParse(worksheet.Cells[row, 4].Text, out var date) ? date : null,
+                                GrandTotal = decimal.TryParse(worksheet.Cells[row, 5].Text, out var total) ? total : 0,
+                                TotalPaid = decimal.TryParse(worksheet.Cells[row, 6].Text, out var paid) ? paid : 0,
+                                TotalUnpaid = decimal.TryParse(worksheet.Cells[row, 7].Text, out var unpaid) ? unpaid : 0,
+                                Status = worksheet.Cells[row, 8].Text
+                            };
+
+                            importedRecords.Add(record);
+                            row++;
+                        }
+
+                        MessageBox.Show("Import successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to import: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+
+            return importedRecords;
+        }
+
+
         public void ExportServiceRecordsToExcel()
         {
             //OfficeOpenXml.ExcelPackage.License = OfficeOpenXml.LicenseContext.NonCommercial;

@@ -31,6 +31,12 @@ namespace MyQuanLyTrangSuc.View.Windows
         private void addButton_Click(object sender, RoutedEventArgs e)
         {
             logicService.AddUnit(unitNameTextBox.Text);
+            bool isAdded = logicService.AddUnit(unitNameTextBox.Text);
+
+            if (!isAdded)
+            {
+                return; // Ngăn cửa sổ đóng nếu dữ liệu không hợp lệ
+            }
             this.Close();
         }
     }

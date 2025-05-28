@@ -78,8 +78,8 @@
                     </Button>
                     <!--Import Button-->
                     <Button x:Name="importExcelFileButton"
-                            Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
-                        <!-- Click="importExcelFileButton_Click" -->
+                            Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4"
+                            Click="importExcelFileButton_Click">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Import" FontWeight="SemiBold"/>
