@@ -330,7 +330,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 return;
             }
 
-            var result = MessageBox.Show($"You are sure you want to delete all stock reports for the month {selectedReport.MonthYear.Month}/{selectedReport.MonthYear.Year}?",
+            var result = MessageBox.Show($"You are sure you want to delete all stock reports for the month {selectedReport.MonthYear.Value.Month}/{selectedReport.MonthYear.Value.Year}?",
                                          "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)

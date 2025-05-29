@@ -2,8 +2,6 @@
 using Microsoft.Win32;
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
-using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -51,7 +49,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 isEditing = false;
             }
 
-            mainNavigationWindowLogic.LoadEmployeeListPage();
+            //mainNavigationWindowLogic.LoadEmployeeListPage();
         }
 
         private void ReloadEmployeeData()
