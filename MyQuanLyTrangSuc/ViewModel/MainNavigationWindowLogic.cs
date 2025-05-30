@@ -272,14 +272,12 @@ namespace MyQuanLyTrangSuc.ViewModel
                 Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(""), new string[] { });
                 Application.Current.Resources["CurrentAccountId"] = null; // Clear the stored ID
                 Application.Current.Resources["CurrentUsername"] = null; // Clear username if stored
-
-                // Show the Login Window
-                var loginWindow = new LoginWindow(); // Assuming LoginWindow is in MyQuanLyTrangSuc.View.Windows
-                loginWindow.Show();
-
-                // Close the main navigation window UI
-                _ui.Close();
+                //string applicationPath = Process.GetCurrentProcess().MainModule.FileName;
+                string applicationPath = Environment.ProcessPath;
+                Process.Start(applicationPath);
+                App.Current.Shutdown();
             }
+
         }
 
         // INotifyPropertyChanged implementation
