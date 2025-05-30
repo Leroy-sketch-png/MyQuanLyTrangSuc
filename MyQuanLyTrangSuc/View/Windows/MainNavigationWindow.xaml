@@ -110,7 +110,7 @@
                                 Visibility="{Binding Path=CurrentUserPrincipal,
                                                      Converter={StaticResource PermissionToVisibilityConverter},
                                                      ConverterParameter=ImportPage}">
-                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToImportRecordPageCommand}">
+                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToImportPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Import" Foreground="White"/>
                                             <TextBlock Text=" Imports" Foreground="White"/>
@@ -122,7 +122,7 @@
                                 Visibility="{Binding Path=CurrentUserPrincipal,
                                                      Converter={StaticResource PermissionToVisibilityConverter},
                                                      ConverterParameter=InvoicePage}">
-                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToExportRecordPageCommand}">
+                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToInvoicePageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Invoice" Foreground="White"/>
                                             <TextBlock Text=" Invoices" Foreground="White"/>
@@ -158,7 +158,7 @@
                                 Visibility="{Binding Path=CurrentUserPrincipal,
                                                      Converter={StaticResource PermissionToVisibilityConverter},
                                                      ConverterParameter=CustomerListPage}">
-                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToCustomerPageCommand}">
+                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToCustomerListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="FaceWomanShimmerOutline" Foreground="White"/>
                                             <TextBlock Text=" Customers" Foreground="White"/>
@@ -170,7 +170,7 @@
                                 Visibility="{Binding Path=CurrentUserPrincipal,
                                                      Converter={StaticResource PermissionToVisibilityConverter},
                                                      ConverterParameter=SupplierListPage}">
-                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToSupplierPageCommand}">
+                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToSupplierListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="PackageVariantClosedPlus" Foreground="White"/>
                                             <TextBlock Text=" Suppliers" Foreground="White"/>
@@ -182,10 +182,10 @@
                                 Visibility="{Binding Path=CurrentUserPrincipal,
                                                      Converter={StaticResource PermissionToVisibilityConverter},
                                                      ConverterParameter=ServiceRecordListPage}">
-                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToServiceListPageCommand}">
+                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToServiceRecordListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Microscope" Foreground="White"/>
-                                            <TextBlock Text=" Services" Foreground="White"/>
+                                            <TextBlock Text=" Service Records" Foreground="White"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
@@ -218,7 +218,7 @@
                                 Visibility="{Binding Path=CurrentUserPrincipal,
                                                      Converter={StaticResource PermissionToVisibilityConverter},
                                                      ConverterParameter=UserGroupListPage}">
-                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToUserGroupPageCommand}">
+                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToUserGroupListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="AccountGroup" Foreground="White"/>
                                             <TextBlock Text=" User Group" Foreground="White"/>

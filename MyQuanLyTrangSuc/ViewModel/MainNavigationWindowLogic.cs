@@ -220,7 +220,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         public ICommand NavigateToItemListPageCommand { get; private set; }
         public ICommand NavigateToItemCategoryListPageCommand { get; private set; }
         public ICommand NavigateToUnitListPageCommand { get; private set; }
-        public ICommand NavigateToServiceListPageCommand { get; private set; }
+        public ICommand NavigateToServiceRecordListPageCommand { get; private set; }
         public ICommand NavigateToImportPageCommand { get; private set; }
         public ICommand NavigateToInvoicePageCommand { get; private set; }
         public ICommand NavigateToMonthlyStockReportPageCommand { get; private set; }
@@ -243,7 +243,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             NavigateToItemListPageCommand = new RelayCommand(() => NavigateToPage(typeof(ItemListPage), "ItemListPage"));
             NavigateToItemCategoryListPageCommand = new RelayCommand(() => NavigateToPage(typeof(ItemCategoryListPage), "ItemCategoryListPage"));
             NavigateToUnitListPageCommand = new RelayCommand(() => NavigateToPage(typeof(UnitListPage), "UnitListPage"));
-            NavigateToServiceListPageCommand = new RelayCommand(() => NavigateToPage(typeof(ServiceRecordListPage), "ServiceRecordListPage"));
+            NavigateToServiceRecordListPageCommand = new RelayCommand(() => NavigateToPage(typeof(ServiceRecordListPage), "ServiceRecordListPage"));
             NavigateToImportPageCommand = new RelayCommand(() => NavigateToPage(typeof(ImportPage), "ImportPage"));
             NavigateToInvoicePageCommand = new RelayCommand(() => NavigateToPage(typeof(InvoicePage), "InvoicePage"));
             NavigateToMonthlyStockReportPageCommand = new RelayCommand(() => NavigateToPage(typeof(MonthlyStockReportPage), "MonthlyStockReportPage"));
