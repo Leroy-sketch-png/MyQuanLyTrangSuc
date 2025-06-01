@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.Security;
+using MyQuanLyTrangSuc.View;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using Microsoft.EntityFrameworkCore;
-using MyQuanLyTrangSuc.Model;
-using MyQuanLyTrangSuc.View;
+using System.Windows.Input;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -26,6 +28,11 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
+        public CustomPrincipal CurrentUserPrincipal
+        {
+            get => Thread.CurrentPrincipal as CustomPrincipal;
+        }
+
         public ObservableCollection<Product> Products { get; set; } = new ObservableCollection<Product>();
         public ObservableCollection<ProductCategory> Categories { get; set; } = new ObservableCollection<ProductCategory>();
 
@@ -37,6 +44,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             LoadProducts();
             LoadCategories();
+            LoadAddItemWindowCommand = new RelayCommand(LoadAddItemWindow);
         }
 
         public void LoadProducts()
@@ -116,15 +124,34 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void LoadAddItemWindow()
         {
-            Window addWindow = new AddItemWindow();
-            addWindow.ShowDialog();
-            LoadProducts();
-            LoadCategories();
+            if (CurrentUserPrincipal is CustomPrincipal currentPrincipal)
+            {
+                if (currentPrincipal.HasPermission("AddItem"))
+                {
+                    Window addWindow = new AddItemWindow();
+                    addWindow.ShowDialog();
+                    LoadProducts();
+                    LoadCategories();
+                }
+                else
+                {
+                    MessageBox.Show($"You do not have permission to add products.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    // Optional: Navigate to a "Permission Denied" page
+                }
+            }
+            else
+            {
+                MessageBox.Show($"You do not have permission to add products.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
+                // Optional: Navigate to a "Permission Denied" page
+            }
+
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public ICommand LoadAddItemWindowCommand { get; private set; }
     }
 }

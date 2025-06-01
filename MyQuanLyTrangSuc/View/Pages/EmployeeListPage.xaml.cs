@@ -19,37 +19,6 @@ namespace MyQuanLyTrangSuc.View
             DataContext = logicService;
         }
 
-        // Add function
-        private void addButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadAddEmployeeWindow();
-        }
-
-        // Delete function
-        private void deleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (logicService.SelectedEmployee != null)
-            {
-                MessageBoxResult result = MessageBox.Show("Do you want to delete this employee?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
-                {
-                    logicService.DeleteEmployee();
-                }
-            }
-            else
-            {
-                MessageBox.Show("No employee selected.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
-
-        // Edit function
-        private void editButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Assuming you have a method to load employee properties page
-            logicService.LoadEmployeePropertiesPage();
-            //MessageBox.Show("Edit functionality is not implemented yet.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
         // Search functionality
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -70,18 +39,6 @@ namespace MyQuanLyTrangSuc.View
             {
                 searchTextBlock.Text = "Search by name";
             }
-        }
-
-        // Export to Excel
-        private void exportExcelFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.ExportExcelFile(employeesDataGrid);
-        }
-
-        // Import from Excel
-        private void importExcelFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.ImportExcelFile();
         }
     }
 }

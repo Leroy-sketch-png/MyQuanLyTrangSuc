@@ -39,15 +39,14 @@
             <TextBlock Text="Jewelries List" FontSize="36" FontWeight="Bold" Foreground="Black" HorizontalAlignment="Left" TextAlignment="Center" Margin="20,0,0,0"/>
             <Separator BorderBrush="#ba80d3" BorderThickness="10" Margin="5,10,30,10"/>
             <DockPanel>
-                <Button DockPanel.Dock="Right" Width="160" Height="36" Content="Add new item" 
-                        IsEnabled="False" 
-                        HorizontalAlignment="Left" Margin="10, 0, 20, 0" FontWeight="Bold"
-                        materialDesign:ButtonAssist.CornerRadius="10"
+                <Button DockPanel.Dock="Right"
+                        Content="Add new item" 
+                        Command="{Binding LoadAddItemWindowCommand}"
                         Style="{StaticResource MyCustomMaterialDisabledButton}"
-                        Background="#FF747525"
-                        Foreground="White"
-                        Click="OnClick_Add_ItemList"
                         ToolTipService.ShowOnDisabled="True"
+                        IsEnabled="{Binding Path=CurrentUserPrincipal,
+                                    Converter={StaticResource PermissionToIsEnabledConverter},
+                                    ConverterParameter={}}"
                         />
                 <!--IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"-->
                 <!---->

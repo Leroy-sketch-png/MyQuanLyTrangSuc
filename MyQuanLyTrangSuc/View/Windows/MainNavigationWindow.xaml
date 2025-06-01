@@ -9,12 +9,7 @@
         Title="MainNavigationWindow" Height="750" Width="1180" WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Loaded="Loaded_HomePage">
-
-    <Window.Resources>
-        <converters:PermissionToVisibilityConverter x:Key="PermissionToVisibilityConverter"/>
-        <converters:PermissionToIsEnabledConverter x:Key="PermissionToIsEnabledConverter"/>
-    </Window.Resources>
-
+    
     <Border Background="#FF272E3C"
             MouseDown="Border_MouseDown"
             MouseLeftButtonDown="Border_MouseLeftButtonDown">

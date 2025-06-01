@@ -48,8 +48,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
                 isEditing = false;
             }
-
-            //mainNavigationWindowLogic.LoadEmployeeListPage();
+            mainNavigationWindowLogic.NavigateToPage(typeof(EmployeeListPage), "EmployeeListPage");
         }
 
         private void ReloadEmployeeData()

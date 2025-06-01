@@ -29,9 +29,6 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             get
             {
-                // Remove Console.WriteLine for production, keep if debugging initialization
-                // if (_instance != null) Console.WriteLine(_instance.ToString());
-                // else Console.WriteLine("MainNavigationWindowLogic: Instance is NULL");
                 return _instance;
             }
             // Private setter to ensure only Initialize can set the instance
@@ -40,7 +37,6 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         private readonly MainNavigationWindow _ui; // Reference to the UI window
 
-        // Add this property (as corrected previously)
         public CustomPrincipal CurrentUserPrincipal
         {
             get => Thread.CurrentPrincipal as CustomPrincipal;
@@ -63,7 +59,6 @@ namespace MyQuanLyTrangSuc.ViewModel
                 if (Instance == null) // Use 'Instance' property to check, not '_instance' field
                 {
                     Instance = new MainNavigationWindowLogic(mainNavigationWindowUI);
-                    // Console.WriteLine("MainNavigationWindowLogic: Initialized."); // Remove for production
                     return true;
                 }
                 return false;
@@ -153,22 +148,28 @@ namespace MyQuanLyTrangSuc.ViewModel
             // Notify UI that the CurrentUserPrincipal property has changed,
             // which will trigger re-evaluation of Visibility/IsEnabled bindings.
             OnPropertyChanged(nameof(CurrentUserPrincipal));
+            // Crucial: Invalidate commands so they re-evaluate their CanExecute state
+            CommandManager.InvalidateRequerySuggested();
         }
         // --- End Authentication ---
 
 
         // --- Navigation Logic ---
 
-        // Centralized method to navigate to a page with permission check
-        private void NavigateToPage(Type pageType, string permissionName)
+        // Helper method to check permission for navigation
+        private bool CanNavigateToPageByPermission(string permissionIdentifier)
         {
-            // Ensure the principal is set before checking permissions
-            // Note: CurrentUserPrincipal getter directly uses Thread.CurrentPrincipal
+            // Ensure the current user principal exists and has the required permission
+            return CurrentUserPrincipal?.HasPermission(permissionIdentifier) == true;
+        }
+
+        // Centralized method to navigate to a page with permission check (redundant check, but good for defensive coding)
+        public void NavigateToPage(Type pageType, string permissionName)
+        {
             if (CurrentUserPrincipal is CustomPrincipal currentPrincipal)
             {
                 if (currentPrincipal.HasPermission(permissionName))
                 {
-                    // Handle ProfilePage specifically if its constructor needs the username
                     Page pageInstance;
                     if (pageType == typeof(ProfilePage))
                     {
@@ -177,8 +178,6 @@ namespace MyQuanLyTrangSuc.ViewModel
                     }
                     else
                     {
-                        // For other pages, use Activator.CreateInstance if they have a parameterless constructor
-                        // If pages have dependencies, consider a simple IoC container or factory
                         try
                         {
                             pageInstance = (Page)Activator.CreateInstance(pageType);
@@ -200,15 +199,11 @@ namespace MyQuanLyTrangSuc.ViewModel
                 else
                 {
                     MessageBox.Show($"You do not have permission to view '{permissionName}'.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    // Optional: Navigate to a "Permission Denied" page
-                    // _ui.MainFrame.Navigate(new PermissionDeniedPage());
                 }
             }
             else
             {
-                // This typically means Thread.CurrentPrincipal is not a CustomPrincipal or is null
                 MessageBox.Show("Security context not established. Please log in again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                // Force logout or navigate to login
                 OnClick_LogOut();
             }
         }
@@ -238,26 +233,96 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         private void InitializeCommands()
         {
-            // Use your RelayCommand implementation
-            NavigateToDashboardCommand = new RelayCommand(() => NavigateToPage(typeof(DashboardPage), "DashboardPage"));
-            NavigateToItemListPageCommand = new RelayCommand(() => NavigateToPage(typeof(ItemListPage), "ItemListPage"));
-            NavigateToItemCategoryListPageCommand = new RelayCommand(() => NavigateToPage(typeof(ItemCategoryListPage), "ItemCategoryListPage"));
-            NavigateToUnitListPageCommand = new RelayCommand(() => NavigateToPage(typeof(UnitListPage), "UnitListPage"));
-            NavigateToServiceRecordListPageCommand = new RelayCommand(() => NavigateToPage(typeof(ServiceRecordListPage), "ServiceRecordListPage"));
-            NavigateToImportPageCommand = new RelayCommand(() => NavigateToPage(typeof(ImportPage), "ImportPage"));
-            NavigateToInvoicePageCommand = new RelayCommand(() => NavigateToPage(typeof(InvoicePage), "InvoicePage"));
-            NavigateToMonthlyStockReportPageCommand = new RelayCommand(() => NavigateToPage(typeof(MonthlyStockReportPage), "MonthlyStockReportPage"));
-            NavigateToMonthlyRevenueReportPageCommand = new RelayCommand(() => NavigateToPage(typeof(MonthlyRevenueReportPage), "MonthlyRevenueReportPage")); // Make sure this page exists
-            NavigateToCustomerListPageCommand = new RelayCommand(() => NavigateToPage(typeof(CustomerListPage), "CustomerListPage"));
-            NavigateToSupplierListPageCommand = new RelayCommand(() => NavigateToPage(typeof(SupplierListPage), "SupplierListPage"));
-            NavigateToEmployeeListPageCommand = new RelayCommand(() => NavigateToPage(typeof(EmployeeListPage), "EmployeeListPage"));
-            NavigateToProfilePageCommand = new RelayCommand(() => NavigateToPage(typeof(ProfilePage), "ProfilePage"));
+            // Now, initialize your RelayCommands with both an execute Action and a canExecute Func<bool>
+
+            NavigateToDashboardCommand = new RelayCommand(
+                () => NavigateToPage(typeof(DashboardPage), "DashboardPage"),
+                () => CanNavigateToPageByPermission("DashboardPage")
+            );
+
+            NavigateToItemListPageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(ItemListPage), "ItemListPage"),
+                () => CanNavigateToPageByPermission("ItemListPage")
+            );
+
+            NavigateToItemCategoryListPageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(ItemCategoryListPage), "ItemCategoryListPage"),
+                () => CanNavigateToPageByPermission("ItemCategoryListPage")
+            );
+
+            NavigateToUnitListPageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(UnitListPage), "UnitListPage"),
+                () => CanNavigateToPageByPermission("UnitListPage")
+            );
+
+            NavigateToServiceRecordListPageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(ServiceRecordListPage), "ServiceRecordListPage"),
+                () => CanNavigateToPageByPermission("ServiceRecordListPage")
+            );
+
+            NavigateToImportPageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(ImportPage), "ImportPage"),
+                () => CanNavigateToPageByPermission("ImportPage")
+            );
+
+            NavigateToInvoicePageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(InvoicePage), "InvoicePage"),
+                () => CanNavigateToPageByPermission("InvoicePage")
+            );
+
+            NavigateToMonthlyStockReportPageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(MonthlyStockReportPage), "MonthlyStockReportPage"),
+                () => CanNavigateToPageByPermission("MonthlyStockReportPage")
+            );
+
+            NavigateToMonthlyRevenueReportPageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(MonthlyRevenueReportPage), "MonthlyRevenueReportPage"),
+                () => CanNavigateToPageByPermission("MonthlyRevenueReportPage")
+            );
+
+            NavigateToCustomerListPageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(CustomerListPage), "CustomerListPage"),
+                () => CanNavigateToPageByPermission("CustomerListPage")
+            );
+
+            NavigateToSupplierListPageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(SupplierListPage), "SupplierListPage"),
+                () => CanNavigateToPageByPermission("SupplierListPage")
+            );
+
+            NavigateToEmployeeListPageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(EmployeeListPage), "EmployeeListPage"),
+                () => CanNavigateToPageByPermission("EmployeeListPage")
+            );
+
+            NavigateToProfilePageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(ProfilePage), "ProfilePage"),
+                () => CanNavigateToPageByPermission("ProfilePage")
+            );
+
             // If RulesSettingsPage exists, uncomment and adjust:
-            // NavigateToRulesSettingsPageCommand = new RelayCommand(() => NavigateToPage(typeof(RulesSettingsPage), "RulesSettingsPage"));
-            NavigateToPermissionListPageCommand = new RelayCommand(() => NavigateToPage(typeof(PermissionListPage), "PermissionListPage"));
-            NavigateToUserGroupListPageCommand = new RelayCommand(() => NavigateToPage(typeof(UserGroupListPage), "UserGroupListPage"));
-            NavigateToAccountListPageCommand = new RelayCommand(() => NavigateToPage(typeof(AccountListPage), "AccountListPage"));
-            LogoutCommand = new RelayCommand(OnClick_LogOut);
+            //NavigateToRulesSettingsPageCommand = new RelayCommand(
+            //    () => NavigateToPage(typeof(RulesSettingsPage), "RulesSettingsPage"),
+            //    () => CanNavigateToPageByPermission("RulesSettingsPage") // Assuming a permission named "RulesSettingsPage"
+            //);
+
+            NavigateToPermissionListPageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(PermissionListPage), "PermissionListPage"),
+                () => CanNavigateToPageByPermission("PermissionListPage")
+            );
+
+            NavigateToUserGroupListPageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(UserGroupListPage), "UserGroupListPage"),
+                () => CanNavigateToPageByPermission("UserGroupListPage")
+            );
+
+            NavigateToAccountListPageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(AccountListPage), "AccountListPage"),
+                () => CanNavigateToPageByPermission("AccountListPage")
+            );
+
+            // Logout command typically doesn't need a permission check, as it should always be available.
+            LogoutCommand = new RelayCommand(OnClick_LogOut, () => true); // Always enabled
         }
 
         // --- Logout Logic ---
@@ -272,12 +337,11 @@ namespace MyQuanLyTrangSuc.ViewModel
                 Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(""), new string[] { });
                 Application.Current.Resources["CurrentAccountId"] = null; // Clear the stored ID
                 Application.Current.Resources["CurrentUsername"] = null; // Clear username if stored
-                //string applicationPath = Process.GetCurrentProcess().MainModule.FileName;
+
                 string applicationPath = Environment.ProcessPath;
                 Process.Start(applicationPath);
                 App.Current.Shutdown();
             }
-
         }
 
         // INotifyPropertyChanged implementation
@@ -295,4 +359,3 @@ namespace MyQuanLyTrangSuc.ViewModel
             => _ui.MainFrame.Navigate(page);
     }
 }
-

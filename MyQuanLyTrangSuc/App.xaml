@@ -20,13 +20,18 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Secondary/MaterialDesignColor.Lime.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
+            <customConverters:PermissionToIsEnabledConverter x:Key="PermissionToIsEnabledConverter" />
+            <customConverters:PermissionToVisibilityConverter x:Key="PermissionToVisibilityConverter" />
             <Style x:Key="MyCustomMaterialDisabledButton"
            TargetType="{x:Type Button}">
-                <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}" />
-                <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidForegroundBrush}" />
+                <Setter Property="Width" Value="160"/>
+                <Setter Property="Height" Value="36"/>
+                <Setter Property="Margin" Value="10, 0, 20, 0"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Background" Value="#FF747525" />
+                <Setter Property="Foreground" Value="White" />
                 <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="wpf:ButtonAssist.CornerRadius" Value="4" />
+                <Setter Property="wpf:ButtonAssist.CornerRadius" Value="10" />
                 <Setter Property="Padding" Value="16,8" />
                 <Setter Property="Cursor" Value="Hand"/>
                 <Setter Property="Template">
@@ -79,7 +84,10 @@
                                 <Trigger Property="IsKeyboardFocused" Value="true">
                                     <Setter TargetName="border" Property="wpf:ShadowAssist.Darken" Value="True" />
                                 </Trigger>
-
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#7b5cd6"/>
+                                    <Setter Property="Foreground" Value="#ffffff"/>
+                                </Trigger>
                                 <Trigger Property="IsEnabled" Value="false">
                                     <Setter TargetName="border" Property="Background" Value="#FFE0E0E0" />
                                     <Setter TargetName="border" Property="BorderBrush" Value="#FFC0C0C0" />
@@ -514,7 +522,6 @@
                     <Trigger Property="IsMouseOver" Value="True">
                         <Setter Property="Background" Value="#7b5cd6"/>
                         <Setter Property="Foreground" Value="#ffffff"/>
-
                     </Trigger>
                 </Style.Triggers>
             </Style>
