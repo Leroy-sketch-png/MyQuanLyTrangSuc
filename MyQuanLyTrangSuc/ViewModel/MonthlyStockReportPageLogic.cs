@@ -291,15 +291,15 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             var hasData = context.InvoiceDetails
                 .Any(detail => detail.ProductId == productId &&
-                              detail.Invoice.Date.Month == reportDate.Month &&
-                              detail.Invoice.Date.Year == reportDate.Year);
+                              detail.Invoice.Date.Value.Month == reportDate.Month &&
+                              detail.Invoice.Date.Value.Year == reportDate.Year);
 
             if (!hasData) return 0;
 
             return context.InvoiceDetails
                 .Where(detail => detail.ProductId == productId &&
-                                detail.Invoice.Date.Month == reportDate.Month &&
-                                detail.Invoice.Date.Year == reportDate.Year)
+                                detail.Invoice.Date.Value.Month == reportDate.Month &&
+                                detail.Invoice.Date.Value.Year == reportDate.Year)
                 .Sum(detail => (int?)detail.Quantity) ?? 0;
         }
 
@@ -308,15 +308,15 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             var hasData = context.ImportDetails
                 .Any(detail => detail.ProductId == productId &&
-                              detail.Import.Date.Month == reportDate.Month &&
-                              detail.Import.Date.Year == reportDate.Year);
+                              detail.Import.Date.Value.Month == reportDate.Month &&
+                              detail.Import.Date.Value.Year == reportDate.Year);
 
             if (!hasData) return 0;
 
             return context.ImportDetails
                 .Where(detail => detail.ProductId == productId &&
-                                detail.Import.Date.Month == reportDate.Month &&
-                                detail.Import.Date.Year == reportDate.Year)
+                                detail.Import.Date.Value.Month == reportDate.Month &&
+                                detail.Import.Date.Value.Year == reportDate.Year)
                 .Sum(detail => (int?)detail.Quantity) ?? 0;
         }
 
