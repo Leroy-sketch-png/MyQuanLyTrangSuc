@@ -37,7 +37,7 @@ namespace MyQuanLyTrangSuc.View
     };
 
             // Đảm bảo có giá trị doanh thu mặc định để test
-            InitializeDefaultRevenue(context);
+            //InitializeDefaultRevenue(context);
 
             // Khởi tạo logic với dữ liệu test
             logicReport = new MonthlyStockReportWindowLogic(sampleReports, "01/2025");
@@ -45,23 +45,23 @@ namespace MyQuanLyTrangSuc.View
         }
 
         // Phương thức đảm bảo có doanh thu test
-        private void InitializeDefaultRevenue(MyQuanLyTrangSucContext context)
-        {
-            var monthYearDate = new DateTime(2025, 1, 1);
+        //private void InitializeDefaultRevenue(MyQuanLyTrangSucContext context)
+        //{
+        //    var monthYearDate = new DateTime(2025, 1, 1);
 
-            if (!context.RevenueReports.Any(r => r.MonthYear == monthYearDate))
-            {
-                var defaultRevenue = new RevenueReport
-                {
-                    RevenueReportId = GenerateRevenueReportId(),
-                    MonthYear = monthYearDate,
-                    TotalRevenue = 300 // Giá trị test mặc định
-                };
+        //    if (!context.RevenueReports.Any(r => r.MonthYear == monthYearDate))
+        //    {
+        //        var defaultRevenue = new RevenueReport
+        //        {
+        //            RevenueReportId = GenerateRevenueReportId(),
+        //            MonthYear = monthYearDate,
+        //            TotalRevenue = 300 // Giá trị test mặc định
+        //        };
 
-                context.RevenueReports.Add(defaultRevenue);
-                context.SaveChanges();
-            }
-        }
+        //        context.RevenueReports.Add(defaultRevenue);
+        //        context.SaveChanges();
+        //    }
+        //}
 
         private string GenerateRevenueReportId()
         {

@@ -182,7 +182,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                                            r.MonthYear.Value.Year == reportDate.Year)
                             : new StockReport
                             {
-                                StockReportId = GenerateStockReportId(),
+                                StockReportId = GenerateStockReportId(reportDate),
                                 MonthYear = reportDate,
                                 TotalBeginStock = 0,
                                 TotalFinishStock = 0,
@@ -268,52 +268,65 @@ namespace MyQuanLyTrangSuc.ViewModel
         }
 
         // Các phương thức hỗ trợ tính toán
+        // Sửa lại CalculateBeginStock - tính tổng tồn kho đầu kỳ
         private int CalculateBeginStock(string productId, DateTime reportDate)
         {
-            return context.ImportDetails
-                .Join(context.Imports,
-                    detail => detail.ImportId,
-                    import => import.ImportId,
-                    (detail, import) => new { Detail = detail, Import = import })
-                .Where(joined => joined.Import.Date < reportDate && joined.Detail.ProductId == productId)
-                .Select(joined => joined.Detail.Quantity ?? 0)
-                .FirstOrDefault(); // Tránh lỗi null
+            // Tổng nhập trước ngày báo cáo
+            var totalImported = context.ImportDetails
+                .Where(detail => detail.ProductId == productId &&
+                                detail.Import.Date < reportDate)
+                .Sum(detail => (int?)detail.Quantity) ?? 0;
+
+            // Tổng xuất (bán) trước ngày báo cáo  
+            var totalSold = context.InvoiceDetails
+                .Where(detail => detail.ProductId == productId &&
+                                detail.Invoice.Date < reportDate)
+                .Sum(detail => (int?)detail.Quantity) ?? 0;
+
+            return totalImported - totalSold;
         }
 
+        // Sửa lại CalculateSalesQuantity - dùng Navigation Property và xử lý null
         private int CalculateSalesQuantity(string productId, DateTime reportDate)
         {
+            var hasData = context.InvoiceDetails
+                .Any(detail => detail.ProductId == productId &&
+                              detail.Invoice.Date.Month == reportDate.Month &&
+                              detail.Invoice.Date.Year == reportDate.Year);
+
+            if (!hasData) return 0;
+
             return context.InvoiceDetails
-                .Join(context.Invoices,
-                    detail => detail.InvoiceId,
-                    invoice => invoice.InvoiceId,
-                    (detail, invoice) => new { Detail = detail, Invoice = invoice })
-                .Where(joined => joined.Invoice.Date.Value.Month == reportDate.Month &&
-                               joined.Invoice.Date.Value.Year == reportDate.Year &&
-                               joined.Detail.ProductId == productId)
-                .Select(joined => joined.Detail.Quantity ?? 0)
-                .DefaultIfEmpty(0) // Tránh lỗi nếu không có dữ liệu
-                .Sum();
+                .Where(detail => detail.ProductId == productId &&
+                                detail.Invoice.Date.Month == reportDate.Month &&
+                                detail.Invoice.Date.Year == reportDate.Year)
+                .Sum(detail => (int?)detail.Quantity) ?? 0;
         }
 
+        // Sửa lại CalculatePurchaseQuantity - dùng Navigation Property và xử lý null
         private int CalculatePurchaseQuantity(string productId, DateTime reportDate)
         {
+            var hasData = context.ImportDetails
+                .Any(detail => detail.ProductId == productId &&
+                              detail.Import.Date.Month == reportDate.Month &&
+                              detail.Import.Date.Year == reportDate.Year);
+
+            if (!hasData) return 0;
+
             return context.ImportDetails
-                .Join(context.Imports,
-                    detail => detail.ImportId,
-                    import => import.ImportId,
-                    (detail, import) => new { Detail = detail, Import = import })
-                .Where(joined => joined.Import.Date.Value.Month == reportDate.Month &&
-                               joined.Import.Date.Value.Year == reportDate.Year &&
-                               joined.Detail.ProductId == productId)
-                .Select(joined => joined.Detail.Quantity ?? 0)
-                .DefaultIfEmpty(0) // Tránh lỗi nếu không có dữ liệu
-                .Sum();
+                .Where(detail => detail.ProductId == productId &&
+                                detail.Import.Date.Month == reportDate.Month &&
+                                detail.Import.Date.Year == reportDate.Year)
+                .Sum(detail => (int?)detail.Quantity) ?? 0;
         }
 
-        private string GenerateStockReportId()
+        // Tạo StockReportId theo format SR + MM + YY (VD: SR0625 cho tháng 6/2025)
+        private string GenerateStockReportId(DateTime reportDate)
         {
-            var maxId = context.StockReports.Max(r => (int?)Convert.ToInt32(r.StockReportId)) ?? 0;
-            return (maxId + 1).ToString("D6");
+            string month = reportDate.Month.ToString("D2");  // 06
+            string year = reportDate.Year.ToString().Substring(2); // 25
+
+            return $"SR{month}{year}";
         }
 
         public void DeleteStockReport()
