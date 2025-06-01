@@ -9,6 +9,7 @@
       mc:Ignorable="d"
       d:DesignHeight="720" d:DesignWidth="880"
       Title="SupplierPageUI">
+
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Page.Resources>
@@ -19,9 +20,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <!--Main Section-->
             <Grid Grid.Column="1" HorizontalAlignment="Center">
-
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -32,13 +31,6 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <!--Page Title-->
-                <TextBlock Text="Supplier Page" HorizontalAlignment="Left" VerticalAlignment="Center"
-                           Margin="55 0 0 2" FontSize="16" FontWeight="SemiBold" Foreground="Blue"/>
-                <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="33 0 0 4" Width="14" Height="14" Foreground="#ff9d00"/>
-                <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="30 4 0 0" Width="14" Height="14" Foreground="#4880ff"/>
-
-                <!--Top Button-->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 15 0">
                     <TextBlock x:Name="welcomeTextBlock" Foreground="#374655" FontSize="14" Margin="0 0 10 0"
                                VerticalAlignment="Center" Text="Welcome, have a nice day" FontStyle="Italic">
@@ -58,49 +50,45 @@
                             </EventTrigger>
                         </TextBlock.Triggers>
                     </TextBlock>
-
-                    <!--<Button Style="{StaticResource menuButton_2}">
-                        <Icon:PackIconMaterial Kind="BellOutline" Width="14" Height="14"/>
-                    </Button>
-
-                    <Button Style="{StaticResource menuButton_2}">
-                        <Icon:PackIconMaterial Kind="Cog" Width="14" Height="14"/>
-                    </Button>
-
-                    <Button Style="{StaticResource menuButton_2}">
-                        <Icon:PackIconMaterial Kind="AccountCheckOutline" Width="14" Height="14"/>
-                    </Button>-->
                 </StackPanel>
 
-                <!--Page Title-->
                 <TextBlock Text="Supplier" Grid.Row="1" FontSize="32" FontWeight="SemiBold"
-                           Margin="0 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
+                           Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
+                <TextBlock Text="Supplier Page" HorizontalAlignment="Left" VerticalAlignment="Center"
+                           Margin="55 0 0 2" FontSize="16" FontWeight="SemiBold" Foreground="Blue"/>
+                <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="33 0 0 4" Width="14" Height="14" Foreground="#ff9d00"/>
+                <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="30 4 0 0" Width="14" Height="14" Foreground="#4880ff"/>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
-                    <!--Add Button-->
-                    <Button x:Name="addButton" Style="{StaticResource addButton}"
-                            Click="addButton_Click"
-                            Grid.RowSpan="4" Grid.Row="1" >
+                    <Button x:Name="addButton" Style="{StaticResource MyCustomMaterialDisabledButton}" Grid.RowSpan="4" Grid.Row="1"
+                            Command="{Binding LoadAddSupplierWindowCommand}" VerticalAlignment="Bottom"
+                            IsEnabled="{Binding Path=CurrentUserPrincipal,
+                                        Converter={StaticResource PermissionToIsEnabledConverter},
+                                        ConverterParameter=AddSupplier}">
                         <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="15"
-                                                   Height="15" Margin="0 1 8 0"/>
+                            <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11"
+                                                   Height="11" Margin="0 1 8 0"/>
                             <TextBlock Text="Add new supplier" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
 
-                    <!--Import Button-->
-                    <Button x:Name="importExcelFileButton" Click="importExcelFileButton_Click"
-                            Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
+                    <Button x:Name="importExcelFileButton" Style="{StaticResource MyCustomMaterialDisabledButton}" Grid.Row="1" Grid.RowSpan="4"
+                            Command="{Binding ImportExcelCommand}" VerticalAlignment="Bottom"
+                            IsEnabled="{Binding Path=CurrentUserPrincipal,
+                                        Converter={StaticResource PermissionToIsEnabledConverter},
+                                        ConverterParameter=ImportSupplierExcel}">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Import" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
 
-                    <!--Export Button-->
-                    <Button x:Name="exportExcelFileButton" Click="exportExcelFileButton_Click"
-                            Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
-                        <!--Click="exportExcelFileButton_Click"-->
+                    <Button x:Name="exportExcelFileButton" Style="{StaticResource MyCustomMaterialDisabledButton}" Grid.Row="1" Grid.RowSpan="4"
+                            Command="{Binding ExportExcelCommand}"
+                            CommandParameter="{Binding ElementName=supplierDataGrid}" VerticalAlignment="Bottom"
+                            IsEnabled="{Binding Path=CurrentUserPrincipal,
+                                        Converter={StaticResource PermissionToIsEnabledConverter},
+                                        ConverterParameter=ExportSupplierExcel}">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Export" FontWeight="SemiBold"/>
@@ -108,35 +96,24 @@
                     </Button>
                 </StackPanel>
 
-                <!--Separator-->
                 <Separator Grid.Row="3" BorderBrush="#747525" BorderThickness="10" Margin="5,10,30,10"/>
 
-                <!--Filter TextBox-->
                 <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
                     <TextBox TextChanged="searchTextBox_TextChanged" x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0" FontSize="20"/>
                 </Grid>
 
-
-                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220,0,0,0" HorizontalAlignment="Left" Width="120">
+                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
                     <ComboBoxItem Content="Name"/>
                     <ComboBoxItem Content="ID"/>
                 </ComboBox>
 
-                <!--Suppliers DataGrid-->
-                <DataGrid AutoGenerateColumns="False" IsReadOnly="True" 
-                          CanUserSortColumns="True"
-                          MouseDoubleClick="supplierDataGrid_MouseDoubleClick"
-                          ItemsSource="{Binding Suppliers}" x:Name="supplierDataGrid" 
-                          Style="{DynamicResource DataGridStyle1}"  
-                          RowStyle="{DynamicResource DataGridRowStyle1}" 
-                          SelectedItem="{Binding SelectedSupplier, Mode=TwoWay}"
+                <DataGrid AutoGenerateColumns="False" IsReadOnly="True"
+                          CanUserSortColumns="True" ItemsSource="{Binding Suppliers}"
+                          SelectedItem="{Binding SelectedSupplier, Mode=TwoWay}" x:Name="supplierDataGrid"
+                          Style="{DynamicResource DataGridStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}"
                           CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
                     <DataGrid.Columns>
-
-                        <!--ID-->
-                        <DataGridTextColumn Binding="{Binding SupplierId}" Header="ID" IsReadOnly="True" CanUserResize="False" Width="80"/>
-
-                        <!--Name-->
+                        <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="False" Width="80" Binding="{Binding SupplierId}"/>
                         <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}" CanUserResize="False" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -144,8 +121,6 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-
-                        <!--Email-->
                         <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*" IsReadOnly="True" CanUserResize="False">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -153,34 +128,36 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
+                        <DataGridTextColumn Header="Telephone" IsReadOnly="True" Width="*" Binding="{Binding ContactNumber}"/>
+                        <DataGridTextColumn Header="Address" IsReadOnly="True" Width="*" Binding="{Binding Address}"/>
 
-                        <!--Telephone-->
-                        <DataGridTextColumn Binding="{Binding ContactNumber}" Header="Telephone" IsReadOnly="True" Width="*"/>
-
-                        <!--Address-->
-                        <DataGridTextColumn Binding="{Binding Address}" Header="Address" IsReadOnly="True" Width="*"/>
-
-                        <!--Operations-->
                         <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button x:Name="editButton" Style="{StaticResource gridEditButton}" Click="editButton_Click">
+                                        <Button x:Name="editButton" Style="{StaticResource gridEditButton}"
+                                                Command="{Binding DataContext.LoadEditSupplierWindowCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                CommandParameter="{Binding}"
+                                                Visibility="{Binding Path=CurrentUserPrincipal,
+                                                            Converter={StaticResource PermissionToVisibilityConverter},
+                                                            ConverterParameter=EditSupplier}">
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
-                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0" Click="deleteButton_Click">
+                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0"
+                                                Command="{Binding DataContext.DeleteSupplierCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                CommandParameter="{Binding}"
+                                                Visibility="{Binding Path=CurrentUserPrincipal,
+                                                            Converter={StaticResource PermissionToVisibilityConverter},
+                                                            ConverterParameter=DeleteSupplier}">
                                             <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
-
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
                     </DataGrid.Columns>
                 </DataGrid>
-                <!--MouseDoubleClick="supplierDataGrid_MouseDoubleClick"-->
             </Grid>
         </Grid>
     </Border>

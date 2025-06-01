@@ -1,63 +1,155 @@
-﻿using MaterialDesignThemes.Wpf;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MyQuanLyTrangSuc.BusinessLogic;
 using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.Security; // Assuming CustomPrincipal is here
 using MyQuanLyTrangSuc.View;
+using MyQuanLyTrangSuc.View.Windows; // Assuming AddImportWindow, ImportDetailsWindow are here
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input; // Required for ICommand
 
-namespace PhanMemQuanLyVatTu.ViewModel
+namespace MyQuanLyTrangSuc.ViewModel
 {
-    public class ImportPageLogic
+    public class ImportPageLogic : INotifyPropertyChanged
     {
-        private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
-        private readonly ImportPage importRecordPageUI;
+        private readonly ImportPage importPage;
+        private readonly MyQuanLyTrangSucContext context;
         private readonly ImportService importService;
 
-        // DataContext Zone
-        public ObservableCollection<Import> ImportRecords { get; set; }
-
-        public ImportPageLogic(ImportPage importRecordPageUI)
+        private ObservableCollection<Import> _importRecords;
+        /// <summary>
+        /// Collection of import records displayed in the DataGrid.
+        /// </summary>
+        public ObservableCollection<Import> ImportRecords
         {
-            this.importRecordPageUI = importRecordPageUI;
+            get => _importRecords;
+            set
+            {
+                _importRecords = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Import _selectedImportRecord;
+        /// <summary>
+        /// The currently selected import record in the DataGrid.
+        /// </summary>
+        public Import SelectedImportRecord
+        {
+            get => _selectedImportRecord;
+            set
+            {
+                _selectedImportRecord = value;
+                OnPropertyChanged();
+                // Re-evaluate CanExecute for commands that depend on a selected item
+                ((RelayCommand<Import>)LoadImportDetailsWindowCommand)?.RaiseCanExecuteChanged();
+                ((RelayCommand<Import>)PrintImportRecordCommand)?.RaiseCanExecuteChanged();
+            }
+        }
+
+        /// <summary>
+        /// Represents the current user principal for permission checks.
+        /// </summary>
+        public CustomPrincipal CurrentUserPrincipal
+        {
+            get => Thread.CurrentPrincipal as CustomPrincipal;
+        }
+
+        private string _searchText;
+        /// <summary>
+        /// Text bound to the search TextBox for filtering import records.
+        /// </summary>
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                OnPropertyChanged();
+                ApplySearchFilter(); // Apply filter whenever search text changes
+            }
+        }
+
+        private ComboBoxItem _selectedSearchCriteria;
+        /// <summary>
+        /// The selected item from the search ComboBox (e.g., "Date", "ID", "Supplier").
+        /// </summary>
+        public ComboBoxItem SelectedSearchCriteria
+        {
+            get => _selectedSearchCriteria;
+            set
+            {
+                _selectedSearchCriteria = value;
+                OnPropertyChanged();
+                ApplySearchFilter(); // Apply filter whenever search criteria changes
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        // --- Commands ---
+        public ICommand LoadAddImportWindowCommand { get; private set; }
+        public ICommand LoadImportDetailsWindowCommand { get; private set; } // Takes Import parameter
+        public ICommand PrintImportRecordCommand { get; private set; }       // Takes Import parameter
+
+        public ImportPageLogic()
+        {
+            context = MyQuanLyTrangSucContext.Instance;
+            importService = ImportService.Instance;
             ImportRecords = new ObservableCollection<Import>();
             LoadRecordsFromDatabase();
-            importService = ImportService.Instance;
-            //context.OnImportAdded += Context_OnImportAdded;
             importService.OnImportAdded += ImportService_OnImportAdded;
-        }
+            InitializeCommands();
 
-        private void ImportService_OnImportAdded(Import import)
+            // Set default search criteria
+            SelectedSearchCriteria = new ComboBoxItem { Content = "Supplier" };
+        }
+        public ImportPageLogic(ImportPage importPage)
         {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                ImportRecords.Add(import);
-            });
+            this.importPage = importPage;
+            context = MyQuanLyTrangSucContext.Instance;
+            importService = ImportService.Instance;
+            ImportRecords = new ObservableCollection<Import>();
+            LoadRecordsFromDatabase();
+            importService.OnImportAdded += ImportService_OnImportAdded;
+            InitializeCommands();
+
+            // Set default search criteria
+            SelectedSearchCriteria = new ComboBoxItem { Content = "Supplier" };
         }
 
-        //private void Context_OnImportAdded(Import import)
-        //{
-        //    Application.Current.Dispatcher.Invoke(() =>
-        //    {
-        //        ImportRecords.Add(import);
-        //    });
-        //}
+        private void InitializeCommands()
+        {
+            LoadAddImportWindowCommand = new RelayCommand(LoadAddImportWindow, CanLoadAddImportWindow);
+            LoadImportDetailsWindowCommand = new RelayCommand<Import>(LoadImportDetailsWindow, CanLoadImportDetailsWindow);
+            PrintImportRecordCommand = new RelayCommand<Import>(PrintImportRecord, CanPrintImportRecord);
+        }
 
         private void LoadRecordsFromDatabase()
         {
             try
             {
-                List<Import> importRecordFromDb = context.Imports
-                    .Include(i => i.Supplier) // Ensure Supplier is included
+                // Ensure Supplier data is eager-loaded with the import record
+                List<Import> importRecordsFromDb = context.Imports
+                    .Include(i => i.Supplier)
                     .ToList();
+
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     ImportRecords.Clear();
-                    foreach (Import ir in importRecordFromDb)
+                    foreach (Import ir in importRecordsFromDb)
                     {
                         ImportRecords.Add(ir);
                     }
@@ -69,117 +161,213 @@ namespace PhanMemQuanLyVatTu.ViewModel
             }
         }
 
+        private void ImportService_OnImportAdded(Import import)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ImportRecords.Add(import);
+            });
+        }
 
-        public void LoadAddRecordWindow()
+        // --- Add Import Logic ---
+        private void LoadAddImportWindow()
         {
             AddImportWindow addImportRecordWindowUI = new AddImportWindow();
             addImportRecordWindowUI.ShowDialog();
+            LoadRecordsFromDatabase(); // Refresh data after the window closes
         }
 
-        public void LoadImportDetailsWindow()
+        private bool CanLoadAddImportWindow()
         {
-            if (importRecordPageUI.importRecordsDataGrid.SelectedItem is Import selectedImportRecord)
+            return CurrentUserPrincipal?.HasPermission("AddImport") == true;
+        }
+
+        // --- View Import Details Logic ---
+        private void LoadImportDetailsWindow(Import selectedImportRecord)
+        {
+            if (selectedImportRecord != null)
             {
                 ImportDetailsWindow importDetailsWindowUI = new ImportDetailsWindow(selectedImportRecord);
                 importDetailsWindowUI.ShowDialog();
             }
+            else
+            {
+                MessageBox.Show("Please select an import record to view details.", "No Import Selected", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
-        public void ImportsSearchByNameOfSupplier(string name_supplier)
+        private bool CanLoadImportDetailsWindow(Import selectedImportRecord)
         {
-            List<Import> importsFromDb = context.Imports.ToList();
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                ImportRecords.Clear();
-                foreach (Import import in importsFromDb)
-                {
-                    if (import.Supplier.Name.IndexOf(name_supplier, StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        ImportRecords.Add(import);
-                    }
-                }
-            });
+            return CurrentUserPrincipal?.HasPermission("ViewImportDetails") == true && selectedImportRecord != null;
         }
 
-        public void ImportsSearchByID(string ID)
+        // --- Print Import Logic ---
+        public void PrintImportRecord(Import selectedImportRecord)
         {
-            List<Import> importsFromDb = context.Imports.ToList();
-            Application.Current.Dispatcher.Invoke(() =>
+            if (selectedImportRecord != null)
             {
-                ImportRecords.Clear();
-                foreach (Import import in importsFromDb)
-                {
-                    if (import.ImportId.IndexOf(ID, StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        ImportRecords.Add(import);
-                    }
-                }
-            });
-        }
-
-        public void ImportsSearchByDate(string date)
-        {
-            var dateParts = date.Split('/');
-            List<Import> importsFromDb = context.Imports.ToList();
-
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                ImportRecords.Clear();
-
-                foreach (var import in importsFromDb)
-                {
-                    bool match = true;
-
-                    if (dateParts.Length > 0 && int.TryParse(dateParts[0], out int day))
-                    {
-                        if (import.Date.Value.Day != day)
-                        {
-                            match = false;
-                        }
-                    }
-
-                    if (dateParts.Length > 1 && int.TryParse(dateParts[1], out int month))
-                    {
-                        if (import.Date.Value.Month != month)
-                        {
-                            match = false;
-                        }
-                    }
-
-                    if (dateParts.Length > 2 && int.TryParse(dateParts[2], out int year))
-                    {
-                        if (import.Date.Value.Year != year)
-                        {
-                            match = false;
-                        }
-                    }
-
-                    if (match)
-                    {
-                        ImportRecords.Add(import);
-                    }
-                }
-            });
-        }
-
-        public void PrintImportRecord()
-        {
-            if (importRecordPageUI.importRecordsDataGrid.SelectedItem is Import selectedImportRecord)
-            {
-                var printPage = new ImportDetailsWindow(selectedImportRecord);
+                var printPage = new ImportDetailsWindow(selectedImportRecord); // Assuming ImportDetailsWindow is your printable view
                 var printDialog = new PrintDialog();
 
                 if (printDialog.ShowDialog() == true)
                 {
-                    printPage.ShowDialog();
-                    printDialog.PrintVisual(printPage, "Import Record");
-                    printPage.Close();
+                    printPage.Show(); // Must be shown to be printable by PrintVisual
+                    printPage.UpdateLayout(); // Ensure layout is updated before printing
+                    printDialog.PrintVisual(printPage, $"Import Record - {selectedImportRecord.ImportId}");
+                    printPage.Close(); // Close the window after printing
                 }
             }
             else
             {
                 MessageBox.Show("Please select an import record to print.", "Print Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private bool CanPrintImportRecord(Import selectedImportRecord)
+        {
+            return CurrentUserPrincipal?.HasPermission("PrintImport") == true && selectedImportRecord != null;
+        }
+
+        // --- Search/Filter Logic ---
+        /// <summary>
+        /// Applies the search filter based on the current SearchText and SelectedSearchCriteria.
+        /// </summary>
+        private void ApplySearchFilter()
+        {
+            // If search text is empty, reload all import records
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                LoadRecordsFromDatabase();
+                return;
+            }
+
+            // Perform search based on selected criteria
+            List<Import> filteredImports;
+            string searchBy = SelectedSearchCriteria?.Content.ToString();
+
+            switch (searchBy)
+            {
+                case "ID":
+                    filteredImports = ImportsSearchByID(SearchText);
+                    break;
+                case "Supplier":
+                    filteredImports = ImportsSearchByNameOfSupplier(SearchText);
+                    break;
+                case "Date":
+                    filteredImports = ImportsSearchByDate(SearchText);
+                    break;
+                default: // Default to Supplier search if criteria is null/unrecognized
+                    filteredImports = ImportsSearchByNameOfSupplier(SearchText);
+                    break;
+            }
+
+            UpdateImportRecordsDisplay(filteredImports);
+        }
+
+        /// <summary>
+        /// Searches import records by supplier name.
+        /// </summary>
+        public List<Import> ImportsSearchByNameOfSupplier(string name_supplier)
+        {
+            // Include Supplier navigation property for filtering by supplier name
+            return context.Imports
+                          .Include(i => i.Supplier)
+                          .Where(i => i.Supplier != null && i.Supplier.Name.IndexOf(name_supplier, StringComparison.OrdinalIgnoreCase) >= 0)
+                          .ToList();
+        }
+
+        /// <summary>
+        /// Searches import records by Import ID.
+        /// </summary>
+        public List<Import> ImportsSearchByID(string ID)
+        {
+            return context.Imports
+                          .Include(i => i.Supplier) // Still include supplier for consistent data display
+                          .Where(i => i.ImportId.IndexOf(ID, StringComparison.OrdinalIgnoreCase) >= 0)
+                          .ToList();
+        }
+
+        /// <summary>
+        /// Searches import records by date. Handles partial date inputs (day, month, year).
+        /// </summary>
+        public List<Import> ImportsSearchByDate(string date)
+        {
+            List<Import> matchingImports = new List<Import>();
+            if (DateTime.TryParse(date, out DateTime parsedDate))
+            {
+                matchingImports = context.Imports
+                                          .Include(i => i.Supplier)
+                                          .Where(i => i.Date.HasValue &&
+                                                      i.Date.Value.Date == parsedDate.Date)
+                                          .ToList();
+            }
+            else
+            {
+                var dateParts = date.Split(new char[] { '/', '-', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                var allImports = context.Imports.Include(i => i.Supplier).ToList();
+
+                foreach (var import in allImports)
+                {
+                    if (!import.Date.HasValue) continue;
+
+                    bool match = true;
+                    if (dateParts.Length >= 1 && int.TryParse(dateParts[0], out int part1))
+                    {
+                        if (import.Date.Value.Day != part1 && import.Date.Value.Month != part1)
+                        {
+                            match = false;
+                        }
+                    }
+                    if (dateParts.Length >= 2 && int.TryParse(dateParts[1], out int part2))
+                    {
+                        if (import.Date.Value.Month != part2 && import.Date.Value.Year != part2)
+                        {
+                            match = false;
+                        }
+                    }
+                    if (dateParts.Length >= 3 && int.TryParse(dateParts[2], out int part3))
+                    {
+                        if (import.Date.Value.Year != part3)
+                        {
+                            match = false;
+                        }
+                    }
+
+                    if (match && dateParts.Length > 0)
+                    {
+                        matchingImports.Add(import);
+                    }
+                }
+            }
+            return matchingImports;
+        }
+
+        /// <summary>
+        /// Updates the ImportRecords ObservableCollection with the new filtered list.
+        /// </summary>
+        /// <param name="newImports">The list of imports that should currently be displayed.</param>
+        private void UpdateImportRecordsDisplay(List<Import> newImports)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var newImportIds = new HashSet<string>(newImports.Select(i => i.ImportId));
+
+                for (int i = ImportRecords.Count - 1; i >= 0; i--)
+                {
+                    if (!newImportIds.Contains(ImportRecords[i].ImportId))
+                    {
+                        ImportRecords.RemoveAt(i);
+                    }
+                }
+
+                foreach (var newImport in newImports)
+                {
+                    if (!ImportRecords.Any(ir => ir.ImportId == newImport.ImportId))
+                    {
+                        ImportRecords.Add(newImport);
+                    }
+                }
+            });
         }
     }
 }

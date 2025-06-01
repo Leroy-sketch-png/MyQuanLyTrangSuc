@@ -3,12 +3,11 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
       xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d"
       d:DesignHeight="720" d:DesignWidth="880"
-      Title="ServicesPageUI">
+      Title="ServiceRecordListPage">
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
@@ -17,12 +16,10 @@
     <Border Background="#eff2f7" CornerRadius="30">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!--Main Section-->
-            <Grid Grid.Column="1" HorizontalAlignment="Center">
-
+            <Grid Grid.Column="0" HorizontalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -33,16 +30,14 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <!--Page Title-->
                 <TextBlock Text="Service Record Page" HorizontalAlignment="Left" VerticalAlignment="Center"
                            Margin="55 0 0 2" FontSize="16" FontWeight="SemiBold" Foreground="Blue"/>
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="33 0 0 4" Width="14" Height="14" Foreground="#ff9d00"/>
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="30 4 0 0" Width="14" Height="14" Foreground="#4880ff"/>
 
-                <!--Top Button-->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 15 0">
                     <TextBlock x:Name="welcomeTextBlock" Foreground="#374655" FontSize="14" Margin="0 0 10 0"
-                                VerticalAlignment="Center" Text="Welcome, have a nice day" FontStyle="Italic">
+                               VerticalAlignment="Center" Text="Welcome, have a nice day" FontStyle="Italic">
                         <TextBlock.RenderTransform>
                             <TranslateTransform x:Name="textTransform" X="-50"/>
                         </TextBlock.RenderTransform>
@@ -51,45 +46,44 @@
                                 <BeginStoryboard>
                                     <Storyboard RepeatBehavior="Forever">
                                         <DoubleAnimation Storyboard.TargetName="textTransform"
-                                     Storyboard.TargetProperty="X"
-                                     From="-50" To="0" Duration="0:0:4"
-                                     AutoReverse="True" />
+                                                         Storyboard.TargetProperty="X"
+                                                         From="-50" To="0" Duration="0:0:4"
+                                                         AutoReverse="True" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
                         </TextBlock.Triggers>
                     </TextBlock>
-
                 </StackPanel>
 
-                <!--Page Title-->
                 <TextBlock Text="SERVICE RECORDS" Grid.Row="1" FontSize="32" FontWeight="SemiBold"
-                            Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
+                           Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
-                    <!--Add Button-->
-                    <Button x:Name="addButton" Style="{StaticResource addButton}"  Grid.RowSpan="4" Grid.Row="1" 
-                         Click="OnClick_AddServiceRecordWindow" >
+                    <Button Style="{StaticResource addButton}" Command="{Binding LoadAddServiceRecordWindowCommand}"
+                            IsEnabled="{Binding Path=CurrentUserPrincipal,
+                                        Converter={StaticResource PermissionToIsEnabledConverter},
+                                        ConverterParameter=AddServiceRecord}">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="15"
-                                   Height="15" Margin="0 1 8 0"/>
+                                                   Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Add new record" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
-                    <!--Import Button-->
-                    <Button x:Name="importExcelFileButton"
-                            Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
-                        <!-- Click="importExcelFileButton_Click" -->
+                    <Button Style="{StaticResource addButton}" Command="{Binding ImportExcelFileCommand}"
+                            IsEnabled="{Binding Path=CurrentUserPrincipal,
+                                        Converter={StaticResource PermissionToIsEnabledConverter},
+                                        ConverterParameter=ImportServiceRecords}">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Import" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
 
-                    <!--Export Button-->
-                    <Button x:Name="exportExcelFileButton"
-                            Style="{StaticResource addButton}" Grid.Row="1" Grid.RowSpan="4">
-                        <!-- Click="exportExcelFileButton_Click" -->
+                    <Button Style="{StaticResource addButton}" Command="{Binding ExportExcelFileCommand}"
+                            IsEnabled="{Binding Path=CurrentUserPrincipal,
+                                        Converter={StaticResource PermissionToIsEnabledConverter},
+                                        ConverterParameter=ExportServiceRecords}">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
                             <TextBlock Text="Export" FontWeight="SemiBold"/>
@@ -97,28 +91,31 @@
                     </Button>
                 </StackPanel>
 
-                <!--Separator-->
                 <Separator Grid.Row="3" BorderBrush="#ba80d3" BorderThickness="10" Margin="5,10,30,10"/>
 
-                <!--Filter TextBox-->
                 <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
                     <TextBlock x:Name="searchTextBlock" Margin="15 8 0 5" VerticalAlignment="Center" Foreground="#b0b9c6"
-                                IsHitTestVisible="False" Panel.ZIndex="1" Text="Search"
-                                Visibility="{Binding ElementName=txtFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0"/>
-                    <!-- TextChanged="searchTextBox_TextChanged" -->
+                               IsHitTestVisible="False" Panel.ZIndex="1" Text="Search"
+                               Visibility="{Binding ElementName=searchTextBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0"
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
 
-                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
-                    <ComboBoxItem Content="Name"/>
+                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120"
+                          SelectedItem="{Binding SelectedSearchCriteria, Mode=TwoWay}">
+                    <ComboBoxItem Content="Customer"/>
                     <ComboBoxItem Content="ID"/>
+                    <ComboBoxItem Content="Date"/>
                 </ComboBox>
 
-                <!--Employees DataGrid-->
-                <DataGrid ItemsSource="{Binding ServiceRecords}" SelectedItem="{Binding SelectedServiceRecord}" x:Name="ServiceRecordsDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
-                    <!-- SelectionChanged="employeesDataGrid_SelectionChanged" -->
+                <DataGrid ItemsSource="{Binding ServiceRecords}"
+                          SelectedItem="{Binding SelectedServiceRecord, Mode=TwoWay}"
+                          x:Name="ServiceRecordsDataGrid" Style="{DynamicResource DataGridStyle1}"
+                          RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
+                    <DataGrid.InputBindings>
+                        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding LoadServiceRecordDetailsWindowCommand}" CommandParameter="{Binding SelectedServiceRecord}" />
+                    </DataGrid.InputBindings>
                     <DataGrid.Columns>
-                        <!--ID-->
                         <DataGridTextColumn Binding="{Binding ServiceRecordId}" Header="ID" IsReadOnly="True" CanUserResize="False" Width="80">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -127,7 +124,6 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!--Created Date-->
                         <DataGridTextColumn Binding="{Binding CreateDate, StringFormat=dd-MM-yyyy}" Header="Created Date" IsReadOnly="True" CanUserResize="False" Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -136,7 +132,6 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!--Customer-->
                         <DataGridTextColumn Header="Customer" Binding="{Binding Customer.Name}" Width="*" IsReadOnly="True" CanUserResize="False">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -145,32 +140,40 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!--Total-->
-                        <DataGridTextColumn Binding="{Binding GrandTotal}" Header="Total" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding GrandTotal, StringFormat=C}" Header="Total" IsReadOnly="True" Width="*"/>
 
-                        <!--Prepaid-->
-                        <DataGridTextColumn Binding="{Binding TotalPaid}" Header="Paid" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding TotalPaid, StringFormat=C}" Header="Paid" IsReadOnly="True" Width="*"/>
 
-                        <!--Remain-->
-                        <DataGridTextColumn Binding="{Binding TotalUnpaid}" Header="Remained" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding TotalUnpaid, StringFormat=C}" Header="Remained" IsReadOnly="True" Width="*"/>
 
-                        <!--Status-->
                         <DataGridTextColumn Binding="{Binding Status}" Header="Status" IsReadOnly="True" Width="100"/>
-                        <!--Operations-->
-
                         <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button Margin="0 0 3 0" Click="editButton_Click"
-                                                x:Name="editButton" Style="{StaticResource gridEditButton}" 
-                                                >
+                                        <Button Margin="0 0 3 0" Style="{StaticResource gridEditButton}"
+                                                Command="{Binding DataContext.LoadServiceRecordDetailsWindowCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                CommandParameter="{Binding}"
+                                                Visibility="{Binding Path=CurrentUserPrincipal,
+                                                            Converter={StaticResource PermissionToVisibilityConverter},
+                                                            ConverterParameter=ViewServiceRecordDetails}">
                                             <Icon:PackIconMaterial Kind="ViewListOutline" Style="{StaticResource gridButtonIcon}" />
                                         </Button>
-                                        <Button Margin="3 0 0 0" x:Name="printButton" 
-                                                Style="{StaticResource gridEditButton}" Click="printButton_Click"
-                                                >
+                                        <Button Margin="3 0 0 0" Style="{StaticResource gridEditButton}"
+                                                Command="{Binding DataContext.PrintServiceRecordCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                CommandParameter="{Binding}"
+                                                Visibility="{Binding Path=CurrentUserPrincipal,
+                                                            Converter={StaticResource PermissionToVisibilityConverter},
+                                                            ConverterParameter=PrintServiceRecord}">
                                             <Icon:PackIconMaterial Kind="Printer" Style="{StaticResource gridButtonIcon}"/>
+                                        </Button>
+                                        <Button Margin="3 0 0 0" Style="{StaticResource gridEditButton}"
+                                                Command="{Binding DataContext.DeleteServiceRecordCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                CommandParameter="{Binding}"
+                                                Visibility="{Binding Path=CurrentUserPrincipal,
+                                                            Converter={StaticResource PermissionToVisibilityConverter},
+                                                            ConverterParameter=DeleteServiceRecord}">
+                                            <Icon:PackIconMaterial Kind="Delete" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>
                                 </DataTemplate>

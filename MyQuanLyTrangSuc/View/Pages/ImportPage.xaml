@@ -4,11 +4,10 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
-      xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
-      xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d"
       d:DesignHeight="720" d:DesignWidth="880"
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+      Title="ImportPage">
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
@@ -19,7 +18,6 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <!--Main Section-->
             <Grid Grid.Column="0" HorizontalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -31,10 +29,9 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <!--Top Button-->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 15 0">
                     <TextBlock x:Name="welcomeTextBlock" Foreground="#374655" FontSize="14" Margin="0 0 10 0"
-                VerticalAlignment="Center" Text="Welcome, have a nice day" FontStyle="Italic">
+                               VerticalAlignment="Center" Text="Welcome, have a nice day" FontStyle="Italic">
                         <TextBlock.RenderTransform>
                             <TranslateTransform x:Name="textTransform" X="-50"/>
                         </TextBlock.RenderTransform>
@@ -43,9 +40,9 @@
                                 <BeginStoryboard>
                                     <Storyboard RepeatBehavior="Forever">
                                         <DoubleAnimation Storyboard.TargetName="textTransform"
-                     Storyboard.TargetProperty="X"
-                     From="-50" To="0" Duration="0:0:4"
-                     AutoReverse="True" />
+                                                         Storyboard.TargetProperty="X"
+                                                         From="-50" To="0" Duration="0:0:4"
+                                                         AutoReverse="True" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
@@ -53,46 +50,49 @@
                     </TextBlock>
                 </StackPanel>
 
-                <!--Page Title-->
                 <TextBlock Text="Import Page" HorizontalAlignment="Left" VerticalAlignment="Center"
-                            Margin="55 0 0 2" FontSize="16" FontWeight="SemiBold" Foreground="Blue"/>
+                           Margin="55 0 0 2" FontSize="16" FontWeight="SemiBold" Foreground="Blue"/>
 
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="33 0 0 4" Width="14" Height="14" Foreground="#ff9d00"/>
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="30 4 0 0" Width="14" Height="14" Foreground="#4880ff"/>
                 <TextBlock Text="Import" Grid.Row="1" FontSize="32" FontWeight="SemiBold"
-                       Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
+                           Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
-                <!--Add Button-->
                 <Button Style="{StaticResource addButton}" Margin="0 0 20 5" Grid.RowSpan="4" Grid.Row="1"
-                        Click="OnClick_AddRecord_ImportRecordPage">
+                        Command="{Binding LoadAddImportWindowCommand}"
+                        IsEnabled="{Binding Path=CurrentUserPrincipal,
+                                    Converter={StaticResource PermissionToIsEnabledConverter},
+                                    ConverterParameter=AddImport}">
                     <StackPanel Orientation="Horizontal">
                         <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11"
-                                           Height="11" Margin="0 1 8 0"/>
+                                               Height="11" Margin="0 1 8 0"/>
                         <TextBlock Text="Add new record"/>
                     </StackPanel>
                 </Button>
 
-                <!--Separator-->
                 <Separator Grid.Row="3" BorderBrush="#747525" BorderThickness="10" Margin="5,10,30,10"/>
 
-                <!--Filter TextBox-->
                 <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
                     <TextBlock x:Name="searchTextBlock" Margin="15 8 0 5" VerticalAlignment="Center" Foreground="#b0b9c6"
-                            IsHitTestVisible="False" Panel.ZIndex="1" Text="Search by supplier"
-                            Visibility="{Binding ElementName=searchTextBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0" TextChanged="searchTextBox_TextChanged"/>
+                               IsHitTestVisible="False" Panel.ZIndex="1" Text="Search by supplier"
+                               Visibility="{Binding ElementName=searchTextBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" Margin="0 0 0 0"
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
 
-                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
+                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120"
+                          SelectedItem="{Binding SelectedSearchCriteria, Mode=TwoWay}">
                     <ComboBoxItem Content="Date"/>
                     <ComboBoxItem Content="ID"/>
                     <ComboBoxItem Content="Supplier"/>
                 </ComboBox>
 
-                <!--Import Records DataGrid-->
                 <DataGrid x:Name="importRecordsDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" Grid.Row="5"
                           ItemsSource="{Binding ImportRecords}"
-                          MouseDoubleClick="OnDoubleClick_InspectRecord_ExportRecordPageDataGrid">
+                          SelectedItem="{Binding SelectedImportRecord, Mode=TwoWay}">
+                    <DataGrid.InputBindings>
+                        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding LoadImportDetailsWindowCommand}" CommandParameter="{Binding SelectedImportRecord}" />
+                    </DataGrid.InputBindings>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="False" Width="80" Binding="{Binding ImportId}"/>
                         <DataGridTextColumn Header="Date" IsReadOnly="True" Width="*" Binding="{Binding Date, StringFormat=d}"/>
@@ -103,12 +103,20 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <Button Margin="0 0 3 0"
-                                                 x:Name="viewButton" Style="{StaticResource gridEditButton}"
-                                                 Click="viewButton_Click">
+                                                x:Name="viewButton" Style="{StaticResource gridEditButton}"
+                                                Command="{Binding DataContext.LoadImportDetailsWindowCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                CommandParameter="{Binding}"
+                                                Visibility="{Binding Path=CurrentUserPrincipal,
+                                                            Converter={StaticResource PermissionToVisibilityConverter},
+                                                            ConverterParameter=ViewImportDetails}">
                                             <Icon:PackIconMaterial Kind="ViewListOutline" Style="{StaticResource gridButtonIcon}" />
                                         </Button>
                                         <Button Margin="3 0 0 0" x:Name="printButton" Style="{StaticResource gridEditButton}"
-                                                Click="printButton_Click">
+                                                Command="{Binding DataContext.PrintImportRecordCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                CommandParameter="{Binding}"
+                                                Visibility="{Binding Path=CurrentUserPrincipal,
+                                                            Converter={StaticResource PermissionToVisibilityConverter},
+                                                            ConverterParameter=PrintImport}">
                                             <Icon:PackIconMaterial Kind="Printer" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>

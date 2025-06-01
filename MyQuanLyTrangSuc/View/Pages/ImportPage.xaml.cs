@@ -1,5 +1,5 @@
 ﻿using MyQuanLyTrangSuc.Model;
-using PhanMemQuanLyVatTu.ViewModel;
+using MyQuanLyTrangSuc.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,20 +20,6 @@ namespace MyQuanLyTrangSuc.View
             DataContext = logicService;
         }
 
-        private void OnClick_AddRecord_ImportRecordPage(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadAddRecordWindow();
-        }
-
-        private void OnDoubleClick_InspectRecord_ExportRecordPageDataGrid(object sender, MouseButtonEventArgs e)
-        {
-            logicService.LoadImportDetailsWindow();
-        }
-
-        private void viewButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadImportDetailsWindow();
-        }
 
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -60,9 +46,5 @@ namespace MyQuanLyTrangSuc.View
             }
         }
 
-        private void printButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.PrintImportRecord();
-        }
     }
 }

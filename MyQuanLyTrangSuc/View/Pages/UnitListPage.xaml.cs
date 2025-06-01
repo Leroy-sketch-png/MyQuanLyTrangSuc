@@ -30,21 +30,6 @@ namespace MyQuanLyTrangSuc.View
             DataContext = logicService;
         }
 
-        private void addButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadAddUnitWindow();
-        }
-
-        private void editButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadEditUnitWindow((Model.Unit)unitsDataGrid.SelectedItem);
-        }
-
-        private void deleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.DeleteUnit((Model.Unit)unitsDataGrid.SelectedItem);
-        }
-
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (searchComboBox.SelectedItem is ComboBoxItem selectedItem)
@@ -71,11 +56,6 @@ namespace MyQuanLyTrangSuc.View
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             logicService.CheckBox_Unchecked(sender, e);
-        }
-
-        private void deleteMultipleButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.DeleteMultipleUnits();
         }
     }
 }

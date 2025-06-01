@@ -19,21 +19,6 @@ namespace MyQuanLyTrangSuc.View
             DataContext = logicService;
         }
 
-        private void OnClick_AddInvoiceWindow(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadAddInvoiceWindow();
-        }
-
-        private void OnDoubleClick_InspectRecord_InvoicePageDataGrid(object sender, MouseButtonEventArgs e)
-        {
-            logicService.LoadInvoiceDetailsWindow();
-        }
-
-        private void viewButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadInvoiceDetailsWindow();
-        }
-
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             searchTextBlock.Text = "";
@@ -57,11 +42,6 @@ namespace MyQuanLyTrangSuc.View
             {
                 searchTextBlock.Text = "Search";
             }
-        }
-
-        private void printButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadInvoiceWindow();
         }
     }
 }

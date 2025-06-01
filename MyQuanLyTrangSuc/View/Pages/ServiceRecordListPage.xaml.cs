@@ -34,11 +34,10 @@ namespace MyQuanLyTrangSuc.View
         }
         
         private void OnDoubleClick_InspectRecord_ServiceRecordPageDataGrid(object sender, MouseButtonEventArgs e) {
-            //logicService.LoadServiceRecordDetailsWindow();
+            logicService.LoadServiceRecordDetailsWindow();
         }
         
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e) {
-            searchTextBlock.Text = "";
             if (searchComboBox.SelectedItem != null) {
                 string selectedCriteria = (searchComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
                 switch (selectedCriteria) {

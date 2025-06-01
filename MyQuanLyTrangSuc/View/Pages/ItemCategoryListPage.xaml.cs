@@ -29,25 +29,7 @@ namespace MyQuanLyTrangSuc.View
             DataContext = logicService;
         }
 
-        private void addButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadAddItemCategoryWindow();
-        }
 
-        private void editButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadEditItemCategoryWindow((Model.ProductCategory)itemCategoriesDataGrid.SelectedItem);
-        }
-
-        private void deleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.DeleteItemCategory((Model.ProductCategory)itemCategoriesDataGrid.SelectedItem);
-        }
-
-        private void deleteMultipleButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.DeleteMultipleItemCategories();
-        }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {

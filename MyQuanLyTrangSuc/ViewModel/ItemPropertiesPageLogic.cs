@@ -79,7 +79,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 _isEditing = false;
             }
 
-            //_mainNavigationWindowLogic.LoadItemListPage();
+            _mainNavigationWindowLogic.NavigateToPage(typeof(ItemListPage), "ItemListPage");
         }
 
         private void ResetItemChanges()
