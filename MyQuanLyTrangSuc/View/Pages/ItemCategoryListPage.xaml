@@ -107,7 +107,7 @@
 
                 <!--Filter TextBox-->
                 <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
-                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}" 
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Search" 
                              Margin="0 0 0 0" FontSize="20"
                              TextChanged="searchTextBox_TextChanged"
                              />
