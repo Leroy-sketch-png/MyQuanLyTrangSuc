@@ -91,7 +91,7 @@
                 <Separator Grid.Row="3" BorderBrush="#747525" BorderThickness="10" Margin="20,10,20,10"/>
 
                 <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
-                    <TextBox x:Name="searchTextBox" Style="{StaticResource textboxFilter}"
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Search" 
                              Margin="0 0 0 0" FontSize="20"
                              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>

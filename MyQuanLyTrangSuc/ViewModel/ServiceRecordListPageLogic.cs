@@ -1,16 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using MyQuanLyTrangSuc.BusinessLogic;
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
+using OfficeOpenXml.Style;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace MyQuanLyTrangSuc.ViewModel {
-    public class ServiceRecordListPageLogic {
+namespace MyQuanLyTrangSuc.ViewModel
+{
+    public class ServiceRecordListPageLogic
+    {
         private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
         private readonly ServiceRecordService serviceRecordService;
         private readonly ServiceRecordListPage serviceRecordPageUI;
@@ -19,7 +25,8 @@ namespace MyQuanLyTrangSuc.ViewModel {
         public ObservableCollection<ServiceRecord> ServiceRecords { get; set; }
         public ServiceRecord SelectedServiceRecord { get; set; }
 
-        public ServiceRecordListPageLogic(ServiceRecordListPage page) {
+        public ServiceRecordListPageLogic(ServiceRecordListPage page)
+        {
             serviceRecordPageUI = page;
             ServiceRecords = new ObservableCollection<ServiceRecord>();
             serviceRecordService = ServiceRecordService.Instance;
@@ -30,37 +37,53 @@ namespace MyQuanLyTrangSuc.ViewModel {
             LoadServiceRecordsFromDatabase();
         }
 
-        private void LoadServiceRecordsFromDatabase() {
-            try {
+        private void LoadServiceRecordsFromDatabase()
+        {
+            try
+            {
                 var recordsFromDb = context.ServiceRecords
                     .Include(sr => sr.Customer)
                     .Include(sr => sr.Employee)
                     .Include(sr => sr.ServiceDetails)
                     .ToList();
 
-                Application.Current.Dispatcher.Invoke(() => {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
                     ServiceRecords.Clear();
-                    foreach (var record in recordsFromDb) {
+                    foreach (var record in recordsFromDb)
+                    {
                         ServiceRecords.Add(record);
                     }
                 });
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 MessageBox.Show($"Error loading service records: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void HandleServiceRecordAdded(ServiceRecord newRecord) {
-            Application.Current.Dispatcher.Invoke(() => {
+        private void HandleServiceRecordAdded(ServiceRecord newRecord)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 ServiceRecords.Add(newRecord);
             });
         }
 
-        private void HandleServiceRecordUpdated(ServiceRecord updatedRecord) {
-            Application.Current.Dispatcher.Invoke(() => {
+        private void HandleServiceRecordUpdated(ServiceRecord updatedRecord)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 var existing = ServiceRecords.FirstOrDefault(r => r.ServiceRecordId == updatedRecord.ServiceRecordId);
-                if (existing != null) {
-                    var index = ServiceRecords.IndexOf(existing);
-                    ServiceRecords[index] = updatedRecord;
+                if (existing != null)
+                {
+                    existing.Customer = updatedRecord.Customer;
+                    existing.Employee = updatedRecord.Employee;
+                    existing.CreateDate = updatedRecord.CreateDate;
+                    existing.GrandTotal = updatedRecord.GrandTotal;
+                    existing.TotalPaid = updatedRecord.TotalPaid;
+                    existing.TotalUnpaid = updatedRecord.TotalUnpaid;
+                    existing.Status = updatedRecord.Status;
                 }
             });
         }
@@ -81,27 +104,21 @@ namespace MyQuanLyTrangSuc.ViewModel {
 
             try
             {
-                // Load related ServiceDetails if not already loaded
                 context.Entry(SelectedServiceRecord).Collection(sr => sr.ServiceDetails).Load();
 
-                // Delete child ServiceDetails
                 foreach (var detail in SelectedServiceRecord.ServiceDetails.ToList())
                 {
                     serviceRecordService.DeleteServiceDetail(detail);
-                    //context.ServiceDetails.Remove(detail);
                 }
 
-                // Delete the main ServiceRecord
                 serviceRecordService.DeleteServiceRecord(SelectedServiceRecord);
-                //context.ServiceRecords.Remove(SelectedServiceRecord);
                 context.SaveChanges();
 
-                // Remove from ObservableCollection so UI updates
-                Application.Current.Dispatcher.Invoke(() => {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
                     ServiceRecords.Remove(SelectedServiceRecord);
                 });
 
-                //notificationWindowLogic.LoadNotification("Success", "Service record and related details deleted successfully.", "BottomRight");
                 MessageBox.Show("Service record and related details deleted successfully.",
                                 "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -111,116 +128,287 @@ namespace MyQuanLyTrangSuc.ViewModel {
             }
         }
 
-
-        public void SearchServiceRecords(string keyword, string category) {
+        public void SearchServiceRecords(string keyword, string category)
+        {
             var recordsFromDb = context.ServiceRecords
                 .Include(sr => sr.Customer)
                 .ToList();
 
-            Application.Current.Dispatcher.Invoke(() => {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 ServiceRecords.Clear();
 
-                foreach (var record in recordsFromDb) {
-                    bool match = category switch {
+                foreach (var record in recordsFromDb)
+                {
+                    bool match = category switch
+                    {
                         "Name" => record.Customer?.Name?.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0,
                         "ID" => record.ServiceRecordId.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0,
                         _ => false
                     };
 
-                    if (match) {
+                    if (match)
+                    {
                         ServiceRecords.Add(record);
                     }
                 }
             });
         }
 
-        public void LoadAddServiceRecordWindow() {
+        public void LoadAddServiceRecordWindow()
+        {
             AddServiceRecordWindow addWindow = new AddServiceRecordWindow();
             addWindow.ShowDialog();
         }
 
-        public void LoadServiceRecordDetailsWindow() {
-            if (SelectedServiceRecord != null) {
-                //ServiceRecordDetailsWindow detailsWindow = new ServiceRecordDetailsWindow(SelectedServiceRecord);
-                //detailsWindow.ShowDialog();
+        public void LoadServiceRecordDetailsWindow()
+        {
+            if (SelectedServiceRecord != null)
+            {
+                ServiceRecordDetailWindow detailsWindow = new ServiceRecordDetailWindow(SelectedServiceRecord);
+
+                if (detailsWindow.DataContext is ServiceRecordDetailLogic detailLogic)
+                {
+                    detailLogic.ServiceRecordCompleted += HandleServiceRecordCompleted;
+                }
+
+                detailsWindow.ShowDialog();
+
+                if (detailsWindow.DataContext is ServiceRecordDetailLogic closedDetailLogic)
+                {
+                    closedDetailLogic.ServiceRecordCompleted -= HandleServiceRecordCompleted;
+                }
             }
         }
 
-        public void PrintServiceRecord() {
-            if (SelectedServiceRecord != null) {
-                //var printPage = new ReceiptWindow(SelectedServiceRecord);
-                var printDialog = new PrintDialog();
-
-                if (printDialog.ShowDialog() == true) {
-                    //printPage.ShowDialog(); // Optional: preview
-                    //printDialog.PrintVisual(printPage, "Service Record");
-                    //printPage.Close();
+        private void HandleServiceRecordCompleted(ServiceRecord completedRecord)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var existing = ServiceRecords.FirstOrDefault(r => r.ServiceRecordId == completedRecord.ServiceRecordId);
+                if (existing != null)
+                {
+                    existing.Status = completedRecord.Status;
+                    existing.TotalPaid = completedRecord.TotalPaid;
+                    existing.TotalUnpaid = completedRecord.TotalUnpaid;
                 }
-            } else {
+            });
+        }
+
+        public void PrintServiceRecord()
+        {
+            if (SelectedServiceRecord != null)
+            {
+                var printPage = new ServiceRecordPrint(SelectedServiceRecord);
+                printPage.Show();
+            }
+            else
+            {
                 MessageBox.Show("Please select a record to print.", "Print Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
-        public void SearchServiceRecordsByNameOfCustomer(string name) {
+
+        public void SearchServiceRecordsByNameOfCustomer(string name)
+        {
             List<ServiceRecord> serviceRecordsFromDb = context.ServiceRecords
-                .Include(i => i.Customer) // Ensure Customer data is included
+                .Include(i => i.Customer)
                 .ToList();
 
-            Application.Current.Dispatcher.Invoke(() => {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 ServiceRecords.Clear();
-                foreach (ServiceRecord serviceRecord in serviceRecordsFromDb) {
-                    if (serviceRecord.Customer.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0) {
+                foreach (ServiceRecord serviceRecord in serviceRecordsFromDb)
+                {
+                    if (serviceRecord.Customer.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
                         ServiceRecords.Add(serviceRecord);
                     }
                 }
             });
         }
 
-        public void SearchServiceRecordsByID(string ID) {
+        public void SearchServiceRecordsByID(string ID)
+        {
             List<ServiceRecord> serviceRecordsFromDb = context.ServiceRecords.ToList();
-            Application.Current.Dispatcher.Invoke(() => {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 ServiceRecords.Clear();
-                foreach (ServiceRecord serviceRecord in serviceRecordsFromDb) {
-                    if (serviceRecord.ServiceRecordId.IndexOf(ID, StringComparison.OrdinalIgnoreCase) >= 0) {
+                foreach (ServiceRecord serviceRecord in serviceRecordsFromDb)
+                {
+                    if (serviceRecord.ServiceRecordId.IndexOf(ID, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
                         ServiceRecords.Add(serviceRecord);
                     }
                 }
             });
         }
 
-        public void SearchServiceRecordsByDate(string date) {
+        public void SearchServiceRecordsByDate(string date)
+        {
             var dateParts = date.Split('/');
             List<ServiceRecord> serviceRecordsFromDb = context.ServiceRecords.ToList();
 
-            Application.Current.Dispatcher.Invoke(() => {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 ServiceRecords.Clear();
 
-                foreach (var serviceRecord in serviceRecordsFromDb) {
+                foreach (var serviceRecord in serviceRecordsFromDb)
+                {
                     bool match = true;
 
-                    if (dateParts.Length > 0 && int.TryParse(dateParts[0], out int day)) {
-                        if (serviceRecord.CreateDate.Value.Day != day) {
+                    if (dateParts.Length > 0 && int.TryParse(dateParts[0], out int day))
+                    {
+                        if (serviceRecord.CreateDate.Value.Day != day)
+                        {
                             match = false;
                         }
                     }
 
-                    if (dateParts.Length > 1 && int.TryParse(dateParts[1], out int month)) {
-                        if (serviceRecord.CreateDate.Value.Month != month) {
+                    if (dateParts.Length > 1 && int.TryParse(dateParts[1], out int month))
+                    {
+                        if (serviceRecord.CreateDate.Value.Month != month)
+                        {
                             match = false;
                         }
                     }
 
-                    if (dateParts.Length > 2 && int.TryParse(dateParts[2], out int year)) {
-                        if (serviceRecord.CreateDate.Value.Year != year) {
+                    if (dateParts.Length > 2 && int.TryParse(dateParts[2], out int year))
+                    {
+                        if (serviceRecord.CreateDate.Value.Year != year)
+                        {
                             match = false;
                         }
                     }
 
-                    if (match) {
+                    if (match)
+                    {
                         ServiceRecords.Add(serviceRecord);
                     }
                 }
             });
         }
 
+        public List<ServiceRecord> ImportServiceRecordsFromExcel()
+        {
+            var importedRecords = new List<ServiceRecord>();
+
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Excel files (*.xlsx)|*.xlsx"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+
+                    using (var package = new ExcelPackage(new FileInfo(openFileDialog.FileName)))
+                    {
+                        var worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                        if (worksheet == null)
+                        {
+                            MessageBox.Show("No worksheet found.");
+                            return importedRecords;
+                        }
+
+                        int row = 2; // Assuming row 1 is the header
+                        while (worksheet.Cells[row, 1].Value != null)
+                        {
+                            var record = new ServiceRecord
+                            {
+                                ServiceRecordId = worksheet.Cells[row, 1].Text,
+                                Customer = new Customer { Name = worksheet.Cells[row, 2].Text },
+                                Employee = new Employee { Name = worksheet.Cells[row, 3].Text },
+                                CreateDate = DateTime.TryParse(worksheet.Cells[row, 4].Text, out var date) ? date : null,
+                                GrandTotal = decimal.TryParse(worksheet.Cells[row, 5].Text, out var total) ? total : 0,
+                                TotalPaid = decimal.TryParse(worksheet.Cells[row, 6].Text, out var paid) ? paid : 0,
+                                TotalUnpaid = decimal.TryParse(worksheet.Cells[row, 7].Text, out var unpaid) ? unpaid : 0,
+                                Status = worksheet.Cells[row, 8].Text
+                            };
+
+                            importedRecords.Add(record);
+                            row++;
+                        }
+
+                        MessageBox.Show("Import successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to import: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+
+            return importedRecords;
+        }
+
+
+        public void ExportServiceRecordsToExcel()
+        {
+            //OfficeOpenXml.ExcelPackage.License = OfficeOpenXml.LicenseContext.NonCommercial;
+            if (ServiceRecords == null || !ServiceRecords.Any())
+            {
+                MessageBox.Show("No records available to export.", "Export", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Excel files (*.xlsx)|*.xlsx",
+                FileName = "ServiceRecords.xlsx"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    using (var package = new ExcelPackage())
+                    {
+                        var worksheet = package.Workbook.Worksheets.Add("ServiceRecords");
+
+                        worksheet.Cells[1, 1].Value = "ID";
+                        worksheet.Cells[1, 2].Value = "Customer Name";
+                        worksheet.Cells[1, 3].Value = "Employee Name";
+                        worksheet.Cells[1, 4].Value = "Create Date";
+                        worksheet.Cells[1, 5].Value = "Total";
+                        worksheet.Cells[1, 6].Value = "Paid";
+                        worksheet.Cells[1, 7].Value = "Unpaid";
+                        worksheet.Cells[1, 8].Value = "Status";
+
+                        using (var range = worksheet.Cells[1, 1, 1, 8])
+                        {
+                            range.Style.Font.Bold = true;
+                            range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                        }
+
+                        int row = 2;
+                        foreach (var record in ServiceRecords)
+                        {
+                            worksheet.Cells[row, 1].Value = record.ServiceRecordId;
+                            worksheet.Cells[row, 2].Value = record.Customer?.Name;
+                            worksheet.Cells[row, 3].Value = record.Employee?.Name;
+                            worksheet.Cells[row, 4].Value = record.CreateDate?.ToString("dd/MM/yyyy");
+                            worksheet.Cells[row, 5].Value = record.GrandTotal;
+                            worksheet.Cells[row, 6].Value = record.TotalPaid;
+                            worksheet.Cells[row, 7].Value = record.TotalUnpaid;
+                            worksheet.Cells[row, 8].Value = record.Status;
+                            row++;
+                        }
+
+                        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                        var fileInfo = new FileInfo(saveFileDialog.FileName);
+                        package.SaveAs(fileInfo);
+
+                        MessageBox.Show("Export successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to export: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
     }
 }

@@ -58,13 +58,27 @@ namespace MyQuanLyTrangSuc.View
         }
 
         private void printButton_Click(object sender, RoutedEventArgs e) {
-            logicService.LoadServiceRecordDetailsWindow();
+            logicService.PrintServiceRecord();
         }
 
         private void editButton_Click(object sender, RoutedEventArgs e)
         {
+            logicService.LoadServiceRecordDetailsWindow();
+        }
+
+        private void deleteButton_Click(object sender, RoutedEventArgs e)
+        {
             logicService.HandleServiceRecordDeleted();
         }
 
+        private void exportExcelFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.ExportServiceRecordsToExcel();
+        }
+
+        private void importExcelFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.ImportServiceRecordsFromExcel();
+        }
     }
 }
