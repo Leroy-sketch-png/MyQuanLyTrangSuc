@@ -24,7 +24,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         private static AuthenticationService _instance;
         public static AuthenticationService Instance => _instance ??= new AuthenticationService();
 
-        public AuthenticationService()
+        private AuthenticationService()
         {
             authenticationRepository = new AuthenticationRepository();
         }

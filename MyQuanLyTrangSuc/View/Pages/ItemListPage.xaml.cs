@@ -35,10 +35,6 @@ namespace MyQuanLyTrangSuc.View
             }
         }
 
-        private void OnClick_Add_ItemList(object sender, RoutedEventArgs e)
-        {
-            _logicService.LoadAddItemWindow();
-        }
 
         private void ComboBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {

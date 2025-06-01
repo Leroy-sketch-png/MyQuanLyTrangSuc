@@ -12,12 +12,15 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input; // Ensure this is present for ICommand and CommandManager
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
 using MyQuanLyTrangSuc.ViewModel;
 using MyQuanLyTrangSuc.BusinessLogic;
 using Microsoft.EntityFrameworkCore;
 using MaterialDesignThemes.Wpf;
+using System.Threading; // Added for Thread.CurrentPrincipal
+using MyQuanLyTrangSuc.Security; // Added for CustomPrincipal
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -28,7 +31,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         private MainNavigationWindowLogic mainNavigationWindowLogic = MainNavigationWindowLogic.Instance;
 
         public ObservableCollection<Employee> Employees { get; set; }
-        private EmployeeListPage employeeListPage;
+        private EmployeeListPage employeeListPage; // Reference to the View, consider removing if possible for cleaner MVVM
         private Employee _selectedEmployee;
 
         public Employee SelectedEmployee
@@ -38,8 +41,25 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 _selectedEmployee = value;
                 OnPropertyChanged();
+                // When SelectedEmployee changes, the CanExecute state of Edit and Delete commands might change
+                LoadEditEmployeeCommand?.RaiseCanExecuteChanged(); // Calls CommandManager.InvalidateRequerySuggested internally
+                DeleteEmployeeCommand?.RaiseCanExecuteChanged(); // Calls CommandManager.InvalidateRequerySuggested internally
             }
         }
+
+        // Add CurrentUserPrincipal for permission checks
+        public CustomPrincipal CurrentUserPrincipal
+        {
+            get => Thread.CurrentPrincipal as CustomPrincipal;
+        }
+
+        // --- Commands ---
+        public RelayCommand LoadAddEmployeeCommand { get; private set; }
+        public RelayCommand<Employee> LoadEditEmployeeCommand { get; private set; } // Generic as it takes Employee parameter
+        public RelayCommand<Employee> DeleteEmployeeCommand { get; private set; } // Generic as it takes Employee parameter
+        public RelayCommand ImportExcelCommand { get; private set; }
+        public RelayCommand<DataGrid> ExportExcelCommand { get; private set; } // Generic as it takes DataGrid parameter
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -53,39 +73,83 @@ namespace MyQuanLyTrangSuc.ViewModel
             employeeService = new EmployeeService();
             Employees = new ObservableCollection<Employee>();
             LoadEmployeesFromDatabase();
+            InitializeCommands(); // Initialize commands here
 
             context.OnEmployeeAdded += Context_OnEmployeeAdded;
             context.OnEmployeesReset += Context_OnEmployeesReset;
         }
 
-        public EmployeeListPageLogic(EmployeeListPage employeeListPage)
+        public EmployeeListPageLogic(EmployeeListPage employeeListPage) : this() // Call default constructor
         {
             this.employeeListPage = employeeListPage;
-            employeeService = new EmployeeService();
-            Employees = new ObservableCollection<Employee>();
-            LoadEmployeesFromDatabase();
-
-            context.OnEmployeeAdded += Context_OnEmployeeAdded;
-            context.OnEmployeesReset += Context_OnEmployeesReset;
+            // Commands are already initialized by the default constructor
         }
 
-        public void LoadEmployeePropertiesPage()
+        // --- Command CanExecute Methods (only for actions that require permissions) ---
+        private bool CanAddEmployee()
         {
-            //
-            mainNavigationWindowLogic = MainNavigationWindowLogic.Instance;
-            //
-            var selectedEmp = (Employee)employeeListPage.employeesDataGrid.SelectedItem;
-            mainNavigationWindowLogic.LoadEmployeePropertiesPage(new EmployeePropertiesPage(selectedEmp));
+            // Permission string for adding employees. Adjust as per your Functions table.
+            return CurrentUserPrincipal?.HasPermission("AddEmployee") == true;
         }
+
+        private bool CanEditEmployee(Employee employee)
+        {
+            // Permission string for editing employees. Adjust as per your Functions table.
+            // Also, ensure an employee is selected.
+            return CurrentUserPrincipal?.HasPermission("EditEmployee") == true && employee != null;
+        }
+
+        private bool CanDeleteEmployee(Employee employee)
+        {
+            // Permission string for deleting employees. Adjust as per your Functions table.
+            // Also, ensure an employee is selected.
+            return CurrentUserPrincipal?.HasPermission("DeleteEmployee") == true && employee != null;
+        }
+
+        private bool CanImportExcel()
+        {
+            // Permission for importing data.
+            return CurrentUserPrincipal?.HasPermission("ImportEmployeeExcel") == true;
+        }
+
+        private bool CanExportExcel(DataGrid parameter)
+        {
+            // Permission for exporting data.
+            return CurrentUserPrincipal?.HasPermission("ExportEmployeeExcel") == true;
+        }
+
+
+
+        // --- Initialize Commands ---
+        private void InitializeCommands()
+        {
+            LoadAddEmployeeCommand = new RelayCommand(LoadAddEmployeeWindow, CanAddEmployee);
+            ImportExcelCommand = new RelayCommand(ImportExcelFile, CanImportExcel);
+            ExportExcelCommand = new RelayCommand<DataGrid>(ExportExcelFile, CanExportExcel);
+
+            // Generic commands (require an Employee parameter from UI binding, usually SelectedItem)
+            LoadEditEmployeeCommand = new RelayCommand<Employee>(
+                (emp) => mainNavigationWindowLogic.LoadEmployeePropertiesPage(new EmployeePropertiesPage(emp)),
+                CanEditEmployee
+            );
+
+            DeleteEmployeeCommand = new RelayCommand<Employee>(DeleteEmployee, CanDeleteEmployee);
+        }
+
+        // --- Existing Methods (Now hooked to Commands) ---
 
         private void Context_OnEmployeesReset()
         {
             LoadEmployeesFromDatabase();
+            // Re-evaluate command states as data might have changed
+            CommandManager.InvalidateRequerySuggested();
         }
 
         private void Context_OnEmployeeAdded(Employee employee)
         {
             Employees.Add(employee);
+            // Re-evaluate command states as data might have changed
+            CommandManager.InvalidateRequerySuggested();
         }
 
         public void LoadEmployeesFromDatabase()
@@ -96,6 +160,9 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 Employees.Add(employee);
             }
+            // After loading, SelectedEmployee might be null or change, so update command states
+            LoadEditEmployeeCommand?.RaiseCanExecuteChanged();
+            DeleteEmployeeCommand?.RaiseCanExecuteChanged();
         }
 
         public void LoadAddEmployeeWindow()
@@ -104,44 +171,24 @@ namespace MyQuanLyTrangSuc.ViewModel
             addEmployeeWindow.ShowDialog();
         }
 
-        public void DeleteEmployee()
+        public void DeleteEmployee(Employee employeeToDelete) // Now takes Employee parameter
         {
-            if (SelectedEmployee == null)
+            if (employeeToDelete == null) // Use the passed parameter instead of SelectedEmployee directly
             {
                 return;
             }
 
-            SelectedEmployee.IsDeleted = true;
-            context.Entry(SelectedEmployee).State = EntityState.Modified;
-            Employees.Remove(SelectedEmployee);
-            context.SaveChanges();
-        }
+            MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete employee: {employeeToDelete.Name}?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
-        public void SortEmployees(string option)
-        {
-            if (Employees == null || Employees.Count == 0) return;
-
-            List<Employee> sortedEmployees;
-            switch (option)
+            if (result == MessageBoxResult.Yes)
             {
-                case "Name (A-Z)":
-                    sortedEmployees = Employees.OrderBy(e => e.Name).ToList();
-                    break;
-                case "Name (Z-A)":
-                    sortedEmployees = Employees.OrderByDescending(e => e.Name).ToList();
-                    break;
-                default:
-                    sortedEmployees = Employees.ToList();
-                    break;
-            }
-
-            Employees.Clear();
-            foreach (var employee in sortedEmployees)
-            {
-                Employees.Add(employee);
+                employeeToDelete.IsDeleted = true;
+                context.Entry(employeeToDelete).State = EntityState.Modified;
+                Employees.Remove(employeeToDelete); // Remove from ObservableCollection immediately for UI update
+                context.SaveChanges();
+                SelectedEmployee = null; // Clear selection after deletion
             }
         }
-
         public void EmployeesSearchByName(string name)
         {
             List<Employee> employeesFromDb = context.Employees.ToList();
@@ -173,8 +220,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 }
             });
         }
-
-        public DateTime ConvertExcelDate(string dateString)
+        public DateTime ConvertExcelDate(string dateString) // Remains public
         {
             if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateValue))
             {
@@ -186,7 +232,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        public void ImportExcelFile()
+        public void ImportExcelFile() // Remains public
         {
             string filePath = "";
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -207,12 +253,12 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             DataTable dt = new DataTable();
             dt.Columns.AddRange(new DataColumn[] {
-        new DataColumn("Name"),
-        new DataColumn("Email"),
-        new DataColumn("Telephone"),
-        new DataColumn("Birthday"),
-        new DataColumn("Gender")
-    });
+                new DataColumn("Name"),
+                new DataColumn("Email"),
+                new DataColumn("Telephone"),
+                new DataColumn("Birthday"),
+                new DataColumn("Gender")
+            });
 
             try
             {
@@ -249,21 +295,19 @@ namespace MyQuanLyTrangSuc.ViewModel
                         context.Employees.Add(employee);
                         context.SaveChanges();
                     }
-                    catch
+                    catch (Exception ex) // Catch specific exceptions for better debugging
                     {
-                        MessageBox.Show("Invalid data", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Invalid data in Excel row: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Errors occurred during the process.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Errors occurred during the import process: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-
-
-public void ExportExcelFile(DataGrid employeesDataGrid)
+        public void ExportExcelFile(DataGrid employeesDataGrid) // Now public and accepts DataGrid parameter
         {
             string filePath = "";
             SaveFileDialog saveFileDialog = new SaveFileDialog
