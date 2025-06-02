@@ -35,7 +35,6 @@ namespace MyQuanLyTrangSuc.View
             }
         }
 
-
         private void ComboBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (sender is ComboBox comboBox)
