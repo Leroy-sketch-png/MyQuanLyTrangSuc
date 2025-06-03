@@ -42,9 +42,10 @@ namespace MyQuanLyTrangSuc.View
         {
             logicService.LoadItemPropertiesPage();
         }
+
         private void OnClick_ExportExcelFile_ItemUserControl(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Do you want to export by Import Date or Export Date?", "Chose Import Date", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show("Do you want to export by Import Date or Invoice Date?", "Chose Import Date", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
                 logicService.ExportExcelFile("Ngày Nhập");

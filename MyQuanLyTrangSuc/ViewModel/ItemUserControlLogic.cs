@@ -92,17 +92,17 @@ namespace MyQuanLyTrangSuc.ViewModel {
                 using (ExcelPackage p = new ExcelPackage())
                 {
                     //Author's name
-                    p.Workbook.Properties.Author = "IT008.P12";
+                    p.Workbook.Properties.Author = "SE104.P22";
 
                     //Title
-                    p.Workbook.Properties.Title = "Item Report";
+                    p.Workbook.Properties.Title = "Product Report";
 
                     //Sheet
-                    p.Workbook.Worksheets.Add("Item Sheet");
+                    p.Workbook.Worksheets.Add("Product Sheet");
 
                     ExcelWorksheet ws = p.Workbook.Worksheets[0];
 
-                    ws.Name = "Item Sheet";
+                    ws.Name = "Product Sheet";
 
                     //Default font size
                     ws.Cells.Style.Font.Size = 12;
@@ -116,11 +116,11 @@ namespace MyQuanLyTrangSuc.ViewModel {
                     if (type == "Ngày Nhập")
                         arrColumnHeader = new string[] { "ID", "Name", "Category", "Price", "More Info", "Import Date" };
                     else
-                        arrColumnHeader = new string[] { "ID", "Name", "Category", "Price", "More Info", "Export Date" };
+                        arrColumnHeader = new string[] { "ID", "Name", "Category", "Price", "More Info", "Invoice Date" };
                     var countColumnHeader = arrColumnHeader.Count();
 
                     //Merge, bold, center
-                    ws.Cells[1, 1].Value = "Item Report";
+                    ws.Cells[1, 1].Value = "Product Report";
                     ws.Cells[1, 1, 1, countColumnHeader].Merge = true;
                     ws.Cells[1, 1, 1, countColumnHeader].Style.Font.Bold = true;
                     ws.Cells[1, 1, 1, countColumnHeader].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
