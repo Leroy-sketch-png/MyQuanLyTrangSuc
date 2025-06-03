@@ -60,39 +60,48 @@
                 <Icon:PackIconMaterial Kind="Message" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="30 4 0 0" Width="14" Height="14" Foreground="#4880ff"/>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
-                    <Button x:Name="addButton" Style="{StaticResource MyCustomMaterialDisabledButton}" Grid.RowSpan="4" Grid.Row="1" 
+                    <Button x:Name="addButton" Style="{StaticResource MyCustomMaterialDisabledButton}" Grid.RowSpan="4" Grid.Row="1"
                             Command="{Binding LoadAddCustomerWindowCommand}" VerticalAlignment="Bottom"
-                                       IsEnabled="{Binding Path=CurrentUserPrincipal,
-                                    Converter={StaticResource PermissionToIsEnabledConverter},
-                                    ConverterParameter=AddCustomer}">
+                            IsEnabled="{Binding Path=CurrentUserPrincipal,
+                                        Converter={StaticResource PermissionToIsEnabledConverter},
+                                        ConverterParameter=AddCustomer}">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11"
-                                   Height="11" Margin="0 1 8 0"/>
-                            <TextBlock Text="Add new customer" FontWeight="SemiBold"/>
+                                       Height="11" Margin="0 1 8 0"
+                                       Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
+                            <TextBlock Text="Add new customer" FontWeight="SemiBold"
+                                       Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
                         </StackPanel>
                     </Button>
-                    <Button x:Name="importExcelFileButton" Style="{StaticResource MyCustomMaterialDisabledButton}" Grid.Row="1" Grid.RowSpan="4" 
+                    <Button x:Name="importExcelFileButton" Style="{StaticResource MyCustomMaterialDisabledButton}" Grid.Row="1" Grid.RowSpan="4"
                             Command="{Binding ImportExcelCommand}" VerticalAlignment="Bottom"
-                                                                   IsEnabled="{Binding Path=CurrentUserPrincipal,
-                                    Converter={StaticResource PermissionToIsEnabledConverter},
-                                    ConverterParameter=ImportCustomerExcel}">
+                            IsEnabled="{Binding Path=CurrentUserPrincipal,
+                                        Converter={StaticResource PermissionToIsEnabledConverter},
+                                        ConverterParameter=ImportCustomerExcel}">
                         <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Import" FontWeight="SemiBold"/>
+                            <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"
+                                       Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
+                            <TextBlock Text="Import" FontWeight="SemiBold"
+                                       Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
                         </StackPanel>
                     </Button>
 
-                    <Button x:Name="exportExcelFileButton" Style="{StaticResource MyCustomMaterialDisabledButton}" Grid.Row="1" Grid.RowSpan="4" 
+                    <Button x:Name="exportExcelFileButton" Style="{StaticResource MyCustomMaterialDisabledButton}" Grid.Row="1" Grid.RowSpan="4"
                             Command="{Binding ExportExcelCommand}"
                             CommandParameter="{Binding ElementName=customersDataGrid}" VerticalAlignment="Bottom"
-                                                                                      IsEnabled="{Binding Path=CurrentUserPrincipal,
-                                    Converter={StaticResource PermissionToIsEnabledConverter},
-                                    ConverterParameter=ExportCustomerExcel}">
+                            IsEnabled="{Binding Path=CurrentUserPrincipal,
+                                        Converter={StaticResource PermissionToIsEnabledConverter},
+                                        ConverterParameter=ExportCustomerExcel}">
                         <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Export" FontWeight="SemiBold"/>
+                            <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"
+                                                   Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                />
+                            <TextBlock Text="Export" FontWeight="SemiBold"
+                                       Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                />
                         </StackPanel>
                     </Button>
+
                 </StackPanel>
 
                 <Separator Grid.Row="3" BorderBrush="#747525" BorderThickness="10" Margin="5,10,30,10"/>
@@ -101,12 +110,10 @@
                     <TextBox TextChanged="searchTextBox_TextChanged" x:Name="searchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Search" Margin="0 0 0 0"/>
                 </Grid>
 
-                <!--Search Option-->
                 <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
                     <ComboBoxItem Content="Name"/>
                     <ComboBoxItem Content="ID"/>
                 </ComboBox>
-
                 <DataGrid AutoGenerateColumns="False" IsReadOnly="True"
                           CanUserSortColumns="True" ItemsSource="{Binding Customers}"
                           SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}" x:Name="customersDataGrid" Style="{DynamicResource DataGridStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
@@ -138,7 +145,6 @@
 
                         <DataGridTextColumn Header="Gender" IsReadOnly="True" Width="*" Binding="{Binding Gender}"/>
 
-
                         <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -146,25 +152,24 @@
                                         <Button x:Name="editButton" Style="{StaticResource gridEditButton}"
                                                 Command="{Binding DataContext.LoadEditCustomerWindowCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding}"
-                                                     Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=EditCustomer}">
+                                                Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=EditCustomer}">
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
                                         <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0"
                                                 Command="{Binding DataContext.DeleteCustomerCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding}"
-                                                     Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=DeleteCustomer}">
+                                                Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=DeleteCustomer}">
                                             <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

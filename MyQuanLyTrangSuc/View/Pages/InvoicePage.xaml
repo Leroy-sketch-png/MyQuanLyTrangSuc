@@ -59,15 +59,17 @@
                 <TextBlock Text="Invoice" Grid.Row="1" FontSize="32" FontWeight="SemiBold"
                            Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
-                <Button Style="{StaticResource addButton}" Margin="0 0 20 5" Grid.RowSpan="4" Grid.Row="1"
+                <Button Style="{StaticResource MyCustomMaterialDisabledButton}" Margin="0 0 20 5" Grid.RowSpan="4" Grid.Row="1"
                         Command="{Binding LoadAddInvoiceWindowCommand}"
                         IsEnabled="{Binding Path=CurrentUserPrincipal,
-                                    Converter={StaticResource PermissionToIsEnabledConverter},
-                                    ConverterParameter=AddInvoice}">
+                                        Converter={StaticResource PermissionToIsEnabledConverter},
+                                        ConverterParameter=AddInvoice}" HorizontalAlignment="Right">
                     <StackPanel Orientation="Horizontal">
                         <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11"
-                                               Height="11" Margin="0 1 8 0"/>
-                        <TextBlock Text="Add new record"/>
+                                               Height="11" Margin="0 1 8 0"
+                                               Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                        <TextBlock Text="Add new record"
+                                   Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
                     </StackPanel>
                 </Button>
 
@@ -86,7 +88,6 @@
                     <ComboBoxItem Content="ID"/>
                     <ComboBoxItem Content="Customer"/>
                 </ComboBox>
-
                 <DataGrid x:Name="InvoicesDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" Grid.Row="5"
                           ItemsSource="{Binding Invoices}"
                           SelectedItem="{Binding SelectedInvoice, Mode=TwoWay}">
@@ -106,18 +107,18 @@
                                                 x:Name="viewButton" Style="{StaticResource gridEditButton}"
                                                 Command="{Binding DataContext.LoadInvoiceDetailsWindowCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding}"
-                                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                            Converter={StaticResource PermissionToVisibilityConverter},
-                                                            ConverterParameter=ViewInvoiceDetails}">
+                                                Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=ViewInvoiceDetails}">
                                             <Icon:PackIconMaterial Kind="ViewListOutline" Style="{StaticResource gridButtonIcon}" />
                                         </Button>
                                         <Button Margin="3 0 0 0" x:Name="printButton"
                                                 Style="{StaticResource gridEditButton}"
                                                 Command="{Binding DataContext.PrintInvoiceRecordCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding}"
-                                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                            Converter={StaticResource PermissionToVisibilityConverter},
-                                                            ConverterParameter=PrintInvoice}">
+                                                Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=PrintInvoice}">
                                             <Icon:PackIconMaterial Kind="Printer" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>

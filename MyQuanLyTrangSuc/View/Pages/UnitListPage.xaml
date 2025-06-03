@@ -61,29 +61,33 @@
                 <TextBlock Text="Unit" Grid.Row="1" FontSize="32" FontWeight="SemiBold"
                            Margin="10 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
-                <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
-                    <Button x:Name="addButton" Style="{StaticResource addButton}"
+                <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                    <Button x:Name="addButton" Style="{StaticResource MyCustomMaterialDisabledButton}"
                             Grid.RowSpan="4" Grid.Row="1"
                             Command="{Binding LoadAddUnitWindowCommand}"
                             IsEnabled="{Binding Path=CurrentUserPrincipal,
-                                        Converter={StaticResource PermissionToIsEnabledConverter},
-                                        ConverterParameter=AddUnit}">
+                                            Converter={StaticResource PermissionToIsEnabledConverter},
+                                            ConverterParameter=AddUnit}" VerticalAlignment="Bottom">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="15"
-                                                   Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Add new unit" FontWeight="SemiBold"/>
+                                                   Height="15" Margin="0 1 8 0"
+                                                   Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                            <TextBlock Text="Add new unit" FontWeight="SemiBold"
+                                       Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
                         </StackPanel>
                     </Button>
 
-                    <Button x:Name="deleteMultipleButton" Style="{StaticResource addButton}"
+                    <Button x:Name="deleteMultipleButton" Style="{StaticResource MyCustomMaterialDisabledButton}"
                             Grid.Row="1" Grid.RowSpan="4"
                             Command="{Binding DeleteMultipleUnitsCommand}"
                             IsEnabled="{Binding Path=CurrentUserPrincipal,
-                                        Converter={StaticResource PermissionToIsEnabledConverter},
-                                        ConverterParameter=DeleteMultipleUnit}">
+                                            Converter={StaticResource PermissionToIsEnabledConverter},
+                                            ConverterParameter=DeleteMultipleUnit}" VerticalAlignment="Bottom">
                         <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="AlphaDBox" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Delete multiple" FontWeight="SemiBold"/>
+                            <Icon:PackIconMaterial Kind="AlphaDBox" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"
+                                                   Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                            <TextBlock Text="Delete multiple" FontWeight="SemiBold"
+                                       Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -91,7 +95,7 @@
                 <Separator Grid.Row="3" BorderBrush="#747525" BorderThickness="10" Margin="20,10,20,10"/>
 
                 <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
-                    <TextBox x:Name="searchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Search" 
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Search"
                              Margin="0 0 0 0" FontSize="20"
                              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
@@ -135,9 +139,9 @@
                                         <Button x:Name="editButton" Style="{StaticResource gridEditButton}"
                                                 Command="{Binding DataContext.LoadEditUnitWindowCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding}"
-                                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                            Converter={StaticResource PermissionToVisibilityConverter},
-                                                            ConverterParameter=EditUnit}">
+                                                Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=EditUnit}">
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
@@ -145,16 +149,15 @@
                                                 Margin="5 0 0 0"
                                                 Command="{Binding DataContext.DeleteUnitCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding}"
-                                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                            Converter={StaticResource PermissionToVisibilityConverter},
-                                                            ConverterParameter=DeleteUnit}">
+                                                Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=DeleteUnit}">
                                             <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

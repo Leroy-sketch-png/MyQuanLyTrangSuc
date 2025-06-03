@@ -66,12 +66,14 @@
                             Grid.RowSpan="4" Grid.Row="1" VerticalAlignment="Bottom"
                             Command="{Binding LoadAddItemCategoryWindowCommand}"
                             IsEnabled="{Binding Path=CurrentUserPrincipal,
-                                        Converter={StaticResource PermissionToIsEnabledConverter},
-                                        ConverterParameter=AddItemCategory}">
+                                            Converter={StaticResource PermissionToIsEnabledConverter},
+                                            ConverterParameter=AddItemCategory}">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11"
-                                                   Height="11" Margin="0 1 8 0"/>
-                            <TextBlock Text="Add new category" FontWeight="SemiBold"/>
+                                                   Height="11" Margin="0 1 8 0"
+                                                   Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                            <TextBlock Text="Add new category" FontWeight="SemiBold"
+                                       Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
                         </StackPanel>
                     </Button>
 
@@ -79,11 +81,13 @@
                             Grid.Row="1" Grid.RowSpan="4" VerticalAlignment="Bottom"
                             Command="{Binding DeleteMultipleItemCategoriesCommand}"
                             IsEnabled="{Binding Path=CurrentUserPrincipal,
-                                        Converter={StaticResource PermissionToIsEnabledConverter},
-                                        ConverterParameter=DeleteMultipleItemCategory}">
+                                            Converter={StaticResource PermissionToIsEnabledConverter},
+                                            ConverterParameter=DeleteMultipleItemCategory}">
                         <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="AlphaDBox" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Delete multiple" FontWeight="SemiBold"/>
+                            <Icon:PackIconMaterial Kind="AlphaDBox" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"
+                                                   Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                            <TextBlock Text="Delete multiple" FontWeight="SemiBold"
+                                       Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
                         </StackPanel>
                     </Button>
 
@@ -92,7 +96,7 @@
                 <Separator Grid.Row="3" BorderBrush="#ba80d3" BorderThickness="10" Margin="5,10,30,10"/>
 
                 <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
-                    <TextBox x:Name="searchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Search" 
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Search"
                              Margin="0 0 0 0" FontSize="20"
                              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
@@ -102,7 +106,6 @@
                     <ComboBoxItem Content="Name"/>
                     <ComboBoxItem Content="ID"/>
                 </ComboBox>
-
                 <DataGrid ItemsSource="{Binding ItemCategories}"
                           SelectedItem="{Binding SelectedItemCategory, Mode=TwoWay}"
                           x:Name="itemCategoriesDataGrid" Style="{DynamicResource DataGridStyle1}"
@@ -152,9 +155,9 @@
                                         <Button x:Name="editButton" Style="{StaticResource gridEditButton}"
                                                 Command="{Binding DataContext.LoadEditItemCategoryWindowCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding}"
-                                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                            Converter={StaticResource PermissionToVisibilityConverter},
-                                                            ConverterParameter=EditItemCategory}">
+                                                Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=EditItemCategory}">
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
@@ -162,9 +165,9 @@
                                                 Margin="5 0 0 0"
                                                 Command="{Binding DataContext.DeleteItemCategoryCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding}"
-                                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                            Converter={StaticResource PermissionToVisibilityConverter},
-                                                            ConverterParameter=DeleteItemCategory}">
+                                                Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=DeleteItemCategory}">
                                             <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>

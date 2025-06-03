@@ -46,7 +46,7 @@
                         ToolTipService.ShowOnDisabled="True"
                         IsEnabled="{Binding Path=CurrentUserPrincipal,
                                     Converter={StaticResource PermissionToIsEnabledConverter},
-                                    ConverterParameter={}}"
+                                    ConverterParameter={}}" VerticalAlignment="Bottom"
                         />
                 <!--IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"-->
                 <!---->

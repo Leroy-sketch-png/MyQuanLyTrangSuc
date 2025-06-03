@@ -60,33 +60,39 @@
                            Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
-                    <Button Style="{StaticResource addButton}" Command="{Binding LoadAddServiceRecordWindowCommand}"
+                    <Button Style="{StaticResource MyCustomMaterialDisabledButton}" Command="{Binding AddServiceRecordCommand}"
                             IsEnabled="{Binding Path=CurrentUserPrincipal,
-                                        Converter={StaticResource PermissionToIsEnabledConverter},
-                                        ConverterParameter=AddServiceRecord}">
+                                            Converter={StaticResource PermissionToIsEnabledConverter},
+                                            ConverterParameter=AddServiceRecord}" VerticalAlignment="Bottom">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="15"
-                                                   Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Add new record" FontWeight="SemiBold"/>
+                                                   Height="15" Margin="0 1 8 0"
+                                                   Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                            <TextBlock Text="Add new record" FontWeight="SemiBold"
+                                       Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
                         </StackPanel>
                     </Button>
-                    <Button Style="{StaticResource addButton}" Command="{Binding ImportExcelFileCommand}"
+                    <Button Style="{StaticResource MyCustomMaterialDisabledButton}" Command="{Binding ImportServiceRecordsCommand}"
                             IsEnabled="{Binding Path=CurrentUserPrincipal,
-                                        Converter={StaticResource PermissionToIsEnabledConverter},
-                                        ConverterParameter=ImportServiceRecords}">
+                                            Converter={StaticResource PermissionToIsEnabledConverter},
+                                            ConverterParameter=ImportServiceRecords}" VerticalAlignment="Bottom">
                         <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Import" FontWeight="SemiBold"/>
+                            <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"
+                                                   Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                            <TextBlock Text="Import" FontWeight="SemiBold"
+                                       Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource addButton}" Command="{Binding ExportExcelFileCommand}"
+                    <Button Style="{StaticResource MyCustomMaterialDisabledButton}" Command="{Binding ExportServiceRecordsCommand}"
                             IsEnabled="{Binding Path=CurrentUserPrincipal,
-                                        Converter={StaticResource PermissionToIsEnabledConverter},
-                                        ConverterParameter=ExportServiceRecords}">
+                                            Converter={StaticResource PermissionToIsEnabledConverter},
+                                            ConverterParameter=ExportServiceRecords}" VerticalAlignment="Bottom">
                         <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Export" FontWeight="SemiBold"/>
+                            <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"
+                                                   Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                            <TextBlock Text="Export" FontWeight="SemiBold"
+                                       Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -95,10 +101,9 @@
 
                 <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
                     <TextBlock x:Name="searchTextBlock" Margin="15 8 0 5" VerticalAlignment="Center" Foreground="#b0b9c6"
-                                IsHitTestVisible="False" Panel.ZIndex="1" Text=""
-                                Visibility="{Binding ElementName=txtFilter, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
+                               IsHitTestVisible="False" Panel.ZIndex="1" Text=""
+                               Visibility="{Binding ElementName=searchTextBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
                     <TextBox x:Name="searchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Search" Margin="0 0 0 0" TextChanged="searchTextBox_TextChanged"/>
-                    
                 </Grid>
 
                 <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120"
@@ -107,13 +112,12 @@
                     <ComboBoxItem Content="ID"/>
                     <ComboBoxItem Content="Date"/>
                 </ComboBox>
-
                 <DataGrid ItemsSource="{Binding ServiceRecords}"
                           SelectedItem="{Binding SelectedServiceRecord, Mode=TwoWay}"
                           x:Name="ServiceRecordsDataGrid" Style="{DynamicResource DataGridStyle1}"
                           RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
                     <DataGrid.InputBindings>
-                        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding LoadServiceRecordDetailsWindowCommand}" CommandParameter="{Binding SelectedServiceRecord}" />
+                        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding ViewServiceRecordDetailsCommand}" CommandParameter="{Binding SelectedServiceRecord}" />
                     </DataGrid.InputBindings>
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding ServiceRecordId}" Header="ID" IsReadOnly="True" CanUserResize="False" Width="80">
@@ -152,27 +156,27 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <Button Margin="0 0 3 0" Style="{StaticResource gridEditButton}"
-                                                Command="{Binding DataContext.LoadServiceRecordDetailsWindowCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                Command="{Binding DataContext.ViewServiceRecordDetailsCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding}"
-                                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                            Converter={StaticResource PermissionToVisibilityConverter},
-                                                            ConverterParameter=ViewServiceRecordDetails}">
+                                                Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=EditServiceRecord}">
                                             <Icon:PackIconMaterial Kind="ViewListOutline" Style="{StaticResource gridButtonIcon}" />
                                         </Button>
                                         <Button Margin="3 0 0 0" Style="{StaticResource gridEditButton}"
                                                 Command="{Binding DataContext.PrintServiceRecordCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding}"
-                                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                            Converter={StaticResource PermissionToVisibilityConverter},
-                                                            ConverterParameter=PrintServiceRecord}">
+                                                Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=PrintServiceRecord}">
                                             <Icon:PackIconMaterial Kind="Printer" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                         <Button Margin="3 0 0 0" Style="{StaticResource gridEditButton}"
                                                 Command="{Binding DataContext.DeleteServiceRecordCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding}"
-                                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                            Converter={StaticResource PermissionToVisibilityConverter},
-                                                            ConverterParameter=DeleteServiceRecord}">
+                                                Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=DeleteServiceRecord}">
                                             <Icon:PackIconMaterial Kind="Delete" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>

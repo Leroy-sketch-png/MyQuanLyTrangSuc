@@ -58,15 +58,17 @@
                 <TextBlock Text="Import" Grid.Row="1" FontSize="32" FontWeight="SemiBold"
                            Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518"/>
 
-                <Button Style="{StaticResource addButton}" Margin="0 0 20 5" Grid.RowSpan="4" Grid.Row="1"
+                <Button Style="{StaticResource MyCustomMaterialDisabledButton}" Margin="0 0 20 5" Grid.RowSpan="4" Grid.Row="1"
                         Command="{Binding LoadAddImportWindowCommand}"
                         IsEnabled="{Binding Path=CurrentUserPrincipal,
-                                    Converter={StaticResource PermissionToIsEnabledConverter},
-                                    ConverterParameter=AddImport}">
+                                        Converter={StaticResource PermissionToIsEnabledConverter},
+                                        ConverterParameter=AddImport}" HorizontalAlignment="Right">
                     <StackPanel Orientation="Horizontal">
                         <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11"
-                                               Height="11" Margin="0 1 8 0"/>
-                        <TextBlock Text="Add new record"/>
+                                               Height="11" Margin="0 1 8 0"
+                                               Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                        <TextBlock Text="Add new record"
+                                   Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
                     </StackPanel>
                 </Button>
 
@@ -86,7 +88,6 @@
                     <ComboBoxItem Content="ID"/>
                     <ComboBoxItem Content="Supplier"/>
                 </ComboBox>
-
                 <DataGrid x:Name="importRecordsDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" Grid.Row="5"
                           ItemsSource="{Binding ImportRecords}"
                           SelectedItem="{Binding SelectedImportRecord, Mode=TwoWay}">
@@ -106,17 +107,17 @@
                                                 x:Name="viewButton" Style="{StaticResource gridEditButton}"
                                                 Command="{Binding DataContext.LoadImportDetailsWindowCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding}"
-                                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                            Converter={StaticResource PermissionToVisibilityConverter},
-                                                            ConverterParameter=ViewImportDetails}">
+                                                Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=ViewImportDetails}">
                                             <Icon:PackIconMaterial Kind="ViewListOutline" Style="{StaticResource gridButtonIcon}" />
                                         </Button>
                                         <Button Margin="3 0 0 0" x:Name="printButton" Style="{StaticResource gridEditButton}"
                                                 Command="{Binding DataContext.PrintImportRecordCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding}"
-                                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                            Converter={StaticResource PermissionToVisibilityConverter},
-                                                            ConverterParameter=PrintImport}">
+                                                Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=PrintImport}">
                                             <Icon:PackIconMaterial Kind="Printer" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>

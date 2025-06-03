@@ -2,39 +2,197 @@
 using Microsoft.Win32;
 using MyQuanLyTrangSuc.BusinessLogic;
 using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.Security; // Assuming CustomPrincipal is here
 using MyQuanLyTrangSuc.View;
-using OfficeOpenXml.Style;
+using MyQuanLyTrangSuc.View.Windows; // Assuming AddServiceRecordWindow, ServiceRecordDetailWindow, ServiceRecordPrint are here
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input; // Required for ICommand
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
-    public class ServiceRecordListPageLogic
+    public class ServiceRecordListPageLogic : INotifyPropertyChanged
     {
+        private readonly ServiceRecordListPage serviceRecordListPage;
         private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
         private readonly ServiceRecordService serviceRecordService;
-        private readonly ServiceRecordListPage serviceRecordPageUI;
-        private readonly NotificationWindowLogic notificationWindowLogic;
+        private readonly NotificationWindowLogic notificationWindowLogic; // Still here, consider abstracting into a service/interface
 
-        public ObservableCollection<ServiceRecord> ServiceRecords { get; set; }
-        public ServiceRecord SelectedServiceRecord { get; set; }
-
-        public ServiceRecordListPageLogic(ServiceRecordListPage page)
+        private ObservableCollection<ServiceRecord> _serviceRecords;
+        /// <summary>
+        /// Collection of service records displayed in the DataGrid.
+        /// </summary>
+        public ObservableCollection<ServiceRecord> ServiceRecords
         {
-            serviceRecordPageUI = page;
+            get => _serviceRecords;
+            set
+            {
+                _serviceRecords = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ServiceRecord _selectedServiceRecord;
+        /// <summary>
+        /// The currently selected service record in the DataGrid.
+        /// </summary>
+        public ServiceRecord SelectedServiceRecord
+        {
+            get => _selectedServiceRecord;
+            set
+            {
+                _selectedServiceRecord = value;
+                OnPropertyChanged();
+                // Re-evaluate CanExecute for commands that depend on a selected item
+                ((RelayCommand)ViewServiceRecordDetailsCommand)?.RaiseCanExecuteChanged();
+                ((RelayCommand)DeleteServiceRecordCommand)?.RaiseCanExecuteChanged();
+                ((RelayCommand)PrintServiceRecordCommand)?.RaiseCanExecuteChanged();
+            }
+        }
+
+        /// <summary>
+        /// Represents the current user principal for permission checks.
+        /// </summary>
+        public CustomPrincipal CurrentUserPrincipal
+        {
+            get => Thread.CurrentPrincipal as CustomPrincipal;
+        }
+
+        private string _searchText;
+        /// <summary>
+        /// Text bound to the search TextBox for filtering service records.
+        /// </summary>
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                OnPropertyChanged();
+                ApplySearchFilter(); // Apply filter whenever search text changes
+            }
+        }
+
+        private ComboBoxItem _selectedSearchCriteria;
+        /// <summary>
+        /// The selected item from the search ComboBox (e.g., "Date", "ID", "Customer").
+        /// </summary>
+        public ComboBoxItem SelectedSearchCriteria
+        {
+            get => _selectedSearchCriteria;
+            set
+            {
+                _selectedSearchCriteria = value;
+                OnPropertyChanged();
+                ApplySearchFilter(); // Apply filter whenever search criteria changes
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        // --- Commands ---
+        public ICommand AddServiceRecordCommand { get; private set; }
+        public ICommand ViewServiceRecordDetailsCommand { get; private set; }
+        public ICommand DeleteServiceRecordCommand { get; private set; }
+        public ICommand PrintServiceRecordCommand { get; private set; }
+        public ICommand ImportServiceRecordsCommand { get; private set; }
+        public ICommand ExportServiceRecordsCommand { get; private set; }
+
+
+        public ServiceRecordListPageLogic()
+        {
             ServiceRecords = new ObservableCollection<ServiceRecord>();
             serviceRecordService = ServiceRecordService.Instance;
+            notificationWindowLogic = new NotificationWindowLogic();
+
+            // Subscribe to events from the service
             serviceRecordService.OnServiceRecordAdded += HandleServiceRecordAdded;
             serviceRecordService.OnServiceRecordUpdated += HandleServiceRecordUpdated;
+            // Assuming ServiceRecordService also has an OnServiceRecordDeleted event
+            // If not, you might need to manually handle the ObservableCollection removal after successful DB delete.
+            // For now, I'll add a placeholder if it doesn't exist yet.
+            serviceRecordService.OnServiceRecordDeleted += HandleServiceRecordDeleted;
 
-            notificationWindowLogic = new NotificationWindowLogic();
+            InitializeCommands();
             LoadServiceRecordsFromDatabase();
+
+            // Set default search criteria
+            SelectedSearchCriteria = new ComboBoxItem { Content = "Customer" };
+        }
+        public ServiceRecordListPageLogic(ServiceRecordListPage serviceRecordListPage)
+        {
+            this.serviceRecordListPage = serviceRecordListPage;
+            ServiceRecords = new ObservableCollection<ServiceRecord>();
+            serviceRecordService = ServiceRecordService.Instance;
+            notificationWindowLogic = new NotificationWindowLogic();
+
+            // Subscribe to events from the service
+            serviceRecordService.OnServiceRecordAdded += HandleServiceRecordAdded;
+            serviceRecordService.OnServiceRecordUpdated += HandleServiceRecordUpdated;
+            // Assuming ServiceRecordService also has an OnServiceRecordDeleted event
+            // If not, you might need to manually handle the ObservableCollection removal after successful DB delete.
+            // For now, I'll add a placeholder if it doesn't exist yet.
+            serviceRecordService.OnServiceRecordDeleted += HandleServiceRecordDeleted;
+
+            InitializeCommands();
+            LoadServiceRecordsFromDatabase();
+
+            // Set default search criteria
+            SelectedSearchCriteria = new ComboBoxItem { Content = "Customer" };
+        }
+
+        private void InitializeCommands()
+        {
+            AddServiceRecordCommand = new RelayCommand(ExecuteAddServiceRecord, CanExecuteAddServiceRecord);
+            ViewServiceRecordDetailsCommand = new RelayCommand(ExecuteViewServiceRecordDetails, CanViewServiceRecordDetails);
+            DeleteServiceRecordCommand = new RelayCommand(ExecuteDeleteServiceRecord, CanDeleteServiceRecord);
+            PrintServiceRecordCommand = new RelayCommand(ExecutePrintServiceRecord, CanPrintServiceRecord);
+            ImportServiceRecordsCommand = new RelayCommand(ExecuteImportServiceRecords, CanExecuteImport);
+            ExportServiceRecordsCommand = new RelayCommand(ExecuteExportServiceRecords, CanExecuteExport);
+        }
+
+        private bool CanViewServiceRecordDetails()
+        {
+            return SelectedServiceRecord != null && CurrentUserPrincipal?.HasPermission("EditServiceRecord") == true;
+        }
+
+        private bool CanDeleteServiceRecord()
+        {
+            return SelectedServiceRecord != null && CurrentUserPrincipal?.HasPermission("DeleteServiceRecord") == true;
+        }
+
+        private bool CanPrintServiceRecord()
+        {
+            return SelectedServiceRecord != null && CurrentUserPrincipal?.HasPermission("PrintServiceRecord") == true;
+        }
+
+        private bool CanExecuteAddServiceRecord()
+        {
+            return CurrentUserPrincipal?.HasPermission("AddServiceRecord") == true; // Example permission check
+        }
+
+        private bool CanExecuteImport()
+        {
+            return CurrentUserPrincipal?.HasPermission("ImportServiceRecordExcel") == true; // Example permission check
+        }
+        private bool CanExecuteExport()
+        {
+            return CurrentUserPrincipal?.HasPermission("ExportServiceRecordExcel") == true; // Example permission check
         }
 
         private void LoadServiceRecordsFromDatabase()
@@ -62,6 +220,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
+        // --- Event Handlers from Service ---
         private void HandleServiceRecordAdded(ServiceRecord newRecord)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -88,80 +247,41 @@ namespace MyQuanLyTrangSuc.ViewModel
             });
         }
 
-        public void HandleServiceRecordDeleted()
+        private void HandleServiceRecordDeleted(ServiceRecord deletedRecord)
         {
-            if (SelectedServiceRecord == null)
-            {
-                MessageBox.Show("Please select a record to delete.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            var confirm = MessageBox.Show("Are you sure you want to delete this service record?",
-                                          "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (confirm != MessageBoxResult.Yes)
-                return;
-
-            try
-            {
-                context.Entry(SelectedServiceRecord).Collection(sr => sr.ServiceDetails).Load();
-
-                foreach (var detail in SelectedServiceRecord.ServiceDetails.ToList())
-                {
-                    serviceRecordService.DeleteServiceDetail(detail);
-                }
-
-                serviceRecordService.DeleteServiceRecord(SelectedServiceRecord);
-                context.SaveChanges();
-
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    ServiceRecords.Remove(SelectedServiceRecord);
-                });
-
-                MessageBox.Show("Service record and related details deleted successfully.",
-                                "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Failed to delete: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        public void SearchServiceRecords(string keyword, string category)
-        {
-            var recordsFromDb = context.ServiceRecords
-                .Include(sr => sr.Customer)
-                .ToList();
-
             Application.Current.Dispatcher.Invoke(() =>
             {
-                ServiceRecords.Clear();
-
-                foreach (var record in recordsFromDb)
+                var existing = ServiceRecords.FirstOrDefault(r => r.ServiceRecordId == deletedRecord.ServiceRecordId);
+                if (existing != null)
                 {
-                    bool match = category switch
-                    {
-                        "Name" => record.Customer?.Name?.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0,
-                        "ID" => record.ServiceRecordId.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0,
-                        _ => false
-                    };
-
-                    if (match)
-                    {
-                        ServiceRecords.Add(record);
-                    }
+                    ServiceRecords.Remove(existing);
                 }
             });
         }
 
-        public void LoadAddServiceRecordWindow()
+        private void HandleServiceRecordCompleted(ServiceRecord completedRecord)
+        {
+            // This handler is for updates coming from the detail window, particularly status/payment changes
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var existing = ServiceRecords.FirstOrDefault(r => r.ServiceRecordId == completedRecord.ServiceRecordId);
+                if (existing != null)
+                {
+                    existing.Status = completedRecord.Status;
+                    existing.TotalPaid = completedRecord.TotalPaid;
+                    existing.TotalUnpaid = completedRecord.TotalUnpaid;
+                }
+            });
+        }
+
+        // --- Command Execution Methods ---
+        private void ExecuteAddServiceRecord()
         {
             AddServiceRecordWindow addWindow = new AddServiceRecordWindow();
             addWindow.ShowDialog();
         }
 
-        public void LoadServiceRecordDetailsWindow()
+        private void ExecuteViewServiceRecordDetails()
         {
             if (SelectedServiceRecord != null)
             {
@@ -178,24 +298,48 @@ namespace MyQuanLyTrangSuc.ViewModel
                 {
                     closedDetailLogic.ServiceRecordCompleted -= HandleServiceRecordCompleted;
                 }
+                // Optionally, refresh data if the detail window allows extensive edits not covered by events
+                // LoadServiceRecordsFromDatabase();
             }
         }
 
-        private void HandleServiceRecordCompleted(ServiceRecord completedRecord)
+        private void ExecuteDeleteServiceRecord()
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            if (SelectedServiceRecord == null)
             {
-                var existing = ServiceRecords.FirstOrDefault(r => r.ServiceRecordId == completedRecord.ServiceRecordId);
-                if (existing != null)
+                MessageBox.Show("Please select a record to delete.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var confirm = MessageBox.Show("Are you sure you want to delete this service record?",
+                                            "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (confirm != MessageBoxResult.Yes)
+                return;
+
+            try
+            {
+                // Ensure ServiceDetails are loaded before trying to delete them
+                context.Entry(SelectedServiceRecord).Collection(sr => sr.ServiceDetails).Load();
+
+                foreach (var detail in SelectedServiceRecord.ServiceDetails.ToList())
                 {
-                    existing.Status = completedRecord.Status;
-                    existing.TotalPaid = completedRecord.TotalPaid;
-                    existing.TotalUnpaid = completedRecord.TotalUnpaid;
+                    serviceRecordService.DeleteServiceDetail(detail);
                 }
-            });
+
+                serviceRecordService.DeleteServiceRecord(SelectedServiceRecord);
+                context.SaveChanges(); // Save changes after all deletions
+
+                MessageBox.Show("Service record and related details deleted successfully.",
+                                "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to delete: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        public void PrintServiceRecord()
+        private void ExecutePrintServiceRecord()
         {
             if (SelectedServiceRecord != null)
             {
@@ -208,86 +352,172 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        public void SearchServiceRecordsByNameOfCustomer(string name)
+        private void ExecuteImportServiceRecords()
         {
-            List<ServiceRecord> serviceRecordsFromDb = context.ServiceRecords
-                .Include(i => i.Customer)
-                .ToList();
-
-            Application.Current.Dispatcher.Invoke(() =>
+            var importedRecords = ImportServiceRecordsFromExcel();
+            // After importing, if they are added to the database, reload the collection.
+            if (importedRecords.Any())
             {
-                ServiceRecords.Clear();
-                foreach (ServiceRecord serviceRecord in serviceRecordsFromDb)
-                {
-                    if (serviceRecord.Customer.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        ServiceRecords.Add(serviceRecord);
-                    }
-                }
-            });
+                LoadServiceRecordsFromDatabase();
+            }
         }
 
-        public void SearchServiceRecordsByID(string ID)
+        private void ExecuteExportServiceRecords()
         {
-            List<ServiceRecord> serviceRecordsFromDb = context.ServiceRecords.ToList();
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                ServiceRecords.Clear();
-                foreach (ServiceRecord serviceRecord in serviceRecordsFromDb)
-                {
-                    if (serviceRecord.ServiceRecordId.IndexOf(ID, StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        ServiceRecords.Add(serviceRecord);
-                    }
-                }
-            });
+            ExportServiceRecordsToExcel();
         }
 
-        public void SearchServiceRecordsByDate(string date)
+        // --- Search/Filter Logic ---
+        /// <summary>
+        /// Applies the search filter based on the current SearchText and SelectedSearchCriteria.
+        /// </summary>
+        private void ApplySearchFilter()
         {
-            var dateParts = date.Split('/');
-            List<ServiceRecord> serviceRecordsFromDb = context.ServiceRecords.ToList();
-
-            Application.Current.Dispatcher.Invoke(() =>
+            // If search text is empty, reload all service records
+            if (string.IsNullOrWhiteSpace(SearchText))
             {
-                ServiceRecords.Clear();
+                LoadServiceRecordsFromDatabase();
+                return;
+            }
 
-                foreach (var serviceRecord in serviceRecordsFromDb)
+            // Perform search based on selected criteria
+            List<ServiceRecord> filteredRecords;
+            string searchBy = SelectedSearchCriteria?.Content.ToString();
+
+            switch (searchBy)
+            {
+                case "ID":
+                    filteredRecords = SearchServiceRecordsByID(SearchText);
+                    break;
+                case "Customer":
+                    filteredRecords = SearchServiceRecordsByNameOfCustomer(SearchText);
+                    break;
+                case "Date":
+                    filteredRecords = SearchServiceRecordsByDate(SearchText);
+                    break;
+                default: // Default to Customer search if criteria is null/unrecognized
+                    filteredRecords = SearchServiceRecordsByNameOfCustomer(SearchText);
+                    break;
+            }
+
+            UpdateServiceRecordsDisplay(filteredRecords);
+        }
+
+        /// <summary>
+        /// Searches service records by customer name.
+        /// </summary>
+        public List<ServiceRecord> SearchServiceRecordsByNameOfCustomer(string name)
+        {
+            return context.ServiceRecords
+                          .Include(sr => sr.Customer)
+                          .Where(sr => sr.Customer != null && sr.Customer.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0)
+                          .ToList();
+        }
+
+        /// <summary>
+        /// Searches service records by Service Record ID.
+        /// </summary>
+        public List<ServiceRecord> SearchServiceRecordsByID(string ID)
+        {
+            return context.ServiceRecords
+                          .Include(sr => sr.Customer) // Keep includes for consistency in displayed data
+                          .Include(sr => sr.Employee)
+                          .Where(sr => sr.ServiceRecordId.IndexOf(ID, StringComparison.OrdinalIgnoreCase) >= 0)
+                          .ToList();
+        }
+
+        /// <summary>
+        /// Searches service records by date. Handles partial date inputs (day, month, year).
+        /// </summary>
+        public List<ServiceRecord> SearchServiceRecordsByDate(string date)
+        {
+            List<ServiceRecord> matchingRecords = new List<ServiceRecord>();
+            // Attempt to parse the full date first
+            if (DateTime.TryParse(date, out DateTime parsedDate))
+            {
+                matchingRecords = context.ServiceRecords
+                                          .Include(sr => sr.Customer)
+                                          .Include(sr => sr.Employee)
+                                          .Where(sr => sr.CreateDate.HasValue &&
+                                                      sr.CreateDate.Value.Date == parsedDate.Date)
+                                          .ToList();
+            }
+            else
+            {
+                // Fallback to searching by date parts if full parsing fails
+                var dateParts = date.Split(new char[] { '/', '-', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                var allRecords = context.ServiceRecords.Include(sr => sr.Customer).Include(sr => sr.Employee).ToList();
+
+                foreach (var record in allRecords)
                 {
+                    if (!record.CreateDate.HasValue) continue;
+
                     bool match = true;
-
-                    if (dateParts.Length > 0 && int.TryParse(dateParts[0], out int day))
+                    // Check day, month, year based on available parts
+                    if (dateParts.Length > 0 && int.TryParse(dateParts[0], out int part1))
                     {
-                        if (serviceRecord.CreateDate.Value.Day != day)
+                        if (record.CreateDate.Value.Day != part1 && record.CreateDate.Value.Month != part1 && record.CreateDate.Value.Year != part1)
+                        {
+                            match = false;
+                        }
+                    }
+                    if (dateParts.Length > 1 && int.TryParse(dateParts[1], out int part2))
+                    {
+                        if (record.CreateDate.Value.Month != part2 && record.CreateDate.Value.Year != part2)
+                        {
+                            match = false;
+                        }
+                    }
+                    if (dateParts.Length > 2 && int.TryParse(dateParts[2], out int part3))
+                    {
+                        if (record.CreateDate.Value.Year != part3)
                         {
                             match = false;
                         }
                     }
 
-                    if (dateParts.Length > 1 && int.TryParse(dateParts[1], out int month))
+                    if (match && dateParts.Length > 0)
                     {
-                        if (serviceRecord.CreateDate.Value.Month != month)
-                        {
-                            match = false;
-                        }
+                        matchingRecords.Add(record);
                     }
+                }
+            }
+            return matchingRecords;
+        }
 
-                    if (dateParts.Length > 2 && int.TryParse(dateParts[2], out int year))
+        /// <summary>
+        /// Updates the ServiceRecords ObservableCollection with the new filtered list.
+        /// This method is designed to minimize UI updates by only adding/removing items as needed.
+        /// </summary>
+        /// <param name="newRecords">The list of service records that should currently be displayed.</param>
+        private void UpdateServiceRecordsDisplay(List<ServiceRecord> newRecords)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                // Create a temporary set of IDs from the new filtered list for efficient lookup
+                var newRecordIds = new HashSet<string>(newRecords.Select(sr => sr.ServiceRecordId));
+
+                // Remove items from the current display that are no longer in the filtered list
+                for (int i = ServiceRecords.Count - 1; i >= 0; i--)
+                {
+                    if (!newRecordIds.Contains(ServiceRecords[i].ServiceRecordId))
                     {
-                        if (serviceRecord.CreateDate.Value.Year != year)
-                        {
-                            match = false;
-                        }
+                        ServiceRecords.RemoveAt(i);
                     }
+                }
 
-                    if (match)
+                // Add items to the current display that are in the filtered list but not yet present
+                foreach (var newRecord in newRecords)
+                {
+                    if (!ServiceRecords.Any(sr => sr.ServiceRecordId == newRecord.ServiceRecordId))
                     {
-                        ServiceRecords.Add(serviceRecord);
+                        ServiceRecords.Add(newRecord);
                     }
                 }
             });
         }
 
+        // --- Excel Operations ---
         public List<ServiceRecord> ImportServiceRecordsFromExcel()
         {
             var importedRecords = new List<ServiceRecord>();
@@ -301,51 +531,83 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 try
                 {
-
                     using (var package = new ExcelPackage(new FileInfo(openFileDialog.FileName)))
                     {
                         var worksheet = package.Workbook.Worksheets.FirstOrDefault();
                         if (worksheet == null)
                         {
-                            MessageBox.Show("No worksheet found.");
+                            MessageBox.Show("No worksheet found in the Excel file.", "Import Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                             return importedRecords;
                         }
 
                         int row = 2; // Assuming row 1 is the header
                         while (worksheet.Cells[row, 1].Value != null)
                         {
+                            // Basic validation and parsing
+                            string serviceRecordId = worksheet.Cells[row, 1].Text;
+                            string customerName = worksheet.Cells[row, 2].Text;
+                            string employeeName = worksheet.Cells[row, 3].Text;
+
+                            DateTime? createDate = DateTime.TryParse(worksheet.Cells[row, 4].Text, out var date) ? date : (DateTime?)null;
+                            decimal grandTotal = decimal.TryParse(worksheet.Cells[row, 5].Text, out var total) ? total : 0;
+                            decimal totalPaid = decimal.TryParse(worksheet.Cells[row, 6].Text, out var paid) ? paid : 0;
+                            decimal totalUnpaid = decimal.TryParse(worksheet.Cells[row, 7].Text, out var unpaid) ? unpaid : 0;
+                            string status = worksheet.Cells[row, 8].Text;
+
+                            // Look up existing Customer and Employee or create new ones
+                            // This part ensures that imported records link to existing entities if names match
+                            var customer = context.Customers.FirstOrDefault(c => c.Name == customerName);
+                            if (customer == null)
+                            {
+                                customer = new Customer { Name = customerName };
+                                context.Customers.Add(customer);
+                            }
+
+                            var employee = context.Employees.FirstOrDefault(e => e.Name == employeeName);
+                            if (employee == null)
+                            {
+                                employee = new Employee { Name = employeeName };
+                                context.Employees.Add(employee);
+                            }
+
                             var record = new ServiceRecord
                             {
-                                ServiceRecordId = worksheet.Cells[row, 1].Text,
-                                Customer = new Customer { Name = worksheet.Cells[row, 2].Text },
-                                Employee = new Employee { Name = worksheet.Cells[row, 3].Text },
-                                CreateDate = DateTime.TryParse(worksheet.Cells[row, 4].Text, out var date) ? date : null,
-                                GrandTotal = decimal.TryParse(worksheet.Cells[row, 5].Text, out var total) ? total : 0,
-                                TotalPaid = decimal.TryParse(worksheet.Cells[row, 6].Text, out var paid) ? paid : 0,
-                                TotalUnpaid = decimal.TryParse(worksheet.Cells[row, 7].Text, out var unpaid) ? unpaid : 0,
-                                Status = worksheet.Cells[row, 8].Text
+                                ServiceRecordId = serviceRecordId,
+                                Customer = customer,
+                                Employee = employee,
+                                CreateDate = createDate,
+                                GrandTotal = grandTotal,
+                                TotalPaid = totalPaid,
+                                TotalUnpaid = totalUnpaid,
+                                Status = status
                             };
 
                             importedRecords.Add(record);
                             row++;
                         }
+                        // Add imported records to the database
+                        foreach (var record in importedRecords)
+                        {
+                            // Use the service to add, which should also raise the event
+                            serviceRecordService.AddServiceRecord(record);
+                        }
+                        context.SaveChanges(); // Save all changes including new customers/employees if any
 
                         MessageBox.Show("Import successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Failed to import: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Failed to import: {ex.Message}\nDetails: {ex.InnerException?.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-
             return importedRecords;
         }
 
-
         public void ExportServiceRecordsToExcel()
         {
-            //OfficeOpenXml.ExcelPackage.License = OfficeOpenXml.LicenseContext.NonCommercial;
+            OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial; // Set license context
+
             if (ServiceRecords == null || !ServiceRecords.Any())
             {
                 MessageBox.Show("No records available to export.", "Export", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -366,13 +628,14 @@ namespace MyQuanLyTrangSuc.ViewModel
                     {
                         var worksheet = package.Workbook.Worksheets.Add("ServiceRecords");
 
+                        // Headers
                         worksheet.Cells[1, 1].Value = "ID";
                         worksheet.Cells[1, 2].Value = "Customer Name";
                         worksheet.Cells[1, 3].Value = "Employee Name";
                         worksheet.Cells[1, 4].Value = "Create Date";
-                        worksheet.Cells[1, 5].Value = "Total";
-                        worksheet.Cells[1, 6].Value = "Paid";
-                        worksheet.Cells[1, 7].Value = "Unpaid";
+                        worksheet.Cells[1, 5].Value = "Grand Total";
+                        worksheet.Cells[1, 6].Value = "Total Paid";
+                        worksheet.Cells[1, 7].Value = "Total Unpaid";
                         worksheet.Cells[1, 8].Value = "Status";
 
                         using (var range = worksheet.Cells[1, 1, 1, 8])
@@ -409,6 +672,14 @@ namespace MyQuanLyTrangSuc.ViewModel
                     MessageBox.Show($"Failed to export: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        // Dispose of event subscriptions to prevent memory leaks
+        public void Dispose()
+        {
+            serviceRecordService.OnServiceRecordAdded -= HandleServiceRecordAdded;
+            serviceRecordService.OnServiceRecordUpdated -= HandleServiceRecordUpdated;
+            serviceRecordService.OnServiceRecordDeleted -= HandleServiceRecordDeleted;
         }
     }
 }

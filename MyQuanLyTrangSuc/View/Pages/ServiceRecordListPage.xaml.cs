@@ -29,14 +29,6 @@ namespace MyQuanLyTrangSuc.View
             DataContext = logicService;
         }
         
-        private void OnClick_AddServiceRecordWindow(object sender, RoutedEventArgs e) {
-            logicService.LoadAddServiceRecordWindow();
-        }
-        
-        private void OnDoubleClick_InspectRecord_ServiceRecordPageDataGrid(object sender, MouseButtonEventArgs e) {
-            logicService.LoadServiceRecordDetailsWindow();
-        }
-        
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e) {
             if (searchComboBox.SelectedItem != null) {
                 string selectedCriteria = (searchComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
@@ -55,30 +47,6 @@ namespace MyQuanLyTrangSuc.View
             if (string.IsNullOrEmpty(searchTextBox.Text)) {
                 searchTextBlock.Text = "Search";
             }
-        }
-
-        private void printButton_Click(object sender, RoutedEventArgs e) {
-            logicService.PrintServiceRecord();
-        }
-
-        private void editButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadServiceRecordDetailsWindow();
-        }
-
-        private void deleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.HandleServiceRecordDeleted();
-        }
-
-        private void exportExcelFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.ExportServiceRecordsToExcel();
-        }
-
-        private void importExcelFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.ImportServiceRecordsFromExcel();
         }
     }
 }

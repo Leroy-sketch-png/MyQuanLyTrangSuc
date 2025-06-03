@@ -22,6 +22,7 @@
             </ResourceDictionary.MergedDictionaries>
             <customConverters:PermissionToIsEnabledConverter x:Key="PermissionToIsEnabledConverter" />
             <customConverters:PermissionToVisibilityConverter x:Key="PermissionToVisibilityConverter" />
+            
             <Style x:Key="MyCustomMaterialDisabledButton"
            TargetType="{x:Type Button}">
                 <Setter Property="Width" Value="160"/>
@@ -59,14 +60,12 @@
                                     </Grid>
                                 </AdornerDecorator>
                                 <wpf:Ripple Name="ripple"
-                                    Padding="{TemplateBinding Padding}"
-                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                    Content="{TemplateBinding Content}"
-                                    ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                                    ContentTemplate="{TemplateBinding ContentTemplate}"
-                                    Focusable="False"
-                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+    Padding="{TemplateBinding Padding}"
+    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+    Focusable="False"
+    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+
                                     <wpf:Ripple.Clip>
                                         <MultiBinding Converter="{x:Static customConverters:BorderClipConverter.Instance}">
                                             <Binding ElementName="border" Path="ActualWidth" />
@@ -75,6 +74,14 @@
                                             <Binding ElementName="border" Path="BorderThickness" />
                                         </MultiBinding>
                                     </wpf:Ripple.Clip>
+
+                                    <ContentPresenter
+        Content="{TemplateBinding Content}"
+        ContentTemplate="{TemplateBinding ContentTemplate}"
+        ContentStringFormat="{TemplateBinding ContentStringFormat}"
+        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+        RecognizesAccessKey="True" />
                                 </wpf:Ripple>
                             </Grid>
                             <ControlTemplate.Triggers>
@@ -92,8 +99,8 @@
                                     <Setter TargetName="border" Property="Background" Value="#FFE0E0E0" />
                                     <Setter TargetName="border" Property="BorderBrush" Value="#FFC0C0C0" />
                                     <Setter TargetName="ripple" Property="Foreground" Value="#FFA0A0A0" />
+                                    <Setter Property="Foreground" Value="#FFA0A0A0" />
                                     <Setter Property="UIElement.Opacity" Value="0.7" />
-
                                     <Setter Property="Cursor" Value="Arrow" />
                                     <Setter Property="ToolTip" Value="You do not have permission to perform this action." />
                                 </Trigger>
@@ -359,23 +366,23 @@
 
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="#623ed0"/>
-                        <Setter Property="Foreground" Value="#ffffff"/>
+                        <Setter Property="Background" Value="#E0E0E0"/>
+                        <Setter Property="Foreground" Value="#222528"/>
                     </Trigger>
-
                     <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="#623ed0"/>
-                        <Setter Property="Foreground" Value="#ffffff"/>
+                        <Setter Property="Background" Value="#7F7D00FF"/>
+                        <Setter Property="Foreground" Value="White"/>
                     </Trigger>
-
                     <MultiTrigger>
                         <MultiTrigger.Conditions>
                             <Condition Property="IsSelected" Value="True"/>
-                            <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                            <Condition Property="IsMouseOver" Value="True"/>
                         </MultiTrigger.Conditions>
-                        <Setter Property="Background" Value="#dfdfdf"/>
+                        <Setter Property="Background" Value="#7F7D00FF"/>
+                        <Setter Property="Foreground" Value="White"/>
                     </MultiTrigger>
                 </Style.Triggers>
+
             </Style>
 
             <!--#end region-->

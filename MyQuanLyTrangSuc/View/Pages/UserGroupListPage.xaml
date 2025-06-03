@@ -69,8 +69,8 @@
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
                     <!--Add Button-->
-                    <Button x:Name="addButton" Style="{StaticResource addButton}" Click="addButton_Click"
-                        Grid.RowSpan="4" Grid.Row="1" >
+                    <Button x:Name="addButton" Style="{StaticResource MyCustomMaterialDisabledButton}" Click="addButton_Click"
+                        Grid.RowSpan="4" Grid.Row="1" VerticalAlignment="Bottom" >
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="15"
                                                Height="15" Margin="0 1 8 0"/>
