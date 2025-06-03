@@ -71,5 +71,10 @@ namespace MyQuanLyTrangSuc.BusinessLogic {
         public int GenerateNewServiceDetailID() {
             return serviceRecordRepository.GetLastServiceDetailID();
         }
+
+        public decimal GetPrepaidPercentage()
+        {
+            return serviceRecordRepository.GetPrepaidPercentage();
+        }
     }
 }

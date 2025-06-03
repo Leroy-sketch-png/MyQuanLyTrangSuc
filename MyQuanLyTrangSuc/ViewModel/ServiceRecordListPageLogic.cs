@@ -170,7 +170,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             return SelectedServiceRecord != null && CurrentUserPrincipal?.HasPermission("EditServiceRecord") == true;
         }
-
+         
         private bool CanDeleteServiceRecord()
         {
             return SelectedServiceRecord != null && CurrentUserPrincipal?.HasPermission("DeleteServiceRecord") == true;

@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using MyQuanLyTrangSuc.Model;
 
 namespace MyQuanLyTrangSuc.DataAccess {
     public class ServiceRecordRepository {
@@ -65,6 +66,24 @@ namespace MyQuanLyTrangSuc.DataAccess {
                 .Select(sd => sd.Stt)
                 .FirstOrDefault();
             return (lastStt != null && lastStt > 0) ? lastStt + 1 : 1;
+        }
+        public decimal GetPrepaidPercentage()
+        {
+            decimal PrepaidPercentage;
+                var pam = context.Parameters
+                    .AsNoTracking()
+                    .FirstOrDefault(p => p.ConstName == "PrepaidPercentage");
+            if (pam != null)
+            {
+                PrepaidPercentage = pam.ConstValue ?? 50.0m;
+            }
+            else
+            {
+                PrepaidPercentage = 50.0m;
+                // Cant find, create immediately
+                context.Database.ExecuteSqlRaw("INSERT INTO Parameter (constName, constValue) VALUES ('PrepaidPercentage', {0})", PrepaidPercentage);
+            }
+            return PrepaidPercentage;
         }
     }
 }

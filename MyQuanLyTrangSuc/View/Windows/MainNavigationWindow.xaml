@@ -209,31 +209,31 @@
                                     </Button>
                                 </StackPanel>
 
-                                <StackPanel x:Name="UserGroupSettingsPanel" DockPanel.Dock="Top"
+                                <StackPanel x:Name="UserGroupPanel" DockPanel.Dock="Top"
                                 Visibility="{Binding Path=CurrentUserPrincipal,
                                                      Converter={StaticResource PermissionToVisibilityConverter},
                                                      ConverterParameter=UserGroupListPage}">
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToUserGroupListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="AccountGroup" Foreground="White"/>
-                                            <TextBlock Text=" User Group" Foreground="White"/>
+                                            <TextBlock Text=" User Groups" Foreground="White"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
 
-                                <StackPanel x:Name="AccountSettingsPanel" DockPanel.Dock="Top"
+                                <StackPanel x:Name="AccountPanel" DockPanel.Dock="Top"
                                 Visibility="{Binding Path=CurrentUserPrincipal,
                                                      Converter={StaticResource PermissionToVisibilityConverter},
                                                      ConverterParameter=AccountListPage}">
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToAccountListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Account" Foreground="White"/>
-                                            <TextBlock Text=" Account" Foreground="White"/>
+                                            <TextBlock Text=" Accounts" Foreground="White"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
 
-                                <StackPanel x:Name="PermissionSettingsPanel" DockPanel.Dock="Top"
+                                <StackPanel x:Name="PermissionPanel" DockPanel.Dock="Top"
                                 Visibility="{Binding Path=CurrentUserPrincipal,
                                                      Converter={StaticResource PermissionToVisibilityConverter},
                                                      ConverterParameter=PermissionListPage}">
@@ -244,7 +244,18 @@
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
-                                
+                                <StackPanel x:Name="RulePanel" DockPanel.Dock="Top"
+                                Visibility="{Binding Path=CurrentUserPrincipal,
+                                                     Converter={StaticResource PermissionToVisibilityConverter},
+                                                     ConverterParameter=RulePage}">
+                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToRulesPageCommand}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="AlphaP" Foreground="White"/>
+                                            <TextBlock Text=" Rules" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
                             </StackPanel>
                         </ScrollViewer>
                         <StackPanel DockPanel.Dock="Top">

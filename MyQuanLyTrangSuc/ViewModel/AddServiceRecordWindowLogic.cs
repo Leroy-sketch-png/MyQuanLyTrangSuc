@@ -10,12 +10,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace MyQuanLyTrangSuc.ViewModel {
-    public class AddServiceRecordWindowLogic : INotifyPropertyChanged {
+namespace MyQuanLyTrangSuc.ViewModel
+{
+    public class AddServiceRecordWindowLogic : INotifyPropertyChanged
+    {
         private readonly ServiceRecordService serviceRecordService;
         private readonly NotificationWindowLogic notificationWindowLogic;
 
-        public AddServiceRecordWindowLogic() {
+        public AddServiceRecordWindowLogic()
+        {
             serviceRecordService = ServiceRecordService.Instance;
             notificationWindowLogic = new NotificationWindowLogic();
             GenerateNewServiceRecordID();
@@ -24,21 +27,26 @@ namespace MyQuanLyTrangSuc.ViewModel {
             ServiceDetails = new ObservableCollection<ServiceDetail>();
             _newServiceDetailId = serviceRecordService.GenerateNewServiceDetailID();
             Status = "not delivered";
+            PrepaidPercentage = serviceRecordService.GetPrepaidPercentage();
         }
 
         private string _newServiceRecordId;
-        public string NewServiceRecordId {
+        public string NewServiceRecordId
+        {
             get => _newServiceRecordId;
-            private set {
+            private set
+            {
                 _newServiceRecordId = value;
                 OnPropertyChanged();
             }
         }
 
         private Service _selectedService;
-        public Service SelectedService {
+        public Service SelectedService
+        {
             get => _selectedService;
-            set {
+            set
+            {
                 _selectedService = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ProcessedCostPerService));
@@ -48,9 +56,11 @@ namespace MyQuanLyTrangSuc.ViewModel {
         }
 
         private int _quantity;
-        public int Quantity {
+        public int Quantity
+        {
             get => _quantity;
-            set {
+            set
+            {
                 _quantity = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ProcessedCostPerService));
@@ -60,9 +70,11 @@ namespace MyQuanLyTrangSuc.ViewModel {
         }
 
         private decimal _extraExpense;
-        public decimal ExtraExpense {
+        public decimal ExtraExpense
+        {
             get => _extraExpense;
-            set {
+            set
+            {
                 _extraExpense = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ProcessedCostPerService));
@@ -72,25 +84,37 @@ namespace MyQuanLyTrangSuc.ViewModel {
         }
 
         private decimal _prepaid;
-        public decimal Prepaid {
+        public decimal Prepaid
+        {
             get => _prepaid;
-            private set {
+            private set
+            {
                 _prepaid = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Unpaid));
             }
         }
 
+        private decimal _prepaidPercentage;
+        public decimal PrepaidPercentage
+        {
+            get => _prepaidPercentage;
+            set { _prepaidPercentage = value; OnPropertyChanged(); }
+        }
+
         private Customer _selectedCustomer;
-        public Customer SelectedCustomer {
+        public Customer SelectedCustomer
+        {
             get => _selectedCustomer;
             set { _selectedCustomer = value; OnPropertyChanged(); }
         }
 
         private string _prepaidInput;
-        public string PrepaidInput {
+        public string PrepaidInput
+        {
             get => _prepaidInput;
-            set {
+            set
+            {
                 _prepaidInput = value;
                 OnPropertyChanged();
             }
@@ -104,10 +128,13 @@ namespace MyQuanLyTrangSuc.ViewModel {
         public decimal GrandTotalPaid => ServiceDetails.Sum(d => d.Prepaid ?? 0);
 
         private DateTime? _dueDay;
-        public DateTime? DueDay {
+        public DateTime? DueDay
+        {
             get => _dueDay;
-            set {
-                if (value < DateTime.Today) {
+            set
+            {
+                if (value < DateTime.Today)
+                {
                     // Notify user and reset to today
                     notificationWindowLogic.LoadNotification(
                         "Error",
@@ -115,7 +142,9 @@ namespace MyQuanLyTrangSuc.ViewModel {
                         "BottomRight"
                     );
                     _dueDay = DateTime.Today;
-                } else {
+                }
+                else
+                {
                     _dueDay = value;
                 }
                 OnPropertyChanged();
@@ -124,9 +153,11 @@ namespace MyQuanLyTrangSuc.ViewModel {
 
 
         private string _status;
-        public string Status {
+        public string Status
+        {
             get => _status;
-            set {
+            set
+            {
                 _status = value;
                 OnPropertyChanged();
             }
@@ -140,30 +171,38 @@ namespace MyQuanLyTrangSuc.ViewModel {
         private int _newServiceDetailId;
         private int GenerateNewServiceDetailID() => _newServiceDetailId++;
 
-        private void GenerateNewServiceRecordID() {
+        private void GenerateNewServiceRecordID()
+        {
             NewServiceRecordId = serviceRecordService.GenerateNewServiceRecordID();
         }
 
-        private void UpdateDefaultPrepaid() {
-            if (TotalProcessedCost > 0) {
+        private void UpdateDefaultPrepaid()
+        {
+            if (TotalProcessedCost > 0)
+            {
                 Prepaid = TotalProcessedCost * 0.5m;
             }
         }
 
-        public void AddServiceDetail() {
-            if (SelectedService == null) {
+        public void AddServiceDetail()
+        {
+            if (SelectedService == null)
+            {
                 notificationWindowLogic.LoadNotification("Error", "Please choose a service", "BottomRight");
                 return;
             }
-            if (Quantity <= 0) {
+            if (Quantity <= 0)
+            {
                 notificationWindowLogic.LoadNotification("Error", "Quantity must be positive", "BottomRight");
                 return;
             }
-            if (!DueDay.HasValue) {
+            if (!DueDay.HasValue)
+            {
                 notificationWindowLogic.LoadNotification("Error", "Please choose a due day", "BottomRight");
                 return;
             }
-            if (SelectedCustomer == null) {
+            if (SelectedCustomer == null)
+            {
                 notificationWindowLogic.LoadNotification("Error", "Please choose a customer", "BottomRight");
                 return;
             }
@@ -173,7 +212,8 @@ namespace MyQuanLyTrangSuc.ViewModel {
             // See if we already have this service in the list
             var existing = ServiceDetails.FirstOrDefault(d => d.ServiceId == SelectedService.ServiceId);
 
-            if (existing != null) {
+            if (existing != null)
+            {
                 int idx = ServiceDetails.IndexOf(existing);
                 ServiceDetails.RemoveAt(idx);
 
@@ -205,13 +245,16 @@ namespace MyQuanLyTrangSuc.ViewModel {
                 existing.DueDay = DueDay;
                 // Stt, ServiceRecordId, ServiceId unchanged
                 ServiceDetails.Insert(idx, existing);
-            } else {
+            }
+            else
+            {
                 // brand-new detail
                 decimal perUnitExtra = ExtraExpense;
                 decimal totalCost = (unitPrice + perUnitExtra) * Quantity ?? 0;
                 decimal unpaid = totalCost - Prepaid;
 
-                var detail = new ServiceDetail {
+                var detail = new ServiceDetail
+                {
                     Stt = GenerateNewServiceDetailID(),
                     ServiceRecordId = NewServiceRecordId,
                     ServiceId = SelectedService.ServiceId,
@@ -231,24 +274,30 @@ namespace MyQuanLyTrangSuc.ViewModel {
             }
         }
 
-        public void ClearServiceDetail() {
+        public void ClearServiceDetail()
+        {
             if (MessageBox.Show($"Do you want to clear ALL of these service details",
-                    "Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes) {
+                    "Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
                 ServiceDetails.Clear();
                 OnPropertyChanged(nameof(GrandTotalCost));
                 OnPropertyChanged(nameof(GrandTotalPaid));
             }
         }
-        public void RemoveServiceDetail(ServiceDetail selectedDetail) {
-            if (ServiceDetails.Contains(selectedDetail)) {
+        public void RemoveServiceDetail(ServiceDetail selectedDetail)
+        {
+            if (ServiceDetails.Contains(selectedDetail))
+            {
                 ServiceDetails.Remove(selectedDetail);
                 OnPropertyChanged(nameof(GrandTotalCost));
                 OnPropertyChanged(nameof(GrandTotalPaid));
             }
         }
 
-        public void AddServiceRecord() {
-            if (ServiceDetails.Count == 0) {
+        public void AddServiceRecord()
+        {
+            if (ServiceDetails.Count == 0)
+            {
                 notificationWindowLogic.LoadNotification("Error", "Please add at least one service", "BottomRight");
                 return;
             }
@@ -257,7 +306,8 @@ namespace MyQuanLyTrangSuc.ViewModel {
             decimal totalUnpaid = GrandTotalCost - GrandTotalPaid;
             string status = totalUnpaid == 0m ? "complete" : "incomplete";
 
-            var record = new ServiceRecord {
+            var record = new ServiceRecord
+            {
                 ServiceRecordId = NewServiceRecordId,
                 CreateDate = DateTime.Now,
                 CustomerId = SelectedCustomer?.CustomerId,                          // assuming you have SelectedCustomer bound
@@ -274,7 +324,8 @@ namespace MyQuanLyTrangSuc.ViewModel {
             serviceRecordService.AddServiceRecord(record);
 
             // 2) Add details
-            foreach (var detail in ServiceDetails) {
+            foreach (var detail in ServiceDetails)
+            {
                 // ensure the detail points to our new record
                 detail.ServiceRecordId = record.ServiceRecordId;
                 serviceRecordService.AddServiceDetail(detail);
@@ -290,16 +341,20 @@ namespace MyQuanLyTrangSuc.ViewModel {
         protected void OnPropertyChanged([CallerMemberName] string name = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        public void ValidatePrepaidInput() {
-            if (decimal.TryParse(PrepaidInput, out decimal value)) {
-                var min = TotalProcessedCost * 0.5m;
+        public void ValidatePrepaidInput()
+        {
+            if (decimal.TryParse(PrepaidInput, out decimal value))
+            {
+                var min = TotalProcessedCost * PrepaidPercentage / 100m;
                 var max = TotalProcessedCost;
                 value = Math.Min(Math.Max(value, min), max);
                 Prepaid = value;
                 PrepaidInput = value.ToString("0.##"); // Optional: reformat the input
-            } else {
+            }
+            else
+            {
                 // If invalid input (e.g., letters), reset to default
-                var defaultVal = TotalProcessedCost * 0.5m;
+                var defaultVal = TotalProcessedCost * PrepaidPercentage / 100m;
                 Prepaid = defaultVal;
                 PrepaidInput = defaultVal.ToString("0.##");
             }

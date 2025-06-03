@@ -128,7 +128,8 @@ namespace MyQuanLyTrangSuc.ViewModel
                         // Check if Function is not null and add permission by ScreenToLoad name
                         if (gp.Function != null)
                         {
-                            principal.AddPermission(gp.Function.ScreenToLoad);
+                            if (gp.IsDeleted == false)
+                                principal.AddPermission(gp.Function.ScreenToLoad);
                         }
                     }
                 }
@@ -224,7 +225,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         public ICommand NavigateToSupplierListPageCommand { get; private set; }
         public ICommand NavigateToEmployeeListPageCommand { get; private set; }
         public ICommand NavigateToProfilePageCommand { get; private set; }
-        public ICommand NavigateToRulesSettingsPageCommand { get; private set; } // Assuming this page might exist
+        public ICommand NavigateToRulesPageCommand { get; private set; }
         public ICommand NavigateToPermissionListPageCommand { get; private set; }
         public ICommand NavigateToUserGroupListPageCommand { get; private set; }
         public ICommand NavigateToAccountListPageCommand { get; private set; }
@@ -295,16 +296,10 @@ namespace MyQuanLyTrangSuc.ViewModel
                 () => CanNavigateToPageByPermission("EmployeeListPage")
             );
 
-            NavigateToProfilePageCommand = new RelayCommand(
-                () => NavigateToPage(typeof(ProfilePage), "ProfilePage"),
-                () => CanNavigateToPageByPermission("ProfilePage")
+            NavigateToRulesPageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(RulePage), "RulePage"),
+                () => CanNavigateToPageByPermission("RulePage")
             );
-
-            // If RulesSettingsPage exists, uncomment and adjust:
-            //NavigateToRulesSettingsPageCommand = new RelayCommand(
-            //    () => NavigateToPage(typeof(RulesSettingsPage), "RulesSettingsPage"),
-            //    () => CanNavigateToPageByPermission("RulesSettingsPage") // Assuming a permission named "RulesSettingsPage"
-            //);
 
             NavigateToPermissionListPageCommand = new RelayCommand(
                 () => NavigateToPage(typeof(PermissionListPage), "PermissionListPage"),
@@ -321,7 +316,10 @@ namespace MyQuanLyTrangSuc.ViewModel
                 () => CanNavigateToPageByPermission("AccountListPage")
             );
 
-            // Logout command typically doesn't need a permission check, as it should always be available.
+            //Always enabled
+            NavigateToProfilePageCommand = new RelayCommand(
+                () => NavigateToPage(typeof(ProfilePage), "ProfilePage"),
+                () => true);
             LogoutCommand = new RelayCommand(OnClick_LogOut, () => true); // Always enabled
         }
 

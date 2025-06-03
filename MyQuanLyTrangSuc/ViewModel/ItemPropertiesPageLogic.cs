@@ -46,12 +46,6 @@ namespace MyQuanLyTrangSuc.ViewModel
                     .Select(pc => pc.CategoryName)
                     .Distinct()
                     .ToList();
-
-                _itemPropertiesPageUI.inputItemUnit.ItemsSource = _context.Units
-                    .AsNoTracking()
-                    .Select(u => u.UnitName)
-                    .Distinct()
-                    .ToList();
             }
             catch (Exception ex)
             {
@@ -123,14 +117,12 @@ namespace MyQuanLyTrangSuc.ViewModel
                 product.MoreInfo = _itemPropertiesPageUI.itemDescription.Text;
 
                 var catName = _itemPropertiesPageUI.inputItemCategory.Text?.Trim().ToLower();
-                var unitName = _itemPropertiesPageUI.inputItemUnit.Text?.Trim().ToLower();
 
                 var category = _context.ProductCategories
                     .Include(c => c.Unit)
                     .AsEnumerable() // enables use of ToLower(), Trim()
                     .FirstOrDefault(c =>
-                        c.CategoryName?.Trim().ToLower() == catName &&
-                        c.Unit?.UnitName?.Trim().ToLower() == unitName);
+                        c.CategoryName?.Trim().ToLower() == catName);
 
                 if (category == null)
                 {
@@ -173,7 +165,6 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             _itemPropertiesPageUI.inputItemName.Visibility = editMode;
             _itemPropertiesPageUI.inputItemCategory.Visibility = editMode;
-            _itemPropertiesPageUI.inputItemUnit.Visibility = editMode;
             _itemPropertiesPageUI.inputItemPrice.Visibility = editMode;
             _itemPropertiesPageUI.inputItemStock.Visibility = editMode;
             _itemPropertiesPageUI.inputItemImage.Visibility = editMode;
@@ -204,8 +195,6 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             SelectedProduct.Category = category;
             OnPropertyChanged(nameof(SelectedProduct));
-
-            _itemPropertiesPageUI.inputItemUnit.Text = category.Unit.UnitName;
         }
 
         public void LoadProductDetails(string productId)

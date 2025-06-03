@@ -79,12 +79,8 @@ namespace MyQuanLyTrangSuc.ViewModel
         }
         private void FilterItemsByCategory()
         {
-            if (SelectedCategory == null)
-            {
-                LoadProducts();
-                return;
-            }
-
+            LoadProducts();
+            if (SelectedCategory == null) return;
             var filteredProducts = Products
                 .Where(p => p.Category?.CategoryId == SelectedCategory.CategoryId)
                 .ToList();
