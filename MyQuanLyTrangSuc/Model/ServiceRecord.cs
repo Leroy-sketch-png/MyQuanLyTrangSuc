@@ -2,30 +2,135 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel; // Thêm namespace này
+using System.Runtime.CompilerServices; // Thêm namespace này
 
 namespace MyQuanLyTrangSuc.Model;
 
-public partial class ServiceRecord
+public partial class ServiceRecord : INotifyPropertyChanged // Kế thừa INotifyPropertyChanged
 {
-    public string ServiceRecordId { get; set; }
+    private string _serviceRecordId;
+    public string ServiceRecordId
+    {
+        get => _serviceRecordId;
+        set
+        {
+            if (_serviceRecordId != value)
+            {
+                _serviceRecordId = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
-    public DateTime? CreateDate { get; set; }
+    private DateTime? _createDate;
+    public DateTime? CreateDate
+    {
+        get => _createDate;
+        set
+        {
+            if (_createDate != value)
+            {
+                _createDate = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
-    public string CustomerId { get; set; }
+    private string _customerId;
+    public string CustomerId
+    {
+        get => _customerId;
+        set
+        {
+            if (_customerId != value)
+            {
+                _customerId = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
-    public string EmployeeId { get; set; }
+    private string _employeeId;
+    public string EmployeeId
+    {
+        get => _employeeId;
+        set
+        {
+            if (_employeeId != value)
+            {
+                _employeeId = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
-    public decimal? GrandTotal { get; set; }
+    private decimal? _grandTotal;
+    public decimal? GrandTotal
+    {
+        get => _grandTotal;
+        set
+        {
+            if (_grandTotal != value)
+            {
+                _grandTotal = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
-    public decimal? TotalPaid { get; set; }
+    private decimal? _totalPaid;
+    public decimal? TotalPaid
+    {
+        get => _totalPaid;
+        set
+        {
+            if (_totalPaid != value)
+            {
+                _totalPaid = value;
+                OnPropertyChanged(); // Thông báo thay đổi
+            }
+        }
+    }
 
-    public decimal? TotalUnpaid { get; set; }
+    private decimal? _totalUnpaid;
+    public decimal? TotalUnpaid
+    {
+        get => _totalUnpaid;
+        set
+        {
+            if (_totalUnpaid != value)
+            {
+                _totalUnpaid = value;
+                OnPropertyChanged(); // Thông báo thay đổi
+            }
+        }
+    }
 
-    public string Status { get; set; }
+    private string _status;
+    public string Status
+    {
+        get => _status;
+        set
+        {
+            if (_status != value)
+            {
+                _status = value;
+                OnPropertyChanged(); // Thông báo thay đổi
+            }
+        }
+    }
 
     public virtual Customer Customer { get; set; }
 
     public virtual Employee Employee { get; set; }
 
     public virtual ICollection<ServiceDetail> ServiceDetails { get; set; } = new List<ServiceDetail>();
+
+    // Triển khai INotifyPropertyChanged
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }

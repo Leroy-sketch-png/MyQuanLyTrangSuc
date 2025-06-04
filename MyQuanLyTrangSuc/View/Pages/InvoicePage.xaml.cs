@@ -59,11 +59,6 @@ namespace MyQuanLyTrangSuc.View
             }
         }
 
-        private void printButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadInvoiceWindow();
-        }
-
         private void editButton_Click(object sender, RoutedEventArgs e)
         {
             logicService.LoadEditInvoiceWindow((Model.Invoice)invoicesDataGrid.SelectedItem);

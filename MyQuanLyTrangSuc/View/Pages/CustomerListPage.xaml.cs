@@ -29,21 +29,6 @@ namespace MyQuanLyTrangSuc.View
             DataContext = logicService;
         }
 
-        private void addButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadAddCustomerWindow();
-        }
-
-        private void editButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadEditCustomerWindow((Model.Customer)customersDataGrid.SelectedItem);
-        }
-
-        private void deleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.DeleteCustomer((Model.Customer)customersDataGrid.SelectedItem);
-        }
-
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (searchComboBox.SelectedItem is ComboBoxItem selectedItem)
@@ -59,16 +44,6 @@ namespace MyQuanLyTrangSuc.View
                     logicService.CustomersSearchByID(searchTextBox.Text);
                 }
             }
-        }
-
-        private void importExcelFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.ImportExcelFile();
-        }
-
-        private void exportExcelFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.ExportExcelFile(customersDataGrid);
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)

@@ -1,5 +1,5 @@
 ﻿using MyQuanLyTrangSuc.Model;
-using PhanMemQuanLyVatTu.ViewModel;
+using MyQuanLyTrangSuc.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;

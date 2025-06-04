@@ -72,12 +72,14 @@ namespace MyQuanLyTrangSuc.View
             //AddItemCategoryWindow addItemCategoryWindow = new AddItemCategoryWindow();
             //addItemCategoryWindow.ShowDialog();
             AddItemCategoryWindow addItemCategoryWindow = new AddItemCategoryWindow();
-            bool? result = addItemCategoryWindow.ShowDialog();
+            /*bool? result = addItemCategoryWindow.ShowDialog();
 
             if (result == true)
             {
                 Logic.LoadCategories();
-            }
+            } cái này để thêm loại sp bên trong item*/
+            addItemCategoryWindow.ShowDialog();
+            Logic.RefreshListOfCategories();
         }
     }
 }

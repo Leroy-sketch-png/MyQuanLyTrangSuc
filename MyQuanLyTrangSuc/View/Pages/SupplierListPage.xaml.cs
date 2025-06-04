@@ -29,35 +29,10 @@ namespace MyQuanLyTrangSuc.View
             DataContext = logicService;
         }
 
-        private void addButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadAddSupplierWindow();
-        }
-
-        private void editButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.LoadEditSupplierWindow((Model.Supplier)supplierDataGrid.SelectedItem);
-        }
-
-        private void deleteButton_Click(object sender, RoutedEventArgs e)
-        {
-
-            logicService.DeleteSupplier((Model.Supplier)supplierDataGrid.SelectedItem);
-        }
 
         private void supplierDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             logicService.SearchSupplierOnGoogle((Model.Supplier)supplierDataGrid.SelectedItem);
-        }
-
-        private void importExcelFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.ImportExcelFile();
-        }
-
-        private void exportExcelFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.ExportExcelFile(supplierDataGrid);
         }
 
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)

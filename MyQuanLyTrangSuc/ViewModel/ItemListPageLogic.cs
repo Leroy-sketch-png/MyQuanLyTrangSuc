@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.Security;
+using MyQuanLyTrangSuc.View;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using Microsoft.EntityFrameworkCore;
-using MyQuanLyTrangSuc.Model;
-using MyQuanLyTrangSuc.View;
+using System.Windows.Input;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -14,8 +16,8 @@ namespace MyQuanLyTrangSuc.ViewModel
     {
         private readonly MyQuanLyTrangSucContext _context;
 
-        private string _selectedCategory;
-        public string SelectedCategory
+        private ProductCategory _selectedCategory;
+        public ProductCategory SelectedCategory
         {
             get => _selectedCategory;
             set
@@ -26,8 +28,13 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
+        public CustomPrincipal CurrentUserPrincipal
+        {
+            get => Thread.CurrentPrincipal as CustomPrincipal;
+        }
+
         public ObservableCollection<Product> Products { get; set; } = new ObservableCollection<Product>();
-        public ObservableCollection<string> Categories { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<ProductCategory> Categories { get; set; } = new ObservableCollection<ProductCategory>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -37,6 +44,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             LoadProducts();
             LoadCategories();
+            LoadAddItemWindowCommand = new RelayCommand(LoadAddItemWindow);
         }
 
         public void LoadProducts()
@@ -55,30 +63,26 @@ namespace MyQuanLyTrangSuc.ViewModel
         private void LoadCategories()
         {
             Categories.Clear();
-            var categoriesFromDb = _context.Products
-                .Select(p => p.CategoryId)
-                .Distinct()
+
+            var distinctCategories = Products
+                .Where(p => p.Category != null)
+                .Select(p => p.Category)
+                .Distinct() // this works because EF attaches by reference
                 .ToList();
 
-            foreach (var category in categoriesFromDb)
+            foreach (var category in distinctCategories)
             {
                 Categories.Add(category);
             }
 
             OnPropertyChanged(nameof(Categories));
         }
-
         private void FilterItemsByCategory()
         {
-            if (string.IsNullOrEmpty(SelectedCategory))
-            {
-                LoadProducts();
-                return;
-            }
-
-            var filteredProducts = _context.Products
-                .AsNoTracking()
-                .Where(p => !p.IsDeleted && p.CategoryId == SelectedCategory)
+            LoadProducts();
+            if (SelectedCategory == null) return;
+            var filteredProducts = Products
+                .Where(p => p.Category?.CategoryId == SelectedCategory.CategoryId)
                 .ToList();
 
             Products.Clear();
@@ -116,13 +120,34 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void LoadAddItemWindow()
         {
-            Window addWindow = new AddItemWindow();
-            addWindow.ShowDialog();
+            if (CurrentUserPrincipal is CustomPrincipal currentPrincipal)
+            {
+                if (currentPrincipal.HasPermission("AddItem"))
+                {
+                    Window addWindow = new AddItemWindow();
+                    addWindow.ShowDialog();
+                    LoadProducts();
+                    LoadCategories();
+                }
+                else
+                {
+                    MessageBox.Show($"You do not have permission to add products.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    // Optional: Navigate to a "Permission Denied" page
+                }
+            }
+            else
+            {
+                MessageBox.Show($"You do not have permission to add products.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
+                // Optional: Navigate to a "Permission Denied" page
+            }
+
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public ICommand LoadAddItemWindowCommand { get; private set; }
     }
 }

@@ -33,17 +33,21 @@
                     <TextBlock Text="{Binding Price}" FontSize="14" Foreground="#ba80d3"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Stock: " FontSize="14" FontWeight="Bold" Foreground="#623ed0"/>
+                    <TextBlock Text="Quantity: " FontSize="14" FontWeight="Bold" Foreground="#623ed0"/>
                     <TextBlock Text="{Binding Quantity}" FontSize="14" Foreground="#623ed0"/>
                 </StackPanel>
             </StackPanel>
-            <Button Grid.Column="2" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0" VerticalAlignment="Top" HorizontalAlignment="Left">
+
+            <Button Grid.Column="2" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0" VerticalAlignment="Top" HorizontalAlignment="Left"
+                    Click="OnClick_Remove_ItemUserControl">
                 <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
             </Button>
 
-            <Button Grid.Column="2" Style="{StaticResource gridRemoveButton}" Margin="5 30 0 0" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Button Grid.Column="2" Style="{StaticResource gridRemoveButton}" Margin="5 30 0 0" VerticalAlignment="Top" HorizontalAlignment="Left"
+                    Click="OnClick_ExportExcelFile_ItemUserControl">
                 <Icon:PackIconMaterial Kind="FileExportOutline" Style="{StaticResource gridButtonIcon}"/>
             </Button>
+
         </Grid>
     </Border>
 </UserControl>

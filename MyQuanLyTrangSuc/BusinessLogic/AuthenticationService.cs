@@ -24,7 +24,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         private static AuthenticationService _instance;
         public static AuthenticationService Instance => _instance ??= new AuthenticationService();
 
-        public AuthenticationService()
+        private AuthenticationService()
         {
             authenticationRepository = new AuthenticationRepository();
         }
@@ -113,7 +113,8 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             {
                 return false;
             }
-            bool res = BCrypt.Net.BCrypt.Verify(plainPassword, acc.Password);
+            bool res = plainPassword.Equals(acc.Password);
+            //bool res = BCrypt.Net.BCrypt.Verify(plainPassword, acc.Password);
             return res;
         }
 

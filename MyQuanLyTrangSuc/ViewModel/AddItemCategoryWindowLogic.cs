@@ -61,7 +61,15 @@ namespace MyQuanLyTrangSuc.ViewModel
             NewID = itemCategoryService.GenerateNewItemCategoryID();
             ListOfUnits = new ObservableCollection<Unit>(unitService.GetListOfUnits());
         }
-
+        public void RefreshListOfUnits()
+        {
+            var unitRepo = new UnitRepository();
+            ListOfUnits.Clear();
+            foreach (var unit in unitRepo.GetListOfUnits())
+            {
+                ListOfUnits.Add(unit);
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
         {
@@ -77,7 +85,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
             if (!itemCategoryService.IsValidItemCategoryData(name, _selectedUnit.UnitId, profitPercentage))
             {
-                notificationWindowLogic.LoadNotification("Error", "Invalid item category data!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Unit Id không phù hợp!", "BottomRight");
                 return false;
             }
 

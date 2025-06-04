@@ -62,7 +62,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         public bool IsValidEmail(string email)
         {
             var gmailPattern = @"^(?!.*\.\.)[a-zA-Z0-9._%+-]+(?<!\.)@gmail\.com$";
-            return Regex.IsMatch(email, gmailPattern, RegexOptions.IgnoreCase);
+            return Regex.IsMatch(email, gmailPattern, RegexOptions.IgnoreCase) && !string.IsNullOrEmpty(email);
         }
 
         public bool IsValidTelephoneNumber(string phoneNumber)

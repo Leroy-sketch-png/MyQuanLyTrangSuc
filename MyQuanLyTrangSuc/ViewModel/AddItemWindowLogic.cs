@@ -24,6 +24,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         private const string SuccessMessage = "Sản phẩm đã được thêm thành công!";
         private readonly ItemCategoryService _itemCategoryService;
 
+        private readonly NotificationWindowLogic notificationWindowLogic;
         private readonly AddItemWindow _window;
         private readonly Regex _numericRegex;
 
@@ -70,7 +71,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             _window = window ?? throw new ArgumentNullException(nameof(window));
             _numericRegex = new Regex(NumericPattern);
-
+            notificationWindowLogic = new NotificationWindowLogic();
             Product = new Product();
             _itemCategoryService = ItemCategoryService.Instance;
             LoadCategories();
@@ -79,11 +80,22 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void LoadCategories()
         {
-            Categories = new ObservableCollection<ProductCategory>(_itemCategoryService.GetListOfItemCategories());
+            //Categories = new ObservableCollection<ProductCategory>(_itemCategoryService.GetListOfItemCategories()); bolac was here :3
+            var db = MyQuanLyTrangSucContext.Instance;
+            Categories = new ObservableCollection<ProductCategory>(db.ProductCategories.ToList());
 
             if (Categories.Any())
             {
                 SelectedCategory = Categories.First();
+            }
+        }
+        public void RefreshListOfCategories()
+        {
+            var db = MyQuanLyTrangSucContext.Instance;
+            Categories.Clear();
+            foreach (var category in db.ProductCategories.ToList())
+            {
+                Categories.Add(category);
             }
         }
 
@@ -111,28 +123,48 @@ namespace MyQuanLyTrangSuc.ViewModel
             OnPropertyChanged(nameof(Product));
         }
 
+        private bool IsValidName(string name)
+        {
+            return !string.IsNullOrWhiteSpace(name) && !Regex.IsMatch(name, @"\d");
+        }
+
+        private bool IsValidPrice(string price)
+        {
+            if (string.IsNullOrWhiteSpace(price)) return false;
+
+            return decimal.TryParse(price, out decimal parsedPrice) && parsedPrice > 0;
+        }
+
+        private bool IsValidQuantity(string quantity)
+        {
+            if (string.IsNullOrWhiteSpace(quantity)) return false;
+
+            return int.TryParse(quantity, out int parsedQuantity) && parsedQuantity > 0;
+        }
+
         public bool AddProduct()
         {
             var db = MyQuanLyTrangSucContext.Instance;
 
-            if (string.IsNullOrWhiteSpace(Product.Name) ||
-                Product.Price == null ||
-                Product.Quantity == null ||
-                Product.CategoryId == null)
+            if (!IsValidName(Product.Name))
             {
-                MessageBox.Show(ValidationErrorMessage, ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
+                notificationWindowLogic.LoadNotification("Error", "Tên không hợp lệ!", "BottomRight");
                 return false;
             }
-
-            if (Product.Price <= 0 || Product.Quantity <= 0)
+            if (!IsValidPrice(Product.Price.ToString()))
             {
-                MessageBox.Show("Giá và số lượng phải lớn hơn 0!", ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
+                notificationWindowLogic.LoadNotification("Error", "Giá phải lớn hơn 0!", "BottomRight");
+                return false;
+            }
+            if (!IsValidQuantity(Product.Quantity.ToString()))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Số lượng phải lớn hơn 0!", "BottomRight");
                 return false;
             }
 
             if (db.Products.Any(p => p.Name == Product.Name))
             {
-                MessageBox.Show("Tên sản phẩm đã tồn tại!", ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
+                notificationWindowLogic.LoadNotification("Warning", "Tên sản phẩm đã tồn tại!", "BottomRight");
                 return false;
             }
 
@@ -147,10 +179,10 @@ namespace MyQuanLyTrangSuc.ViewModel
             };
 
             db.Products.Add(newProduct);
-            db.SaveChangesAdded(newProduct);
+            db.SaveChanges();
 
-            MessageBox.Show(SuccessMessage, SuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
-            //_window.Close();
+            notificationWindowLogic.LoadNotification("Success", "Thêm sản phẩm thành công!", "BottomRight");
+            _window.Close();
             return true;
         }
 

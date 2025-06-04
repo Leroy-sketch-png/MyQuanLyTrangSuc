@@ -1,137 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// MyQuanLyTrangSuc.View.MainNavigationWindow.xaml.cs
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-//using DocumentFormat.OpenXml.Spreadsheet;
-using MyQuanLyTrangSuc.View;
-using MyQuanLyTrangSuc.View.Pages;
-using MyQuanLyTrangSuc.ViewModel;
-using static System.Net.Mime.MediaTypeNames;
-using WpfApplication = System.Windows.Application;
-
+using MyQuanLyTrangSuc.ViewModel; // Import your ViewModel namespace
 
 namespace MyQuanLyTrangSuc.View
 {
-    /// <summary>
-    /// Interaction logic for MainNavigationWindowUI.xaml
-    /// </summary>
     public partial class MainNavigationWindow : Window
     {
-        //Static instance of logic
-        private readonly MainNavigationWindowLogic logicService;
-
-        //Fields
-        private readonly DashboardPage dashboardPageUI;
-        private readonly ProfilePage profilePage;
-        private readonly EmployeeListPage employeeListPageUI;
-        private readonly ItemListPage itemListPageUI;
-        private readonly ImportPage importRecordPageUI;
-        private readonly InvoicePage exportRecordPageUI;
-        private readonly CustomerListPage customerPageUI;
-        private readonly SupplierListPage supplierPageUI;
-        private readonly ServiceRecordListPage servicesListPageUI;
-        private readonly MonthlyStockReportPage monthlyStockReportPageUI;
-        private readonly UnitListPage unitListPageUI;
-        private readonly ItemCategoryListPage itemCategoryListPageUI;
-        private readonly UserGroupListPage userGroupListPageUI;
-        private readonly AccountListPage accountListPageUI;
-        private readonly PermissionListPage permissionListPageUI;
-        private string loggedInUsername = (string)WpfApplication.Current.Resources["CurrentUsername"];
-
-        //Properties
-        public ItemListPage ItemListPage
-        {
-            get
-            {
-                return this.itemListPageUI;
-            }
-        }
-        public EmployeeListPage EmployeeListPage
-        {
-            get
-            {
-                return this.employeeListPageUI;
-            }
-        }
-
         public MainNavigationWindow()
         {
-            //Loading MainWindow, pre-loading all pages
+            InitializeComponent();
 
-            dashboardPageUI = new DashboardPage();
-            employeeListPageUI = new EmployeeListPage();
-            profilePage = new ProfilePage(loggedInUsername);
-            itemListPageUI = new ItemListPage();
-            importRecordPageUI = new ImportPage();
-            exportRecordPageUI = new InvoicePage();
-            customerPageUI = new CustomerListPage();
-            supplierPageUI = new SupplierListPage();
-            servicesListPageUI = new ServiceRecordListPage();
-            monthlyStockReportPageUI = new MonthlyStockReportPage();
-            unitListPageUI = new UnitListPage();
-            itemCategoryListPageUI = new ItemCategoryListPage();
-            userGroupListPageUI = new UserGroupListPage();
-            accountListPageUI = new AccountListPage();
-            permissionListPageUI = new PermissionListPage();
-
-            //InitializeAuthentification();
-            //static instance initialized through static method
+            // Set DataContext here
+            // Ensure Initialize is called once, passing 'this' window instance
             if (MainNavigationWindowLogic.Initialize(this))
             {
-
-                //instance after initialization is assigned
-                logicService = MainNavigationWindowLogic.Instance;
                 this.DataContext = MainNavigationWindowLogic.Instance;
-
-                logicService.Authentification();
-
-
-                InitializeComponent();
             }
+            else
+            {
+                // If it's already initialized, just set the DataContext
+                this.DataContext = MainNavigationWindowLogic.Instance;
+            }
+
+            // Call Authentification right after setting DataContext
+            // The ViewModel will then notify the UI via OnPropertyChanged for CurrentUserPrincipal
+            MainNavigationWindowLogic.Instance.Authentification();
         }
 
-
-        public MainNavigationWindow(string loggedInUsername)
+        private void Loaded_HomePage(object sender, RoutedEventArgs e)
         {
-            //Loading MainWindow, pre-loading all pages
-
-            dashboardPageUI = new DashboardPage();
-            employeeListPageUI = new EmployeeListPage();
-            profilePage = new ProfilePage(loggedInUsername);
-            itemListPageUI = new ItemListPage();
-            importRecordPageUI = new ImportPage();
-            exportRecordPageUI = new InvoicePage();
-            customerPageUI = new CustomerListPage();
-            supplierPageUI = new SupplierListPage();
-            userGroupListPageUI = new UserGroupListPage();
-            accountListPageUI = new AccountListPage();
-            permissionListPageUI = new PermissionListPage();
-
-            //InitializeAuthentification();
-            //static instance initialized through static method
-            if (MainNavigationWindowLogic.Initialize(this))
+            // Now that DataContext is set and Authentification run,
+            // we can execute the initial navigation command from the ViewModel.
+            if (this.DataContext is MainNavigationWindowLogic viewModel)
             {
-
-                //instance after initialization is assigned
-                logicService = MainNavigationWindowLogic.Instance;
-                this.DataContext = MainNavigationWindowLogic.Instance;
-
-                logicService.Authentification();
-
-                InitializeComponent();
+                // This is a common way to trigger an initial command on load
+                viewModel.NavigateToDashboardCommand.Execute(null);
             }
         }
 
+        // Keep existing Window drag/maximize logic if needed
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Pressed)
@@ -141,7 +49,6 @@ namespace MyQuanLyTrangSuc.View
         }
 
         private bool isMaximized = false;
-
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
@@ -161,91 +68,7 @@ namespace MyQuanLyTrangSuc.View
             }
         }
 
-        private void OnClick_LogOut(object sender, RoutedEventArgs e)
-        {
-            MessageBoxResult result = MessageBox.Show("Proceed to log out?", "Logging out...", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                string applicationPath = Process.GetCurrentProcess().MainModule.FileName;
-                Process.Start(applicationPath);
-                App.Current.Shutdown();
-            }
-        }
-        private void OnClick_DashboardPageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(dashboardPageUI);
-        }
-        private void OnClick_ProfilePageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(profilePage);
-        }
-        private void OnClick_ItemListPageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(itemListPageUI);
-
-
-        }
-        private void OnClick_ImportRecordPageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(importRecordPageUI);
-
-        }
-        private void OnClick_ExportRecordPageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(exportRecordPageUI);
-
-        }
-        private void OnClick_CustomerPageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(customerPageUI);
-        }
-        private void OnClick_SupplierPageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(supplierPageUI);
-
-        }
-        private void OnClick_UserPageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(employeeListPageUI);
-
-        }
-        private void OnClick_ServiceListPageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(servicesListPageUI);
-        }
-        private void OnClick_MonthlyStockReportPageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(monthlyStockReportPageUI);
-        }
-        private void OnClick_UnitListPageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(unitListPageUI);
-        }
-        private void OnClick_ItemCategoryListPageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(itemCategoryListPageUI);
-        }
-
-        private void Loaded_HomePage(object sender, RoutedEventArgs e)
-        {
-            //MainFrame.Navigate(dashboardPageUI);
-        }
-
-        private void OnClick_AccountPageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(accountListPageUI);
-        }
-
-        private void OnClick_UserGroupPageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(userGroupListPageUI);
-        }
-
-        private void OnClick_PermissionPageNavigation(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(permissionListPageUI);
-        }
+        // REMOVE ALL OnClick_...Navigation methods here. They are replaced by Commands.
+        // REMOVE OnClick_LogOut here. It's replaced by a Command.
     }
 }
-

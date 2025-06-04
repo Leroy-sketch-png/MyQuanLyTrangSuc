@@ -9,8 +9,8 @@ using System.Windows.Controls; // Cần cho PasswordBox
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.EntityFrameworkCore;
-using MyQuanLyTrangSuc.Model;
-using MyQuanLyTrangSuc.View;
+using System.Threading; // <--- ADD THIS for Thread.CurrentPrincipal
+using MyQuanLyTrangSuc.Security; // <--- ADD THIS, ensure it matches your CustomPrincipal/Identity namespace
 using WpfApplication = System.Windows.Application;
 
 namespace MyQuanLyTrangSuc.ViewModel
@@ -21,6 +21,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         private readonly AuthenticationService authenticationService = AuthenticationService.Instance;
 
+        private readonly PermissionService permissionService = PermissionService.Instance; // <--- NEW: Inject or create PermissionService
 
         public string userName { get; set; }
         private const string USER = "user"; 
@@ -55,18 +56,19 @@ namespace MyQuanLyTrangSuc.ViewModel
             VerificationWindow window = new VerificationWindow();
             window.Show();
         }
-        public void Login(PasswordBox passwordBox) 
+        // In your LoginWindowLogic.cs (or wherever your Login method resides)
+        // ...
+        public void Login(PasswordBox passwordBox)
         {
             try
             {
                 if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(passwordBox.Password))
                 {
                     notificationLogic.LoadNotification("Error", "Please enter both username and password.", "BottomRight");
-                    return; 
+                    return;
                 }
 
-                string password = passwordBox.Password; 
-
+                string password = passwordBox.Password;
 
                 bool isValid = authenticationService.ValidateLogin(userName, password);
 
@@ -74,35 +76,33 @@ namespace MyQuanLyTrangSuc.ViewModel
                 {
                     Account account = authenticationService.GetAccountWithGroupByUsername(userName);
 
-                    if (account != null) 
+                    if (account != null)
                     {
                         WpfApplication.Current.Resources["CurrentAccountId"] = account.AccountId;
                         WpfApplication.Current.Resources["CurrentUsername"] = account.Username;
 
-                        string groupName = account.Group?.GroupName; 
+                        string groupName = account.Group?.GroupName ?? "Unknown"; // Handle null group if possible
 
-                        if (groupName.Equals(USER)) 
+                        CustomIdentity identity = new CustomIdentity(account.Username, "ApplicationCustomAuth", true, groupName);
+
+                        CustomPrincipal principal = new CustomPrincipal(identity);
+
+                        List<string> userPermissions = permissionService.GetPermissionsByGroupId(account.GroupId);
+                        foreach (string permission in userPermissions)
                         {
-                            var mainWindow = new MainNavigationWindow();
-                            mainWindow.Show();
-                            loginWindow.Close();
-                            notificationLogic.LoadNotification("Success", "You have logged in as User!", "BottomRight"); 
+                            principal.AddPermission(permission);
                         }
-                        else if (groupName.Equals(ADMIN))
-                        {
-                            var mainWindow = new MainNavigationWindow();
-                            mainWindow.Show();
-                            loginWindow.Close();
-                            notificationLogic.LoadNotification("Success", "You have logged in as Admin!", "BottomRight"); 
-                        }
-                        else
-                        {
-                            notificationLogic.LoadNotification("Error", "Your account group does not have access permission.", "BottomRight");
-                        }
+
+                        Thread.CurrentPrincipal = principal; // Set the principal for the current thread
+
+                        var mainWindow = new MainNavigationWindow();
+                        mainWindow.Show();
+                        loginWindow.Close();
+                        notificationLogic.LoadNotification("Success", $"You have logged in as {groupName}!", "BottomRight");
                     }
                     else
                     {
-                        notificationLogic.LoadNotification("Error", "Login failed unexpectedly.", "BottomRight");
+                        notificationLogic.LoadNotification("Error", "Login failed: Account or Group information not found.", "BottomRight");
                     }
                 }
                 else
@@ -112,7 +112,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
             catch (Exception ex)
             {
-                notificationLogic.LoadNotification("Error", $"An error occurred during login: {ex.Message}", "BottomRight"); // Thông báo lỗi chi tiết hơn
+                notificationLogic.LoadNotification("Error", $"An error occurred during login: {ex.Message}", "BottomRight");
             }
         }
     }

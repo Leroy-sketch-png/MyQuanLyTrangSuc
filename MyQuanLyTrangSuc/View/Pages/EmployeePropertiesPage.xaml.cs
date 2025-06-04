@@ -51,7 +51,6 @@ namespace MyQuanLyTrangSuc.View
         private void OnClick_Back_EmployeePropertiesPage(object sender, RoutedEventArgs e)
         {
             logicService.LoadEmployeeListPage();
-            MessageBox.Show("Có hoạt động");
         }
 
         private void OnClick_EditImage_EmployeePropertiesPage(object sender, RoutedEventArgs e)

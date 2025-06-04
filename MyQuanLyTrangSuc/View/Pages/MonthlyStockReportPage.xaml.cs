@@ -57,13 +57,13 @@ namespace MyQuanLyTrangSuc.View
 
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            searchTextBlock.Text = "";
+            //searchTextBlock.Text = "";
             if (searchComboBox.SelectionBoxItem.ToString() == "Month")
                 logicReport.ReportsSearchByMonth(searchTextBox.Text);
             else if (searchComboBox.SelectionBoxItem.ToString() == "Year")
                 logicReport.ReportsSearchByYear(searchTextBox.Text);
-            if (searchTextBox.Text == "")
-                searchTextBlock.Text = "Search by month/year";
+            //if (searchTextBox.Text == "")
+                //searchTextBlock.Text = "Search by month/year";
         }
     }
 }

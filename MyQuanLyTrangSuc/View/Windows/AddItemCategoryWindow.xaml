@@ -24,8 +24,8 @@
                     <!-- Cột 1 -->
                     <StackPanel Grid.Column="0" Margin="0,0,20,30">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="AlphaIBox" Margin="0 2 3 0" Height="30" Width="30"/>
-                            <TextBlock Text="CATEGORY ID: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                            <materialDesign:PackIcon Kind="AlphaIBox" Margin="0 2 3 0" Height="25" Width="25"/>
+                            <TextBlock Text="CATEGORY ID: " FontSize="16" VerticalAlignment="Center" Margin="0,0,0,5"/>
                         </StackPanel>
                         <Border BorderBrush="Black" BorderThickness="1" Padding="5" Margin="0,0,0,10">
                             <TextBlock x:Name="IDTextBlock" Text="{Binding NewID}" 
@@ -36,8 +36,8 @@
                     <!-- Cột 2 -->
                     <StackPanel Grid.Column="1" Margin="20,0,0,30">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="RenameBox" Margin="0 2 3 0" Height="30" Width="30"/>
-                            <TextBlock Text="NAME: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                            <materialDesign:PackIcon Kind="RenameBox" Margin="0 2 3 0" Height="25" Width="25"/>
+                            <TextBlock Text="NAME: " FontSize="16" VerticalAlignment="Center" Margin="0,0,0,5"/>
                         </StackPanel>
                         <TextBox x:Name="NameTextBox" 
                             Text="{Binding Categoryname, Mode=TwoWay}" 
@@ -63,8 +63,8 @@
 
                     <StackPanel Grid.Column="0" Margin="0,0,20,30">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Margin="0 0 3 1" Kind="Money" VerticalAlignment="Center" Height="30" Width="30"/>
-                            <TextBlock Text="PROFIT: " FontSize="24" Margin="0,0,0,5"/>
+                            <materialDesign:PackIcon Margin="0 0 3 1" Kind="Percent"  VerticalAlignment="Center" Height="25" Width="25"/>
+                            <TextBlock Text="PROFIT PERCENTAGE: " FontSize="16" Margin="0,0,0,5"/>
                         </StackPanel>
                         <TextBox BorderBrush="Black" x:Name="profitPercentageTextBox" Text="{Binding ProfitPercentage, Mode=TwoWay}" FontSize="20" BorderThickness="1" Margin="0,0,0,10">
                             <TextBox.ToolTip>
@@ -75,8 +75,8 @@
 
                     <StackPanel Grid.Column="1" Margin="20,0,0,0">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="AlphaUBox" Height="30" Width="30" Margin="0 2 3 0"/>
-                            <TextBlock Text="UNIT ID: " FontSize="24" Margin="0,0,0,5"/>
+                            <materialDesign:PackIcon Kind="AlphaUBox" Height="25" Width="25" Margin="0 2 3 0"/>
+                            <TextBlock Text="UNIT ID: " FontSize="16" Margin="0,0,0,5"/>
                         </StackPanel>
                         <ComboBox BorderBrush="Black" x:Name="unitComboBox" 
                                   ItemsSource="{Binding ListOfUnits, Mode=TwoWay}" SelectedItem="{Binding SelectedUnit, Mode=TwoWay}"

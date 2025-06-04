@@ -37,6 +37,21 @@ namespace MyQuanLyTrangSuc.ViewModel
             NewID = customerService.GenerateNewCustomerID();
         }
 
+        private bool IsValidName(string name)
+        {
+            return !string.IsNullOrWhiteSpace(name) && !Regex.IsMatch(name, @"\d");
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            return !string.IsNullOrWhiteSpace(email) && Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+        }
+
+        private bool IsValidPhone(string phone)
+        {
+            return !string.IsNullOrWhiteSpace(phone) && Regex.IsMatch(phone, @"^\d{10,15}$");
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
         {

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -43,7 +44,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         }
         public bool IsValidName(string name)
         {
-            return !string.IsNullOrWhiteSpace(name);
+            return !string.IsNullOrWhiteSpace(name) && !Regex.IsMatch(name, @"\d");
         }
         public bool IsValidProfitPercentage(string profitPercentage)
         {

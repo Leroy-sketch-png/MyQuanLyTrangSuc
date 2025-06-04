@@ -637,6 +637,14 @@ public partial class MyQuanLyTrangSucContext : DbContext
                 .HasConstraintName("FK__RevenueRe__servi__68487DD7");
         });
 
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<RevenueReportProductDetail>()
+            .HasKey(r => new { r.RevenueReportId, r.ProductId });
+
+        modelBuilder.Entity<RevenueReportServiceDetail>()
+            .HasKey(r => new { r.RevenueReportId, r.ServiceId });
+
         modelBuilder.Entity<Service>(entity =>
         {
             entity.HasKey(e => e.ServiceId).HasName("PK__Service__455070DF04F2629C");
@@ -864,7 +872,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
             //Your server goes here!
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=LAPTOP-TNOFNAMI\\SQLEXPRESS;Database=MyQuanLyTrangSuc;TrustServerCertificate=True;Trusted_Connection=True");
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=DESKTOP-71PN892\\SQLEXPRESS;Database=MyQuanLyTrangSuc;TrustServerCertificate=True;Trusted_Connection=True");
         }
     }
 }

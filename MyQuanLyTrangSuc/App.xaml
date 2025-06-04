@@ -8,8 +8,9 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
     xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
+                     xmlns:customConverters="clr-namespace:MyQuanLyTrangSuc.Converters"
     xmlns:internal="clr-namespace:MaterialDesignThemes.Wpf.Internal;assembly=MaterialDesignThemes.Wpf"
-             StartupUri="View/Windows/LoginWindow.xaml">
+             StartupUri="View/Controls/ServiceUserControl.xaml">
     <Application.Resources>
 
         <ResourceDictionary>
@@ -19,6 +20,95 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Secondary/MaterialDesignColor.Lime.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <customConverters:PermissionToIsEnabledConverter x:Key="PermissionToIsEnabledConverter" />
+            <customConverters:PermissionToVisibilityConverter x:Key="PermissionToVisibilityConverter" />
+            
+            <Style x:Key="MyCustomMaterialDisabledButton"
+           TargetType="{x:Type Button}">
+                <Setter Property="Width" Value="160"/>
+                <Setter Property="Height" Value="36"/>
+                <Setter Property="Margin" Value="10, 0, 20, 0"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Background" Value="#FF747525" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="wpf:ButtonAssist.CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="16,8" />
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ButtonBase}">
+                            <Grid>
+                                <AdornerDecorator CacheMode="{Binding RelativeSource={RelativeSource Self}, Path=(wpf:ShadowAssist.CacheMode)}">
+                                    <Grid>
+                                        <Border Name="border"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="{Binding Path=(wpf:ButtonAssist.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}"
+                                        Effect="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(wpf:ElevationAssist.Elevation), Converter={x:Static converters:ShadowConverter.Instance}}" />
+                                        <ProgressBar Name="ProgressBar" Height="{TemplateBinding Height}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{DynamicResource MaterialDesignLinearProgressBar}" Width="{Binding RelativeSource={RelativeSource FindAncestor , AncestorType={x:Type ButtonBase}}, Path=ActualWidth}" Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(wpf:ButtonProgressAssist.IndicatorBackground)}" BorderBrush="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(wpf:ButtonProgressAssist.IndicatorBackground)}" Foreground="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(wpf:ButtonProgressAssist.IndicatorForeground)}" IsIndeterminate="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(wpf:ButtonProgressAssist.IsIndeterminate)}" Maximum="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(wpf:ButtonProgressAssist.Maximum)}" Minimum="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(wpf:ButtonProgressAssist.Minimum)}" Opacity="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(wpf:ButtonProgressAssist.Opacity)}" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(wpf:ButtonProgressAssist.IsIndicatorVisible), Converter={x:Static converters:BooleanToVisibilityConverter.CollapsedInstance}}" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(wpf:ButtonProgressAssist.IsIndicatorVisible)}">
+                                            <ProgressBar.Clip>
+                                                <MultiBinding Converter="{x:Static customConverters:BorderClipConverter.Instance}">
+                                                    <Binding ElementName="border" Path="ActualWidth" />
+                                                    <Binding ElementName="border" Path="ActualHeight" />
+                                                    <Binding ElementName="border" Path="CornerRadius" />
+                                                    <Binding ElementName="border" Path="BorderThickness" />
+                                                </MultiBinding>
+                                            </ProgressBar.Clip>
+                                        </ProgressBar>
+                                    </Grid>
+                                </AdornerDecorator>
+                                <wpf:Ripple Name="ripple"
+    Padding="{TemplateBinding Padding}"
+    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+    Focusable="False"
+    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+
+                                    <wpf:Ripple.Clip>
+                                        <MultiBinding Converter="{x:Static customConverters:BorderClipConverter.Instance}">
+                                            <Binding ElementName="border" Path="ActualWidth" />
+                                            <Binding ElementName="border" Path="ActualHeight" />
+                                            <Binding ElementName="border" Path="CornerRadius" />
+                                            <Binding ElementName="border" Path="BorderThickness" />
+                                        </MultiBinding>
+                                    </wpf:Ripple.Clip>
+
+                                    <ContentPresenter
+        Content="{TemplateBinding Content}"
+        ContentTemplate="{TemplateBinding ContentTemplate}"
+        ContentStringFormat="{TemplateBinding ContentStringFormat}"
+        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+        RecognizesAccessKey="True" />
+                                </wpf:Ripple>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter TargetName="border" Property="wpf:ShadowAssist.Darken" Value="True" />
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="true">
+                                    <Setter TargetName="border" Property="wpf:ShadowAssist.Darken" Value="True" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#7b5cd6"/>
+                                    <Setter Property="Foreground" Value="#ffffff"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter TargetName="border" Property="Background" Value="#FFE0E0E0" />
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#FFC0C0C0" />
+                                    <Setter TargetName="ripple" Property="Foreground" Value="#FFA0A0A0" />
+                                    <Setter Property="Foreground" Value="#FFA0A0A0" />
+                                    <Setter Property="UIElement.Opacity" Value="0.7" />
+                                    <Setter Property="Cursor" Value="Arrow" />
+                                    <Setter Property="ToolTip" Value="You do not have permission to perform this action." />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
             <Style x:Key="pictureSet" TargetType="Ellipse">
                 <Style.Triggers>
@@ -276,23 +366,23 @@
 
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="#623ed0"/>
-                        <Setter Property="Foreground" Value="#ffffff"/>
+                        <Setter Property="Background" Value="#E0E0E0"/>
+                        <Setter Property="Foreground" Value="#222528"/>
                     </Trigger>
-
                     <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="#623ed0"/>
-                        <Setter Property="Foreground" Value="#ffffff"/>
+                        <Setter Property="Background" Value="#7F7D00FF"/>
+                        <Setter Property="Foreground" Value="White"/>
                     </Trigger>
-
                     <MultiTrigger>
                         <MultiTrigger.Conditions>
                             <Condition Property="IsSelected" Value="True"/>
-                            <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                            <Condition Property="IsMouseOver" Value="True"/>
                         </MultiTrigger.Conditions>
-                        <Setter Property="Background" Value="#dfdfdf"/>
+                        <Setter Property="Background" Value="#7F7D00FF"/>
+                        <Setter Property="Foreground" Value="White"/>
                     </MultiTrigger>
                 </Style.Triggers>
+
             </Style>
 
             <!--#end region-->
@@ -439,7 +529,6 @@
                     <Trigger Property="IsMouseOver" Value="True">
                         <Setter Property="Background" Value="#7b5cd6"/>
                         <Setter Property="Foreground" Value="#ffffff"/>
-
                     </Trigger>
                 </Style.Triggers>
             </Style>

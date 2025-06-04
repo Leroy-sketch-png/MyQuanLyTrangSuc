@@ -156,33 +156,6 @@
                         </Grid>
                     </StackPanel>
 
-                    <!-- Unit -->
-                    <StackPanel Orientation="Horizontal"
-                                Margin="10,0,0,15">
-                        <materialDesign:PackIcon Kind="AlphaUBoxOutline"
-                                                 Width="35"
-                                                 Height="35"/>
-                        <TextBlock Text="Unit: "
-                                   FontSize="25"
-                                   FontStyle="Italic"
-                                   Foreground="Black"/>
-                        <Grid>
-                            <TextBlock x:Name="itemUnit"
-                                       Text="{Binding SelectedProduct.Category.Unit.UnitName}"
-                                       FontSize="25"
-                                       FontWeight="SemiBold"
-                                       Foreground="#4682B4"
-                                       Visibility="Visible"/>
-                            <ComboBox x:Name="inputItemUnit"
-                                      Text="{Binding SelectedProduct.Category.Unit.UnitName, Mode=TwoWay}"
-                                      FontSize="25"
-                                      FontWeight="SemiBold"
-                                      Foreground="#4682B4"
-                                      IsEditable="True"
-                                      Visibility="Collapsed"/>
-                        </Grid>
-                    </StackPanel>
-
                     <!-- Price -->
                     <StackPanel Orientation="Horizontal"
                                 Margin="10,0,0,15">
