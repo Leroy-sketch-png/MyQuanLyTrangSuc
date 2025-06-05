@@ -173,9 +173,9 @@ namespace MyQuanLyTrangSuc.ViewModel
                 CategoryId = Product.CategoryId,
                 ImagePath = Product.ImagePath
             };
-
             db.Products.Add(newProduct);
-            db.SaveChanges();
+            db.Products.Entry(newProduct).State = Microsoft.EntityFrameworkCore.EntityState.Added;
+            db.SaveChangesAdded(newProduct);
 
             notificationWindowLogic.LoadNotification("Success", "Thêm sản phẩm thành công!", "BottomRight");
             _window.Close();

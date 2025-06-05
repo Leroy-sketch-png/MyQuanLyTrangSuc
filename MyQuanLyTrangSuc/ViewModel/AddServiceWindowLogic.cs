@@ -139,8 +139,8 @@ namespace MyQuanLyTrangSuc.ViewModel
                     ServicePrice = Service?.ServicePrice ?? 0,
                     MoreInfo = string.IsNullOrWhiteSpace(Service?.MoreInfo) ? null : Service.MoreInfo.Trim()
                 };
-
                 db.Services.Add(newService);
+                db.Services.Entry(newService).State = Microsoft.EntityFrameworkCore.EntityState.Added;
                 db.SaveChangesAdded(newService);
 
                 // Show success notification and close window

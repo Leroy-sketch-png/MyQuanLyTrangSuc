@@ -45,12 +45,26 @@ namespace MyQuanLyTrangSuc.ViewModel
             LoadProducts();
             LoadCategories();
             LoadAddItemWindowCommand = new RelayCommand(LoadAddItemWindow);
+            _context.OnItemAdded += _context_OnItemAdded;
+            _context.OnItemRemoved += _context_OnItemRemoved;
+        }
+
+        private void _context_OnItemRemoved(Product obj)
+        {
+            LoadProducts();
+            LoadCategories();
+        }
+
+        private void _context_OnItemAdded(Product obj)
+        {
+            LoadProducts();
+            LoadCategories();
         }
 
         public void LoadProducts()
         {
             Products.Clear();
-            var productsFromDb = _context.Products.AsNoTracking().Where(p => !p.IsDeleted).ToList();
+            var productsFromDb = _context.Products.Where(p => !p.IsDeleted).ToList();
 
             foreach (var product in productsFromDb)
             {
@@ -126,8 +140,6 @@ namespace MyQuanLyTrangSuc.ViewModel
                 {
                     Window addWindow = new AddItemWindow();
                     addWindow.ShowDialog();
-                    LoadProducts();
-                    LoadCategories();
                 }
                 else
                 {

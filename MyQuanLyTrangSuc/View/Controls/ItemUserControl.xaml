@@ -5,9 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d"
-             Height="150" Width="300"
-             MouseDoubleClick="OnMouseDoubleClick_UserControl">
+             xmlns:local="clr-namespace:MyQuanLyTrangSuc.View" mc:Ignorable="d"
+             Height="150" Width="300">
     <UserControl.Effect>
         <DropShadowEffect/>
     </UserControl.Effect>
@@ -38,16 +37,21 @@
                 </StackPanel>
             </StackPanel>
 
-            <Button Grid.Column="2" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0" VerticalAlignment="Top" HorizontalAlignment="Left"
-                    Click="OnClick_Remove_ItemUserControl">
-                <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
+            <Button Grid.Column="2" Style="{StaticResource gridEditButton}" Margin="5 0 0 0" VerticalAlignment="Top" HorizontalAlignment="Left"
+                    Click="OnClick_LoadProperties_ItemUserControl"
+                    Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type Page}},
+                                         Converter={StaticResource PermissionToVisibilityConverter},
+                                         ConverterParameter=EditItem}">
+                <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
             </Button>
 
             <Button Grid.Column="2" Style="{StaticResource gridRemoveButton}" Margin="5 30 0 0" VerticalAlignment="Top" HorizontalAlignment="Left"
-                    Click="OnClick_ExportExcelFile_ItemUserControl">
-                <Icon:PackIconMaterial Kind="FileExportOutline" Style="{StaticResource gridButtonIcon}"/>
+                    Click="OnClick_Remove_ItemUserControl"
+                    Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type Page}},
+                                         Converter={StaticResource PermissionToVisibilityConverter},
+                                         ConverterParameter=DeleteItem}">
+                <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
             </Button>
-
         </Grid>
     </Border>
 </UserControl>

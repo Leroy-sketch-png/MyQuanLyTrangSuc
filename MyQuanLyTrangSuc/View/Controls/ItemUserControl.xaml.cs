@@ -38,20 +38,15 @@ namespace MyQuanLyTrangSuc.View
             logicService.RemoveItemFromDatabase();
         }
 
-        private void OnMouseDoubleClick_UserControl(object sender, MouseButtonEventArgs e)
-        {
-            logicService.LoadItemPropertiesPage();
-        }
-
         private void OnClick_ExportExcelFile_ItemUserControl(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Do you want to export by Import Date or Invoice Date?", "Chose Import Date", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
-                logicService.ExportExcelFile("Ngày Nhập");
-            else if (result == MessageBoxResult.No)
-                logicService.ExportExcelFile("Ngày Xuất");
+            logicService.ExportExcelFile("Ngày Nhập");
         }
 
+        private void OnClick_LoadProperties_ItemUserControl(object sender, RoutedEventArgs e)
+        {
+            logicService.LoadItemPropertiesPage();
+
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.Security;
 using MyQuanLyTrangSuc.View;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,12 @@ namespace MyQuanLyTrangSuc.ViewModel
     public class MonthlyStockReportPageLogic : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public ICommand ViewDetailCommand { get; }
-        public ICommand PrintCommand { get; }
-        public ICommand ExportCommand { get; }
+
+        public CustomPrincipal CurrentUserPrincipal
+        {
+            get => Thread.CurrentPrincipal as CustomPrincipal;
+        }
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -62,13 +66,13 @@ namespace MyQuanLyTrangSuc.ViewModel
             StockReports = new ObservableCollection<StockReport>();
             LoadReportsFromDatabase();
         }
-
         private void LoadReportsFromDatabase()
         {
             try
             {
-                // Sửa lại phần này: Load trực tiếp các báo cáo từ database không qua group by
+                // Only load non-deleted reports
                 var allReports = context.StockReports
+                    .Where(r => !r.IsDeleted)
                     .OrderByDescending(r => r.MonthYear)
                     .ToList();
 
@@ -77,7 +81,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 {
                     StockReports.Add(new StockReport
                     {
-                        StockReportId = report.StockReportId, // Giữ nguyên ID
+                        StockReportId = report.StockReportId,
                         MonthYear = report.MonthYear,
                         TotalBeginStock = report.TotalBeginStock,
                         TotalFinishStock = report.TotalFinishStock
@@ -93,7 +97,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void LoadReportDetailsWindow()
         {
-            if (monthlyStockReportPage.StockReportDataGrid.SelectedItem is StockReport selectedReport)
+            if (SelectedStockReport is StockReport selectedReport)
             {
                 Console.WriteLine($"SelectedStockReport: {selectedReport != null}");
                 var stockReportId = selectedReport.StockReportId;
@@ -142,27 +146,197 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
+        public void LoadReportDetailsWindow(StockReport selectedReport)
+        {
+            Console.WriteLine($"SelectedStockReport: {selectedReport != null}");
+            var stockReportId = selectedReport.StockReportId;
+            var month = selectedReport.MonthYear.Value.Month;
+            var year = selectedReport.MonthYear.Value.Year;
+
+            string monthYear = $"{month}/{year}";
+
+            // Lấy thông tin chi tiết từ bảng StockReportDetail
+            var detailedReports = context.StockReportDetails
+                .Where(detail => detail.StockReportId == stockReportId)
+                .Join(context.Products,
+                    detail => detail.ProductId,
+                    product => product.ProductId,
+                    (detail, product) => new
+                    {
+                        ProductId = detail.ProductId,
+                        BeginStock = detail.BeginStock,
+                        PurchaseQuantity = detail.ImportQuantity,
+                        SalesQuantity = detail.SaleQuantity,
+                        FinishStock = detail.FinishStock,
+                        Product = product
+                    })
+                .ToList();
+
+            if (detailedReports.Count == 0)
+            {
+                MessageBox.Show($"No available stock report for {month}/{year}.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            // Chuyển đổi sang dạng dữ liệu mà MonthlyStockReportWindow có thể hiển thị
+            var reportViewModels = detailedReports.Select(detail => new StockReportDetail
+            {
+                ProductId = detail.ProductId,
+                BeginStock = detail.BeginStock,
+                ImportQuantity = detail.PurchaseQuantity,
+                SaleQuantity = detail.SalesQuantity,
+                FinishStock = detail.FinishStock,
+                Product = detail.Product
+            }).ToList();
+
+            // Mở cửa sổ hiển thị chi tiết báo cáo tồn kho
+            MonthlyStockReportWindow reportWindow = new MonthlyStockReportWindow(reportViewModels, monthYear);
+            reportWindow.ShowDialog();
+        }
+
 
         public void CreateOrUpdateCurrentMonthReport()
         {
             DateTime currentDate = DateTime.Now;
             var reportDate = new DateTime(currentDate.Year, currentDate.Month, 1);
 
+            try
+            {
+                using (var transaction = context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var products = context.Products.AsNoTracking().ToList();
+                        int totalBeginStock = 0;
+                        int totalFinishStock = 0;
+                        int detailCount = 0;
+
+                        // Find existing report, even if soft-deleted
+                        var existingReport = context.StockReports
+                            .IgnoreQueryFilters()
+                            .Include(r => r.StockReportDetails)
+                            .FirstOrDefault(r => r.MonthYear.Value.Month == reportDate.Month &&
+                                                 r.MonthYear.Value.Year == reportDate.Year);
+
+                        bool isExistingReport = existingReport != null;
+                        bool isSoftDeleted = existingReport?.IsDeleted == true;
+
+                        // Confirm with user if a visible (not deleted) report exists
+                        if (isExistingReport && !isSoftDeleted)
+                        {
+                            var confirmResult = MessageBox.Show(
+                                $"Existed report for {reportDate.Month}/{reportDate.Year}. Update?",
+                                "Confirm",
+                                MessageBoxButton.YesNo,
+                                MessageBoxImage.Question);
+
+                            if (confirmResult != MessageBoxResult.Yes)
+                                return;
+                        }
+
+                        StockReport stockReport;
+
+                        if (isExistingReport)
+                        {
+                            // Recover and reuse existing report
+                            stockReport = existingReport;
+                            stockReport.IsDeleted = false;
+
+                            // Clear old details
+                            context.StockReportDetails.RemoveRange(stockReport.StockReportDetails);
+                            stockReport.StockReportDetails.Clear();
+
+                            context.Update(stockReport); // Mark for update explicitly
+                        }
+                        else
+                        {
+                            // Create a brand new report
+                            stockReport = new StockReport
+                            {
+                                StockReportId = GenerateStockReportId(reportDate),
+                                MonthYear = reportDate,
+                                TotalBeginStock = 0,
+                                TotalFinishStock = 0,
+                                IsDeleted = false,
+                                StockReportDetails = new List<StockReportDetail>()
+                            };
+                            context.StockReports.Add(stockReport);
+                        }
+
+                        // Generate new details
+                        foreach (var product in products)
+                        {
+                            var beginStock = CalculateBeginStock(product.ProductId, reportDate);
+                            var salesQty = CalculateSalesQuantity(product.ProductId, reportDate);
+                            var purchaseQty = CalculatePurchaseQuantity(product.ProductId, reportDate);
+                            var finishStock = beginStock + purchaseQty - salesQty;
+
+                            stockReport.StockReportDetails.Add(new StockReportDetail
+                            {
+                                StockReportId = stockReport.StockReportId,
+                                ProductId = product.ProductId,
+                                BeginStock = beginStock,
+                                FinishStock = finishStock,
+                                ImportQuantity = purchaseQty,
+                                SaleQuantity = salesQty
+                            });
+
+                            totalBeginStock += beginStock;
+                            totalFinishStock += finishStock;
+                            detailCount++;
+                        }
+
+                        // Update report totals
+                        stockReport.TotalBeginStock = totalBeginStock;
+                        stockReport.TotalFinishStock = totalFinishStock;
+
+                        // Save everything
+                        context.SaveChanges();
+                        transaction.Commit();
+
+                        string action = isExistingReport ? "Updated" : "Created new";
+                        MessageBox.Show(
+                            $"Successfully {action} stock report for {reportDate.Month}/{reportDate.Year}\n" +
+                            $"• Product quantity: {detailCount}\n" +
+                            $"• Begin Stock: {totalBeginStock}\n" +
+                            $"• Finish Stock: {totalFinishStock}",
+                            "Success",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
+
+                        LoadReportsFromDatabase();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        MessageBox.Show(
+                            $"Error handling report: {ex.Message}\n" +
+                            $"Please try again or contact the system administrator.",
+                            "Error handling data",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"System error: {ex.Message}\n" +
+                    $"Unable to connect to the database.",
+                    "Fatal Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+
+        public void CreateOrUpdateCurrentMonthReport(bool NoNeedForMessageBox)
+        {
+            DateTime currentDate = ((StockReport)monthlyStockReportPage.StockReportDataGrid.SelectedItem).MonthYear ?? DateTime.MinValue;
+            var reportDate = new DateTime(currentDate.Year, currentDate.Month, 1);
+
             // Kiểm tra và xác nhận với người dùng
             bool isExistingReport = context.StockReports
                 .Any(r => r.MonthYear.Value.Month == reportDate.Month && r.MonthYear.Value.Year == reportDate.Year);
-
-            if (isExistingReport)
-            {
-                var confirmResult = MessageBox.Show(
-                    $"Existed report for {reportDate.Month}/{reportDate.Year}. Update?",
-                    "Confirm",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
-
-                if (confirmResult != MessageBoxResult.Yes) return;
-            }
-
             try
             {
                 using (var transaction = context.Database.BeginTransaction())
@@ -328,7 +502,6 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             return $"SR{month}{year}";
         }
-
         public void DeleteStockReport()
         {
             if (monthlyStockReportPage == null || monthlyStockReportPage.StockReportDataGrid == null)
@@ -343,16 +516,18 @@ namespace MyQuanLyTrangSuc.ViewModel
                 return;
             }
 
-            var result = MessageBox.Show($"You are sure you want to delete all stock reports for the month {selectedReport.MonthYear.Value.Month}/{selectedReport.MonthYear.Value.Year}?",
-                                         "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = MessageBox.Show(
+                $"Are you sure you want to mark all stock reports for the month {selectedReport.MonthYear.Value.Month}/{selectedReport.MonthYear.Value.Year} as deleted?",
+                "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
                 try
                 {
-                    // Tìm tất cả báo cáo của tháng/năm đó
-                    var reportsToDelete = context.StockReports.Where(r => r.MonthYear.Value.Month == selectedReport.MonthYear.Value.Month &&
-                                                                          r.MonthYear.Value.Year == selectedReport.MonthYear.Value.Year).ToList();
+                    var reportsToDelete = context.StockReports
+                        .Where(r => r.MonthYear.Value.Month == selectedReport.MonthYear.Value.Month &&
+                                    r.MonthYear.Value.Year == selectedReport.MonthYear.Value.Year)
+                        .ToList();
 
                     if (!reportsToDelete.Any())
                     {
@@ -360,11 +535,16 @@ namespace MyQuanLyTrangSuc.ViewModel
                         return;
                     }
 
-                    // Xóa tất cả báo cáo tìm thấy
-                    context.StockReports.RemoveRange(reportsToDelete);
+                    // Set IsDeleted = true instead of removing
+                    foreach (var report in reportsToDelete)
+                    {
+                        report.IsDeleted = true;
+                        context.Entry(report).State = EntityState.Modified;
+                    }
+
                     context.SaveChanges();
 
-                    // Cập nhật danh sách hiển thị trên UI
+                    // Visually remove from UI
                     for (int i = StockReports.Count - 1; i >= 0; i--)
                     {
                         if (StockReports[i].MonthYear.Value.Month == selectedReport.MonthYear.Value.Month &&
@@ -374,15 +554,11 @@ namespace MyQuanLyTrangSuc.ViewModel
                         }
                     }
 
-                    MessageBox.Show("Successfully deleted all stock reports for the month!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    MessageBox.Show("The data has been modified or deleted previously. Please reload the report list!", "Data synchronization error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Stock reports for the month were soft-deleted successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"\"Error deleting report: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Error soft-deleting reports: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -443,6 +619,6 @@ namespace MyQuanLyTrangSuc.ViewModel
                     StockReports.Add(report);
                 }
             });
-        }  
+        }
     }
 }

@@ -263,7 +263,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             try
             {
                 var packet = new ExcelPackage(new FileInfo(filePath));
-                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                //ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
                 ExcelWorksheet workSheet = packet.Workbook.Worksheets[0];
 
                 for (int i = workSheet.Dimension.Start.Row + 2; i <= workSheet.Dimension.End.Row; i++)
@@ -326,7 +326,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 return;
             }
 
-            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+            //ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             try
             {
                 using (ExcelPackage p = new ExcelPackage())

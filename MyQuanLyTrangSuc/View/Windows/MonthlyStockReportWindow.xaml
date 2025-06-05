@@ -46,7 +46,6 @@
                     <TextBlock Text="REVENUE: " FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding TotalRevenue, StringFormat={}{0:N0}}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10,0,10,0" VerticalAlignment="Center"/>
                 </StackPanel>
-                <TextBlock Text="After 4% Mark-up" FontSize="14" HorizontalAlignment="Center" Margin="10,0,10,10" FontStyle="Italic"/>
             </StackPanel>
         </Border>
     </Grid>

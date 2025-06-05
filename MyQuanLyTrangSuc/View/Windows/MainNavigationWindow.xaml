@@ -76,6 +76,19 @@
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
+                                
+                                <StackPanel x:Name="ServicePanel" DockPanel.Dock="Top"
+                                Visibility="{Binding Path=CurrentUserPrincipal,
+                                                     Converter={StaticResource PermissionToVisibilityConverter},
+                                                     ConverterParameter=ItemListPage}">
+                                    <!--ConverterParameter=ServiceListPage}">-->
+                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToServiceListPageCommand}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="DiamondStone" Foreground="White"/>
+                                            <TextBlock Text=" Services" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
 
                                 <StackPanel x:Name="ProfilePanel" DockPanel.Dock="Top"
                                 Visibility="{Binding Path=CurrentUserPrincipal,
@@ -173,7 +186,7 @@
                                     </Button>
                                 </StackPanel>
 
-                                <StackPanel x:Name="ServicePanel" DockPanel.Dock="Top"
+                                <StackPanel x:Name="ServiceRecordPanel" DockPanel.Dock="Top"
                                 Visibility="{Binding Path=CurrentUserPrincipal,
                                                      Converter={StaticResource PermissionToVisibilityConverter},
                                                      ConverterParameter=ServiceRecordListPage}">

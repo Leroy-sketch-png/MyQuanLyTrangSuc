@@ -16,11 +16,6 @@ namespace MyQuanLyTrangSuc.View
             InitializeComponent();
         }
 
-        private void OnMouseDoubleClick_UserControl(object sender, MouseButtonEventArgs e)
-        {
-            logicService.LoadEditServiceWindow();
-        }
-
         private void OnClick_Remove_ServiceUserControl(object sender, RoutedEventArgs e)
         {
             logicService.RemoveServiceFromDatabase();

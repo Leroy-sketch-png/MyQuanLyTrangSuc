@@ -29,13 +29,36 @@ namespace MyQuanLyTrangSuc.ViewModel
             _context = MyQuanLyTrangSucContext.Instance ?? throw new ArgumentNullException(nameof(MyQuanLyTrangSucContext));
 
             LoadServices();
-            LoadAddServiceWindowCommand = new RelayCommand(LoadAddServiceWindow);
+            LoadAddServiceWindowCommand = new RelayCommand(LoadAddServiceWindow, CanExecuteLoadAddServiceWindow);
+            _context.OnServiceAdded += _context_OnServiceAdded;
+            _context.OnServiceEdited += _context_OnServiceEdited;
+            _context.OnServiceRemoved += _context_OnServiceRemoved;
+        }
+
+        private void _context_OnServiceAdded(Service obj)
+        {
+            LoadServices();
+        }
+
+        private void _context_OnServiceRemoved(Service obj)
+        {
+            LoadServices();
+        }
+
+        private void _context_OnServiceEdited(Service obj)
+        {
+            LoadServices();
+        }
+
+        private bool CanExecuteLoadAddServiceWindow()
+        {
+            return CurrentUserPrincipal?.HasPermission("AddService") == true;
         }
 
         public void LoadServices()
         {
             Services.Clear();
-            var servicesFromDb = _context.Services.AsNoTracking().Where(p => !p.IsDeleted).ToList();
+            var servicesFromDb = _context.Services.Where(p => !p.IsDeleted).ToList();
 
             foreach (var service in servicesFromDb)
             {
@@ -77,18 +100,15 @@ namespace MyQuanLyTrangSuc.ViewModel
                 {
                     Window addWindow = new AddServiceWindow();
                     addWindow.ShowDialog();
-                    LoadServices();
                 }
                 else
                 {
                     MessageBox.Show($"You do not have permission to add services.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    // Optional: Navigate to a "Permission Denied" page
                 }
             }
             else
             {
                 MessageBox.Show($"You do not have permission to add services.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
-                // Optional: Navigate to a "Permission Denied" page
             }
 
         }

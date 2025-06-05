@@ -140,7 +140,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
                     _context.Attach(product);
                     _context.Entry(product).State = EntityState.Modified;
-                    _context.SaveChanges();
+                    _context.SaveChangesAdded(product);
 
                     _notificationWindowLogic.LoadNotification("Success", "Edited product successfully", "BottomRight");
                 }

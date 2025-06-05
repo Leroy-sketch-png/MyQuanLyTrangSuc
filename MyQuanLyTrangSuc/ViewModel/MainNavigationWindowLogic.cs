@@ -214,6 +214,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         // Declare Commands
         public ICommand NavigateToDashboardCommand { get; private set; }
         public ICommand NavigateToItemListPageCommand { get; private set; }
+        public ICommand NavigateToServiceListPageCommand { get; private set; }
         public ICommand NavigateToItemCategoryListPageCommand { get; private set; }
         public ICommand NavigateToUnitListPageCommand { get; private set; }
         public ICommand NavigateToServiceRecordListPageCommand { get; private set; }
@@ -234,7 +235,6 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         private void InitializeCommands()
         {
-            // Now, initialize your RelayCommands with both an execute Action and a canExecute Func<bool>
 
             NavigateToDashboardCommand = new RelayCommand(
                 () => NavigateToPage(typeof(DashboardPage), "DashboardPage"),
@@ -245,6 +245,12 @@ namespace MyQuanLyTrangSuc.ViewModel
                 () => NavigateToPage(typeof(ItemListPage), "ItemListPage"),
                 () => CanNavigateToPageByPermission("ItemListPage")
             );
+
+            NavigateToServiceListPageCommand = new RelayCommand(
+            () => NavigateToPage(typeof(ServiceListPage), "ServiceListPage"),
+            () => CanNavigateToPageByPermission("ServiceListPage")
+            );
+
 
             NavigateToItemCategoryListPageCommand = new RelayCommand(
                 () => NavigateToPage(typeof(ItemCategoryListPage), "ItemCategoryListPage"),

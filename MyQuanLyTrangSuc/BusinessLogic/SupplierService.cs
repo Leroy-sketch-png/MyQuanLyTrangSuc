@@ -191,7 +191,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             {
                 //Open excel file
                 var package = new ExcelPackage(new FileInfo(filePath));
-                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                //ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
                 //Get first worksheet
                 ExcelWorksheet workSheet = package.Workbook.Worksheets[0];
@@ -263,7 +263,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                 return;
             }
 
-            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+            //ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             try
             {
                 using (ExcelPackage p = new ExcelPackage())

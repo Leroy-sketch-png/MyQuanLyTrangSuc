@@ -26,7 +26,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
@@ -66,13 +66,17 @@
                 <TextBlock Text="STOCK REPORT" Grid.Row="1" FontSize="32" FontWeight="SemiBold" 
                             Margin="20 20 0 0" HorizontalAlignment="Left" Foreground="#121518" Height="43" Grid.RowSpan="2" VerticalAlignment="Top"/>
 
-                <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                     <!--Add Button-->
-                    <Button x:Name="addButton" Style="{StaticResource MyCustomMaterialDisabledButton}"  Grid.RowSpan="4" Grid.Row="1" Click="AddButton_Click" VerticalAlignment="Bottom">
+                    <Button x:Name="addButton" Style="{StaticResource MyCustomMaterialDisabledButton}"  Grid.RowSpan="4" Grid.Row="3" Click="AddButton_Click" Width="200"
+                                                IsEnabled="{Binding Path=CurrentUserPrincipal,
+                                Converter={StaticResource PermissionToIsEnabledConverter},
+                                ConverterParameter=AddStockReport}">
+
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="15"
                                    Height="15" Margin="0 1 8 0"/>
-                            <TextBlock Text="Add new stock report" FontWeight="SemiBold"/>
+                            <TextBlock Text="Add/Update Stock Report" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
                     
@@ -99,8 +103,7 @@
                 </ComboBox>
 
                 <!--Stock Report DataGrid-->
-                <DataGrid ItemsSource="{Binding StockReports, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedStockReport}" x:Name="StockReportDataGrid" MouseDoubleClick="OnDoubleClick_InspectReport_MonthlyStockReportPageDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5" >
-                    <!--SelectionChanged="employeesDataGrid_SelectionChanged"-->
+                <DataGrid ItemsSource="{Binding StockReports, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedStockReport}" x:Name="StockReportDataGrid" Style="{DynamicResource DataGridStyle1}"  RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5" >
                     <DataGrid.Columns>
 
                         <!--StockReportId-->
@@ -131,17 +134,21 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button x:Name="editButton" Style="{StaticResource gridEditButton}" Click="EditButton_Click">
+                                        <Button x:Name="inspectButton" Style="{StaticResource gridEditButton}" Click="InspectButton_Click"
+                                                                                                Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=ViewStockReportDetails}">
+
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
-                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0" Click="DeleteButton_Click">
+                                        <Button x:Name="deleteButton" Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0" Click="DeleteButton_Click"
+                                                                                                 Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                Converter={StaticResource PermissionToVisibilityConverter},
+                                                ConverterParameter=DeleteStockReport}">
+
                                             <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
-
-                                        <!--Button x:Name="viewButton" Style="{StaticResource gridViewButton}" Margin="5 0 0 0" Click="ViewButton_Click">
-                                            <Icon:PackIconMaterial Kind="EyeOutline" Style="{StaticResource gridButtonIcon}"/>
-                                        </Button-->
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

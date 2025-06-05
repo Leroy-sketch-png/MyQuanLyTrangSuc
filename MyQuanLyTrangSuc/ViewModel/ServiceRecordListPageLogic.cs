@@ -606,7 +606,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public void ExportServiceRecordsToExcel()
         {
-            OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial; // Set license context
+            //OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial; // Set license context
 
             if (ServiceRecords == null || !ServiceRecords.Any())
             {
