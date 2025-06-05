@@ -37,7 +37,10 @@ namespace MyQuanLyTrangSuc.View
                 temp = femaleRadioButton;
             bool isSuccess = logicService.AddCustomer(NameTextBox.Text, EmailTextBox.Text, TelephoneTextBox.Text, AddressTextBox.Text, birthdayDatePicker.SelectedDate, temp.Content.ToString());
             if (isSuccess)
+            {
+                this.DialogResult = true;
                 this.Close();
+            }
         }
     }
 }

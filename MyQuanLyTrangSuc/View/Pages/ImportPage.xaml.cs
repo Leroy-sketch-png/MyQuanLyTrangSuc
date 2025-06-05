@@ -21,6 +21,8 @@ namespace MyQuanLyTrangSuc.View
         }
 
 
+
+
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             searchTextBlock.Text = "";
@@ -46,5 +48,14 @@ namespace MyQuanLyTrangSuc.View
             }
         }
 
+        private void editButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.LoadEditImportWindow((Model.Import)importRecordsDataGrid.SelectedItem);
+        }
+
+        private void deleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.DeleteImport((Model.Import)importRecordsDataGrid.SelectedItem);
+        }
     }
 }

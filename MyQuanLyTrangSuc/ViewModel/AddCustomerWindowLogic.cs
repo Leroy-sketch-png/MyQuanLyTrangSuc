@@ -59,22 +59,70 @@ namespace MyQuanLyTrangSuc.ViewModel
         }
         public bool AddCustomer(string name, string email, string phone, string address, DateTime? birthday, string gender)
         {
-            if (!IsValidName(name))
+            if (!customerService.IsValidName(name))
             {
-                notificationWindowLogic.LoadNotification("Error", "Tên không hợp lệ!", "BottomRight");
-                return false;
-            }
-            if (!IsValidEmail(email))
-            {
-                notificationWindowLogic.LoadNotification("Error", "Email không hợp lệ!", "BottomRight");
-                return false;
-            }
-            if (!IsValidPhone(phone))
-            {
-                notificationWindowLogic.LoadNotification("Error", "Số điện thoại phải từ 10-15 chữ số!", "BottomRight");
+                if (string.IsNullOrEmpty(name))
+                {
+                    notificationWindowLogic.LoadNotification("Error", "Supplier name cannot be empty.", "BottomRight");
+                }
+                else
+                {
+                    notificationWindowLogic.LoadNotification("Error", "Supplier name can only contain letters and spaces.", "BottomRight");
+                }
                 return false;
             }
 
+            if (!customerService.IsValidEmail(email))
+            {
+                if (string.IsNullOrEmpty(email))
+                {
+                    notificationWindowLogic.LoadNotification("Error", "Email address cannot be empty.", "BottomRight");
+                }
+                else
+                {
+                    notificationWindowLogic.LoadNotification("Error", "Invalid email format. Please enter a valid Gmail address (e.g., example@gmail.com).", "BottomRight");
+                }
+                return false;
+            }
+
+            if (!customerService.IsValidTelephoneNumber(phone))
+            {
+                if (string.IsNullOrEmpty(phone))
+                {
+                    notificationWindowLogic.LoadNotification("Error", "Phone number cannot be empty.", "BottomRight");
+                }
+                else
+                {
+                    notificationWindowLogic.LoadNotification("Error", "Invalid phone number format. Please enter digits only (10-15 digits long).", "BottomRight");
+                }
+                return false;
+            }
+
+            if (!customerService.IsValidAddress(address))
+            {
+                if (string.IsNullOrEmpty(address))
+                {
+                    notificationWindowLogic.LoadNotification("Error", "Address cannot be empty.", "BottomRight");
+                }
+                else
+                {
+                    notificationWindowLogic.LoadNotification("Error", "Address can only contain letters, numbers, spaces, and common punctuation.", "BottomRight");
+                }
+                return false;
+            }
+
+            if (!customerService.IsValidBirthday(birthday))
+            {
+                if (birthday == null)
+                {
+                    notificationWindowLogic.LoadNotification("Error", "Birthday cannot be empty.", "BottomRight");
+                }
+                else
+                {
+                    notificationWindowLogic.LoadNotification("Error", "Invalid birthday. Please enter a valid date.", "BottomRight");
+                }
+                return false;
+            }
             string resultMessage = customerService.AddOrUpdateCustomer(name, email, phone, address, birthday, gender);
             notificationWindowLogic.LoadNotification("Success", resultMessage, "BottomRight");
 

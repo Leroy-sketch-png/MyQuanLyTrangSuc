@@ -113,10 +113,21 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         //edit item category
         public void EditItemCategory(ProductCategory itemCategory)
         {
+            List<ProductCategory> productCategories = itemCategoryRepository.GetListOfItemCategories();
+            bool isDuplicate = productCategories.Any(i => i.CategoryName == itemCategory.CategoryName && i.CategoryId != itemCategory.CategoryId);
+            if (isDuplicate)
+            {
+                throw new InvalidOperationException("Item category already exists.");
+            }
             var temp = itemCategoryRepository.GetItemCategoryByID(itemCategory.CategoryId);
             if (temp != null)
             {
                 itemCategoryRepository.UpdateItemCategory(itemCategory);
+                OnItemCategoryUpdated?.Invoke(itemCategory);
+            }
+            else
+            {
+                throw new InvalidOperationException("Unit not found.");
             }
         }
 

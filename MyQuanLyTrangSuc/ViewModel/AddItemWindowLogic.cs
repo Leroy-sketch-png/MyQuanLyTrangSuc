@@ -9,6 +9,7 @@ using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.View;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using MyQuanLyTrangSuc.BusinessLogic;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -21,6 +22,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         private const string SuccessTitle = "Thông báo";
         private const string ValidationErrorMessage = "Vui lòng nhập đầy đủ thông tin sản phẩm!";
         private const string SuccessMessage = "Sản phẩm đã được thêm thành công!";
+        private readonly ItemCategoryService _itemCategoryService;
 
         private readonly NotificationWindowLogic notificationWindowLogic;
         private readonly AddItemWindow _window;
@@ -71,12 +73,14 @@ namespace MyQuanLyTrangSuc.ViewModel
             _numericRegex = new Regex(NumericPattern);
             notificationWindowLogic = new NotificationWindowLogic();
             Product = new Product();
+            _itemCategoryService = ItemCategoryService.Instance;
             LoadCategories();
             GenerateProductId();
         }
 
-        private void LoadCategories()
+        public void LoadCategories()
         {
+            //Categories = new ObservableCollection<ProductCategory>(_itemCategoryService.GetListOfItemCategories()); bolac was here :3
             var db = MyQuanLyTrangSucContext.Instance;
             Categories = new ObservableCollection<ProductCategory>(db.ProductCategories.ToList());
 
@@ -250,7 +254,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             db.ResetProducts();
         }
 
-        private void OnPropertyChanged(string propertyName)
+        protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

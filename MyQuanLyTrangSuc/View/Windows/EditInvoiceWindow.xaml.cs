@@ -14,19 +14,23 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace MyQuanLyTrangSuc.View
+namespace MyQuanLyTrangSuc.View.Windows
 {
     /// <summary>
-    /// Interaction logic for AddExportRecordWindow.xaml
+    /// Interaction logic for EditInvoiceWindow.xaml
     /// </summary>
-    public partial class AddInvoiceWindow : Window
+    public partial class EditInvoiceWindow : Window
     {
-        private readonly AddInvoiceWindowLogic logicService;
-        public AddInvoiceWindow()
+        private readonly EditInvoiceWindowLogic logicService;
+        public EditInvoiceWindow(Invoice invoice)
         {
             InitializeComponent();
-            logicService = new AddInvoiceWindowLogic();
+            logicService = new EditInvoiceWindowLogic(invoice);
             DataContext = logicService;
+        }
+        private void applyInvoiceBtn_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.SaveInvoice();
         }
 
         private void addInvoiceDetailBtn_Click(object sender, RoutedEventArgs e)
@@ -37,16 +41,12 @@ namespace MyQuanLyTrangSuc.View
         private void addNewClientBtn_Click(object sender, RoutedEventArgs e)
         {
             AddCustomerWindow addCustomerWindow = new AddCustomerWindow();
-            bool? res = addCustomerWindow.ShowDialog();
-            if (res == true)
+            bool? result = addCustomerWindow.ShowDialog();
+
+            if (result == true)
             {
                 logicService.LoadInitialData();
             }
-        }
-
-        private void applyInvoiceBtn_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.AddInvoice();
         }
 
         private void deleteButton_Click(object sender, RoutedEventArgs e)

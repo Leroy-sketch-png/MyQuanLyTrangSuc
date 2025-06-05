@@ -76,10 +76,21 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         //Edit unit
         public void EditUnit(Unit unit)
         {
-            var temp = unitRepository.GetUnitByID(unit.UnitId);
+            List<Unit> units = unitRepository.GetListOfUnits();
+            bool isDuplicate = units.Any(u => u.UnitName == unit.UnitName && u.UnitId != unit.UnitId);
+
+            if (isDuplicate)
+            {
+                throw new InvalidOperationException("Unit already exists.");
+            }
+            var temp = unitRepository.GetUnitByID(unit.UnitId); 
             if (temp != null)
             {
                 unitRepository.UpdateUnit(unit);
+            }
+            else
+            {
+                throw new InvalidOperationException("Unit not found.");
             }
         }
 
@@ -103,5 +114,6 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         {
             return unitRepository.SearchUnitByID(id);
         }
+
     }
 }

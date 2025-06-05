@@ -2,10 +2,12 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace MyQuanLyTrangSuc.Model;
 
-public partial class ImportDetail
+public partial class ImportDetail: INotifyPropertyChanged
 {
     public int Stt { get; set; }
 
@@ -13,13 +15,55 @@ public partial class ImportDetail
 
     public string ProductId { get; set; }
 
-    public int? Quantity { get; set; }
+    private int? _quantity;
+
+    public int? Quantity
+    {
+        get => _quantity;
+        set
+        {
+            if (_quantity != value)
+            {
+                _quantity = value;
+                OnPropertyChanged();
+                CalculateTotalPrice();
+            }
+        }
+    }
+
+    //private decimal? _price;
 
     public decimal? Price { get; set; }
+    
+    
 
-    public decimal? TotalPrice { get; set; }
+    private decimal? _totalPrice;
+
+    public decimal? TotalPrice
+    {
+        get => _totalPrice;
+        set
+        {
+            if (_totalPrice != value)
+            {
+                _totalPrice = value;
+                OnPropertyChanged(); 
+            }
+        }
+    }
+
+    private void CalculateTotalPrice()
+    {
+        TotalPrice = Quantity * Price; 
+    }
 
     public virtual Import Import { get; set; }
 
     public virtual Product Product { get; set; }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }

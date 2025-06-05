@@ -320,7 +320,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             // Assuming UnitService.UnitsSearchByID already handles NotMarketable filter
             return unitService.UnitsSearchByID(id);
         }
-
         /// <summary>
         /// Updates the Units ObservableCollection with the new filtered list.
         /// This method is designed to minimize UI updates by only adding/removing items as needed.

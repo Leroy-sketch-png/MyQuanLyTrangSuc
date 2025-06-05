@@ -15,13 +15,14 @@ namespace MyQuanLyTrangSuc.ViewModel
         private NotificationWindowLogic notificationWindowLogic;
 
         //bind to view
-        private Unit _unit;
-        public Unit Unit
+        private Unit _originalUnit;
+        private Unit _editedUnit;
+        public Unit EditedUnit
         {
-            get => _unit;
+            get => _editedUnit;
             set
             {
-                _unit = value;
+                _editedUnit = value;
                 OnPropertyChanged(nameof(Unit));
             }
         }
@@ -35,21 +36,48 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             unitService = UnitService.Instance;
             notificationWindowLogic = new NotificationWindowLogic();
-            Unit = unit;
+            _originalUnit = unit;
+            _editedUnit = new Unit
+            {
+                UnitId = unit.UnitId,
+                UnitName = unit.UnitName,
+                IsNotMarketable = unit.IsNotMarketable
+            };
         }
 
         //edit unit logic
         public bool EditUnit()
         {
-            if (_unit == null)
+            if (_editedUnit == null)
             {
                 notificationWindowLogic.LoadNotification("Error", "Unit is not found!", "BottomRight");
                 return false;
             }
 
-            unitService.EditUnit(_unit);
-            notificationWindowLogic.LoadNotification("Success", "Update unit successfully", "BottomRight");
-            return true;
+            if (string.IsNullOrWhiteSpace(_editedUnit.UnitName))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Unit name can not be empty", "BottomRight");
+                return false;
+            }
+
+            try
+            {
+                unitService.EditUnit(_editedUnit);
+                notificationWindowLogic.LoadNotification("Success", "Update unit successfully!", "BottomRight");
+                return true;
+            }
+            catch (InvalidOperationException ex)
+            {
+                notificationWindowLogic.LoadNotification("Error", ex.Message, "BottomRight");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                notificationWindowLogic.LoadNotification("Error", "An unexpected error occurred: " + ex.Message, "BottomRight");
+                return false;
+            }
+
+
         }
     }
 }

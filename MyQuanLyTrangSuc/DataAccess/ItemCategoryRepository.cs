@@ -35,7 +35,21 @@ namespace MyQuanLyTrangSuc.DataAccess
 
         public void UpdateItemCategory(ProductCategory productCategory)
         {
-            context.SaveChanges();
+            var existingCategory = context.ProductCategories.Find(productCategory.CategoryId);
+
+            if (existingCategory != null)
+            {
+                existingCategory.CategoryName = productCategory.CategoryName;
+                existingCategory.UnitId = productCategory.UnitId;
+                existingCategory.ProfitPercentage = productCategory.ProfitPercentage;
+                existingCategory.IsNotMarketable = productCategory.IsNotMarketable;
+
+                context.SaveChanges();
+            }
+            else
+            {
+                throw new InvalidOperationException($"ProductCategory with ID {productCategory.CategoryId} not found for update.");
+            }
         }
 
         public List<ProductCategory> GetListOfItemCategories()

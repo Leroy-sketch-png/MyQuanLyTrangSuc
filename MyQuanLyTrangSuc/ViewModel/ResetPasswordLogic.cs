@@ -111,7 +111,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 return; 
             }
 
-            var account = context.Accounts.FirstOrDefault(acc => acc.Username == employee.UsernameNavigation.Username);
+            var account = context.Accounts.FirstOrDefault(acc => acc.Username == employee.Account.Username);
 
             if (account == null)
             {

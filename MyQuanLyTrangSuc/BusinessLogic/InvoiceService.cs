@@ -1,4 +1,5 @@
-﻿using MyQuanLyTrangSuc.DataAccess;
+﻿using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.DataAccess;
 using MyQuanLyTrangSuc.Model;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
     public class InvoiceService
     {
         private InvoiceRepository invoiceRepository;
+        private ItemRepository itemRepository;
         private readonly string prefix = "INV";
         public event Action<Invoice> OnInvoiceAdded;
         public event Action<Invoice> OnInvoiceUpdated;
@@ -22,6 +24,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         public InvoiceService()
         {
             invoiceRepository = new InvoiceRepository();
+            itemRepository = new ItemRepository();
         }
 
         public string GenerateNewInvoiceID()
@@ -60,5 +63,39 @@ namespace MyQuanLyTrangSuc.BusinessLogic
            return invoiceRepository.GetLastInvoiceDetailID();
         }
 
+        public void UpdateProductQuantity(string productId, int quantity)
+        {
+            itemRepository.UpdateProductQuantity(productId, quantity ,false);
+        }
+
+        public IEnumerable<InvoiceDetail> GetInvoiceDetailsByInvoiceId(string invoiceId)
+        {
+            return MyQuanLyTrangSucContext.Instance.InvoiceDetails
+                                  .Where(id => id.InvoiceId == invoiceId)
+                                  .Include(id => id.Product)
+                                  .AsNoTracking()
+                                  .ToList();
+        }
+
+        public void RemoveInvoiceDetail(string invoiceId, string productId)
+        {
+           invoiceRepository.RemoveInvoiceDetail(invoiceId, productId);
+        }
+
+        public void UpdateInvoiceDetail(InvoiceDetail originalDetail)
+        {
+            invoiceRepository.UpdateInvoiceDetail(originalDetail);
+        }
+
+        public void UpdateInvoice(Invoice invoice)
+        {
+            invoiceRepository.UpdateInvoice(invoice);
+            OnInvoiceUpdated?.Invoke(invoice);
+        }
+
+        public void DeleteInvoice(Invoice selectedItem)
+        {
+           invoiceRepository.DeleteInvoice(selectedItem);
+        }
     }
 }

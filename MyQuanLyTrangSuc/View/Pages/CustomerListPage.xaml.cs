@@ -45,5 +45,17 @@ namespace MyQuanLyTrangSuc.View
                 }
             }
         }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            logicService.CheckBox_Checked(sender, e);
+
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            logicService.CheckBox_UnChecked(sender, e);
+        }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using MyQuanLyTrangSuc.DataAccess;
+﻿using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.DataAccess;
 using MyQuanLyTrangSuc.Model;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
     public class ImportService
     {
         private ImportRepository importRepository;
+        private ItemRepository itemRepository;
         private readonly string prefix = "IM";
         public event Action<Import> OnImportAdded;
         public event Action<Import> OnImportUpdated;
@@ -23,6 +25,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         public ImportService()
         {
             importRepository = new ImportRepository();
+            itemRepository = new ItemRepository();
         }
 
         public string GenerateNewImportID()
@@ -64,6 +67,40 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         {
             return importRepository.GetLastImportDetailID();
         }
-       
+
+        public void UpdateProductQuantity(string productId, int quantity)
+        {
+            itemRepository.UpdateProductQuantity(productId, quantity, true);
+        }
+
+        public IEnumerable<ImportDetail> GetImportDetailsByImportId(string importId)
+        {
+            return MyQuanLyTrangSucContext.Instance.ImportDetails
+                                  .Where(id => id.ImportId == importId)
+                                  .Include(id => id.Product)
+                                  .AsNoTracking()
+                                  .ToList();
+        }
+
+        public void RemoveImportDetail(string importId, string productId)
+        {
+            importRepository.RemoveImportDetail(importId, productId);
+        }
+
+        public void UpdateImport(Import import)
+        {
+            importRepository.UpdateImport(import);
+            OnImportUpdated?.Invoke(import);
+        }
+
+        public void UpdateImportDetail(ImportDetail currentDetail)
+        {
+            importRepository.UpdateImportDetail(currentDetail);
+        }
+
+        public void DeleteImport(Import selectedItem)
+        {
+            importRepository.DeleteImport(selectedItem);
+        }
     }
 }

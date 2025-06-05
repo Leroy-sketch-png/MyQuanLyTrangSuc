@@ -40,7 +40,7 @@ namespace MyQuanLyTrangSuc.DataAccess
         }
         public List<Invoice> GetListOfInvoices()
         {
-            return context.Invoices.ToList();
+            return context.Invoices.Where(i => !i.IsDeleted).ToList();
         }
         public List<Product> GetListOfProducts()
         {
@@ -55,6 +55,62 @@ namespace MyQuanLyTrangSuc.DataAccess
         {
             var lastID = context.InvoiceDetails.OrderByDescending(i => i.Stt).Select(i => i.Stt).FirstOrDefault();
             return (lastID != null && lastID > 0) ? lastID + 1 : 1;
+        }
+
+        public void RemoveInvoiceDetail(string invoiceId, string productId)
+        {
+            var detailToRemove = context.InvoiceDetails
+                                        .FirstOrDefault(id => id.InvoiceId == invoiceId && id.ProductId == productId);
+            if (detailToRemove != null)
+            {
+                context.InvoiceDetails.Remove(detailToRemove);
+                context.SaveChanges();
+            }
+        }
+
+        public void UpdateInvoiceDetail(InvoiceDetail currentDetail)
+        {
+            var existingDetail = context.InvoiceDetails.FirstOrDefault(id => id.InvoiceId == currentDetail.InvoiceId && id.ProductId == currentDetail.ProductId);
+
+            if (existingDetail != null)
+            {
+                existingDetail.Quantity = currentDetail.Quantity;
+                existingDetail.Price = currentDetail.Price;
+                existingDetail.TotalPrice = currentDetail.TotalPrice;
+
+                context.InvoiceDetails.Update(existingDetail);
+                context.SaveChanges();
+            }
+            else
+            {
+                throw new InvalidOperationException($"Can not find the invoice detail for record with detail ID: '{currentDetail.InvoiceId}' and product ID: '{currentDetail.ProductId}' to update.");
+            }
+        }
+
+        public void UpdateInvoice(Invoice invoice)
+        {
+            var existingInvoice = context.Invoices.Find(invoice.InvoiceId);
+            if (existingInvoice != null)
+            {
+                existingInvoice.CustomerId = invoice.CustomerId;
+                existingInvoice.Date = invoice.Date;
+                existingInvoice.TotalAmount = invoice.TotalAmount;
+                context.Invoices.Update(existingInvoice);
+                context.SaveChanges();
+            }
+            else
+            {
+                throw new InvalidOperationException($"Can not find the invoice record with ID: {invoice.InvoiceId} to update.");
+            }
+        }
+
+        public void DeleteInvoice(Invoice selectedItem)
+        {
+            if (selectedItem != null)
+            {
+                selectedItem.IsDeleted = true;
+                context.SaveChanges();
+            }
         }
     }
 }

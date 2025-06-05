@@ -1,5 +1,4 @@
 ﻿using MyQuanLyTrangSuc.Model;
-using MyQuanLyTrangSuc.View.Windows;
 using MyQuanLyTrangSuc.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -15,30 +14,21 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace MyQuanLyTrangSuc.View
+namespace MyQuanLyTrangSuc.View.Windows
 {
     /// <summary>
-    /// Interaction logic for AddImportRecordWindow.xaml
+    /// Interaction logic for EditImportWindow.xaml
     /// </summary>
-    public partial class AddImportWindow : Window
+    public partial class EditImportWindow : Window
     {
-        private readonly AddImportRecordWindowLogic logicService;
-        public AddImportWindow()
+        private readonly EditImportWindowLogic logicService;
+        public EditImportWindow(Import import)
         {
             InitializeComponent();
-            logicService = new AddImportRecordWindowLogic();
+            logicService = new EditImportWindowLogic(import);
             DataContext = logicService;
         }
 
-        private void ImportItemComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //logicService.ItemSelectionChanged();
-        }
-
-        private void addImportDetailBtn_Click(object sender, RoutedEventArgs e)
-        {
-            logicService.AddImportDetail();
-        }
         private void addNewItemBtn_Click(object sender, RoutedEventArgs e)
         {
             AddItemWindow addItemWindow = new AddItemWindow();
@@ -61,9 +51,14 @@ namespace MyQuanLyTrangSuc.View
             }
         }
 
+        private void addImportDetailBtn_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.AddImportDetail();
+        }
+
         private void applyImportBtn_Click(object sender, RoutedEventArgs e)
         {
-            logicService.AddImport();
+            logicService.SaveImport();
         }
 
         private void deleteButton_Click(object sender, RoutedEventArgs e)

@@ -48,7 +48,7 @@
                             Margin="0,0,0,10" 
                             VerticalAlignment="Center">
                             <TextBox.ToolTip>
-                                <ToolTip Foreground="Black" Background="White" Content="Please enter a valid full name (not including numbers)."/>
+                                <ToolTip Foreground="Black" Background="White" Content="Please enter a valid unit name (not including numbers)."/>
                             </TextBox.ToolTip>
                         </TextBox>
                     </StackPanel>
@@ -68,7 +68,7 @@
                         </StackPanel>
                         <TextBox BorderBrush="Black" x:Name="profitPercentageTextBox" Text="{Binding ProfitPercentage, Mode=TwoWay}" FontSize="20" BorderThickness="1" Margin="0,0,0,10">
                             <TextBox.ToolTip>
-                                <ToolTip Foreground="Black" Background="White" Content="Please enter a valid phone number (e.g., 123-456-7890) - 10 to 15 digits"/>
+                                <ToolTip Foreground="Black" Background="White" Content="Profit must be positive and between 0 and 100"/>
                             </TextBox.ToolTip>
                         </TextBox>
                     </StackPanel>
@@ -79,8 +79,9 @@
                             <TextBlock Text="UNIT ID: " FontSize="16" Margin="0,0,0,5"/>
                         </StackPanel>
                         <ComboBox BorderBrush="Black" x:Name="unitComboBox" 
-                                  ItemsSource="{Binding ListOfUnits}" SelectedItem="{Binding SelectedUnit, Mode=TwoWay}"
-                                  Text="{Binding SelectedUnit, Mode=TwoWay}" FontSize="20" 
+                                  ItemsSource="{Binding ListOfUnits, Mode=TwoWay}" SelectedItem="{Binding SelectedUnit, Mode=TwoWay}"
+                                  
+                                  FontSize="20" 
                                   BorderThickness="1" Margin="0,0,0,10"
                                   DisplayMemberPath="UnitName"
                                   >
@@ -99,8 +100,8 @@
                 
 
                 <Button x:Name="addButton" Content="ADD" 
-                        FontSize="24" Background="#BFDBFE" 
-                        Foreground="#1E40AF" Padding="5" 
+                        FontSize="24" Background="#BFDBFE" Foreground="#1E40AF"
+                        Padding="5" 
                         HorizontalAlignment="Center" Width="120" 
                         Height="50" Click="addButton_Click"/>
 

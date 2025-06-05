@@ -63,6 +63,33 @@ namespace MyQuanLyTrangSuc.DataAccess
         {
             return context.Suppliers.Where(s => s.SupplierId.Contains(id) && !s.IsDeleted).ToList();
         }
+
+        public void UpdateProductQuantity(string productId, int quantity, bool isAddition)
+        {
+            var product = context.Products.FirstOrDefault(p => p.ProductId == productId);
+            if (product != null)
+            {
+               if (isAddition)
+               {
+                    product.Quantity += quantity;
+               }
+               else
+               {
+                    if (product.Quantity >= quantity)
+                    {
+                        product.Quantity -= quantity;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"Quantity of '{product.Name}' is not enough ({product.Quantity}) to export ({quantity}).");
+                    }
+                    
+               }
+               context.Products.Update(product);
+               context.SaveChanges();
+
+            }
+        }
     }
 }
 

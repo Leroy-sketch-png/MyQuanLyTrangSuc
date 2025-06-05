@@ -121,6 +121,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             this.invoicePage = invoicePage;
             context = MyQuanLyTrangSucContext.Instance;
             invoiceService = InvoiceService.Instance;
+            //invoiceService.OnInvoiceAdded += InvoiceService_OnInvoiceAdded; bolac here :33
+            invoiceService.OnInvoiceUpdated += InvoiceService_OnInvoiceUpdated;
             Invoices = new ObservableCollection<Invoice>();
             LoadRecordsFromDatabase();
             invoiceService.OnInvoiceAdded += Context_OnInvoiceAdded;
@@ -136,6 +138,23 @@ namespace MyQuanLyTrangSuc.ViewModel
             LoadInvoiceDetailsWindowCommand = new RelayCommand<Invoice>(LoadInvoiceDetailsWindow, CanLoadInvoiceDetailsWindow);
             PrintInvoiceRecordCommand = new RelayCommand<Invoice>(PrintInvoiceRecord, CanPrintInvoiceRecord);
         }
+
+        private void InvoiceService_OnInvoiceUpdated(Invoice invoice)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                LoadRecordsFromDatabase();
+            });
+        }
+        //private void InvoiceService_OnInvoiceAdded(Invoice invoice)
+        //{
+        //    Application.Current.Dispatcher.Invoke(() =>
+        //    {
+        //        Invoices.Add(invoice);
+        //    });
+        //} -- bolac here :3
+
+
 
         private void LoadRecordsFromDatabase()
         {
@@ -380,6 +399,22 @@ namespace MyQuanLyTrangSuc.ViewModel
                     }
                 }
             });
+        }
+
+        public void LoadEditInvoiceWindow(Invoice selectedItem)
+        {
+            var temp = new EditInvoiceWindow(selectedItem);
+            temp.ShowDialog();
+        }
+
+        public void DeleteInvoice(Invoice selectedItem)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this invoice?", "Delete Import", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                invoiceService.DeleteInvoice(selectedItem);
+                Invoices.Remove(selectedItem);
+            }
         }
     }
 }

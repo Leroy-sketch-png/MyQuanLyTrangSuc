@@ -43,5 +43,15 @@ namespace MyQuanLyTrangSuc.View
                 searchTextBlock.Text = "Search";
             }
         }
+
+        private void editButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.LoadEditInvoiceWindow((Model.Invoice)InvoicesDataGrid.SelectedItem);
+        }
+
+        private void deleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            logicService.DeleteInvoice((Model.Invoice)InvoicesDataGrid.SelectedItem);
+        }
     }
 }

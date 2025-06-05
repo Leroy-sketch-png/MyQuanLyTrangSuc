@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Controls;
+using MyQuanLyTrangSuc.View.Windows;
 
 namespace MyQuanLyTrangSuc.View
 {
@@ -18,7 +19,12 @@ namespace MyQuanLyTrangSuc.View
 
         private void OnAddItemButtonClick(object sender, RoutedEventArgs e)
         {
-            Logic.AddProduct();
+            bool res = Logic.AddProduct();
+            if (res)
+            {
+                this.DialogResult = true;
+                this.Close();
+            }
         }
 
         private void OnCancelButtonClick(object sender, RoutedEventArgs e)
@@ -53,12 +59,25 @@ namespace MyQuanLyTrangSuc.View
 
         private void OnClick_Add_AddItem(object sender, RoutedEventArgs e)
         {
-            Logic.AddProduct();
+            bool res = Logic.AddProduct();
+            if (res)
+            {
+                this.DialogResult = true;
+                this.Close();
+            }
         }
 
         private void addNewCategoryBtn_Click(object sender, RoutedEventArgs e)
         {
+            //AddItemCategoryWindow addItemCategoryWindow = new AddItemCategoryWindow();
+            //addItemCategoryWindow.ShowDialog();
             AddItemCategoryWindow addItemCategoryWindow = new AddItemCategoryWindow();
+            /*bool? result = addItemCategoryWindow.ShowDialog();
+
+            if (result == true)
+            {
+                Logic.LoadCategories();
+            } cái này để thêm loại sp bên trong item*/
             addItemCategoryWindow.ShowDialog();
             Logic.RefreshListOfCategories();
         }

@@ -128,8 +128,24 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             // Set default search criteria
             SelectedSearchCriteria = new ComboBoxItem { Content = "Supplier" };
+            importService.OnImportUpdated += ImportService_OnImportUpdated;
         }
 
+        private void ImportService_OnImportUpdated(Import obj)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                LoadRecordsFromDatabase();
+            });
+        }
+
+        private void ImportService_OnImportAdded(Import import)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ImportRecords.Add(import);
+            });
+        }
         private void InitializeCommands()
         {
             LoadAddImportWindowCommand = new RelayCommand(LoadAddImportWindow, CanLoadAddImportWindow);
@@ -159,14 +175,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 MessageBox.Show($"Error loading records: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        private void ImportService_OnImportAdded(Import import)
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                ImportRecords.Add(import);
-            });
         }
 
         // --- Add Import Logic ---
@@ -368,6 +376,22 @@ namespace MyQuanLyTrangSuc.ViewModel
                     }
                 }
             });
+        }
+
+        public void LoadEditImportWindow(Import selectedItem)
+        {
+            var temp = new EditImportWindow(selectedItem);
+            temp.ShowDialog();
+        }
+
+        public void DeleteImport(Import selectedItem)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this import?", "Delete Import", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                importService.DeleteImport(selectedItem);
+                ImportRecords.Remove(selectedItem);
+            }
         }
     }
 }

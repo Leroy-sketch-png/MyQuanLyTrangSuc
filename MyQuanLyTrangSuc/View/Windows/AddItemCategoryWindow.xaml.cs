@@ -33,14 +33,24 @@ namespace MyQuanLyTrangSuc.View
         {
             bool isSuccess = logicService.AddItemCategory(NameTextBox.Text, profitPercentageTextBox.Text);
             if (isSuccess)
+            {
+                this.DialogResult = true;
                 this.Close();
+            }
+                
         }
 
         private void addNewUnitBtn_Click(object sender, RoutedEventArgs e)
         {
             AddUnitWindow addUnitWindow = new AddUnitWindow();
-            addUnitWindow.ShowDialog();
-            logicService.RefreshListOfUnits();
+            /*bool? result = addUnitWindow.ShowDialog();
+
+            if (result == true)
+            {
+                logicService.LoadInitialData();
+            } em làm phần này nè, thêm unit bên trong category*/
+            /*addUnitWindow.ShowDialog();
+            logicService.RefreshListOfUnits();*/
         }
     }
 }

@@ -77,7 +77,7 @@
                             Command="{Binding ImportExcelCommand}" VerticalAlignment="Bottom"
                             IsEnabled="{Binding Path=CurrentUserPrincipal,
                                         Converter={StaticResource PermissionToIsEnabledConverter},
-                                        ConverterParameter=ImportCustomerExcel}">
+                                        ConverterParameter=ImportCustomerExcel}" Width="100">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"
                                        Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
@@ -91,7 +91,7 @@
                             CommandParameter="{Binding ElementName=customersDataGrid}" VerticalAlignment="Bottom"
                             IsEnabled="{Binding Path=CurrentUserPrincipal,
                                         Converter={StaticResource PermissionToIsEnabledConverter},
-                                        ConverterParameter=ExportCustomerExcel}">
+                                        ConverterParameter=ExportCustomerExcel}" Width="100">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"
                                                    Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
@@ -102,6 +102,22 @@
                         </StackPanel>
                     </Button>
 
+                    <Button x:Name="deleteMultipleButton"
+                            Style="{StaticResource MyCustomMaterialDisabledButton}" Grid.Row="1" 
+                            Grid.RowSpan="4" VerticalAlignment="Bottom"
+                                                        IsEnabled="{Binding Path=CurrentUserPrincipal,
+                                        Converter={StaticResource PermissionToIsEnabledConverter},
+                                        ConverterParameter=DeleteMultipleCustomer}"
+                            Command="{Binding DeleteMultipleCustomersCommand}">
+
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="AlphaDBox" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"
+                                                                                          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
+                            <TextBlock Text="Delete multiple" FontWeight="SemiBold"
+                                                                                          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
+
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
                 <Separator Grid.Row="3" BorderBrush="#747525" BorderThickness="10" Margin="5,10,30,10"/>
@@ -118,6 +134,14 @@
                           CanUserSortColumns="True" ItemsSource="{Binding Customers}"
                           SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}" x:Name="customersDataGrid" Style="{DynamicResource DataGridStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
                     <DataGrid.Columns>
+                        <!--Checkbox Column for Selection-->
+                        <DataGridTemplateColumn Header="✔" Width="0.5*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
                         <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="False" Width="80" Binding="{Binding CustomerId}"/>
 

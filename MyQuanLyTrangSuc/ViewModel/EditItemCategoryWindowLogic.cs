@@ -2,6 +2,7 @@
 using MyQuanLyTrangSuc.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -9,20 +10,49 @@ using System.Threading.Tasks;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
-    public class EditItemCategoryWindowLogic
+    public class EditItemCategoryWindowLogic: INotifyPropertyChanged
     {
         private readonly ItemCategoryService itemCategoryService;
+        private readonly UnitService unitService;
         private NotificationWindowLogic notificationWindowLogic;
 
-        private ProductCategory _itemCategory;
-        public ProductCategory ItemCategory
+        private ProductCategory _originalItemCategory;
+
+        private ProductCategory _editedItemCategory;
+        public ProductCategory EditedItemCategory
         {
-            get { return _itemCategory; }
+            get { return _editedItemCategory; }
             set
             {
-                _itemCategory = value;
-                OnPropertyChanged(nameof(ItemCategory));
+                _editedItemCategory = value;
+                OnPropertyChanged(nameof(EditedItemCategory));
             }
+        }
+
+        private ObservableCollection<Unit> _listOfUnits;
+        public ObservableCollection<Unit> ListOfUnits
+        {
+            get { return _listOfUnits; }
+            set { _listOfUnits = value; OnPropertyChanged(nameof(ListOfUnits)); }
+        }
+
+        private Unit _selectedUnit;
+        public Unit SelectedUnit
+        {
+            get => _selectedUnit;
+            set
+            {
+                _selectedUnit = value;
+                OnPropertyChanged(nameof(SelectedUnit));
+            }
+        }
+
+
+
+        public void LoadInitialData()
+        {
+            ListOfUnits = new ObservableCollection<Unit>(unitService.GetListOfUnits());
+            SelectedUnit = ListOfUnits.FirstOrDefault(u => u.UnitId == _editedItemCategory.UnitId && !u.IsNotMarketable);
         }
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
@@ -34,26 +64,63 @@ namespace MyQuanLyTrangSuc.ViewModel
         public EditItemCategoryWindowLogic(ProductCategory itemCategory)
         {
             itemCategoryService = ItemCategoryService.Instance;
+            unitService = UnitService.Instance;
             notificationWindowLogic = new NotificationWindowLogic();
-            ItemCategory = itemCategory;
+            _originalItemCategory = itemCategory;
+            _editedItemCategory = new ProductCategory
+            {
+                CategoryId = itemCategory.CategoryId,
+                CategoryName = itemCategory.CategoryName,
+                UnitId = itemCategory.UnitId,
+                ProfitPercentage = itemCategory.ProfitPercentage
+            };
+            LoadInitialData();
         }
 
         //edit function
         public bool EditItemCategory()
         {
-            if (_itemCategory == null)
+            if (_editedItemCategory == null)
             {
                 notificationWindowLogic.LoadNotification("Error", "Item category is not found!", "BottomRight");
                 return false;
             }
-            if (!itemCategoryService.IsValidItemCategoryData(ItemCategory.CategoryName,ItemCategory.UnitId, ItemCategory.ProfitPercentage.ToString()))
+
+            if (string.IsNullOrWhiteSpace(_editedItemCategory.CategoryName))
             {
-                notificationWindowLogic.LoadNotification("Error", "Invalid item category data!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Item category name can not be empty", "BottomRight");
                 return false;
             }
-            itemCategoryService.EditItemCategory(_itemCategory);
-            notificationWindowLogic.LoadNotification("Success", "Update item category successfully", "BottomRight");
-            return true;
+
+            if (string.IsNullOrWhiteSpace(_editedItemCategory.UnitId))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Unit ID can not be empty", "BottomRight");
+                return false;
+            }
+
+            if (!itemCategoryService.IsValidProfitPercentage(_editedItemCategory.ProfitPercentage.ToString()))
+            {
+                notificationWindowLogic.LoadNotification("Error", "Profit percentage must be a valid number", "BottomRight");
+                return false;
+            }
+
+            try
+            {
+                _editedItemCategory.UnitId = SelectedUnit.UnitId;
+                itemCategoryService.EditItemCategory(_editedItemCategory);
+                notificationWindowLogic.LoadNotification("Success", "Item category updated successfully!", "BottomRight");
+                return true;
+            }
+            catch (InvalidOperationException ex)
+            {
+                notificationWindowLogic.LoadNotification("Error", ex.Message, "BottomRight");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                notificationWindowLogic.LoadNotification("Error", "An unexpected error occurred: " + ex.Message, "BottomRight");
+                return false;
+            }
         }
 
     }

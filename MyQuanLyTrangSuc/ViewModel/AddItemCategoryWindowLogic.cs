@@ -11,16 +11,18 @@ using System.Threading.Tasks;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
-    public class AddItemCategoryWindowLogic
+    public class AddItemCategoryWindowLogic: INotifyPropertyChanged
     {
+        private readonly UnitService unitService;
         private readonly ItemCategoryService itemCategoryService;
         private readonly NotificationWindowLogic notificationWindowLogic;
 
         public AddItemCategoryWindowLogic()
         {
             itemCategoryService = ItemCategoryService.Instance;
+            unitService = UnitService.Instance;
             notificationWindowLogic = new NotificationWindowLogic();
-            GenerateNewItemCategoryID();
+            LoadInitialData();
         }
 
         private string _newID;
@@ -52,11 +54,12 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        public void GenerateNewItemCategoryID()
+        
+
+        public void LoadInitialData()
         {
             NewID = itemCategoryService.GenerateNewItemCategoryID();
-            var unitRepo = new UnitRepository();
-            ListOfUnits = new ObservableCollection<Unit>(unitRepo.GetListOfUnits());
+            ListOfUnits = new ObservableCollection<Unit>(unitService.GetListOfUnits());
         }
         public void RefreshListOfUnits()
         {
@@ -75,32 +78,25 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public bool AddItemCategory(string name, string profitPercentage)
         {
-            //if (!itemCategoryService.IsValidItemCategoryData(name, _selectedUnit.UnitId, profitPercentage))
-            //{
-            //    notificationWindowLogic.LoadNotification("Error", "Invalid item category data!", "BottomRight");
-            //    return false;
-            //}
-
-            if (!itemCategoryService.IsValidName(name))
+            if (_selectedUnit == null)
             {
-                notificationWindowLogic.LoadNotification("Error", "Tên không hợp lệ!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Please select a unit!", "BottomRight");
                 return false;
             }
-            if (!itemCategoryService.IsValidProfitPercentage(profitPercentage))
-            {
-                notificationWindowLogic.LoadNotification("Error", "Phần trăm lợi nhuận không hợp lệ!", "BottomRight");
-                return false;
-            }
-            if (!itemCategoryService.IsValidUnitID(_selectedUnit.UnitId))
+            if (!itemCategoryService.IsValidItemCategoryData(name, _selectedUnit.UnitId, profitPercentage))
             {
                 notificationWindowLogic.LoadNotification("Error", "Unit Id không phù hợp!", "BottomRight");
                 return false;
             }
 
             string resultMessage = itemCategoryService.AddOrUpdateItemCategory(name, _selectedUnit.UnitId, profitPercentage);
+            if (resultMessage == "Item category already exists!")
+            {
+                notificationWindowLogic.LoadNotification("Error", resultMessage, "BottomRight");
+                return false;
+            }
             notificationWindowLogic.LoadNotification("Success", resultMessage, "BottomRight");
-
-            GenerateNewItemCategoryID();
+            LoadInitialData();
             return true;
         }
     }

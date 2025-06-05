@@ -117,6 +117,25 @@ namespace MyQuanLyTrangSuc.ViewModel
             // Set default search criteria
             // Ensure this matches one of the ComboBoxItem contents in XAML
             SelectedSearchCriteria = new ComboBoxItem { Content = "Name" };
+            itemCategoryService.OnItemCategoryUpdated += ItemCategoryService_OnItemCategoryUpdated;
+        }
+
+        private void ItemCategoryService_OnItemCategoryUpdated(ProductCategory updatedCategory)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var index = ItemCategories.IndexOf(ItemCategories.FirstOrDefault(c => c.CategoryId == updatedCategory.CategoryId));
+                if (index != -1)
+                {
+                    ItemCategories[index] = updatedCategory;
+                }
+                else
+                {
+                    LoadItemCategoriesFromDatabase();
+                }
+            });
+            
+
         }
 
         private void InitializeCommands()

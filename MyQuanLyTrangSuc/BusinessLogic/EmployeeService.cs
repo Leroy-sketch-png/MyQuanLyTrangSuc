@@ -11,9 +11,20 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         private readonly EmployeeRepository employeeRepository;
         private readonly string prefix = "EMP";
 
+        //singleton
+
+        private static EmployeeService _instance;
+        public static EmployeeService Instance => _instance ??= new EmployeeService();
+
         public EmployeeService()
         {
             employeeRepository = new EmployeeRepository();
+        }
+
+        // get
+        public Employee GetEmployeeByAccountId(int accountId)
+        {
+            return employeeRepository.GetEmployeeByAccountId(accountId);
         }
 
         public string GenerateNewEmployeeID()

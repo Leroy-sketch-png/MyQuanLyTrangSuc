@@ -20,7 +20,7 @@ namespace MyQuanLyTrangSuc.View.Windows
     /// </summary>
     public partial class AddUnitWindow : Window
     {
-        private AddUnitWindowLogic logicService;    
+        private AddUnitWindowLogic logicService;
         public AddUnitWindow()
         {
             InitializeComponent();
@@ -30,14 +30,12 @@ namespace MyQuanLyTrangSuc.View.Windows
 
         private void addButton_Click(object sender, RoutedEventArgs e)
         {
-            logicService.AddUnit(unitNameTextBox.Text);
-            bool isAdded = logicService.AddUnit(unitNameTextBox.Text);
-
-            if (!isAdded)
+            bool res = logicService.AddUnit(unitNameTextBox.Text);
+            if (res)
             {
-                return; // Ngăn cửa sổ đóng nếu dữ liệu không hợp lệ
+                this.DialogResult = true;
+                this.Close();
             }
-            this.Close();
         }
     }
 }

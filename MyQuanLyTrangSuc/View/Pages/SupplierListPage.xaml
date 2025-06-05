@@ -78,7 +78,7 @@
                             Command="{Binding ImportExcelCommand}" VerticalAlignment="Bottom"
                             IsEnabled="{Binding Path=CurrentUserPrincipal,
                                             Converter={StaticResource PermissionToIsEnabledConverter},
-                                            ConverterParameter=ImportSupplierExcel}">
+                                            ConverterParameter=ImportSupplierExcel}" Width="100">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileImport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"
                                                    Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
@@ -92,12 +92,30 @@
                             CommandParameter="{Binding ElementName=supplierDataGrid}" VerticalAlignment="Bottom"
                             IsEnabled="{Binding Path=CurrentUserPrincipal,
                                             Converter={StaticResource PermissionToIsEnabledConverter},
-                                            ConverterParameter=ExportSupplierExcel}">
+                                            ConverterParameter=ExportSupplierExcel}" Width="100">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="FileExport" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"
                                                    Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
                             <TextBlock Text="Export" FontWeight="SemiBold"
                                        Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="deleteMultipleButton"
+                            Style="{StaticResource MyCustomMaterialDisabledButton}" Grid.Row="1" 
+                            Grid.RowSpan="4"
+                                                                                    IsEnabled="{Binding Path=CurrentUserPrincipal,
+                                        Converter={StaticResource PermissionToIsEnabledConverter},
+                                        ConverterParameter=DeleteMultipleSupplier}"
+                            Command="{Binding DeleteMultipleSuppliersCommand}" VerticalAlignment="Bottom">
+
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="AlphaDBox" VerticalAlignment="Center" Width="15" Height="15" Margin="0 1 8 0"
+                                                                                          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
+
+                            <TextBlock Text="Delete multiple" FontWeight="SemiBold"
+                                                                                          Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
+
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -118,7 +136,19 @@
                           Style="{DynamicResource DataGridStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}"
                           CellStyle="{DynamicResource DataGridCellStyle1}" Grid.Row="5">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="False" Width="80" Binding="{Binding SupplierId}"/>
+
+                        <DataGridTemplateColumn Header="✔" Width="0.5*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
+                        <!--ID-->
+                        <DataGridTextColumn Binding="{Binding SupplierId}" Header="ID" IsReadOnly="True" CanUserResize="False" Width="80"/>
+
+                        <!--Name-->
                         <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}" CanUserResize="False" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
