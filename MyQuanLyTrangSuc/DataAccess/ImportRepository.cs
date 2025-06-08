@@ -40,7 +40,7 @@ namespace MyQuanLyTrangSuc.DataAccess
         }
         public List<Invoice> GetListOfInvoicesAfterImport(Import import)
         {
-            return context.Invoices.Where(i => i.Date >= import.Date).ToList();
+            return context.Invoices.Where(i => i.Date >= import.Date && !i.IsDeleted).ToList();
         }
         public List<Import> GetListOfImports()
         {

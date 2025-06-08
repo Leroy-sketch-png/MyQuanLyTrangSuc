@@ -85,7 +85,7 @@
                             Name="addImportDetailBtn" Click="addImportDetailBtn_Click" HorizontalAlignment="Left" Width="90"/>
                 </DockPanel>
                 <DockPanel>
-                    <TextBlock Text="Items" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" HorizontalAlignment="Left"/>
+                    <TextBlock Text="Products" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" HorizontalAlignment="Left"/>
                     <Border DockPanel.Dock="Right" Width="150">
                         <TextBlock FontSize="16" Text="{Binding GrandTotal, StringFormat=C}" FontWeight="Light"/>
                     </Border>
@@ -153,8 +153,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
-
-                    <!-- Action button (e.g., Remove) for each detail -->
+                    <DataGridTextColumn IsReadOnly="True" Header="Total" Width="*" Binding="{Binding TotalPrice}"/>
                     <DataGridTemplateColumn Width="*">
                         <DataGridTemplateColumn.HeaderStyle>
                             <Style TargetType="{x:Type DataGridColumnHeader}">

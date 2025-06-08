@@ -107,7 +107,7 @@
 
                 </DockPanel>
                 <DockPanel>
-                    <TextBlock Text="Items" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" HorizontalAlignment="Left"/>
+                    <TextBlock Text="Products" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" HorizontalAlignment="Left"/>
                     <Border DockPanel.Dock="Right" Width="150">
                         <TextBlock FontSize="16" Text="{Binding GrandTotal, StringFormat=C}" FontWeight="Light"/>
                     </Border>
@@ -127,7 +127,7 @@
                       >
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True" Header="ID" Width="80" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="Name" Width="*" Binding="{Binding Product.Name}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Product" Width="*" Binding="{Binding Product.Name}"/>
                     <DataGridTextColumn IsReadOnly="True" Header="Quantity" Width="*" Binding="{Binding Quantity}" />
                     <DataGridTextColumn IsReadOnly="True" Header="Price" Width="*" Binding="{Binding Price}"/>
                     <DataGridTextColumn IsReadOnly="True" Header="Total" Width="*" Binding="{Binding TotalPrice}"/>
