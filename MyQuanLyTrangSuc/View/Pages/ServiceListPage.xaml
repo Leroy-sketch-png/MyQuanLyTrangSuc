@@ -51,7 +51,7 @@
                         VerticalAlignment="Bottom"
                     />
                 <TextBox DockPanel.Dock="Left" Width="200" x:Name="SearchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Search By Name" HorizontalAlignment="Left" Margin="20,0,10,0"
-                     TextChanged="TextChanged_Search"/>
+                     TextChanged="TextChanged_Search" Height="50"/>
             </DockPanel>
             <Border BorderBrush="Black" BorderThickness="1" Margin="10" Padding="10">
                 <ScrollViewer>
