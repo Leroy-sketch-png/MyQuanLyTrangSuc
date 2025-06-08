@@ -21,7 +21,6 @@ namespace MyQuanLyTrangSuc.View
 
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            searchTextBlock.Text = "";
             if (searchComboBox.SelectedItem != null)
             {
                 string selectedCriteria = (searchComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
@@ -37,10 +36,6 @@ namespace MyQuanLyTrangSuc.View
                         logicService.SearchInvoicesByDate(searchTextBox.Text);
                         break;
                 }
-            }
-            if (string.IsNullOrEmpty(searchTextBox.Text))
-            {
-                searchTextBlock.Text = "Search";
             }
         }
 

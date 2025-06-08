@@ -63,7 +63,7 @@
                         <TextBlock Text="{Binding SelectedImportRecord.Supplier.ContactNumber}" VerticalAlignment="Center" Margin="10,0,20,0" FontWeight="Bold" FontSize="16"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="TOTAL: " FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center"/>
+                        <TextBlock Text="TOTAL COST: " FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding SelectedImportRecord.TotalAmount}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10,0,10,0" VerticalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>

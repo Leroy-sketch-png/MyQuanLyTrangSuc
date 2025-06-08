@@ -625,7 +625,7 @@
             </Style>
 
             <sys:String x:Key="CurrentUsername">US001</sys:String>
-            <sys:String x:Key="CurrentUserID">US002</sys:String>
+            <sys:String x:Key="CurrentAccountId">US002</sys:String>
         </ResourceDictionary>
 
 

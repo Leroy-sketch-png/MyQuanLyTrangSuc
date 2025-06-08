@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="AddPermissionWindow" Height="450" Width="800">
+        Title="AddPermissionWindow" Height="450" Width="500">
     
     <Grid Background="#F2F2F2">
         <!-- Title -->

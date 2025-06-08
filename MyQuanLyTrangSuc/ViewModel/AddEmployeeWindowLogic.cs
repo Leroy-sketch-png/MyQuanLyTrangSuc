@@ -28,16 +28,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
         public string Name { get; set; }
         public string Email { get; set; }
         public string Telephone { get; set; }
-        private string position;
-        public string Position {
-            get { return position; }
-            set {
-                if (position != value) {
-                    position = value;
-                    OnPropertyChanged(nameof(Position));
-                }
-            }
-        }
+        
         private string imagePath;
         public string ImagePath {
             get { return imagePath; }
@@ -56,11 +47,6 @@ namespace MyQuanLyTrangSuc.ViewModel {
             notificationWindowLogic = new NotificationWindowLogic();
 
             this.addEmployeeWindow = addEmployeeWindow;
-
-            this.addEmployeeWindow.PositionComboBox.ItemsSource = context.Employees
-                .GroupBy(emp => emp.Position)
-                .Select(group => group.Key)
-                .ToList();
         }
 
 
@@ -108,7 +94,6 @@ namespace MyQuanLyTrangSuc.ViewModel {
                 if (emp.IsDeleted != false) {
                     emp.IsDeleted = false;
                     emp.Name = Name;
-                    emp.Position = Position;
                     emp.Email = Email;
                     emp.DateOfBirth = addEmployeeWindow.birthdayDatePicker.SelectedDate.HasValue ? addEmployeeWindow.birthdayDatePicker.SelectedDate.Value : (DateTime?)null;
                     emp.Gender = Gender;
@@ -126,7 +111,6 @@ namespace MyQuanLyTrangSuc.ViewModel {
             emp = new Employee() {
                 EmployeeId = NewID,
                 Name = Name,
-                Position = Position,
                 Email = Email,
                 DateOfBirth = addEmployeeWindow.birthdayDatePicker.SelectedDate.HasValue ? addEmployeeWindow.birthdayDatePicker.SelectedDate.Value : (DateTime?)null,
                 ContactNumber = Telephone,
@@ -134,8 +118,8 @@ namespace MyQuanLyTrangSuc.ViewModel {
                 ImagePath = ImagePath,
             };
             context.Employees.Add(emp);
-            //context.SaveChanges();
             context.SaveChangesAdded(emp);
+            notificationWindowLogic.LoadNotification("Success", "Employee added successfully!", "BottomRight");
             return true;
         }
 

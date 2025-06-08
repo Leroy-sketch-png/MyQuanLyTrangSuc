@@ -22,7 +22,6 @@ namespace MyQuanLyTrangSuc.View
         // Search functionality
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            searchTextBlock.Text = "";
             if (searchComboBox.SelectedItem != null)
             {
                 string searchCriteria = ((ComboBoxItem)searchComboBox.SelectedItem).Content.ToString();
@@ -34,10 +33,6 @@ namespace MyQuanLyTrangSuc.View
                 {
                     logicService.EmployeesSearchByID(searchTextBox.Text);
                 }
-            }
-            if (string.IsNullOrEmpty(searchTextBox.Text))
-            {
-                searchTextBlock.Text = "Search by name";
             }
         }
     }

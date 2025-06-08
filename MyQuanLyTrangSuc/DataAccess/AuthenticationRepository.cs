@@ -94,6 +94,11 @@ namespace MyQuanLyTrangSuc.DataAccess
             if (account != null)
             {
                 account.IsDeleted = true;
+                if (account.Employee != null)
+                {
+                    account.Employee.AccountId = null;
+                    account.Employee.Account = null;
+                }
                 context.SaveChanges();
             }
         }
@@ -102,7 +107,7 @@ namespace MyQuanLyTrangSuc.DataAccess
         {
             return context.Accounts
                        .Include(a => a.Group)
-                       .FirstOrDefault(a => a.Username == username && !a.IsDeleted); 
+                       .FirstOrDefault(a => a.Username == username && !a.IsDeleted);
         }
 
         // Permission

@@ -64,7 +64,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             return IsValidName(name) && IsValidEmail(email) && IsValidTelephoneNumber(phone);
         }
 
-        public string AddOrUpdateEmployee(string name, string email, string phone, string imagePath, DateTime? birthday, string gender, string position, bool isDeleted)
+        public string AddOrUpdateEmployee(string name, string email, string phone, string imagePath, DateTime? birthday, string gender, bool isDeleted)
         {
             var employee = employeeRepository.GetEmployeeByDetails(name, email, phone);
 
@@ -79,7 +79,6 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                     employee.DateOfBirth = birthday;
                     employee.Gender = gender;
                     employee.ImagePath = imagePath;
-                    employee.Position = position;
 
                     employeeRepository.UpdateEmployee(employee);
                     return "Restored employee successfully!";
@@ -96,7 +95,6 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                 DateOfBirth = birthday,
                 Gender = gender,
                 ImagePath = imagePath,
-                Position = position,
                 IsDeleted = false
             };
             employeeRepository.AddEmployee(newEmployee);

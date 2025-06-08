@@ -82,6 +82,7 @@
           VerticalAlignment="Top"
           materialDesign:HintAssist.Hint="Gender"
           Margin="60 0 250 0"
+                            Text="{Binding ProfileGender, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
           SelectedValue="{Binding ProfileGender, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
           Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                         <ComboBox.ItemsSource>

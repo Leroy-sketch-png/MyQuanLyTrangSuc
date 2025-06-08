@@ -15,11 +15,10 @@
                 <Grid Margin="0,0,0,-10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Column 1 -->
-                    <StackPanel Grid.Column="0" Margin="0,0,20,30">
+                    <!--<StackPanel Grid.Column="0" Margin="0,0,20,30">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Label" Margin="0 2 3 0" Height="30" Width="30"/>
                             <TextBlock Text="List: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>
@@ -32,10 +31,10 @@
                                       VerticalAlignment="Center"
                                       Height="35"/>
                         </Border>
-                    </StackPanel>
+                    </StackPanel>-->
 
                     <!-- Column 2 -->
-                    <StackPanel Grid.Column="1" Margin="20,0,0,30">
+                    <StackPanel Grid.Column="1" Margin="20,0,20,30">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="RenameBox" Margin="0 2 3 0" Height="30" Width="30"/>
                             <TextBlock Text="Name: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>

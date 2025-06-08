@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using WpfApplication = System.Windows.Application;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -78,24 +79,25 @@ namespace MyQuanLyTrangSuc.ViewModel
             Accounts = new ObservableCollection<Account>(accounts);
         }
 
-
-        // add
         public void LoadAddAccountWindow()
         {
             var temp = new AddAccountWindow();
             temp.ShowDialog();
         }
 
-        // edit
         public void LoadEditAccountWindow(Account selectedItem)
         {
             var temp = new EditAccountWindow(selectedItem);
             temp.ShowDialog();
         }
 
-        // delete 
         public void DeleteAccount(Account account)
         {
+            if (AuthenticationService.Instance.GetAccountWithGroupByUsername((string)WpfApplication.Current.Resources["CurrentUsername"]).AccountId == account.AccountId)
+            {
+                MessageBox.Show("You're trying to delete an account you're currently using. This action cannot be done!", "Delete account", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this account?", "Delete account", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {

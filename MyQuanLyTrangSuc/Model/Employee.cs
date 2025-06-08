@@ -13,8 +13,6 @@ public partial class Employee
 
     public string Name { get; set; }
 
-    public string Position { get; set; }
-
     public string ContactNumber { get; set; }
 
     public string Email { get; set; }
@@ -33,8 +31,7 @@ public partial class Employee
 
     public virtual ICollection<ServiceRecord> ServiceRecords { get; set; } = new List<ServiceRecord>();
 
-    [Required]
-    public int AccountId { get; set; }
+    public int? AccountId { get; set; }
 
     public virtual Account Account { get; set; }
 }

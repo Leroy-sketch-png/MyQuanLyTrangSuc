@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.Security;
 using MyQuanLyTrangSuc.View;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -17,11 +18,20 @@ namespace MyQuanLyTrangSuc.ViewModel
         private EmployeePropertiesPage employeePropertiesPageUI;
         private bool isEditing = false;
 
+        public CustomPrincipal CurrentUserPrincipal
+        {
+            get => Thread.CurrentPrincipal as CustomPrincipal;
+        }
+
         public EmployeePropertiesPageLogic() { }
 
         public EmployeePropertiesPageLogic(EmployeePropertiesPage employeePropertiesPageUI)
         {
             this.employeePropertiesPageUI = employeePropertiesPageUI;
+            if (CurrentUserPrincipal.HasPermission("AccountListPage") == false)
+            {
+                employeePropertiesPageUI.assignAccountButton.Visibility = Visibility.Collapsed;
+            }
         }
 
         public void LoadEmployeeListPage()

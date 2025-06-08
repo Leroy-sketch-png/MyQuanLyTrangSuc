@@ -87,11 +87,11 @@
 
                 <!--Filter TextBox-->
                 <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
-                    <TextBox TextChanged="searchTextBox_TextChanged" x:Name="searchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Search" Margin="0 0 0 0" FontSize="20"/>
+                    <TextBox TextChanged="searchTextBox_TextChanged" x:Name="searchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Search" Margin="0 0 0 0"/>
                 </Grid>
 
 
-                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220,0,0,0" HorizontalAlignment="Left" Width="120">
+                <ComboBox Name="searchComboBox" Style="{StaticResource MaterialDesignOutlinedComboBox}" Height="30" Grid.Row="4" Margin="220,0,0,0" HorizontalAlignment="Left" Width="120">
                     <ComboBoxItem Content="Group Name"/>
                     <ComboBoxItem Content="Function Name"/>
                 </ComboBox>

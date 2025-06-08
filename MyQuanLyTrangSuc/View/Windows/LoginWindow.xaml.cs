@@ -43,10 +43,6 @@ namespace MyQuanLyTrangSuc.View
                 this.DragMove();
             }
         }
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
 
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
         {
@@ -61,6 +57,11 @@ namespace MyQuanLyTrangSuc.View
         private void forgotPassword_Click(object sender, RoutedEventArgs e)
         {
             loginWindowLogic.LoadVerificationWindow();
+        }
+
+        private void CloseButton_Click(object sender, MouseButtonEventArgs e)
+        {
+            this.Close();
         }
     }
 }

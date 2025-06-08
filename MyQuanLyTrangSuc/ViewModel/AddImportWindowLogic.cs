@@ -230,7 +230,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
 
             ResetProductQuantities();
-
             Import import = new Import
             {
                 ImportId = NewID,

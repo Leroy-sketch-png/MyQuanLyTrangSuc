@@ -9,17 +9,20 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using WpfApplication = System.Windows.Application;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
     public class AddServiceRecordWindowLogic : INotifyPropertyChanged
     {
         private readonly ServiceRecordService serviceRecordService;
+        private readonly EmployeeService employeeService;
         private readonly NotificationWindowLogic notificationWindowLogic;
 
         public AddServiceRecordWindowLogic()
         {
             serviceRecordService = ServiceRecordService.Instance;
+            employeeService = EmployeeService.Instance;
             notificationWindowLogic = new NotificationWindowLogic();
             GenerateNewServiceRecordID();
             Services = serviceRecordService.GetListOfServices();
@@ -310,14 +313,12 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 ServiceRecordId = NewServiceRecordId,
                 CreateDate = DateTime.Now,
-                CustomerId = SelectedCustomer?.CustomerId,                          // assuming you have SelectedCustomer bound
-                //EmployeeId = (string)Application.Current.Resources["
-                //"],// or however you pull the current user
+                CustomerId = SelectedCustomer?.CustomerId,
+                EmployeeId = employeeService.GetEmployeeByAccountId((int)WpfApplication.Current.Resources["CurrentAccountId"]).EmployeeId,
                 GrandTotal = GrandTotalCost,
                 TotalPaid = GrandTotalPaid,
                 TotalUnpaid = totalUnpaid,
                 Status = status
-                // imagePath    = ... if you collect one
             };
 
             // 1) Add the header

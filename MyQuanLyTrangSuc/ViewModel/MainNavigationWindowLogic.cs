@@ -138,12 +138,9 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
             else
             {
-                // Account not found, revert to unauthenticated/guest
                 Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("Guest"), new string[] { });
                 CurrentUserRole = "Guest";
                 MessageBox.Show("Authenticated account not found. Please log in again.", "Authentication Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                // Optionally, force logout or navigate to login window
-                // OnClick_LogOut(); // This might cause a loop if Authentification is called on LoginWindow too
             }
 
             // Notify UI that the CurrentUserPrincipal property has changed,
@@ -341,7 +338,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(""), new string[] { });
                 Application.Current.Resources["CurrentAccountId"] = null; // Clear the stored ID
                 Application.Current.Resources["CurrentUsername"] = null; // Clear username if stored
-
+                    
                 string applicationPath = Environment.ProcessPath;
                 Process.Start(applicationPath);
                 App.Current.Shutdown();

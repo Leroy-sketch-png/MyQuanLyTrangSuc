@@ -101,7 +101,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
 
             supplierService.EditSupplier(_supplier);
-            notificationWindowLogic.LoadNotification("Success", "Update supplier successfully", "BottomRight");
+            notificationWindowLogic.LoadNotification("Success", "Supplier updated successfully", "BottomRight");
             return true;
         }
     }

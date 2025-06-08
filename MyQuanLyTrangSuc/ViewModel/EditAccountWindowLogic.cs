@@ -75,7 +75,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
             Account.GroupId = SelectedUserGroup?.GroupId ?? Account.GroupId;
 
-            //MessageBox.Show(SelectedUserGroup.GroupName);
             Account.Group = SelectedUserGroup;
             string newPlainPassword = password?.Password;
             Account.Password = newPlainPassword;

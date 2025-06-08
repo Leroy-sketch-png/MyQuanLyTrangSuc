@@ -171,9 +171,9 @@ namespace MyQuanLyTrangSuc.ViewModel
             addEmployeeWindow.ShowDialog();
         }
 
-        public void DeleteEmployee(Employee employeeToDelete) // Now takes Employee parameter
+        public void DeleteEmployee(Employee employeeToDelete) 
         {
-            if (employeeToDelete == null) // Use the passed parameter instead of SelectedEmployee directly
+            if (employeeToDelete == null)
             {
                 return;
             }
@@ -183,6 +183,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             if (result == MessageBoxResult.Yes)
             {
                 employeeToDelete.IsDeleted = true;
+                employeeToDelete.AccountId = null;
+                employeeToDelete.Account = null;
                 context.Entry(employeeToDelete).State = EntityState.Modified;
                 Employees.Remove(employeeToDelete); // Remove from ObservableCollection immediately for UI update
                 context.SaveChanges();

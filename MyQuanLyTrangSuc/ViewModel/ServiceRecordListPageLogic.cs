@@ -17,7 +17,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input; // Required for ICommand
+using System.Windows.Input;
+using WpfApplication = System.Windows.Application;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -183,16 +184,16 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         private bool CanExecuteAddServiceRecord()
         {
-            return CurrentUserPrincipal?.HasPermission("AddServiceRecord") == true; // Example permission check
+            return CurrentUserPrincipal?.HasPermission("AddServiceRecord") == true && AuthenticationService.Instance.GetAccountWithGroupByUsername((string)WpfApplication.Current.Resources["CurrentUsername"]).Employee != null;
         }
 
         private bool CanExecuteImport()
         {
-            return CurrentUserPrincipal?.HasPermission("ImportServiceRecordExcel") == true; // Example permission check
+            return CurrentUserPrincipal?.HasPermission("ImportServiceRecordExcel") == true;
         }
         private bool CanExecuteExport()
         {
-            return CurrentUserPrincipal?.HasPermission("ExportServiceRecordExcel") == true; // Example permission check
+            return CurrentUserPrincipal?.HasPermission("ExportServiceRecordExcel") == true;
         }
 
         private void LoadServiceRecordsFromDatabase()

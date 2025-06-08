@@ -113,8 +113,8 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             {
                 return false;
             }
-            bool res = plainPassword.Equals(acc.Password);
-            //bool res = BCrypt.Net.BCrypt.Verify(plainPassword, acc.Password);
+            //bool res = plainPassword.Equals(acc.Password);
+            bool res = BCrypt.Net.BCrypt.Verify(plainPassword, acc.Password);
             return res;
         }
 

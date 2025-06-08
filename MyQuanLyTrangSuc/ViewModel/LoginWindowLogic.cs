@@ -21,7 +21,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         private readonly AuthenticationService authenticationService = AuthenticationService.Instance;
 
-        private readonly PermissionService permissionService = PermissionService.Instance; // <--- NEW: Inject or create PermissionService
+        private readonly PermissionService permissionService = PermissionService.Instance;
 
         public string userName { get; set; }
         private const string USER = "user"; 

@@ -59,7 +59,7 @@
                                 <ImageBrush ImageSource="/Resources/Krystal.png" />
                             </Ellipse.Fill>
                         </Ellipse>
-                                 
+
                     </Border>
 
                     <TextBlock FontSize="70"
@@ -192,11 +192,10 @@
                                          Height="20"
                                          Margin="425,13,14,0"
                                          HorizontalAlignment="Stretch"
-                                        
                                          Name="CloseIcon"
                                          Foreground="#FFC1CC00"
-                                         MouseLeftButtonUp="CloseButton_Click"
-                                         /> 
+                                         MouseLeftButtonDown="CloseButton_Click"
+                                         />
 
                 <!--Inputs-->
                 <StackPanel VerticalAlignment="Center"
@@ -250,7 +249,7 @@
                             Content="Forgot Password" 
                             Foreground="#FFC1CC00"
                             Width="140" BorderBrush="Transparent"
-                            Click="forgotPassword_Click"/> 
+                            Click="forgotPassword_Click"/>
 
                     <!--SignIn Button-->
                     <StackPanel Orientation="Horizontal" Height="77">
@@ -261,7 +260,7 @@
                                         Height="45"
                                         materialDesign:ButtonAssist.CornerRadius="22"
                                         
-                                Click="OnClick_Login"/> 
+                                Click="OnClick_Login"/>
                     </StackPanel>
                 </StackPanel>
             </Grid>

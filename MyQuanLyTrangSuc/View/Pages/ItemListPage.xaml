@@ -51,7 +51,7 @@
                 <!--IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"-->
                 <!---->
 
-                <TextBox DockPanel.Dock="Left" Width="200" x:Name="SearchTextBox" materialDesign:HintAssist.Hint="Search By Name" HorizontalAlignment="Left" Margin="20,0,10,0" Height="60"
+                <TextBox DockPanel.Dock="Left" Width="200" x:Name="SearchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Search By Name" HorizontalAlignment="Left" Margin="20,0,10,0"
                          TextChanged="TextChanged_Search"/> 
                 <ComboBox DockPanel.Dock="Left" Width="150" Style="{StaticResource MaterialDesignOutlinedComboBox}" HorizontalAlignment="Left" Margin="20,0,10,0" ItemsSource="{Binding Categories}"
                           SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"

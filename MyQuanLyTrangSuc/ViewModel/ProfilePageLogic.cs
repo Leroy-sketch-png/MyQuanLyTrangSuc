@@ -168,7 +168,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             if (account != null)
             {
-                var employee = account.Employees.FirstOrDefault(e => e.Account.Username == username);
+                var employee = context.Employees.FirstOrDefault(e => e.Account.Username == username);
 
                 if (employee != null)
                 {
@@ -178,14 +178,6 @@ namespace MyQuanLyTrangSuc.ViewModel
                     ProfileGender = employee.Gender;
                     DateOfBirth = employee.DateOfBirth;
                 }
-                else
-                {
-                    Console.WriteLine("Employee not found.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Account not found.");
             }
         }
 

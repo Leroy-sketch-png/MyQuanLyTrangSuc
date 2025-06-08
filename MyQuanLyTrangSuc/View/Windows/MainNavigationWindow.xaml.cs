@@ -68,7 +68,5 @@ namespace MyQuanLyTrangSuc.View
             }
         }
 
-        // REMOVE ALL OnClick_...Navigation methods here. They are replaced by Commands.
-        // REMOVE OnClick_LogOut here. It's replaced by a Command.
     }
 }

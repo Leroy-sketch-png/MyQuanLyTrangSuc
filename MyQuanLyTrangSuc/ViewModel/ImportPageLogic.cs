@@ -14,6 +14,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input; // Required for ICommand
+using WpfApplication = System.Windows.Application;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -188,7 +189,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         private bool CanLoadAddImportWindow()
         {
-            return CurrentUserPrincipal?.HasPermission("AddImport") == true;
+            return CurrentUserPrincipal?.HasPermission("AddImport") == true && AuthenticationService.Instance.GetAccountWithGroupByUsername((string)WpfApplication.Current.Resources["CurrentUsername"]).Employee != null;
         }
 
         // --- View Import Details Logic ---

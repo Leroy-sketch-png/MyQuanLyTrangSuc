@@ -126,8 +126,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
 
             account.Password = BCrypt.Net.BCrypt.HashPassword(newPassword); 
-
-
             try
             {
                 context.SaveChanges();

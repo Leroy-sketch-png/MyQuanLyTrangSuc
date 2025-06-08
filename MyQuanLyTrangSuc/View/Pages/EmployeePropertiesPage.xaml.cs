@@ -1,4 +1,5 @@
 ﻿using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.View.Windows;
 using MyQuanLyTrangSuc.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -57,6 +58,15 @@ namespace MyQuanLyTrangSuc.View
         {
 
             logicService.EditEmployeeImage();
+        }
+
+        private void AssignAccountButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext is Employee employee)
+            {
+                AssignAccountWindow assignAccountWindow = new AssignAccountWindow(employee);
+                assignAccountWindow.ShowDialog();
+            }
         }
     }
 }

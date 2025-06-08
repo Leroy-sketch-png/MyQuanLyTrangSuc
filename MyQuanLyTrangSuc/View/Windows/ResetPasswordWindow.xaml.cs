@@ -34,7 +34,7 @@ namespace MyQuanLyTrangSuc.View
         private void resetGrid_Click(object sender, RoutedEventArgs e)
         {
             logicService.ResetPassword(newPasswordBox, confirmPasswordBox, email);
-            if (ResetPasswordLogic.flag) this.Hide();
+            if (ResetPasswordLogic.flag) this.Close();
         }
     }
 }

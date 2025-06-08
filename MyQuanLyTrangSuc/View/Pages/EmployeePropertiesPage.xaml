@@ -9,19 +9,30 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Background="White">
-            <Button Content="BACK" Width="200" FontSize="25" Margin="10,10,0,0" Height="45"
+            <DockPanel>
+                <Button Content="BACK" Width="200" FontSize="25" Margin="10,10,0,0" Height="45"
                     HorizontalAlignment="Left" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"
-                    Click="OnClick_Back_EmployeePropertiesPage">
-                <Button.Effect>
-                    <DropShadowEffect/>
-                </Button.Effect>
-            </Button>
+                    Click="OnClick_Back_EmployeePropertiesPage"
+                        DockPanel.Dock="Left">
+                    <Button.Effect>
+                        <DropShadowEffect/>
+                    </Button.Effect>
+                </Button>
+                <Button x:Name="assignAccountButton" Content="ASSIGN ACCOUNT" Width="150" FontSize="10" Margin="0,10,10,0" Height="30"
+                    HorizontalAlignment="Right" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"
+                    Click="AssignAccountButton_Click"
+                        DockPanel.Dock="Right">
+                    <Button.Effect>
+                        <DropShadowEffect/>
+                    </Button.Effect>
+                </Button>
 
+            </DockPanel>
             <DockPanel>
                 <TextBlock DockPanel.Dock="Left" Text="Employee's Info" FontSize="36" FontWeight="Bold"
                            Foreground="Black" Margin="20" HorizontalAlignment="Left"/>
-                <Button x:Name="editButton" Content="Modify?" FontWeight="Bold" HorizontalAlignment="Right" Width="160"
-                        Margin="20,20,40,20" FontSize="18" Click="OnClick_Edit_EmployeePropertiesPage"/>
+                <Button x:Name="editButton" DockPanel.Dock="Right" Content="Modify?" FontWeight="Bold" Width="160"
+                        Margin="20,20,40,20" FontSize="18" Click="OnClick_Edit_EmployeePropertiesPage" HorizontalAlignment="Right"/>
             </DockPanel>
             <Separator BorderBrush="#623ed0" BorderThickness="5" Margin="5,0,50,20"/>
 

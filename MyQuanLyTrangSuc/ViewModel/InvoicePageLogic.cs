@@ -14,6 +14,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input; // Required for ICommand
+using WpfApplication = System.Windows.Application;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -199,7 +200,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         private bool CanLoadAddInvoiceWindow()
         {
-            return CurrentUserPrincipal?.HasPermission("AddInvoice") == true;
+            return CurrentUserPrincipal?.HasPermission("AddInvoice") == true && AuthenticationService.Instance.GetAccountWithGroupByUsername((string)WpfApplication.Current.Resources["CurrentUsername"]).Employee != null;
         }
 
         // --- View Invoice Details Logic ---

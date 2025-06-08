@@ -296,16 +296,15 @@ public partial class MyQuanLyTrangSucContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
-            entity.Property(e => e.Position)
-                .HasMaxLength(255)
-                .HasColumnName("position");
             entity.Property(e => e.AccountId)
                 .HasMaxLength(50)
                 .HasColumnName("accountId");
 
             entity.HasOne(d => d.Account)
-                .WithMany(p => p.Employees)
-                .HasForeignKey(d => d.AccountId)
+                .WithOne(p => p.Employee) 
+                .HasForeignKey<Employee>(d => d.AccountId)
+                .IsRequired(false) 
+                .OnDelete(DeleteBehavior.SetNull) 
                 .HasConstraintName("fk_employee_account");
         });
 
@@ -592,7 +591,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
             entity.HasIndex(e => new { e.RevenueReportId, e.ProductId }, "UQ__RevenueR__4AC7438FA1B54800").IsUnique();
 
             entity.Property(e => e.Percentage)
-                .HasColumnType("decimal(3, 2)")
+                .HasColumnType("decimal(5, 2)")
                 .HasColumnName("percentage");
             entity.Property(e => e.ProductId)
                 .HasMaxLength(6)
@@ -625,7 +624,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
             entity.HasIndex(e => new { e.RevenueReportId, e.ServiceId }, "UQ__RevenueR__1C434994F1684961").IsUnique();
 
             entity.Property(e => e.Percentage)
-                .HasColumnType("decimal(3, 2)")
+                .HasColumnType("decimal(5, 2)")
                 .HasColumnName("percentage");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.Revenue)
