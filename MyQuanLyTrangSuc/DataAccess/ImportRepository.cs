@@ -38,11 +38,14 @@ namespace MyQuanLyTrangSuc.DataAccess
                 context.SaveChanges();
             }
         }
-        
+        public List<Invoice> GetListOfInvoicesAfterImport(Import import)
+        {
+            return context.Invoices.Where(i => i.Date >= import.Date).ToList();
+        }
         public List<Import> GetListOfImports()
         {
             return context.Imports.Where(i => !i.IsDeleted).ToList();
-        }   
+        }
         public List<Product> GetListOfProducts()
         {
             return context.Products.Where(p => !p.IsDeleted).ToList();
@@ -60,7 +63,10 @@ namespace MyQuanLyTrangSuc.DataAccess
 
         public IEnumerable<ImportDetail> GetImportDetailsByImportId(string importId)
         {
-            return context.ImportDetails.Where(id => id.ImportId == importId);
+            return context.ImportDetails
+                .Where(id => id.ImportId == importId)
+                .Include(id => id.Product)
+                .AsNoTracking();
         }
 
         public void RemoveImportDetail(string importId, string productId)
@@ -80,9 +86,9 @@ namespace MyQuanLyTrangSuc.DataAccess
             if (existingImport != null)
             {
                 existingImport.SupplierId = import.SupplierId;
-                existingImport.Date = import.Date; 
+                existingImport.Date = import.Date;
                 existingImport.TotalAmount = import.TotalAmount;
-                context.Imports.Update(existingImport); 
+                context.Imports.Update(existingImport);
                 context.SaveChanges();
             }
             else
@@ -97,7 +103,7 @@ namespace MyQuanLyTrangSuc.DataAccess
             if (existingDetail != null)
             {
                 existingDetail.Quantity = currentDetail.Quantity;
-                existingDetail.Price = currentDetail.Price; 
+                existingDetail.Price = currentDetail.Price;
                 existingDetail.TotalPrice = currentDetail.TotalPrice;
 
                 context.ImportDetails.Update(existingDetail);
@@ -113,9 +119,14 @@ namespace MyQuanLyTrangSuc.DataAccess
         {
             if (selectedItem != null)
             {
+                foreach (ImportDetail importDetail in GetImportDetailsByImportId(selectedItem.ImportId))
+                {
+                    importDetail.Product.Quantity -= importDetail.Quantity;
+                }
                 selectedItem.IsDeleted = true;
                 context.SaveChanges();
             }
         }
+
     }
 }

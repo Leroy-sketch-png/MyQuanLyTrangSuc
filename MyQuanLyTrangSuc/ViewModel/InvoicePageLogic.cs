@@ -162,6 +162,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 // Ensure Customer data is eager-loaded with the invoice
                 List<Invoice> invoicesFromDb = context.Invoices
+                    .Where(i => !i.IsDeleted)
                     .Include(i => i.Customer)
                     .ToList();
 
@@ -289,8 +290,8 @@ namespace MyQuanLyTrangSuc.ViewModel
         public List<Invoice> SearchInvoicesByNameOfCustomer(string name)
         {
             // Include Customer navigation property for filtering by customer name
-            return context.Invoices
-                          .Include(i => i.Customer)
+            return Invoices
+                          //.Include(i => i.Customer)
                           .Where(i => i.Customer != null && i.Customer.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0)
                           .ToList();
         }
@@ -300,8 +301,8 @@ namespace MyQuanLyTrangSuc.ViewModel
         /// </summary>
         public List<Invoice> SearchInvoicesByID(string id)
         {
-            return context.Invoices
-                          .Include(i => i.Customer) // Still include customer for consistent data display
+            return Invoices
+                          //.Include(i => i.Customer) // Still include customer for consistent data display
                           .Where(i => i.InvoiceId.IndexOf(id, StringComparison.OrdinalIgnoreCase) >= 0)
                           .ToList();
         }
@@ -317,8 +318,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             // or a dedicated date picker in the UI.
             if (DateTime.TryParse(date, out DateTime parsedDate))
             {
-                matchingInvoices = context.Invoices
-                                          .Include(i => i.Customer)
+                matchingInvoices = Invoices
+                                          //.Include(i => i.Customer)
                                           .Where(i => i.Date.HasValue &&
                                                       i.Date.Value.Date == parsedDate.Date)
                                           .ToList();
@@ -327,7 +328,9 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 // Attempt to match by parts if full parsing fails
                 var dateParts = date.Split(new char[] { '/', '-', '.' }, StringSplitOptions.RemoveEmptyEntries);
-                var allInvoices = context.Invoices.Include(i => i.Customer).ToList();
+                var allInvoices = Invoices
+                    //.Include(i => i.Customer)
+                    .ToList();
 
                 foreach (var invoice in allInvoices)
                 {

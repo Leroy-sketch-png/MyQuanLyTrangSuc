@@ -22,11 +22,11 @@ namespace MyQuanLyTrangSuc.View
     /// </summary>
     public partial class AddImportWindow : Window
     {
-        private readonly AddImportRecordWindowLogic logicService;
+        private readonly AddImportWindowLogic logicService;
         public AddImportWindow()
         {
             InitializeComponent();
-            logicService = new AddImportRecordWindowLogic();
+            logicService = new AddImportWindowLogic();
             DataContext = logicService;
         }
 
@@ -79,6 +79,11 @@ namespace MyQuanLyTrangSuc.View
                     }
                 }
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            logicService.ResetProductQuantities();
         }
     }
 }

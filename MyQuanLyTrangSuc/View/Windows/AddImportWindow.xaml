@@ -2,11 +2,12 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         ResizeMode="NoResize"
-        Height="600" Width="650"
+        Height="620" Width="650"
         xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="SingleBorderWindow">
+        WindowStyle="SingleBorderWindow"
+        Closing="Window_Closing">
     <Border Background="White" CornerRadius="10" Padding="5"
             BorderBrush="Gray" BorderThickness="1">
         <Grid>
@@ -96,6 +97,7 @@
                             Background="#BFDBFE" Foreground="#1E40AF" 
                             Padding="10,5" Margin="0,0,450,0"
                             Name="addImportDetailBtn" Click="addImportDetailBtn_Click"
+                            Width="90" HorizontalAlignment="Left"
                             />
                     <!--<Button DockPanel.Dock="Left" Content="Clear" Background="#BFDBFE" 
                             Foreground="#1E40AF" Padding="10,5" Margin="0,0,5,0"
@@ -132,11 +134,11 @@
                       Margin="0,0,0,67"
                       >
                 <DataGrid.Columns>
-                    <DataGridTextColumn IsReadOnly="True" Header="Index" Width="65" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="ID" Width="65" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
                     <DataGridTextColumn IsReadOnly="True" Header="Product" Width="*" Binding="{Binding Product.Name}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="Category" Width="*" Binding="{Binding Product.Category.CategoryName}"/>
-                    <DataGridTextColumn IsReadOnly="False" Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
                     <DataGridTextColumn IsReadOnly="True" Header="Price" Width="*" Binding="{Binding Product.Price}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Total" Width="*" Binding="{Binding TotalPrice}"/>
                     <DataGridTemplateColumn Width="*">
                         <DataGridTemplateColumn.HeaderStyle>
                             <Style TargetType="{x:Type DataGridColumnHeader}">

@@ -9,16 +9,17 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using WpfApplication = System.Windows.Application;
 
-
 namespace MyQuanLyTrangSuc.ViewModel
 {
-    public class AddImportRecordWindowLogic : INotifyPropertyChanged
+    public class AddImportWindowLogic : INotifyPropertyChanged
     {
         private readonly ImportService importService;
         private readonly EmployeeService employeeService;
         private readonly NotificationWindowLogic notificationWindowLogic;
 
-        public AddImportRecordWindowLogic()
+        private Dictionary<string, int> originalProductQuantities;
+
+        public AddImportWindowLogic()
         {
             importService = ImportService.Instance;
             employeeService = EmployeeService.Instance;
@@ -28,6 +29,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             Suppliers = new ObservableCollection<Supplier>(importService.GetListOfSuppliers());
             ImportDetails = new ObservableCollection<ImportDetail>();
             _newImportDetailID = importService.GenerateNewImportDetailID();
+
+            originalProductQuantities = Items.ToDictionary(p => p.ProductId, p => p.Quantity ?? 0);
         }
 
         private string _newID;
@@ -54,11 +57,16 @@ namespace MyQuanLyTrangSuc.ViewModel
                 }
             }
         }
+
         private Supplier selectedSupplier;
         public Supplier SelectedSupplier
         {
             get => selectedSupplier;
-            set { selectedSupplier = value; OnPropertyChanged(); }
+            set
+            {
+                selectedSupplier = value;
+                OnPropertyChanged();
+            }
         }
 
         private decimal grandTotal;
@@ -88,6 +96,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 }
             }
         }
+
         public ObservableCollection<Product> _items;
         public ObservableCollection<Product> Items
         {
@@ -98,8 +107,9 @@ namespace MyQuanLyTrangSuc.ViewModel
                 OnPropertyChanged();
             }
         }
+
         public ObservableCollection<Supplier> _suppliers;
-        public ObservableCollection<Supplier> Suppliers 
+        public ObservableCollection<Supplier> Suppliers
         {
             get => _suppliers;
             set
@@ -108,6 +118,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 OnPropertyChanged();
             }
         }
+
         public ObservableCollection<ImportDetail> ImportDetails { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -146,17 +157,18 @@ namespace MyQuanLyTrangSuc.ViewModel
                 notificationWindowLogic.LoadNotification("Error", "Quantity must be positive", "BottomRight");
                 return;
             }
+
             var existingDetail = ImportDetails.FirstOrDefault(d => d.ProductId == SelectedItem.ProductId);
 
             if (existingDetail != null)
             {
-                GrandTotal -= (decimal)(existingDetail.Quantity * existingDetail.Price); 
+                GrandTotal -= (decimal)(existingDetail.Quantity * existingDetail.Price);
                 int index = ImportDetails.IndexOf(existingDetail);
                 ImportDetails.Remove(existingDetail);
                 existingDetail.Quantity += Quantity;
-                existingDetail.TotalPrice = (existingDetail.Quantity * existingDetail.Price);
+                existingDetail.TotalPrice = existingDetail.Quantity * existingDetail.Price;
                 ImportDetails.Insert(index, existingDetail);
-                GrandTotal += (decimal)(existingDetail.Quantity * existingDetail.Price);
+                GrandTotal += (decimal)(existingDetail.TotalPrice);
 
                 notificationWindowLogic.LoadNotification("Success", $"Updated quantity for product '{SelectedItem.Name}'. New quantity: {existingDetail.Quantity}", "BottomRight");
             }
@@ -169,11 +181,12 @@ namespace MyQuanLyTrangSuc.ViewModel
                     ProductId = SelectedItem.ProductId,
                     Quantity = Quantity,
                     Price = (decimal)SelectedItem.Price,
-                    TotalPrice = (decimal)(Quantity * SelectedItem.Price),
+                    TotalPrice = Quantity * (decimal)SelectedItem.Price,
                     Product = SelectedItem
                 };
+
                 ImportDetails.Add(importDetail);
-                GrandTotal += (decimal)(importDetail.Quantity * importDetail.Price);
+                GrandTotal += (decimal)(importDetail.TotalPrice);
 
                 notificationWindowLogic.LoadNotification("Success", $"Added product '{SelectedItem.Name}' to import list.", "BottomRight");
             }
@@ -185,11 +198,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 ImportDetails.Remove(selectedDetail);
                 GrandTotal -= (decimal)(selectedDetail.Quantity * selectedDetail.Price);
+
                 notificationWindowLogic.LoadNotification("Success", $"Removed product '{selectedDetail.Product?.Name}' from import list.", "BottomRight");
-                //for (int i = 0; i < ImportDetails.Count; i++)
-                //{
-                //    ImportDetails[i].Stt = i + 1;
-                //}
             }
         }
 
@@ -200,6 +210,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 notificationWindowLogic.LoadNotification("Error", "Please add at least one item", "BottomRight");
                 return;
             }
+
             if (SelectedSupplier == null)
             {
                 notificationWindowLogic.LoadNotification("Error", "Please select a supplier", "BottomRight");
@@ -218,31 +229,60 @@ namespace MyQuanLyTrangSuc.ViewModel
                 return;
             }
 
+            ResetProductQuantities();
+
             Import import = new Import
             {
                 ImportId = NewID,
                 Supplier = SelectedSupplier,
-                SupplierId = SelectedSupplier.SupplierId,
                 EmployeeId = employeeService.GetEmployeeByAccountId((int)WpfApplication.Current.Resources["CurrentAccountId"]).EmployeeId,
                 Date = DateTime.Now,
-                TotalAmount = GrandTotal
+                TotalAmount = GrandTotal,
             };
+
             importService.AddImport(import);
+
             foreach (var importDetail in ImportDetails)
             {
                 importService.AddImportDetail(importDetail);
-                importService.UpdateProductQuantity(importDetail.ProductId, (int)importDetail.Quantity);
+                importService.UpdateProductQuantity(importDetail.Product.ProductId, (int)importDetail.Quantity);
             }
+
             notificationWindowLogic.LoadNotification("Success", "Import record added successfully", "BottomRight");
+
             GenerateNewImportID();
             ImportDetails.Clear();
             GrandTotal = 0;
+
+            Items = new ObservableCollection<Product>(importService.GetListOfProducts());
+            originalProductQuantities = Items.ToDictionary(p => p.ProductId, p => p.Quantity ?? 0);
+            OnPropertyChanged(nameof(Items));
+
+            SelectedItem = null;
+            Quantity = 0;
         }
 
         public void LoadInitialData()
         {
             Suppliers = new ObservableCollection<Supplier>(importService.GetListOfSuppliers());
             Items = new ObservableCollection<Product>(importService.GetListOfProducts());
+        }
+
+        public void ResetProductQuantities()
+        {
+            if (originalProductQuantities == null) return;
+
+            foreach (var product in Items)
+            {
+                if (originalProductQuantities.TryGetValue(product.ProductId, out int originalQty))
+                {
+                    product.Quantity = originalQty;
+                }
+            }
+
+            OnPropertyChanged(nameof(Items));
+            if (SelectedItem != null)
+                OnPropertyChanged(nameof(SelectedItem));
         }
     }
 }

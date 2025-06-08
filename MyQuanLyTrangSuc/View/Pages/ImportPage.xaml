@@ -89,7 +89,7 @@
                     <ComboBoxItem Content="Supplier"/>
                 </ComboBox>
                 <DataGrid x:Name="importRecordsDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" Grid.Row="5"
-                          ItemsSource="{Binding ImportRecords}"
+                          ItemsSource="{Binding Imports}"
                           SelectedItem="{Binding SelectedImportRecord, Mode=TwoWay}">
                     <DataGrid.InputBindings>
                         <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding LoadImportDetailsWindowCommand}" CommandParameter="{Binding SelectedImportRecord}" />

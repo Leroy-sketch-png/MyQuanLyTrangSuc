@@ -24,6 +24,10 @@ public partial class ImportDetail: INotifyPropertyChanged
         {
             if (_quantity != value)
             {
+                if (value <= 0)
+                {
+                    value = 1;
+                }
                 _quantity = value;
                 OnPropertyChanged();
                 CalculateTotalPrice();
@@ -31,9 +35,21 @@ public partial class ImportDetail: INotifyPropertyChanged
         }
     }
 
-    //private decimal? _price;
 
-    public decimal? Price { get; set; }
+    private decimal? _price;
+    public decimal? Price {
+        get => _price;
+        set
+        {
+            if (_price != value)
+            {
+                _price = value;
+                OnPropertyChanged();
+                CalculateTotalPrice();
+            }
+
+        }
+    }
     
     
 

@@ -75,5 +75,10 @@ namespace MyQuanLyTrangSuc.View.Windows
                 }
             }
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            logicService.ResetProductQuantities();
+        }
     }
 }

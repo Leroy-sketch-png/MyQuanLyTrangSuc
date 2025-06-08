@@ -57,6 +57,10 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         {
             importRepository.AddImportDetail(importDetail);
         }
+        public List<Invoice> GetListOfInvoicesAfterImport(Import import)
+        {
+            return importRepository.GetListOfInvoicesAfterImport(import);
+        }
         public void AddImport(Import import)
         {
             importRepository.AddImport(import);
@@ -68,18 +72,14 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             return importRepository.GetLastImportDetailID();
         }
 
-        public void UpdateProductQuantity(string productId, int quantity)
+        public void UpdateProductQuantity(string productId, int quantity, bool isAddition = true)
         {
-            itemRepository.UpdateProductQuantity(productId, quantity, true);
+            itemRepository.UpdateProductQuantity(productId, quantity, isAddition);
         }
 
         public IEnumerable<ImportDetail> GetImportDetailsByImportId(string importId)
         {
-            return MyQuanLyTrangSucContext.Instance.ImportDetails
-                                  .Where(id => id.ImportId == importId)
-                                  .Include(id => id.Product)
-                                  .AsNoTracking()
-                                  .ToList();
+            return importRepository.GetImportDetailsByImportId(importId);
         }
 
         public void RemoveImportDetail(string importId, string productId)

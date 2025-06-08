@@ -6,7 +6,8 @@
         WindowStartupLocation="CenterScreen"
         xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        WindowStyle="SingleBorderWindow">
+        WindowStyle="SingleBorderWindow"
+        Closing="Window_Closing">
     <Border Background="White" CornerRadius="10" Padding="5"
             BorderBrush="Gray" BorderThickness="1">
         <Grid>
@@ -127,7 +128,8 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True" Header="ID" Width="80" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
                     <DataGridTextColumn IsReadOnly="True" Header="Name" Width="*" Binding="{Binding Product.Name}"/>
-                    <DataGridTextColumn IsReadOnly="False" Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Quantity" Width="*" Binding="{Binding Quantity}" />
+                    <DataGridTextColumn IsReadOnly="True" Header="Price" Width="*" Binding="{Binding Price}"/>
                     <DataGridTextColumn IsReadOnly="True" Header="Total" Width="*" Binding="{Binding TotalPrice}"/>
                     <DataGridTemplateColumn Width="*">
                         <DataGridTemplateColumn.HeaderStyle>

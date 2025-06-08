@@ -111,12 +111,12 @@ namespace MyQuanLyTrangSuc.ViewModel {
             if (selectedFromDate == null || selectedUntilDate == null) return;
 
             var importData = context.Imports
-                .Where(i => i.Date >= selectedFromDate && i.Date <= selectedUntilDate)
+                .Where(i => i.Date >= selectedFromDate && i.Date <= selectedUntilDate && !i.IsDeleted)
                 .Select(i => new { Date = i.Date.Value, Value = -i.TotalAmount })
                 .ToList();
 
             var exportData = context.Invoices
-                .Where(e => e.Date >= selectedFromDate && e.Date <= selectedUntilDate)
+                .Where(e => e.Date >= selectedFromDate && e.Date <= selectedUntilDate && !e.IsDeleted)
                 .Select(e => new { Date = e.Date.Value, Value = e.TotalAmount })
                 .ToList();
 

@@ -27,7 +27,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         /// <summary>
         /// Collection of import records displayed in the DataGrid.
         /// </summary>
-        public ObservableCollection<Import> ImportRecords
+        public ObservableCollection<Import> Imports
         {
             get => _importRecords;
             set
@@ -108,7 +108,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             context = MyQuanLyTrangSucContext.Instance;
             importService = ImportService.Instance;
-            ImportRecords = new ObservableCollection<Import>();
+            Imports = new ObservableCollection<Import>();
             LoadRecordsFromDatabase();
             importService.OnImportAdded += ImportService_OnImportAdded;
             InitializeCommands();
@@ -121,7 +121,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             this.importPage = importPage;
             context = MyQuanLyTrangSucContext.Instance;
             importService = ImportService.Instance;
-            ImportRecords = new ObservableCollection<Import>();
+            Imports = new ObservableCollection<Import>();
             LoadRecordsFromDatabase();
             importService.OnImportAdded += ImportService_OnImportAdded;
             InitializeCommands();
@@ -143,7 +143,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                ImportRecords.Add(import);
+                Imports.Add(import);
             });
         }
         private void InitializeCommands()
@@ -159,15 +159,16 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 // Ensure Supplier data is eager-loaded with the import record
                 List<Import> importRecordsFromDb = context.Imports
+                    .Where(i => !i.IsDeleted)
                     .Include(i => i.Supplier)
                     .ToList();
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    ImportRecords.Clear();
+                    Imports.Clear();
                     foreach (Import ir in importRecordsFromDb)
                     {
-                        ImportRecords.Add(ir);
+                        Imports.Add(ir);
                     }
                 });
             }
@@ -278,8 +279,8 @@ namespace MyQuanLyTrangSuc.ViewModel
         public List<Import> ImportsSearchByNameOfSupplier(string name_supplier)
         {
             // Include Supplier navigation property for filtering by supplier name
-            return context.Imports
-                          .Include(i => i.Supplier)
+            return Imports
+                          //.Include(i => i.Supplier)
                           .Where(i => i.Supplier != null && i.Supplier.Name.IndexOf(name_supplier, StringComparison.OrdinalIgnoreCase) >= 0)
                           .ToList();
         }
@@ -289,8 +290,8 @@ namespace MyQuanLyTrangSuc.ViewModel
         /// </summary>
         public List<Import> ImportsSearchByID(string ID)
         {
-            return context.Imports
-                          .Include(i => i.Supplier) // Still include supplier for consistent data display
+            return Imports
+                          //.Include(i => i.Supplier) // Still include supplier for consistent data display
                           .Where(i => i.ImportId.IndexOf(ID, StringComparison.OrdinalIgnoreCase) >= 0)
                           .ToList();
         }
@@ -303,8 +304,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             List<Import> matchingImports = new List<Import>();
             if (DateTime.TryParse(date, out DateTime parsedDate))
             {
-                matchingImports = context.Imports
-                                          .Include(i => i.Supplier)
+                matchingImports = Imports
+                                          //.Include(i => i.Supplier)
                                           .Where(i => i.Date.HasValue &&
                                                       i.Date.Value.Date == parsedDate.Date)
                                           .ToList();
@@ -312,7 +313,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             else
             {
                 var dateParts = date.Split(new char[] { '/', '-', '.' }, StringSplitOptions.RemoveEmptyEntries);
-                var allImports = context.Imports.Include(i => i.Supplier).ToList();
+                var allImports = Imports.ToList();
 
                 foreach (var import in allImports)
                 {
@@ -360,19 +361,19 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 var newImportIds = new HashSet<string>(newImports.Select(i => i.ImportId));
 
-                for (int i = ImportRecords.Count - 1; i >= 0; i--)
+                for (int i = Imports.Count - 1; i >= 0; i--)
                 {
-                    if (!newImportIds.Contains(ImportRecords[i].ImportId))
+                    if (!newImportIds.Contains(Imports[i].ImportId))
                     {
-                        ImportRecords.RemoveAt(i);
+                        Imports.RemoveAt(i);
                     }
                 }
 
                 foreach (var newImport in newImports)
                 {
-                    if (!ImportRecords.Any(ir => ir.ImportId == newImport.ImportId))
+                    if (!Imports.Any(ir => ir.ImportId == newImport.ImportId))
                     {
-                        ImportRecords.Add(newImport);
+                        Imports.Add(newImport);
                     }
                 }
             });
@@ -390,7 +391,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             if (result == MessageBoxResult.Yes)
             {
                 importService.DeleteImport(selectedItem);
-                ImportRecords.Remove(selectedItem);
+                Imports.Remove(selectedItem);
             }
         }
     }

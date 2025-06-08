@@ -63,5 +63,21 @@ namespace MyQuanLyTrangSuc.View.Windows
                 }
             }
         }
+
+        private void addNewItemBtn_Click(object sender, RoutedEventArgs e)
+        {
+            AddItemWindow addItemWindow = new AddItemWindow();
+            bool? result = addItemWindow.ShowDialog();
+
+            if (result == true)
+            {
+                logicService.LoadInitialData();
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            logicService.ResetProductQuantities();
+        }
     }
 }

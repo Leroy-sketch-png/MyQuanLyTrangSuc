@@ -6,19 +6,19 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using WpfApplication = System.Windows.Application;
 
-
 namespace MyQuanLyTrangSuc.ViewModel
 {
-    public class AddInvoiceWindowLogic: INotifyPropertyChanged
+    public class AddInvoiceWindowLogic : INotifyPropertyChanged
     {
         private readonly InvoiceService invoiceService;
         private readonly EmployeeService employeeService;
         private readonly NotificationWindowLogic notificationWindowLogic;
+
+        private Dictionary<string, int> originalProductQuantities;
+
         public AddInvoiceWindowLogic()
         {
             invoiceService = InvoiceService.Instance;
@@ -30,7 +30,10 @@ namespace MyQuanLyTrangSuc.ViewModel
             InvoiceDetails = new ObservableCollection<InvoiceDetail>();
             _newInvoiceDetailID = invoiceService.GenerateNewInvoiceDetailID();
 
+            // Store original snapshot of quantities
+            originalProductQuantities = Items.ToDictionary(p => p.ProductId, p => p.Quantity ?? 0);
         }
+
         private string _newID;
         public string NewID
         {
@@ -60,7 +63,11 @@ namespace MyQuanLyTrangSuc.ViewModel
         public Customer SelectedCustomer
         {
             get => selectedCustomer;
-            set { selectedCustomer = value; OnPropertyChanged(); }
+            set
+            {
+                selectedCustomer = value;
+                OnPropertyChanged();
+            }
         }
 
         private decimal grandTotal;
@@ -90,7 +97,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 }
             }
         }
-        //public decimal TotalPrice => SelectedItem?.Price* Quantity ?? 0;
+
         public ObservableCollection<Product> Items { get; set; }
 
         private ObservableCollection<Customer> _customers;
@@ -99,10 +106,11 @@ namespace MyQuanLyTrangSuc.ViewModel
             get => _customers;
             set
             {
-                    _customers = value;
-                    OnPropertyChanged();
+                _customers = value;
+                OnPropertyChanged();
             }
         }
+
         public ObservableCollection<InvoiceDetail> InvoiceDetails { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -110,15 +118,18 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         private void GenerateNewInvoiceID()
         {
             NewID = invoiceService.GenerateNewInvoiceID();
         }
+
         private int _newInvoiceDetailID;
         private int GenerateNewInvoiceDetailID()
         {
             return _newInvoiceDetailID++;
         }
+
         public void AddInvoiceDetail()
         {
             if (SelectedItem == null)
@@ -126,22 +137,22 @@ namespace MyQuanLyTrangSuc.ViewModel
                 notificationWindowLogic.LoadNotification("Error", "Please choose an item", "BottomRight");
                 return;
             }
+
             if (SelectedCustomer == null)
             {
                 notificationWindowLogic.LoadNotification("Error", "Please choose a customer", "BottomRight");
                 return;
             }
+
             if (Quantity <= 0)
             {
                 notificationWindowLogic.LoadNotification("Error", "Quantity must be positive", "BottomRight");
                 return;
             }
-           
-            var productInItems = Items.FirstOrDefault(p => p.ProductId == SelectedItem.ProductId);
 
-            if (productInItems != null && productInItems.Quantity < Quantity)
+            if (SelectedItem.Quantity < Quantity)
             {
-                notificationWindowLogic.LoadNotification("Error", $"Not enough stock for '{SelectedItem.Name}'. Available: {productInItems.Quantity}", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", $"Not enough stock for '{SelectedItem.Name}'. Available: {SelectedItem.Quantity}", "BottomRight");
                 return;
             }
 
@@ -149,24 +160,16 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             if (existingDetail != null)
             {
-                if (productInItems != null && productInItems.Quantity < (existingDetail.Quantity + Quantity))
-                {
-                    notificationWindowLogic.LoadNotification("Error", $"Not enough stock to add more '{SelectedItem.Name}'. Available: {productInItems.Quantity}", "BottomRight");
-                    return;
-                }
-
                 GrandTotal -= (decimal)(existingDetail.Quantity * existingDetail.Price);
                 int index = InvoiceDetails.IndexOf(existingDetail);
                 InvoiceDetails.Remove(existingDetail);
                 existingDetail.Quantity += Quantity;
-                existingDetail.TotalPrice = (existingDetail.Quantity * existingDetail.Price);
+                existingDetail.TotalPrice = existingDetail.Quantity * existingDetail.Price;
                 InvoiceDetails.Insert(index, existingDetail);
-                GrandTotal += (decimal)(existingDetail.Quantity * existingDetail.Price);
-                if (SelectedItem == productInItems) 
-                {
-                    SelectedItem.Quantity -= Quantity; 
-                    OnPropertyChanged(nameof(SelectedItem)); 
-                }
+                GrandTotal += (decimal)(existingDetail.TotalPrice);
+
+                SelectedItem.Quantity -= Quantity;
+                OnPropertyChanged(nameof(SelectedItem));
 
                 notificationWindowLogic.LoadNotification("Success", $"Updated quantity for product '{SelectedItem.Name}'. New quantity: {existingDetail.Quantity}", "BottomRight");
             }
@@ -174,7 +177,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 InvoiceDetail invoiceDetail = new InvoiceDetail
                 {
-                    Stt = GenerateNewInvoiceDetailID(), 
+                    Stt = GenerateNewInvoiceDetailID(),
                     InvoiceId = NewID,
                     ProductId = SelectedItem.ProductId,
                     Quantity = Quantity,
@@ -182,43 +185,34 @@ namespace MyQuanLyTrangSuc.ViewModel
                     TotalPrice = SelectedItem.Price * Quantity,
                     Product = SelectedItem
                 };
+
                 InvoiceDetails.Add(invoiceDetail);
                 GrandTotal += (decimal)(invoiceDetail.TotalPrice);
 
-                if (SelectedItem == productInItems) 
-                {
-                    SelectedItem.Quantity -= Quantity; 
-                    OnPropertyChanged(nameof(SelectedItem));
-                }
+                SelectedItem.Quantity -= Quantity;
+                OnPropertyChanged(nameof(SelectedItem));
 
                 notificationWindowLogic.LoadNotification("Success", $"Added product '{SelectedItem.Name}' to invoice list.", "BottomRight");
             }
-            Quantity = 0;
 
+            Quantity = 0;
         }
+
         public void RemoveInvoiceDetail(InvoiceDetail selectedDetail)
         {
             if (InvoiceDetails.Contains(selectedDetail))
             {
                 InvoiceDetails.Remove(selectedDetail);
                 GrandTotal -= (decimal)(selectedDetail.TotalPrice);
-                notificationWindowLogic.LoadNotification("Success", $"Removed product '{selectedDetail.Product?.Name}' from invoice list.", "BottomRight");
-                var productInItems = Items.FirstOrDefault(p => p.ProductId == selectedDetail.ProductId);
-                if (productInItems != null)
-                {
-                    productInItems.Quantity += (int)selectedDetail.Quantity;
-                    if (SelectedItem == productInItems) 
-                    {
-                        OnPropertyChanged(nameof(SelectedItem)); 
-                    }
-                }
 
-                //for (int i = 0; i < InvoiceDetails.Count; i++)
-                //{
-                //    InvoiceDetails[i].Stt = i + 1;
-                //}
+                selectedDetail.Product.Quantity += (int)selectedDetail.Quantity;
+                if (SelectedItem == selectedDetail.Product)
+                    OnPropertyChanged(nameof(SelectedItem));
+
+                notificationWindowLogic.LoadNotification("Success", $"Removed product '{selectedDetail.Product?.Name}' from invoice list.", "BottomRight");
             }
         }
+
         public void AddInvoice()
         {
             if (SelectedItem == null)
@@ -226,26 +220,21 @@ namespace MyQuanLyTrangSuc.ViewModel
                 notificationWindowLogic.LoadNotification("Error", "Please choose an item", "BottomRight");
                 return;
             }
+
             if (SelectedCustomer == null)
             {
                 notificationWindowLogic.LoadNotification("Error", "Please choose a customer", "BottomRight");
                 return;
             }
+
             if (InvoiceDetails.Count == 0)
             {
                 notificationWindowLogic.LoadNotification("Error", "Please add at least one item", "BottomRight");
                 return;
             }
 
-            foreach (var detail in InvoiceDetails)
-            {
-                var productInStock = Items.FirstOrDefault(p => p.ProductId == detail.ProductId);
-                if (productInStock != null && productInStock.Quantity < detail.Quantity)
-                {
-                    notificationWindowLogic.LoadNotification("Error", $"Product '{productInStock.Name}' has insufficient stock. Available: {productInStock.Quantity}, Ordered: {detail.Quantity}", "BottomRight");
-                    return; 
-                }
-            }
+            ResetProductQuantities();
+
             Invoice invoice = new Invoice
             {
                 InvoiceId = NewID,
@@ -255,10 +244,13 @@ namespace MyQuanLyTrangSuc.ViewModel
                 TotalAmount = GrandTotal,
                 EmployeeId = employeeService.GetEmployeeByAccountId((int)WpfApplication.Current.Resources["CurrentAccountId"]).EmployeeId,
             };
+
             invoiceService.AddInvoice(invoice);
+
             foreach (var detail in InvoiceDetails)
             {
                 invoiceService.AddInvoiceDetail(detail);
+
                 try
                 {
                     invoiceService.UpdateProductQuantity(detail.ProductId, (int)detail.Quantity);
@@ -266,15 +258,16 @@ namespace MyQuanLyTrangSuc.ViewModel
                 catch (InvalidOperationException ex)
                 {
                     notificationWindowLogic.LoadNotification("Error", ex.Message, "BottomRight");
-                    return; 
+                    return;
                 }
-
             }
+
             notificationWindowLogic.LoadNotification("Success", "Invoice added successfully", "BottomRight");
             GenerateNewInvoiceID();
             InvoiceDetails.Clear();
             GrandTotal = 0;
             Items = new ObservableCollection<Product>(invoiceService.GetListOfProducts());
+            originalProductQuantities = Items.ToDictionary(p => p.ProductId, p => p.Quantity ?? 0); // refresh snapshot
             OnPropertyChanged(nameof(Items));
             SelectedItem = null;
             Quantity = 0;
@@ -283,6 +276,23 @@ namespace MyQuanLyTrangSuc.ViewModel
         public void LoadInitialData()
         {
             Customers = new ObservableCollection<Customer>(invoiceService.GetListOfCustomers());
+        }
+
+        public void ResetProductQuantities()
+        {
+            if (originalProductQuantities == null) return;
+
+            foreach (var product in Items)
+            {
+                if (originalProductQuantities.TryGetValue(product.ProductId, out int originalQty))
+                {
+                    product.Quantity = originalQty;
+                }
+            }
+
+            OnPropertyChanged(nameof(Items));
+            if (SelectedItem != null)
+                OnPropertyChanged(nameof(SelectedItem));
         }
     }
 }

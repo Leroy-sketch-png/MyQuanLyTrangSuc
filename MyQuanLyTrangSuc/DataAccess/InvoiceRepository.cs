@@ -1,4 +1,5 @@
-﻿using MyQuanLyTrangSuc.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MyQuanLyTrangSuc.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,10 +105,22 @@ namespace MyQuanLyTrangSuc.DataAccess
             }
         }
 
+        public IEnumerable<InvoiceDetail> GetInvoiceDetailsByInvoiceId(string invoiceId)
+        {
+            return context.InvoiceDetails
+                          .Where(id => id.InvoiceId == invoiceId)
+                          .Include(id => id.Product)
+                          .AsNoTracking();
+        }
+
         public void DeleteInvoice(Invoice selectedItem)
         {
             if (selectedItem != null)
             {
+                foreach (InvoiceDetail invoiceDetail in GetInvoiceDetailsByInvoiceId(selectedItem.InvoiceId))
+                {
+                    invoiceDetail.Product.Quantity += invoiceDetail.Quantity;
+                }
                 selectedItem.IsDeleted = true;
                 context.SaveChanges();
             }

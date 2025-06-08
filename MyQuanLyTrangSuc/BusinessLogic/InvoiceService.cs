@@ -60,26 +60,22 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         }
         public int GenerateNewInvoiceDetailID()
         {
-           return invoiceRepository.GetLastInvoiceDetailID();
+            return invoiceRepository.GetLastInvoiceDetailID();
         }
 
-        public void UpdateProductQuantity(string productId, int quantity)
+        public void UpdateProductQuantity(string productId, int quantity, bool isAddition = false)
         {
-            itemRepository.UpdateProductQuantity(productId, quantity ,false);
+            itemRepository.UpdateProductQuantity(productId, quantity, isAddition);
         }
 
         public IEnumerable<InvoiceDetail> GetInvoiceDetailsByInvoiceId(string invoiceId)
         {
-            return MyQuanLyTrangSucContext.Instance.InvoiceDetails
-                                  .Where(id => id.InvoiceId == invoiceId)
-                                  .Include(id => id.Product)
-                                  .AsNoTracking()
-                                  .ToList();
+            return invoiceRepository.GetInvoiceDetailsByInvoiceId(invoiceId);
         }
 
         public void RemoveInvoiceDetail(string invoiceId, string productId)
         {
-           invoiceRepository.RemoveInvoiceDetail(invoiceId, productId);
+            invoiceRepository.RemoveInvoiceDetail(invoiceId, productId);
         }
 
         public void UpdateInvoiceDetail(InvoiceDetail originalDetail)
@@ -95,7 +91,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
 
         public void DeleteInvoice(Invoice selectedItem)
         {
-           invoiceRepository.DeleteInvoice(selectedItem);
+            invoiceRepository.DeleteInvoice(selectedItem);
         }
     }
 }

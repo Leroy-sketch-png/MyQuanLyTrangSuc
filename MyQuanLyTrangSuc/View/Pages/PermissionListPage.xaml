@@ -107,7 +107,7 @@
                     <DataGrid.Columns>
 
                         <!--Group ID-->
-                        <DataGridTextColumn Binding="{Binding GroupId}" Header="Group ID" IsReadOnly="True" CanUserResize="False" Width="*"/>
+                        <!--<DataGridTextColumn Binding="{Binding GroupId}" Header="Group ID" IsReadOnly="True" CanUserResize="False" Width="*"/>-->
 
                         <!--Group Name-->
                         <DataGridTextColumn Header="Group Name" Width="*" Binding="{Binding Group.GroupName}" CanUserResize="False" IsReadOnly="True">
@@ -119,13 +119,13 @@
                         </DataGridTextColumn>
 
                         <!--Function ID-->
-                        <DataGridTextColumn Header="Function ID" Width="*" Binding="{Binding FunctionId}" CanUserResize="False" IsReadOnly="True">
+                        <!--<DataGridTextColumn Header="Function ID" Width="*" Binding="{Binding FunctionId}" CanUserResize="False" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
+                        </DataGridTextColumn>-->
                         
                         <!--Function Name-->
                         <DataGridTextColumn Header="Function Name" Width="*" Binding="{Binding Function.FunctionName}" CanUserResize="False" IsReadOnly="True">
@@ -137,7 +137,7 @@
                         </DataGridTextColumn>
 
                         <!--Operations-->
-                        <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="*">
+                        <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="0.5*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">

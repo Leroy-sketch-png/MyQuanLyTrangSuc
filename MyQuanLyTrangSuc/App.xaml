@@ -22,7 +22,9 @@
             </ResourceDictionary.MergedDictionaries>
             <customConverters:PermissionToIsEnabledConverter x:Key="PermissionToIsEnabledConverter" />
             <customConverters:PermissionToVisibilityConverter x:Key="PermissionToVisibilityConverter" />
-            
+            <customConverters:ImportDetailEditabilityConverter x:Key="ImportDetailEditabilityConverter"/>
+
+
             <Style x:Key="MyCustomMaterialDisabledButton"
            TargetType="{x:Type Button}">
                 <Setter Property="Width" Value="160"/>

@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace MyQuanLyTrangSuc.Model;
 
-public partial class InvoiceDetail: INotifyPropertyChanged
+public partial class InvoiceDetail : INotifyPropertyChanged
 {
     public int Stt { get; set; }
 
@@ -24,6 +24,14 @@ public partial class InvoiceDetail: INotifyPropertyChanged
         {
             if (_quantity != value)
             {
+                if (value <= 0)
+                {
+                    value = 1;
+                }
+                else if (Product != null && value > Product.Quantity + _quantity)
+                {
+                    value = Product.Quantity + _quantity;
+                }
                 _quantity = value;
                 OnPropertyChanged();
                 CalculateTotalPrice();
@@ -31,7 +39,21 @@ public partial class InvoiceDetail: INotifyPropertyChanged
         }
     }
 
-    public decimal? Price { get; set; }
+    private decimal? _price;
+    public decimal? Price
+    {
+        get => _price;
+        set
+        {
+            if (_price != value)
+            {
+                _price = value;
+                OnPropertyChanged();
+                CalculateTotalPrice();
+            }
+
+        }
+    }
 
     private decimal? _totalPrice;
     public decimal? TotalPrice

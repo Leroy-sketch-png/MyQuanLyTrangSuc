@@ -6,96 +6,67 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using WpfApplication = System.Windows.Application;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
-    public class EditInvoiceWindowLogic: INotifyPropertyChanged
+    public class EditInvoiceWindowLogic : INotifyPropertyChanged
     {
         private readonly InvoiceService invoiceService;
-        private readonly EmployeeService employeeService;
         private readonly NotificationWindowLogic notificationWindowLogic;
 
-        private Invoice _invoice;
+        // Snapshot of original product quantities for UI reset
+        private Dictionary<string, int> originalProductQuantities;
+        private Dictionary<string, int> originalDetailQuantities;
+        private int _nextDetailSequence;
 
-        public Invoice Invoice
+        public EditInvoiceWindowLogic(Invoice invoice)
         {
-            get => _invoice;
-            set
-            {
-                _invoice = value;
-                OnPropertyChanged(nameof(Import));
-            }
+            invoiceService = InvoiceService.Instance;
+            notificationWindowLogic = new NotificationWindowLogic();
+
+            Invoice = invoice;
+
+            // Load master data
+            Items = new ObservableCollection<Product>(invoiceService.GetListOfProducts());
+            Customers = new ObservableCollection<Customer>(invoiceService.GetListOfCustomers());
+
+            // Snapshot original quantities
+            originalProductQuantities = Items.ToDictionary(p => p.ProductId, p => p.Quantity ?? 0);
+
+            var existingDetails = invoiceService.GetInvoiceDetailsByInvoiceId(invoice.InvoiceId);
+            originalDetailQuantities = existingDetails.ToDictionary(d => d.ProductId, d => d.Quantity ?? 0);
+
+            // Initialize fields
+            InvoiceDetails = new ObservableCollection<InvoiceDetail>(existingDetails);
+            CalculateGrandTotal();
+            _nextDetailSequence = invoiceService.GenerateNewInvoiceDetailID();
         }
+
+        public Invoice Invoice { get; private set; }
+        public ObservableCollection<Product> Items { get; private set; }
+        public ObservableCollection<Customer> Customers { get; private set; }
 
         private Product selectedItem;
         public Product SelectedItem
         {
             get => selectedItem;
-            set
-            {
-                if (selectedItem != value)
-                {
-                    selectedItem = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private Customer selectedCustomer;
-        public Customer SelectedCustomer
-        {
-            get => selectedCustomer;
-            set { selectedCustomer = value; OnPropertyChanged(); }
+            set { selectedItem = value; OnPropertyChanged(); }
         }
 
         private decimal grandTotal;
         public decimal GrandTotal
         {
             get => grandTotal;
-            set
-            {
-                if (grandTotal != value)
-                {
-                    grandTotal = value;
-                    OnPropertyChanged();
-                }
-            }
+            private set { grandTotal = value; OnPropertyChanged(); }
         }
 
-        private int _quantity;
+        private int quantity;
         public int Quantity
         {
-            get => _quantity;
-            set
-            {
-                if (_quantity != value)
-                {
-                    _quantity = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private int _newInvoiceDetailID;
-        private int GenerateNewImportDetailID()
-        {
-            return _newInvoiceDetailID++;
-        }
-
-        public ObservableCollection<Product> Items { get; set; }
-
-        private ObservableCollection<Customer> _customers;
-        public ObservableCollection<Customer> Customers
-        {
-            get => _customers;
-            set
-            {
-                _customers = value;
-                OnPropertyChanged();
-            }
+            get => quantity;
+            set { quantity = value; OnPropertyChanged(); }
         }
 
         private ObservableCollection<InvoiceDetail> _invoiceDetails;
@@ -134,39 +105,45 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 CalculateGrandTotal();
             }
-        }
-        private void CalculateGrandTotal()
-        {
-            GrandTotal = (decimal)InvoiceDetails.Sum(detail => detail.TotalPrice);
+
+            if (e.PropertyName == nameof(InvoiceDetail.Quantity))
+            {
+                if (sender is InvoiceDetail detail)
+                {
+                    if (detail.ProductId == null) return;
+
+                    if (!originalDetailQuantities.TryGetValue(detail.ProductId, out int originalQty))
+                        originalQty = 0;
+
+                    Product product = Items.FirstOrDefault(p => p.ProductId == detail.ProductId);
+                    if (product == null) return;
+
+                    int availableStock = product.Quantity + originalQty ?? 0;
+                    if (detail.Quantity > availableStock)
+                    {
+                        detail.Quantity = availableStock;
+                    }
+
+                    int newUsedQuantity = detail.Quantity ?? 0;
+                    product.Quantity -= (newUsedQuantity - originalQty);
+
+                    originalDetailQuantities[detail.ProductId] = newUsedQuantity;
+
+                    OnPropertyChanged(nameof(SelectedItem));
+                }
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public EditInvoiceWindowLogic(Invoice invoice)
-        {
-            invoiceService = InvoiceService.Instance;
-            employeeService = EmployeeService.Instance;
-            notificationWindowLogic = new NotificationWindowLogic();
-            _invoice = invoice;
-
-            Items = new ObservableCollection<Product>(invoiceService.GetListOfProducts());
-            Customers = new ObservableCollection<Customer>(invoiceService.GetListOfCustomers());
-            SelectedCustomer = Customers.FirstOrDefault(c => c.CustomerId == invoice.CustomerId);
-            InvoiceDetails = new ObservableCollection<InvoiceDetail>(invoiceService.GetInvoiceDetailsByInvoiceId(invoice.InvoiceId));
-            GrandTotal = (decimal)_invoice.TotalAmount;
-            _newInvoiceDetailID = GenerateNewImportDetailID();
-        }
-
-       
+        // Add or update an invoice detail in the UI
         public void AddInvoiceDetail()
         {
             if (SelectedItem == null)
             {
-                notificationWindowLogic.LoadNotification("Error", "Please choose an item", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Please choose a product", "BottomRight");
                 return;
             }
             if (Quantity <= 0)
@@ -174,162 +151,147 @@ namespace MyQuanLyTrangSuc.ViewModel
                 notificationWindowLogic.LoadNotification("Error", "Quantity must be positive", "BottomRight");
                 return;
             }
-
-            var productInItems = Items.FirstOrDefault(p => p.ProductId == SelectedItem.ProductId);
-
-            if (productInItems != null && productInItems.Quantity < Quantity)
+            if (SelectedItem.Quantity < Quantity)
             {
-                notificationWindowLogic.LoadNotification("Error", $"Not enough stock for '{SelectedItem.Name}'. Available: {productInItems.Quantity}", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", $"Not enough stock. Available: {SelectedItem.Quantity}", "BottomRight");
                 return;
             }
 
-            var existingDetail = InvoiceDetails.FirstOrDefault(d => d.ProductId == SelectedItem.ProductId);
-
-            if (existingDetail != null)
+            var existing = InvoiceDetails.FirstOrDefault(d => d.ProductId == SelectedItem.ProductId);
+            if (existing != null)
             {
-                if (productInItems != null && productInItems.Quantity < (existingDetail.Quantity + Quantity))
-                {
-                    notificationWindowLogic.LoadNotification("Error", $"Not enough stock to add more '{SelectedItem.Name}'. Available: {productInItems.Quantity}", "BottomRight");
-                    return;
-                }
-
-                GrandTotal -= (decimal)(existingDetail.Quantity * existingDetail.Price);
-                int index = InvoiceDetails.IndexOf(existingDetail);
-                InvoiceDetails.Remove(existingDetail);
-                existingDetail.Quantity += Quantity;
-                existingDetail.TotalPrice = (existingDetail.Quantity * existingDetail.Price);
-                InvoiceDetails.Insert(index, existingDetail);
-                GrandTotal += (decimal)(existingDetail.Quantity * existingDetail.Price);
-                GrandTotal += (decimal)(existingDetail.Quantity * existingDetail.Price);
-                if (SelectedItem == productInItems)
-                {
-                    SelectedItem.Quantity -= Quantity;
-                    OnPropertyChanged(nameof(SelectedItem));
-                }
-                notificationWindowLogic.LoadNotification("Success", $"Updated quantity for product '{SelectedItem.Name}'. New quantity: {existingDetail.Quantity}", "BottomRight");
+                existing.Quantity += Quantity;
+                existing.TotalPrice = existing.Quantity * existing.Price;
+                SelectedItem.Quantity -= Quantity;
             }
             else
             {
-                InvoiceDetail importDetail = new InvoiceDetail
+                var detail = new InvoiceDetail
                 {
-                    Stt = GenerateNewImportDetailID(),
-                    InvoiceId = _invoice.InvoiceId,
+                    Stt = GetNextDetailSequence(),
+                    InvoiceId = Invoice.InvoiceId,
                     ProductId = SelectedItem.ProductId,
                     Quantity = Quantity,
                     Price = (decimal)SelectedItem.Price,
-                    TotalPrice = (decimal)(Quantity * SelectedItem.Price),
+                    TotalPrice = Quantity * (decimal)SelectedItem.Price,
                     Product = SelectedItem
                 };
-                InvoiceDetails.Add(importDetail);
-                GrandTotal += (decimal)(importDetail.Quantity * importDetail.Price);
-                importDetail.PropertyChanged += InvoiceDetail_PropertyChanged;
-                if (SelectedItem == productInItems)
-                {
-                    SelectedItem.Quantity -= Quantity;
-                    OnPropertyChanged(nameof(SelectedItem));
-                }
-                notificationWindowLogic.LoadNotification("Success", $"Added product '{SelectedItem.Name}' to invoice list.", "BottomRight");
+                InvoiceDetails.Add(detail);
+                detail.PropertyChanged += InvoiceDetail_PropertyChanged;
+
+                originalDetailQuantities[detail.ProductId] = detail.Quantity ?? 0;
+
+                OnPropertyChanged(nameof(SelectedItem));
             }
+            CalculateGrandTotal();
+            notificationWindowLogic.LoadNotification("Success", "Invoice detail updated", "BottomRight");
+
             Quantity = 0;
             SelectedItem = null;
         }
 
-        public void RemoveInvoiceDetail(InvoiceDetail selectedDetail)
+        // Remove a detail and restore UI stock
+        public void RemoveInvoiceDetail(InvoiceDetail detail)
         {
-            if (InvoiceDetails.Contains(selectedDetail))
-            {
-                InvoiceDetails.Remove(selectedDetail);
-                selectedDetail.PropertyChanged -= InvoiceDetail_PropertyChanged;
-                CalculateGrandTotal();
-                //GrandTotal -= (decimal)(selectedDetail.Quantity * selectedDetail.Price);
-                notificationWindowLogic.LoadNotification("Success", $"Removed product '{selectedDetail.Product?.Name}' from invoice list.", "BottomRight");
-                var productInItems = Items.FirstOrDefault(p => p.ProductId == selectedDetail.ProductId);
-                if (productInItems != null)
-                {
-                    productInItems.Quantity += (int)selectedDetail.Quantity;
-                    if (SelectedItem == productInItems)
-                    {
-                        OnPropertyChanged(nameof(SelectedItem));
-                    }
-                }
+            if (detail == null)
+                return;
 
-                //for (int i = 0; i < ImportDetails.Count; i++)
-                //{
-                //    ImportDetails[i].Stt = i + 1;
-                //}
+            InvoiceDetails.Remove(detail);
+            detail.PropertyChanged -= InvoiceDetail_PropertyChanged;
+
+            originalDetailQuantities.Remove(detail.ProductId);
+
+            CalculateGrandTotal();
+            notificationWindowLogic.LoadNotification("Success", "Invoice detail removed", "BottomRight");
+            var productInItems = Items.FirstOrDefault(p => p.ProductId == detail.ProductId);
+            if (productInItems != null)
+            {
+                productInItems.Quantity += (int)detail.Quantity;
+                if (SelectedItem == productInItems)
+                {
+                    OnPropertyChanged(nameof(SelectedItem));
+                }
             }
         }
 
+        // Recalculate the total amount
+        public void CalculateGrandTotal()
+        {
+            GrandTotal = (decimal)InvoiceDetails.Sum(d => d.TotalPrice);
+        }
+
+        // Save changes to the database
         public void SaveInvoice()
         {
             if (InvoiceDetails.Count == 0)
             {
-                notificationWindowLogic.LoadNotification("Error", "Please add at least one item", "BottomRight");
-                return;
-            }
-            if (SelectedCustomer == null)
-            {
-                notificationWindowLogic.LoadNotification("Error", "Please select a customer", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Please add at least one detail", "BottomRight");
                 return;
             }
 
-            Invoice.CustomerId = SelectedCustomer.CustomerId;
-            Invoice.Customer = SelectedCustomer;
-            Invoice.TotalAmount = GrandTotal;
+            ResetProductQuantities();
+
+            // Update invoice header
             Invoice.Date = DateTime.Now;
+            Invoice.TotalAmount = GrandTotal;
+            invoiceService.UpdateInvoice(Invoice);
 
-            try
+            var original = invoiceService.GetInvoiceDetailsByInvoiceId(Invoice.InvoiceId).ToList();
+            var current = InvoiceDetails.ToList();
+
+            // Delete removed details
+            var toDelete = original.Where(o => !current.Any(c => c.ProductId == o.ProductId)).ToList();
+            foreach (var d in toDelete)
             {
-                List<InvoiceDetail> originalInvoiceDetails = invoiceService.GetInvoiceDetailsByInvoiceId(Invoice.InvoiceId).ToList();
-                List<InvoiceDetail> currentInvoiceDetails = InvoiceDetails.ToList();
-                var detailsToDelete = originalInvoiceDetails
-                                        .Where(orig => !currentInvoiceDetails.Any(curr => curr.ProductId == orig.ProductId))
-                                        .ToList();
-
-                foreach (var detail in detailsToDelete)
-                {
-                    invoiceService.RemoveInvoiceDetail(detail.InvoiceId, detail.ProductId);
-                    invoiceService.UpdateProductQuantity(detail.ProductId, -(int)detail.Quantity);
-                }
-
-                foreach (var currentDetail in currentInvoiceDetails)
-                {
-                    var originalDetail = originalInvoiceDetails.FirstOrDefault(orig => currentDetail.ProductId == orig.ProductId);
-
-                    if (originalDetail == null)
-                    {
-                        invoiceService.AddInvoiceDetail(currentDetail);
-                        invoiceService.UpdateProductQuantity(currentDetail.ProductId, (int)currentDetail.Quantity);
-                    }
-                    else
-                    {
-                        if (originalDetail.Quantity != currentDetail.Quantity || originalDetail.Price != currentDetail.Price)
-                        {
-                            int quantityChange = (int)(currentDetail.Quantity - originalDetail.Quantity);
-                            originalDetail.Quantity = currentDetail.Quantity;
-                            originalDetail.Price = currentDetail.Price;
-                            originalDetail.TotalPrice = currentDetail.TotalPrice;
-
-                            invoiceService.UpdateInvoiceDetail(originalDetail);
-                            invoiceService.UpdateProductQuantity(currentDetail.ProductId, quantityChange);
-
-                        }
-                    }
-                }
-                invoiceService.UpdateInvoice(Invoice);
-                notificationWindowLogic.LoadNotification("Success", "Update invoice record successfully", "BottomRight");
+                invoiceService.RemoveInvoiceDetail(d.InvoiceId, d.ProductId);
+                invoiceService.UpdateProductQuantity(d.ProductId, (int)d.Quantity, true);
             }
-            catch (Exception ex)
+
+            // Add new or update existing
+            foreach (var c in current)
             {
-                notificationWindowLogic.LoadNotification("Error", $"Error while updating invoice record: {ex.Message}", "BottomRight");
-                MessageBox.Show(ex.Message);
-                Console.WriteLine($"Error during SaveInvoice: {ex.Message}");
-                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                var orig = original.FirstOrDefault(o => o.ProductId == c.ProductId);
+                if (orig == null)
+                {
+                    invoiceService.AddInvoiceDetail(c);
+                    invoiceService.UpdateProductQuantity(c.ProductId, (int)c.Quantity, false);
+                }
+                else if (orig.Quantity != c.Quantity || orig.Price != c.Price)
+                {
+                    var qtyDiff = (int)(c.Quantity - orig.Quantity);
+                    orig.Quantity = c.Quantity;
+                    orig.Price = c.Price;
+                    orig.TotalPrice = c.TotalPrice;
+                    invoiceService.UpdateInvoiceDetail(orig);
+                    if (qtyDiff != 0)
+                        invoiceService.UpdateProductQuantity(c.ProductId, Math.Abs(qtyDiff), qtyDiff < 0);
+                }
             }
+
+            notificationWindowLogic.LoadNotification("Success", "Invoice updated successfully", "BottomRight");
+
+            // Refresh master data and snapshot
+            Items = new ObservableCollection<Product>(invoiceService.GetListOfProducts());
+            originalProductQuantities = Items.ToDictionary(p => p.ProductId, p => p.Quantity ?? 0);
+            OnPropertyChanged(nameof(Items));
         }
+
+        // Restore UI to original stock if not saved
+        public void ResetProductQuantities()
+        {
+            foreach (var prod in Items)
+            {
+                if (originalProductQuantities.TryGetValue(prod.ProductId, out var qty))
+                    prod.Quantity = qty;
+            }
+            OnPropertyChanged(nameof(Items));
+        }
+
+        private int GetNextDetailSequence() => _nextDetailSequence++;
 
         public void LoadInitialData()
         {
+            Items = new ObservableCollection<Product>(invoiceService.GetListOfProducts());
             Customers = new ObservableCollection<Customer>(invoiceService.GetListOfCustomers());
         }
     }
