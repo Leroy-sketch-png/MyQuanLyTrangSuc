@@ -44,7 +44,22 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         }
         public bool IsValidName(string name)
         {
-            return !string.IsNullOrWhiteSpace(name) && !Regex.IsMatch(name, @"\d");
+            // Kiểm tra null/empty và không chứa số
+            if (string.IsNullOrWhiteSpace(name) || Regex.IsMatch(name, @"\d"))
+                return false;
+
+            try
+            {
+                var repository = new ItemCategoryRepository();
+                var existingCategories = repository.GetListOfItemCategories(); // hoặc method tương tự
+
+                // Trả về false nếu tên đã tồn tại (không phân biệt hoa thường)
+                return !existingCategories.Any(c => c.CategoryName.Equals(name, StringComparison.OrdinalIgnoreCase));
+            }
+            catch
+            {
+                return false; // Lỗi thì coi như không hợp lệ
+            }
         }
         public bool IsValidProfitPercentage(string profitPercentage)
         {
@@ -62,9 +77,15 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             {
                 return false;
             }
-            var temp = new UnitRepository();
-
-            return temp.GetListOfUnits().Any(u => u.UnitId == unitID);
+            try
+            {
+                var temp = new UnitRepository();
+                return temp.GetListOfUnits().Any(u => u.UnitId == unitID);
+            }
+            catch
+            {
+                return false; // Tránh crash nếu database lỗi
+            }
         }
 
         public bool IsValidItemCategoryData(string name, string unitID, string profitPercentage)

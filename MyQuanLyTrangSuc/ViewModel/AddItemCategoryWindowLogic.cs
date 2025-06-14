@@ -83,7 +83,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 notificationWindowLogic.LoadNotification("Error", "Please select a unit!", "BottomRight");
                 return false;
             }
-            if (!itemCategoryService.IsValidItemCategoryData(name, _selectedUnit.UnitId, profitPercentage))
+            if (_selectedUnit == null || !itemCategoryService.IsValidUnitID(_selectedUnit.UnitId))
             {
                 notificationWindowLogic.LoadNotification("Error", "Unit Id không phù hợp!", "BottomRight");
                 return false;
