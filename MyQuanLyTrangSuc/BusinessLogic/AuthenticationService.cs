@@ -1,5 +1,6 @@
 ﻿using MyQuanLyTrangSuc.DataAccess;
 using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,11 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         private AuthenticationService()
         {
             authenticationRepository = new AuthenticationRepository();
+        }
+
+        public CustomPrincipal CurrentUserPrincipal
+        {
+            get => Thread.CurrentPrincipal as CustomPrincipal;
         }
 
         // User Group
@@ -174,6 +180,12 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             var permission = authenticationRepository.GetListOfPermissions().FirstOrDefault(p => p.GroupId == selectedValue1 && p.FunctionId == selectedValue2);
             if (permission != null)
             {
+                if (permission.IsDeleted)
+                {
+                    CurrentUserPrincipal.AddPermission(permission.Function.ScreenToLoad);
+                    permission.IsDeleted = false;
+                    return true;
+                }
                 return false;
             }
             else
@@ -185,6 +197,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                     IsDeleted = false
                 };
                 authenticationRepository.AddPermission(newPermission);
+                CurrentUserPrincipal.AddPermission(newPermission.Function.ScreenToLoad);
                 OnPermissionAdded?.Invoke(newPermission);
                 return true;
             }
@@ -206,6 +219,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
         public void DeletePermission(Permission selectedItem)
         {
             authenticationRepository.DeletePermission(selectedItem);
+            CurrentUserPrincipal.RemovePermission(selectedItem.Function.ScreenToLoad);
         }
     }
 }

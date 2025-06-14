@@ -113,7 +113,7 @@ namespace MyQuanLyTrangSuc.DataAccess
         // Permission
         public List<Permission> GetListOfPermissions()
         {
-            return context.Permissions.Include(p => p.Function).ToList();
+            return context.Permissions.Where(p => !p.IsDeleted).Include(p => p.Function).ToList();
         }
 
         public List<Function> GetListOfFunctions()

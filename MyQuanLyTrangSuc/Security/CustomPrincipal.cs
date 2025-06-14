@@ -33,6 +33,10 @@ namespace MyQuanLyTrangSuc.Security
                 _permissions.Add(permission);
             }
         }
+        public void RemovePermission(string permission)
+        {
+            _permissions.Remove(permission);
+        }
 
         /// <summary>
         /// Checks if the principal has a specific permission.
