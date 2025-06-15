@@ -84,7 +84,7 @@
                 </Grid>
 
                 <!--ComboBox for search criteria-->
-                <ComboBox x:Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120" SelectionChanged="SearchComboBox_SelectionChanged" Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                <ComboBox x:Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120" SelectionChanged="SearchComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                     <ComboBoxItem Content="Month"/>
                     <ComboBoxItem Content="Year"/>
                 </ComboBox>

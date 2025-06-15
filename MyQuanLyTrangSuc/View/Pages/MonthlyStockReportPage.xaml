@@ -97,7 +97,7 @@
                              materialDesign:HintAssist.Hint="Search"/>
                 </Grid>
 
-                <ComboBox Name="searchComboBox" Style="{StaticResource MaterialDesignOutlinedComboBox}" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
+                <ComboBox Name="searchComboBox" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
                     <ComboBoxItem Content="Name"/>
                     <ComboBoxItem Content="ID"/>
                 </ComboBox>

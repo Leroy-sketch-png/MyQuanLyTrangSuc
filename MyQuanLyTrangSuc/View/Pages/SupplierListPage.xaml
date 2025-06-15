@@ -126,7 +126,7 @@
                     <TextBox TextChanged="searchTextBox_TextChanged" x:Name="searchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Search" Margin="0 0 0 0"/>
                 </Grid>
 
-                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Style="{StaticResource MaterialDesignOutlinedComboBox}" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
+                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120">
                     <ComboBoxItem Content="Name"/>
                     <ComboBoxItem Content="ID"/>
                 </ComboBox>

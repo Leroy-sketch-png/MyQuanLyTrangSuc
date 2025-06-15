@@ -79,7 +79,7 @@
                              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
 
-                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120" Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                           SelectedItem="{Binding SelectedSearchCriteria, Mode=TwoWay}">
                     <ComboBoxItem Content="Date"/>
                     <ComboBoxItem Content="ID"/>
