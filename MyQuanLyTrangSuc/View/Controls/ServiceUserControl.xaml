@@ -34,7 +34,7 @@
                 <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
 
-            <Image Grid.Column="0" Source="{Binding ImagePath}" Width="70" Height="70"/>
+            <Image Grid.Column="0" Source="/Resources/Krystal.png" Width="70" Height="70"/>
 
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" Margin="5">
