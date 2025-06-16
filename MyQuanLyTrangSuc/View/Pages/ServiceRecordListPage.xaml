@@ -11,6 +11,33 @@
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <!-- Filter Popup Style -->
+        <Style x:Key="FilterPopupStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#ddd"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="315" ShadowDepth="3" Opacity="0.3" BlurRadius="10"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Filter Section Header Style -->
+        <Style x:Key="FilterSectionHeader" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#374655"/>
+            <Setter Property="Margin" Value="0 12 0 6"/>
+        </Style>
+
+        <!-- Filter CheckBox Style -->
+        <Style x:Key="FilterCheckBox" TargetType="CheckBox" BasedOn="{StaticResource MaterialDesignCheckBox}">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0 4"/>
+        </Style>
     </Page.Resources>
 
     <Border Background="#eff2f7" CornerRadius="30">
@@ -99,19 +126,190 @@
 
                 <Separator Grid.Row="3" BorderBrush="#ba80d3" BorderThickness="10" Margin="5,10,30,10"/>
 
-                <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="10 0 10 0">
-                    <TextBlock x:Name="searchTextBlock" Margin="15 8 0 5" VerticalAlignment="Center" Foreground="#b0b9c6"
-                               IsHitTestVisible="False" Panel.ZIndex="1" Text=""
-                               Visibility="{Binding ElementName=searchTextBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-                    <TextBox x:Name="searchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Search" Margin="0 0 0 0" TextChanged="searchTextBox_TextChanged"/>
+                <!-- Enhanced Search and Filter Row -->
+                <Grid Grid.Row="4" Margin="10 0 10 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Search TextBox -->
+                    <Grid Grid.Column="0">
+                        <TextBlock x:Name="searchTextBlock" Margin="15 8 0 5" VerticalAlignment="Center" Foreground="#b0b9c6"
+                                   IsHitTestVisible="False" Panel.ZIndex="1" Text=""
+                                   Visibility="{Binding ElementName=searchTextBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
+                        <TextBox x:Name="searchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                                 materialDesign:HintAssist.Hint="Search" TextChanged="searchTextBox_TextChanged"/>
+                    </Grid>
+
+                    <!-- Search ComboBox -->
+                    <ComboBox Name="searchComboBox" Grid.Column="1" Height="30" Margin="10 0 0 0" 
+                              Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                              SelectedItem="{Binding SelectedSearchCriteria, Mode=TwoWay}">
+                        <ComboBoxItem Content="Customer"/>
+                        <ComboBoxItem Content="ID"/>
+                        <ComboBoxItem Content="Date"/>
+                    </ComboBox>
+
+                    <!-- Filter Button -->
+                    <Button x:Name="FilterButton" Grid.Column="3" Height="32" Width="50" Margin="10 0 10 0"
+                            Style="{StaticResource MaterialDesignRaisedButton}" 
+                            Click="FilterButton_Click"
+                            ToolTip="Advanced Filters" HorizontalAlignment="Right">
+                        <Icon:PackIconMaterial Kind="FilterVariant" Width="16" Height="16" Foreground="White"/>
+                    </Button>
                 </Grid>
 
-                <ComboBox Name="searchComboBox" Height="30" Grid.Row="4" Margin="220 0 0 0" HorizontalAlignment="Left" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                          SelectedItem="{Binding SelectedSearchCriteria, Mode=TwoWay}">
-                    <ComboBoxItem Content="Customer"/>
-                    <ComboBoxItem Content="ID"/>
-                    <ComboBoxItem Content="Date"/>
-                </ComboBox>
+                <!-- Filter Popup Overlay -->
+                <Grid x:Name="FilterOverlay" Grid.Row="0" Grid.RowSpan="7" 
+                      Background="#40000000" Visibility="Collapsed" Panel.ZIndex="1000"
+                      MouseLeftButtonDown="FilterOverlay_MouseLeftButtonDown">
+
+                    <!-- Filter Popup -->
+                    <Border x:Name="FilterPopup" Style="{StaticResource FilterPopupStyle}"
+                            Width="480" Height="580" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                        <ScrollViewer VerticalScrollBarVisibility="Hidden" Padding="30">
+                            <StackPanel Margin="15">
+                                <!-- Header -->
+                                <Grid Margin="0 0 0 20">
+                                    <TextBlock Text="Advanced Filters" FontSize="18" FontWeight="Bold" 
+                                               Foreground="#121518" HorizontalAlignment="Left"/>
+                                    <Button x:Name="CloseFilterButton" HorizontalAlignment="Right" 
+                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                            Width="30" Height="30" Padding="0"
+                                            Click="CloseFilterButton_Click">
+                                        <Icon:PackIconMaterial Kind="Close" Width="16" Height="16"/>
+                                    </Button>
+                                </Grid>
+
+                                <Separator Margin="0 0 0 15"/>
+
+                                <!-- Filter Actions -->
+                                <StackPanel Orientation="Horizontal" Margin="0 15 0 20">
+                                    <Button x:Name="ApplyFiltersButton" Content="Apply Filters" 
+                                            Style="{StaticResource MaterialDesignRaisedButton}"
+                                            Background="#4880ff" Margin="0 0 15 0" Width="130" Height="36"
+                                            Click="ApplyFiltersButton_Click"/>
+                                    <Button x:Name="ClearFiltersButton" Content="Clear All" 
+                                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                                            Width="100" Height="36" Click="ClearFiltersButton_Click"/>
+                                </StackPanel>
+
+                                <!-- ID Filter -->
+                                <TextBlock Text="ID Filter" Style="{StaticResource FilterSectionHeader}"/>
+                                <CheckBox x:Name="EnableIdFilter" Content="Enable ID filtering" 
+                                          Style="{StaticResource FilterCheckBox}" Margin="0 0 0 5"/>
+                                <StackPanel x:Name="IdFilterPanel" Margin="20 0 0 0">
+                                    <StackPanel Orientation="Horizontal" Margin="0 2">
+                                        <TextBlock Text="From: SRV" Width="60" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="IdFromTextBox" Width="80" Margin="5 0"
+                                                 Style="{StaticResource MaterialDesignTextBox}"/>
+                                        <TextBlock Text="To: SRV" Width="40" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                        <TextBox x:Name="IdToTextBox" Width="80" Margin="5 0"
+                                                 Style="{StaticResource MaterialDesignTextBox}"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Date Filter -->
+                                <TextBlock Text="Date Filter" Style="{StaticResource FilterSectionHeader}" Margin="0 15 0 4"/>
+                                <CheckBox x:Name="EnableDateFilter" Content="Enable date filtering" 
+                                          Style="{StaticResource FilterCheckBox}" Margin="0 0 0 5"/>
+                                <StackPanel x:Name="DateFilterPanel" Margin="20 0 0 0">
+                                    <StackPanel Orientation="Horizontal" Margin="0 2">
+                                        <TextBlock Text="From:" Width="50" VerticalAlignment="Center"/>
+                                        <DatePicker x:Name="DateFromPicker" Width="120" Margin="5 0"
+                                                   Style="{StaticResource MaterialDesignDatePicker}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                                        <TextBlock Text="To:" Width="50" VerticalAlignment="Center"/>
+                                        <DatePicker x:Name="DateToPicker" Width="120" Margin="5 0"
+                                                   Style="{StaticResource MaterialDesignDatePicker}"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Customer Filter -->
+                                <TextBlock Text="Customer Filter" Style="{StaticResource FilterSectionHeader}" Margin="0 15 0 4"/>
+                                <CheckBox x:Name="EnableCustomerFilter" Content="Enable customer filtering" 
+                                          Style="{StaticResource FilterCheckBox}" Margin="0 0 0 5"/>
+                                <StackPanel x:Name="CustomerFilterPanel" Margin="20 0 0 0">
+                                    <TextBox x:Name="CustomerFilterTextBox" 
+                                             materialDesign:HintAssist.Hint="Customer name contains..."
+                                             Style="{StaticResource MaterialDesignTextBox}" Margin="0 2"/>
+                                </StackPanel>
+
+                                <!-- Total Amount Filter -->
+                                <TextBlock Text="Total Amount Filter" Style="{StaticResource FilterSectionHeader}" Margin="0 15 0 4"/>
+                                <CheckBox x:Name="EnableTotalFilter" Content="Enable total amount filtering" 
+                                          Style="{StaticResource FilterCheckBox}" Margin="0 0 0 5"/>
+                                <StackPanel x:Name="TotalFilterPanel" Margin="20 0 0 0">
+                                    <StackPanel Orientation="Horizontal" Margin="0 2">
+                                        <TextBlock Text="From:" Width="50" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="TotalFromTextBox" Width="80" Margin="5 0"
+                                                 materialDesign:HintAssist.Hint="0.00"
+                                                 Style="{StaticResource MaterialDesignTextBox}"/>
+                                        <TextBlock Text="To:" Width="30" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                        <TextBox x:Name="TotalToTextBox" Width="80" Margin="5 0"
+                                                 materialDesign:HintAssist.Hint="0.00"
+                                                 Style="{StaticResource MaterialDesignTextBox}"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Paid Amount Filter -->
+                                <TextBlock Text="Paid Amount Filter" Style="{StaticResource FilterSectionHeader}" Margin="0 15 0 4"/>
+                                <CheckBox x:Name="EnablePaidFilter" Content="Enable paid amount filtering" 
+                                          Style="{StaticResource FilterCheckBox}" Margin="0 0 0 5"/>
+                                <StackPanel x:Name="PaidFilterPanel" Margin="20 0 0 0">
+                                    <StackPanel Orientation="Horizontal" Margin="0 2">
+                                        <TextBlock Text="From:" Width="50" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="PaidFromTextBox" Width="80" Margin="5 0"
+                                                 materialDesign:HintAssist.Hint="0.00"
+                                                 Style="{StaticResource MaterialDesignTextBox}"/>
+                                        <TextBlock Text="To:" Width="30" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                        <TextBox x:Name="PaidToTextBox" Width="80" Margin="5 0"
+                                                 materialDesign:HintAssist.Hint="0.00"
+                                                 Style="{StaticResource MaterialDesignTextBox}"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Remaining Amount Filter -->
+                                <TextBlock Text="Remaining Amount Filter" Style="{StaticResource FilterSectionHeader}" Margin="0 15 0 4"/>
+                                <CheckBox x:Name="EnableRemainingFilter" Content="Enable remaining amount filtering" 
+                                          Style="{StaticResource FilterCheckBox}" Margin="0 0 0 5"/>
+                                <StackPanel x:Name="RemainingFilterPanel" Margin="20 0 0 0">
+                                    <StackPanel Orientation="Horizontal" Margin="0 2">
+                                        <TextBlock Text="From:" Width="50" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="RemainingFromTextBox" Width="80" Margin="5 0"
+                                                 materialDesign:HintAssist.Hint="0.00"
+                                                 Style="{StaticResource MaterialDesignTextBox}"/>
+                                        <TextBlock Text="To:" Width="30" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                        <TextBox x:Name="RemainingToTextBox" Width="80" Margin="5 0"
+                                                 materialDesign:HintAssist.Hint="0.00"
+                                                 Style="{StaticResource MaterialDesignTextBox}"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Status Filter -->
+                                <TextBlock Text="Status Filter" Style="{StaticResource FilterSectionHeader}" Margin="0 15 0 4"/>
+                                <CheckBox x:Name="EnableStatusFilter" Content="Enable status filtering" 
+                                          Style="{StaticResource FilterCheckBox}" Margin="0 0 0 5"/>
+                                <StackPanel x:Name="StatusFilterPanel" Margin="20 0 0 10">
+                                    <ComboBox x:Name="StatusFilterComboBox" 
+                                              Style="{StaticResource MaterialDesignComboBox}"
+                                              materialDesign:HintAssist.Hint="Select status..."
+                                              Margin="0 2">
+                                        <ComboBoxItem Content="Incomplete"/>
+                                        <ComboBoxItem Content="Complete"/>
+                                    </ComboBox>
+                                </StackPanel>
+
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+
                 <DataGrid ItemsSource="{Binding ServiceRecords}"
                           SelectedItem="{Binding SelectedServiceRecord, Mode=TwoWay}"
                           x:Name="ServiceRecordsDataGrid" Style="{DynamicResource DataGridStyle1}"

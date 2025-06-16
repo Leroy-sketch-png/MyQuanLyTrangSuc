@@ -117,17 +117,13 @@ namespace MyQuanLyTrangSuc.ViewModel
                     // Kiểm tra và cập nhật trạng thái của ServiceRecord chính
                     if (SelectedServiceRecord.TotalPaid == SelectedServiceRecord.GrandTotal)
                     {
-                        SelectedServiceRecord.Status = "Complete";
+                        SelectedServiceRecord.Status = "complete";
                         // Kích hoạt sự kiện khi ServiceRecord hoàn tất
                         ServiceRecordCompleted?.Invoke(SelectedServiceRecord);
                     }
-                    else if (SelectedServiceRecord.TotalPaid > 0 && SelectedServiceRecord.TotalPaid < SelectedServiceRecord.GrandTotal)
-                    {
-                        SelectedServiceRecord.Status = "Partially Paid";
-                    }
                     else
                     {
-                        SelectedServiceRecord.Status = "Pending"; // Hoặc trạng thái mặc định ban đầu
+                        SelectedServiceRecord.Status = "incomplete"; // Hoặc trạng thái mặc định ban đầu
                     }
 
 
