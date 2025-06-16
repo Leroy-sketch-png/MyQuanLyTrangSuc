@@ -91,7 +91,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             catch (Exception ex)
             {
                 Console.WriteLine($"Error loading report: {ex.Message}");
-                MessageBox.Show($"Error loading report: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error loading report: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

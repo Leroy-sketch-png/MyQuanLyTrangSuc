@@ -49,13 +49,13 @@ namespace MyQuanLyTrangSuc.View
             var report = RevenueReportDataGrid.SelectedItem as Model.RevenueReport;
             if (report != null)
             {
-                var result = MessageBox.Show($"Bạn có chắc chắn muốn xoá báo cáo {report.RevenueReportId}?", "Xác nhận xoá", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                var result = MessageBox.Show($"Are you sure to delete report {report.RevenueReportId}?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result == MessageBoxResult.Yes)
                 {
                     report.IsDeleted = true;
                     MyQuanLyTrangSucContext.Instance.SaveChanges();
                     logic.LoadReportsFromDatabase();
-                    MessageBox.Show("Đã xoá báo cáo.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Delete successfully.", "Notification", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
         }

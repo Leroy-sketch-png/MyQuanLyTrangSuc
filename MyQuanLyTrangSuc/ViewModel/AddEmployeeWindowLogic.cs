@@ -67,17 +67,17 @@ namespace MyQuanLyTrangSuc.ViewModel {
             
             if (!IsValidName(Name))
             {
-                notificationWindowLogic.LoadNotification("Error", "Tên không hợp lệ!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Invalid name!", "BottomRight");
                 return false;
             }
             if (!IsValidEmail(Email))
             {
-                notificationWindowLogic.LoadNotification("Error", "Email không hợp lệ!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Invalid email!", "BottomRight");
                 return false;
             }
             if (!IsValidPhone(Telephone))
             {
-                notificationWindowLogic.LoadNotification("Error", "Số điện thoại phải từ 10-15 chữ số!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Phone number must be between 10 and 15 digits!", "BottomRight");
                 return false;
             }
 

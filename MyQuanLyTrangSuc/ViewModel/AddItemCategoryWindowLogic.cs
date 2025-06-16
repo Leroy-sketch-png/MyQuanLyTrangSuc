@@ -99,8 +99,8 @@ namespace MyQuanLyTrangSuc.ViewModel
                 if (columnName == nameof(ProfitPercentage))
                 {
                     if (ProfitPercentage < 0 || ProfitPercentage > 100)
-                        notificationWindowLogic.LoadNotification("Error", "Giá trị không phù hợp!", "BottomRight");
-                    return "Giá trị không được âm hoặc lớn hơn 100!";
+                        notificationWindowLogic.LoadNotification("Error", "Invalid value!", "BottomRight");
+                    return "Value must be positive and less than 100!";
                 }
                 return null;
             }
@@ -115,7 +115,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
             if (_selectedUnit == null || !itemCategoryService.IsValidUnitID(_selectedUnit.UnitId))
             {
-                notificationWindowLogic.LoadNotification("Error", "Unit Id không phù hợp!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Unit Id is invalid!", "BottomRight");
                 return false;
             }
 

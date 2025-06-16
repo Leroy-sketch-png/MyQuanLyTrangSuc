@@ -83,7 +83,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                              employeePropertiesPageUI.inputEmployeeEmail,
                              employeePropertiesPageUI.inputEmployeePhone))
             {
-                MessageBox.Show("Thông tin không hợp lệ! Vui lòng nhập đúng định dạng", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Invalid information! Please enter valid input", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -116,7 +116,7 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             if (!IsValidDateOfBirth(employee.DateOfBirth))
             {
-                MessageBox.Show("Vui lòng chọn ngày sinh hợp lệ.", "Thiếu ngày sinh", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please choose valid birthday.", "Invalid birthday", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -134,13 +134,13 @@ namespace MyQuanLyTrangSuc.ViewModel
                              employeePropertiesPageUI.inputEmployeeEmail,
                              employeePropertiesPageUI.inputEmployeePhone))
             {
-                MessageBox.Show("Thông tin không hợp lệ! Vui lòng nhập đúng định dạng", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Invalid information! Please enter valid information", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (!IsValidDateOfBirth(employee.DateOfBirth))
             {
-                MessageBox.Show("Vui lòng chọn ngày sinh hợp lệ.", "Thiếu ngày sinh", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please enter valid birthday.", "Invalid birthday", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -151,12 +151,12 @@ namespace MyQuanLyTrangSuc.ViewModel
                 context.Entry(employee).State = EntityState.Modified;
                 context.SaveChanges();
 
-                notificationWindowLogic.LoadNotification("Success", "Cập nhật thông tin nhân viên thành công!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Success", "Update employee information successfully!", "BottomRight");
                 isEditing = false;  // Mark as done editing
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Có lỗi khi lưu dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error while saving: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

@@ -17,11 +17,11 @@ namespace MyQuanLyTrangSuc.ViewModel
     {
         private const string NumericPattern = "[^0-9]+";
         private const string ImageFilter = "Image files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg";
-        private const string ImageDialogTitle = "Chọn ảnh sản phẩm";
-        private const string ErrorTitle = "Lỗi";
-        private const string SuccessTitle = "Thông báo";
-        private const string ValidationErrorMessage = "Vui lòng nhập đầy đủ thông tin sản phẩm!";
-        private const string SuccessMessage = "Sản phẩm đã được thêm thành công!";
+        private const string ImageDialogTitle = "Choose image of product";
+        private const string ErrorTitle = "Error";
+        private const string SuccessTitle = "Notification";
+        private const string ValidationErrorMessage = "Invalid input!";
+        private const string SuccessMessage = "Product added successfully!";
         private readonly ItemCategoryService _itemCategoryService;
 
         private readonly NotificationWindowLogic notificationWindowLogic;
@@ -148,23 +148,23 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             if (!IsValidName(Product.Name))
             {
-                notificationWindowLogic.LoadNotification("Error", "Tên không hợp lệ!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Invalid name!", "BottomRight");
                 return false;
             }
             if (!IsValidPrice(Product.Price.ToString()))
             {
-                notificationWindowLogic.LoadNotification("Error", "Giá phải lớn hơn 0!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Price must be positive!", "BottomRight");
                 return false;
             }
             if (!IsValidQuantity(Product.Quantity.ToString()))
             {
-                notificationWindowLogic.LoadNotification("Error", "Số lượng phải lớn hơn 0!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Quantity must be positive!", "BottomRight");
                 return false;
             }
 
             if (db.Products.Any(p => p.Name == Product.Name))
             {
-                notificationWindowLogic.LoadNotification("Warning", "Tên sản phẩm đã tồn tại!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Warning", "Product name is existed!", "BottomRight");
                 return false;
             }
 
@@ -181,7 +181,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             db.Products.Entry(newProduct).State = Microsoft.EntityFrameworkCore.EntityState.Added;
             db.SaveChangesAdded(newProduct);
 
-            notificationWindowLogic.LoadNotification("Success", "Thêm sản phẩm thành công!", "BottomRight");
+            notificationWindowLogic.LoadNotification("Success", "Product added successfully!", "BottomRight");
             //_window.Close();
             return true;
         }
@@ -195,12 +195,12 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 db.Products.Remove(productToRemove);
                 db.SaveChangesRemoved(productToRemove);
-                MessageBox.Show("Sản phẩm đã bị xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Product has been deleted!", "Notification", MessageBoxButton.OK, MessageBoxImage.Information);
                 _window.Close();
             }
             else
             {
-                MessageBox.Show("Không tìm thấy sản phẩm để xóa!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Cannot find product to delete!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
