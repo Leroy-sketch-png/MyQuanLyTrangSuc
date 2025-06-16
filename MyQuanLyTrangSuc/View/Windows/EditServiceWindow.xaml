@@ -7,7 +7,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="EditServiceWindow" Height="550" Width="500">
+        Title="EditServiceWindow" Height="550" Width="700">
     <Grid>
         <Grid Background="#F2F2F2">
             <TextBlock Text="EDITING SERVICE" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 20 0 20"/>
@@ -15,8 +15,8 @@
             <StackPanel Margin="40,120,40,20">
                 <Grid Margin="0,0,0,-10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="0.4*" />
+                        <ColumnDefinition Width="0.7*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Column 1 -->
@@ -34,7 +34,7 @@
                     <StackPanel Grid.Column="1" Margin="20,0,0,30">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="RenameBox" Margin="0 2 3 0" Height="30" Width="30"/>
-                            <TextBlock Text="Name: " FontSize="26" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                            <TextBlock Text="Service's Name: " FontSize="26" VerticalAlignment="Center" Margin="0,0,0,5"/>
                         </StackPanel>
                         <TextBox x:Name="nameTextBox"
                              Text="{Binding ServiceName, Mode=TwoWay}"
@@ -50,15 +50,15 @@
 
                 <Grid Margin="0,20,0,-10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="0.4*" />
+                        <ColumnDefinition Width="0.7*" />
                     </Grid.ColumnDefinitions>
 
                     <!--Service Price-->
                     <StackPanel Grid.Column="0" Margin="0,0,20,30">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="AlphaUBox" Height="30" Width="30" Margin="0 2 3 0"/>
-                            <TextBlock Text="Unit Price: " FontSize="26" Margin="0,0,0,5"/>
+                            <materialDesign:PackIcon Kind="CurrencyBtc" Height="30" Width="30" Margin="0 2 3 0"/>
+                            <TextBlock Text="Price: " FontSize="26" Margin="0,0,0,5"/>
                         </StackPanel>
                         <TextBox BorderBrush="Black" 
                              x:Name="unitPriceTextBox" 
@@ -75,12 +75,12 @@
                     <!--More Info-->
                     <StackPanel Grid.Column="1" Margin="20,0,0,0">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Margin="0 0 3 1" Kind="PhoneOutline" VerticalAlignment="Center" Height="30" Width="30"/>
+                            <materialDesign:PackIcon Margin="0 0 3 1" Kind="InfoBox" VerticalAlignment="Center" Height="30" Width="30"/>
                             <TextBlock Text="More info: " FontSize="26" Margin="0,0,0,5"/>
                         </StackPanel>
                         <TextBox BorderBrush="Black" x:Name="moreInfoTextBox" 
                              Text="{Binding MoreInfo, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
-                             FontSize="22" BorderThickness="1" Height="80"
+                             FontSize="16" BorderThickness="1" Height="80"
                              Margin="0,0,0,10" AcceptsReturn="True"
                              TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" MaxLength="200">
                         </TextBox>

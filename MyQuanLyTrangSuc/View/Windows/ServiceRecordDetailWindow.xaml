@@ -27,7 +27,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="0,0,10,0">
                     <TextBlock Text="Date: " FontSize="16" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding SelectedServiceRecord.Date, StringFormat='{}{0:dd/MM/yyyy}'}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0"/>
+                    <TextBlock Text="{Binding SelectedServiceRecord.CreateDate, StringFormat='{}{0:dd/MM/yyyy}'}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0"/>
                 </StackPanel>
             </DockPanel>
 

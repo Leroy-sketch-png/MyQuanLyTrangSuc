@@ -359,7 +359,7 @@
                                                 Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
                                                 Converter={StaticResource PermissionToVisibilityConverter},
                                                 ConverterParameter=EditServiceRecord}">
-                                            <Icon:PackIconMaterial Kind="ViewListOutline" Style="{StaticResource gridButtonIcon}" />
+                                            <Icon:PackIconMaterial Kind="PencilBox" Style="{StaticResource gridButtonIcon}" />
                                         </Button>
                                         <Button Margin="3 0 0 0" Style="{StaticResource gridEditButton}"
                                                 Command="{Binding DataContext.PrintServiceRecordCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"

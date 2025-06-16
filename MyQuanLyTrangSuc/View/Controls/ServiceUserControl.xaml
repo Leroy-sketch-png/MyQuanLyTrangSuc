@@ -22,8 +22,8 @@
         <Border.ToolTip>
             <StackPanel>
                 <TextBlock Text="{Binding ServiceName}" FontWeight="Bold" FontSize="16"/>
-                <TextBlock Text="{Binding ServicePrice, StringFormat='Giá: {0}'}"/>
-                <TextBlock Text="{Binding MoreInfo, StringFormat='Chi tiết: {0}'}"/>
+                <TextBlock Text="{Binding ServicePrice, StringFormat='Price: {0}'}"/>
+                <TextBlock Text="{Binding MoreInfo, StringFormat='Details: {0}'}"/>
             </StackPanel>
         </Border.ToolTip>
 
