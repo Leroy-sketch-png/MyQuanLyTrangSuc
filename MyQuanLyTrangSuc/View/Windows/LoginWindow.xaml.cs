@@ -24,7 +24,6 @@ namespace MyQuanLyTrangSuc.View
         private NotificationWindowLogic notificationLogic;
         public LoginWindow()
         {
-
             loginWindowLogic = new LoginWindowLogic(this);
             notificationLogic = new NotificationWindowLogic();
             DataContext = loginWindowLogic;

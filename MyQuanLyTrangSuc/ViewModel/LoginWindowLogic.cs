@@ -1,16 +1,16 @@
-﻿using MyQuanLyTrangSuc.BusinessLogic; // <-- Đảm bảo đã import AuthenticationService
+﻿using MyQuanLyTrangSuc.BusinessLogic; 
 using MyQuanLyTrangSuc.Model;
-using MyQuanLyTrangSuc.View; // <-- Đảm bảo đã import các View cần dùng
-using MyQuanLyTrangSuc.View.Windows; // <-- Đảm bảo đã import VerificationWindow, MainNavigationWindow
+using MyQuanLyTrangSuc.View; 
+using MyQuanLyTrangSuc.View.Windows; 
 using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls; // Cần cho PasswordBox
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.EntityFrameworkCore;
-using System.Threading; // <--- ADD THIS for Thread.CurrentPrincipal
-using MyQuanLyTrangSuc.Security; // <--- ADD THIS, ensure it matches your CustomPrincipal/Identity namespace
+using System.Threading; 
+using MyQuanLyTrangSuc.Security; 
 using WpfApplication = System.Windows.Application;
 
 namespace MyQuanLyTrangSuc.ViewModel
@@ -24,9 +24,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         private readonly PermissionService permissionService = PermissionService.Instance;
 
         public string userName { get; set; }
-        private const string USER = "user"; 
-        private const string ADMIN = "admin";
-        //
+        
         private LoginWindow loginWindow;
         public LoginWindowLogic()
         {
@@ -36,6 +34,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         public LoginWindowLogic(LoginWindow loginWindow)
         {
             this.loginWindow = loginWindow;
+            new DatabaseInitializer().InitializeEssentialData();
         }
 
 
