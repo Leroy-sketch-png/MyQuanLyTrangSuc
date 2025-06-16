@@ -182,7 +182,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             db.SaveChangesAdded(newProduct);
 
             notificationWindowLogic.LoadNotification("Success", "Thêm sản phẩm thành công!", "BottomRight");
-            _window.Close();
+            //_window.Close();
             return true;
         }
 

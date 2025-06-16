@@ -43,14 +43,13 @@ namespace MyQuanLyTrangSuc.View
         private void addNewUnitBtn_Click(object sender, RoutedEventArgs e)
         {
             AddUnitWindow addUnitWindow = new AddUnitWindow();
-            /*bool? result = addUnitWindow.ShowDialog();
+            bool? result = addUnitWindow.ShowDialog();
 
             if (result == true)
             {
                 logicService.LoadInitialData();
-            } em làm phần này nè, thêm unit bên trong category*/
-            /*addUnitWindow.ShowDialog();
-            logicService.RefreshListOfUnits();*/
+            } 
+            logicService.RefreshListOfUnits();
         }
     }
 }
