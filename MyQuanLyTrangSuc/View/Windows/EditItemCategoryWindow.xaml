@@ -10,7 +10,7 @@
         Title="EditItemCategoryWindow" Height="500" Width="620">
     <Grid Background="#F2F2F2">
         <Grid Background="#F2F2F2">
-            <TextBlock Text="EDITING CATEGORY..." FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,20"/>
+            <TextBlock Text="EDITING CATEGORY..." Foreground="#747525" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,20"/>
             <StackPanel Margin="20,70,10,20">
 
 
@@ -28,7 +28,7 @@
                             <TextBlock Text="CATEGORY ID: " FontSize="24" VerticalAlignment="Center" Margin="0,0,0,5"/>
                         </StackPanel>
                         <Border BorderBrush="Black" BorderThickness="1" Padding="5" Margin="0,0,0,10">
-                            <TextBlock x:Name="IDTextBlock" Text="{Binding EditedItemCategory.CategoryId}" 
+                            <TextBlock x:Name="IDTextBlock"  Text="{Binding EditedItemCategory.CategoryId}" 
                                        FontSize="20" VerticalAlignment="Center"/>
                         </Border>
                     </StackPanel>
@@ -66,9 +66,18 @@
                             <materialDesign:PackIcon Margin="0 0 3 1" Kind="Money" VerticalAlignment="Center" Height="30" Width="30"/>
                             <TextBlock Text="PROFIT: " FontSize="24" Margin="0,0,0,5"/>
                         </StackPanel>
-                        <TextBox BorderBrush="Black" x:Name="profitPercentageTextBox" Text="{Binding EditedItemCategory.ProfitPercentage, Mode=TwoWay}" FontSize="20" BorderThickness="1" Margin="0,0,0,10">
+                        <TextBox 
+                            BorderBrush="Black" 
+                            x:Name="profitPercentageTextBox" 
+                            Text="{Binding EditedItemCategory.ProfitPercentage, Mode=TwoWay, ValidatesOnDataErrors=True}" 
+                            FontSize="20" 
+                            BorderThickness="1" 
+                            Margin="0,0,0,10"
+                            PreviewTextInput="ProfitPercentage_PreviewTextInput"
+                            PreviewKeyDown="ProfitPercentage_PreviewKeyDown"
+                            TextChanged="ProfitPercentage_TextChanged">
                             <TextBox.ToolTip>
-                                <ToolTip Foreground="Black" Background="White" Content="Profit must be positive and between 0 and 100"/>
+                                <ToolTip Foreground="Black" Background="White" Content="Profit must be between 0 and 100"/>
                             </TextBox.ToolTip>
                         </TextBox>
                     </StackPanel>
@@ -108,4 +117,3 @@
         </Grid>
     </Grid>
 </Window>
- 

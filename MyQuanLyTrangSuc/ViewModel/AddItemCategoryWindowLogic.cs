@@ -76,6 +76,36 @@ namespace MyQuanLyTrangSuc.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private double _profitPercentage;
+        public double ProfitPercentage
+        {
+            get => _profitPercentage;
+            set
+            {
+                if (value >= 0 && value <= 100)
+                {
+                    _profitPercentage = value;
+                    OnPropertyChanged(nameof(ProfitPercentage));
+                }
+            }
+        }
+
+        // Implement IDataErrorInfo
+        public string Error => null;
+        public string this[string columnName]
+        {
+            get
+            {
+                if (columnName == nameof(ProfitPercentage))
+                {
+                    if (ProfitPercentage < 0 || ProfitPercentage > 100)
+                        notificationWindowLogic.LoadNotification("Error", "Giá trị không phù hợp!", "BottomRight");
+                    return "Giá trị không được âm hoặc lớn hơn 100!";
+                }
+                return null;
+            }
+        }
+
         public bool AddItemCategory(string name, string profitPercentage)
         {
             if (_selectedUnit == null)
