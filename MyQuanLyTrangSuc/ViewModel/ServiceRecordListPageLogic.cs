@@ -675,7 +675,163 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        // Dispose of event subscriptions to prevent memory leaks
+        // Add these methods to your ServiceRecordListPageLogic class
+
+        /// <summary>
+        /// Applies advanced filters to the ServiceRecords collection based on the provided filter criteria.
+        /// </summary>
+        public void ApplyAdvancedFilters(
+            bool enableIdFilter, string idFrom, string idTo,
+            bool enableDateFilter, DateTime? dateFrom, DateTime? dateTo,
+            bool enableCustomerFilter, string customerText,
+            bool enableTotalFilter, decimal? totalFrom, decimal? totalTo,
+            bool enablePaidFilter, decimal? paidFrom, decimal? paidTo,
+            bool enableRemainingFilter, decimal? remainingFrom, decimal? remainingTo,
+            bool enableStatusFilter, string selectedStatus)
+        {
+            try
+            {
+                // Start with all service records from database
+                var query = context.ServiceRecords
+                    .Include(sr => sr.Customer)
+                    .Include(sr => sr.Employee)
+                    .AsQueryable();
+
+                // Apply ID filter
+                if (enableIdFilter)
+                {
+                    if (!string.IsNullOrWhiteSpace(idFrom))
+                    {
+                        query = query.Where(sr => string.Compare(sr.ServiceRecordId, "SRV" + idFrom, StringComparison.OrdinalIgnoreCase) >= 0);
+                    }
+                    if (!string.IsNullOrWhiteSpace(idTo))
+                    {
+                        query = query.Where(sr => string.Compare(sr.ServiceRecordId, "SRV" + idTo, StringComparison.OrdinalIgnoreCase) <= 0);
+                    }
+                }
+
+                // Apply Date filter
+                if (enableDateFilter)
+                {
+                    if (dateFrom.HasValue)
+                    {
+                        var fromDate = dateFrom.Value.Date;
+                        query = query.Where(sr => sr.CreateDate.HasValue && sr.CreateDate.Value.Date >= fromDate);
+                    }
+                    if (dateTo.HasValue)
+                    {
+                        var toDate = dateTo.Value.Date;
+                        query = query.Where(sr => sr.CreateDate.HasValue && sr.CreateDate.Value.Date <= toDate);
+                    }
+                }
+
+                // Apply Customer filter
+                if (enableCustomerFilter && !string.IsNullOrWhiteSpace(customerText))
+                {
+                    var searchText = customerText.Trim().ToLower();
+                    query = query.Where(sr => sr.Customer != null &&
+                        sr.Customer.Name.ToLower().Contains(searchText));
+                }
+
+                // Apply Total Amount filter
+                if (enableTotalFilter)
+                {
+                    if (totalFrom.HasValue)
+                    {
+                        query = query.Where(sr => sr.GrandTotal >= totalFrom.Value);
+                    }
+                    if (totalTo.HasValue)
+                    {
+                        query = query.Where(sr => sr.GrandTotal <= totalTo.Value);
+                    }
+                }
+
+                // Apply Paid Amount filter
+                if (enablePaidFilter)
+                {
+                    if (paidFrom.HasValue)
+                    {
+                        query = query.Where(sr => sr.TotalPaid >= paidFrom.Value);
+                    }
+                    if (paidTo.HasValue)
+                    {
+                        query = query.Where(sr => sr.TotalPaid <= paidTo.Value);
+                    }
+                }
+
+                // Apply Remaining Amount filter
+                if (enableRemainingFilter)
+                {
+                    if (remainingFrom.HasValue)
+                    {
+                        query = query.Where(sr => sr.TotalUnpaid >= remainingFrom.Value);
+                    }
+                    if (remainingTo.HasValue)
+                    {
+                        query = query.Where(sr => sr.TotalUnpaid <= remainingTo.Value);
+                    }
+                }
+
+                // Apply Status filter
+                if (enableStatusFilter && !string.IsNullOrWhiteSpace(selectedStatus))
+                {
+                    query = query.Where(sr => sr.Status == selectedStatus);
+                }
+
+                // Execute query and update the collection
+                var filteredRecords = query.OrderByDescending(sr => sr.CreateDate).ToList();
+                UpdateServiceRecordsDisplay(filteredRecords);
+
+                // Show result count in notification
+                WpfApplication.Current.Dispatcher.Invoke(() =>
+                {
+                    notificationWindowLogic.LoadNotification(
+                        "Success",
+                        $"Filter applied: {filteredRecords.Count} records found",
+                        "BottomRight");
+                });
+            }
+            catch (Exception ex)
+            {
+                WpfApplication.Current.Dispatcher.Invoke(() =>
+                {
+                    notificationWindowLogic.LoadNotification(
+                        "Error",
+                        $"Error applying filters: {ex.Message}",
+                        "BottomRight");
+                });
+            }
+        }
+
+        /// <summary>
+        /// Clears all applied filters and reloads all service records from the database.
+        /// </summary>
+        public void ClearAllFilters()
+        {
+            try
+            {
+                // Reload all records from database
+                LoadServiceRecordsFromDatabase();
+
+                WpfApplication.Current.Dispatcher.Invoke(() =>
+                {
+                    notificationWindowLogic.LoadNotification(
+                        "Success",
+                        "All filters cleared",
+                        "BottomRight");
+                });
+            }
+            catch (Exception ex)
+            {
+                WpfApplication.Current.Dispatcher.Invoke(() =>
+                {
+                    notificationWindowLogic.LoadNotification(
+                        "Error",
+                        $"Error clearing filters: {ex.Message}",
+                        "BottomRight");
+                });
+            }
+        }        // Dispose of event subscriptions to prevent memory leaks
         public void Dispose()
         {
             serviceRecordService.OnServiceRecordAdded -= HandleServiceRecordAdded;

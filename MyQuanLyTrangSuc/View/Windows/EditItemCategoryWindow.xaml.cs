@@ -36,7 +36,45 @@ namespace MyQuanLyTrangSuc.View
             if (isSuccess) this.Close();
         }
 
+        // 1. Chặn ký tự không phải số hoặc dấu chấm
+        private void ProfitPercentage_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            string newText = textBox.Text.Insert(textBox.CaretIndex, e.Text);
 
+            bool isValid = double.TryParse(newText, out double result) &&
+                           result >= 0 &&
+                           result <= 100 &&
+                           newText.Count(c => c == '.') <= 1;
+
+            e.Handled = !isValid;
+        }
+
+        // 2. Chặn phím Space và dấu âm
+        private void ProfitPercentage_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Space || e.Key == Key.Subtract || e.Key == Key.OemMinus)
+            {
+                e.Handled = true;
+            }
+        }
+
+        // 3. Xử lý khi paste dữ liệu
+        private void ProfitPercentage_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            if (double.TryParse(textBox.Text, out double value))
+            {
+                if (value < 0)
+                    textBox.Text = "0";
+                else if (value > 100)
+                    textBox.Text = "100";
+            }
+            else if (!string.IsNullOrEmpty(textBox.Text))
+            {
+                textBox.Text = "";
+            }
+        }
         private void addNewUnitBtn_Click(object sender, RoutedEventArgs e)
         {
             AddUnitWindow addUnitWindow = new AddUnitWindow();

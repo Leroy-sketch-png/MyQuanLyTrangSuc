@@ -8,7 +8,8 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="AddItemCategoryWindow" Height="500" Width="620">
-    <Grid Background="#F2F2F2">
+
+    <Grid Background="#747525">
         <Grid Background="#F2F2F2">
             <TextBlock Text="ADDING CATEGORY..." FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,20"/>
             <StackPanel Margin="20,70,10,20">
@@ -25,11 +26,11 @@
                     <StackPanel Grid.Column="0" Margin="0,0,20,30">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="AlphaIBox" Margin="0 2 3 0" Height="25" Width="25"/>
-                            <TextBlock Text="CATEGORY ID: " FontSize="16" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                            <TextBlock Text="CATEGORY ID: " FontFamily="Echotopia" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,5"/>
                         </StackPanel>
                         <Border BorderBrush="Black" BorderThickness="1" Padding="5" Margin="0,0,0,10">
                             <TextBlock x:Name="IDTextBlock" Text="{Binding NewID}" 
-                                       FontSize="20" VerticalAlignment="Center"/>
+                                       FontSize="20"  VerticalAlignment="Center"/>
                         </Border>
                     </StackPanel>
 
@@ -66,9 +67,18 @@
                             <materialDesign:PackIcon Margin="0 0 3 1" Kind="Percent"  VerticalAlignment="Center" Height="25" Width="25"/>
                             <TextBlock Text="PROFIT PERCENTAGE: " FontSize="16" Margin="0,0,0,5"/>
                         </StackPanel>
-                        <TextBox BorderBrush="Black" x:Name="profitPercentageTextBox" Text="{Binding ProfitPercentage, Mode=TwoWay}" FontSize="20" BorderThickness="1" Margin="0,0,0,10">
+                        <TextBox 
+                            BorderBrush="Black" 
+                            x:Name="profitPercentageTextBox" 
+                            Text="{Binding ProfitPercentage, Mode=TwoWay, ValidatesOnDataErrors=True}" 
+                            FontSize="20" 
+                            BorderThickness="1" 
+                            Margin="0,0,0,10"
+                            PreviewTextInput="ProfitPercentage_PreviewTextInput"
+                            PreviewKeyDown="ProfitPercentage_PreviewKeyDown"
+                            TextChanged="ProfitPercentage_TextChanged">
                             <TextBox.ToolTip>
-                                <ToolTip Foreground="Black" Background="White" Content="Profit must be positive and between 0 and 100"/>
+                                <ToolTip Foreground="Black" Background="White" Content="Profit must be between 0 and 100"/>
                             </TextBox.ToolTip>
                         </TextBox>
                     </StackPanel>

@@ -120,6 +120,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
             context.Employees.Add(emp);
             context.SaveChangesAdded(emp);
             notificationWindowLogic.LoadNotification("Success", "Employee added successfully!", "BottomRight");
+            this.addEmployeeWindow.Close();
             return true;
         }
 
