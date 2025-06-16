@@ -168,6 +168,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             _itemPropertiesPageUI.inputItemPrice.Visibility = editMode;
             _itemPropertiesPageUI.inputItemStock.Visibility = editMode;
             _itemPropertiesPageUI.inputItemImage.Visibility = editMode;
+            _itemPropertiesPageUI.itemDescription.IsReadOnly = editing;
 
             _itemPropertiesPageUI.editButton.Content = editing ? "Edit?" : "Apply!";
         }

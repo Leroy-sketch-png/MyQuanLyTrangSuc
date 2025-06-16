@@ -36,7 +36,7 @@
             </DockPanel>
             <Separator BorderBrush="#623ed0" BorderThickness="5" Margin="5,0,50,20"/>
 
-            <Grid>
+            <Grid Height="400">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.56*"/>
                     <ColumnDefinition Width="*"/>
@@ -78,7 +78,7 @@
 
                         <TextBlock Text="{Binding EmployeeId}" FontSize="25" Foreground="DarkGray" TextAlignment="Center" Margin="0,0,0,5"/>
 
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,5">
+                        <StackPanel Orientation="Horizontal" Margin="10,10,0,10">
                             <materialDesign:PackIcon Kind="CakeVariantOutline" Width="25" Height="25" />
                             <TextBlock Text="Birthday: " FontSize="20" Foreground="Black" VerticalAlignment="Center" />
                             <Grid>
@@ -91,7 +91,7 @@
                             </Grid>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,5">
+                        <StackPanel Orientation="Horizontal" Margin="10,10,0,10">
                             <materialDesign:PackIcon Kind="Email" Width="25" Height="25" />
                             <TextBlock Text="Email: " FontSize="20" Foreground="Black" VerticalAlignment="Center" />
                             <Grid>
@@ -105,7 +105,7 @@
                             </Grid>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,5">
+                        <StackPanel Orientation="Horizontal" Margin="10,10,0,10">
                             <materialDesign:PackIcon Kind="Phone" Width="25" Height="25" />
                             <TextBlock Text="Phone: " FontSize="20" Foreground="Black" VerticalAlignment="Center" />
                             <Grid>
@@ -118,7 +118,7 @@
                             </Grid>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,5">
+                        <StackPanel Orientation="Horizontal" Margin="10,10,0,10">
                             <materialDesign:PackIcon Kind="GenderMaleFemale" Width="25" Height="25" />
                             <TextBlock Text="Gender: " FontSize="20" Foreground="Black" VerticalAlignment="Center" />
                             <Grid>
@@ -140,17 +140,8 @@
                 </Border>
             </Grid>
 
-            <Border BorderBrush="Black" BorderThickness="1" Margin="0,20,0,0">
-                <TextBlock Text="---MORE ABOUT ME---" FontSize="20" Margin="10" HorizontalAlignment="Center"/>
-            </Border>
 
-            <Grid>
-                <TextBox x:Name="employeeDescription" Text="{Binding Description, Mode=TwoWay}" AcceptsReturn="True" SpellCheck.IsEnabled="True"
-                         FontSize="20" TextWrapping="Wrap" Margin="10" IsReadOnly="True"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
-            </Grid>
 
-            <TextBlock Text="© 2024 DELTA STEEL" FontSize="14" Foreground="Gray" HorizontalAlignment="Center" Margin="20"/>
         </StackPanel>
     </ScrollViewer>
 </Page>

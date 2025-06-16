@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MyQuanLyTrangSuc.ViewModel;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -9,7 +11,6 @@ namespace MyQuanLyTrangSuc.Security
 {
     public class CustomPrincipal : IPrincipal
     {
-        // IIdentity property
         public IIdentity Identity { get; private set; }
 
         // List to hold granular permissions (e.g., "DashboardPage", "EditCustomer")
@@ -31,11 +32,16 @@ namespace MyQuanLyTrangSuc.Security
             if (!string.IsNullOrEmpty(permission) && !_permissions.Contains(permission))
             {
                 _permissions.Add(permission);
+                MainNavigationWindowLogic.Instance?.NotifyPermissionsChanged();
             }
         }
+
         public void RemovePermission(string permission)
         {
-            _permissions.Remove(permission);
+            if (_permissions.Remove(permission))
+            {
+                MainNavigationWindowLogic.Instance?.NotifyPermissionsChanged();
+            }
         }
 
         /// <summary>
@@ -57,7 +63,6 @@ namespace MyQuanLyTrangSuc.Security
         /// </summary>
         public bool IsInRole(string role)
         {
-            // If your CustomIdentity stores the role name, you can check it here.
             if (Identity is CustomIdentity customIdentity)
             {
                 return customIdentity.RoleName.Equals(role, System.StringComparison.OrdinalIgnoreCase);
@@ -65,5 +70,4 @@ namespace MyQuanLyTrangSuc.Security
             return false;
         }
     }
-
 }

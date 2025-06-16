@@ -195,8 +195,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             employeePropertiesPageUI.inputEmployeeGender.Visibility = visibleWhenEditing;
             employeePropertiesPageUI.inputEmployeeImage.Visibility = visibleWhenEditing;
 
-            employeePropertiesPageUI.employeeDescription.IsReadOnly = !enable;
-
             if (employeePropertiesPageUI.editButton is Button editBtn)
                 editBtn.Content = enable ? "Apply!" : "Modify?";
 
