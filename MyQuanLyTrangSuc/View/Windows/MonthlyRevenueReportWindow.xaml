@@ -41,7 +41,7 @@
                     <DataGridTextColumn Header="ID" Width="80" Binding="{Binding Id}"/>
                     <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}"/>
                     <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
-                    <DataGridTextColumn Header="Revenue" Width="150" Binding="{Binding Revenue}"/>
+                    <DataGridTextColumn Header="Revenue" Width="150" Binding="{Binding Revenue, StringFormat={}{0:N0} $}"/>
                     <DataGridTextColumn Header="Percentage" Width="*" Binding="{Binding Percentage}"/>
                     <!--DataGridTextColumn Header="Percentage (%)" Width="*" 
                         Binding="{Binding Percentage, Converter={StaticResource PercentageToDisplayConverter}, StringFormat={}{0:N2}}"/-->
@@ -53,7 +53,7 @@
             <StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock Text="REVENUE: " FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding TotalRevenue, StringFormat={}{0:N0}}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10,0,10,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding TotalRevenue, StringFormat={}{0:N0} $}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10,0,10,0" VerticalAlignment="Center"/>
                 </StackPanel>
                 <TextBlock Text="After 4% Mark-up" FontSize="14" HorizontalAlignment="Center" Margin="10,0,10,10" FontStyle="Italic"/>
             </StackPanel>

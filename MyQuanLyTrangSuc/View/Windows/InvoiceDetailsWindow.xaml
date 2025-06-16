@@ -35,8 +35,8 @@
                     <DataGridTextColumn Header="Category" Width="*" Binding="{Binding Product.Category.CategoryName}"/>
                     <DataGridTextColumn Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
                     <DataGridTextColumn Header="Unit" Width="*" Binding="{Binding Product.Category.Unit.UnitName}"/>
-                    <DataGridTextColumn Header="Price" Width="*" Binding="{Binding Price}"/>
-                    <DataGridTextColumn Header="Total" Width="*" Binding="{Binding TotalPrice}"/>
+                    <DataGridTextColumn Header="Price" Width="*" Binding="{Binding Price, StringFormat={}{0:N0} $}"/>
+                    <DataGridTextColumn Header="Total" Width="*" Binding="{Binding TotalPrice, StringFormat={}{0:N0} $}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
@@ -55,7 +55,7 @@
             <StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock Text="REVENUE: " FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding SelectedInvoiceRecord.TotalAmount}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10,0,10,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding SelectedInvoiceRecord.TotalAmount, StringFormat={}{0:N0} $}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10,0,10,0" VerticalAlignment="Center"/>
                 </StackPanel>
                 <!--<TextBlock Text="After 4% Mark-up" FontSize="14" HorizontalAlignment="Center" Margin="10,0,10,10" FontStyle="Italic"/>-->
             </StackPanel>

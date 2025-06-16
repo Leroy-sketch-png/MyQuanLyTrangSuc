@@ -167,13 +167,13 @@
                                    Foreground="Black"/>
                         <Grid>
                             <TextBlock x:Name="itemPrice"
-                                       Text="{Binding SelectedProduct.Price}"
+                                       Text="{Binding SelectedProduct.Price, StringFormat={}{0:N0} $}"
                                        FontSize="25"
                                        FontWeight="Bold"
                                        Foreground="DarkGreen"
                                        Visibility="Visible"/>
                             <TextBox x:Name="inputItemPrice"
-                                     Text="{Binding SelectedProduct.Price, Mode=TwoWay}"
+                                     Text="{Binding SelectedProduct.Price, StringFormat={}{0:N0} $, Mode=TwoWay}"
                                      FontSize="25"
                                      FontWeight="Bold"
                                      Foreground="DarkGreen"

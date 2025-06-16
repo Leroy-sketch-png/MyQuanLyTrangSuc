@@ -95,7 +95,7 @@
                         <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="False" Width="80" Binding="{Binding InvoiceId}"/>
                         <DataGridTextColumn Header="Date" IsReadOnly="True" Width="*" Binding="{Binding Date, StringFormat=d}"/>
                         <DataGridTextColumn Header="Customer" IsReadOnly="True" Width="*" Binding="{Binding Customer.Name}"/>
-                        <DataGridTextColumn Header="Total Amount" IsReadOnly="True" Width="*" Binding="{Binding TotalAmount, StringFormat=C}"/>
+                        <DataGridTextColumn Header="Total Amount" IsReadOnly="True" Width="*" Binding="{Binding TotalAmount, StringFormat={}{0:N0} $}"/>
                         <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

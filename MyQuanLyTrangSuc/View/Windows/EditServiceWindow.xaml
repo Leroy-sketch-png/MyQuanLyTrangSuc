@@ -62,7 +62,7 @@
                         </StackPanel>
                         <TextBox BorderBrush="Black" 
                              x:Name="unitPriceTextBox" 
-                             Text="{Binding ServicePrice, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+                             Text="{Binding ServicePrice, StringFormat={}{0:N0} $, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                              FontSize="22" 
                              BorderThickness="1" 
                              Margin="0,0,0,10">

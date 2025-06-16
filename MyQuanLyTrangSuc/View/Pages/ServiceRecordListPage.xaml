@@ -342,11 +342,11 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Binding="{Binding GrandTotal, StringFormat=C}" Header="Total" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding GrandTotal, StringFormat={}{0:N0} $}" Header="Total" IsReadOnly="True" Width="*"/>
 
-                        <DataGridTextColumn Binding="{Binding TotalPaid, StringFormat=C}" Header="Paid" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding TotalPaid, StringFormat={}{0:N0} $}" Header="Paid" IsReadOnly="True" Width="*"/>
 
-                        <DataGridTextColumn Binding="{Binding TotalUnpaid, StringFormat=C}" Header="Remained" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding TotalUnpaid, StringFormat={}{0:N0} $}" Header="Remained" IsReadOnly="True" Width="*"/>
 
                         <DataGridTextColumn Binding="{Binding Status}" Header="Status" IsReadOnly="True" Width="100"/>
                         <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="*">
