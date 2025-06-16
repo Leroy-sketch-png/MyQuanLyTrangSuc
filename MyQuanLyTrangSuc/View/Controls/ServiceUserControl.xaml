@@ -43,7 +43,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Price: " FontSize="14" FontWeight="Bold" Foreground="#ba80d3"/>
-                    <TextBlock Text="{Binding ServicePrice}" FontSize="14" Foreground="#ba80d3"/>
+                    <TextBlock Text="{Binding ServicePrice, StringFormat='{}{0:F2}'}" FontSize="14" Foreground="#ba80d3"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="More Info: " FontSize="14" FontWeight="Bold" Foreground="#623ed0"/>
