@@ -66,7 +66,7 @@
                         <TextBlock Text="Price:" FontSize="16"/>
                     </StackPanel>
                     <TextBox x:Name="unitPriceTextBox" 
-                             Text="{Binding Service.ServicePrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             Text="{Binding Service.ServicePrice, StringFormat='{}{0:N0} $', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                              FontSize="14" 
                              Padding="5"
                              BorderBrush="Black" 

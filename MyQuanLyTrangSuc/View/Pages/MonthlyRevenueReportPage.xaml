@@ -102,7 +102,7 @@
                         <DataGridTextColumn Binding="{Binding RevenueReportId}" Header="Report Id" IsReadOnly="True" Width="*"/>
                         <DataGridTextColumn Binding="{Binding MonthYear.Month}" Header="Month" IsReadOnly="True" Width="*"/>
                         <DataGridTextColumn Binding="{Binding MonthYear.Year}" Header="Year" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Binding="{Binding TotalRevenue, StringFormat={}{0:N0}}" Header="Total Revenue" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding TotalRevenue, StringFormat={}{0:N0} $}" Header="Total Revenue" IsReadOnly="True" Width="*"/>
                         <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

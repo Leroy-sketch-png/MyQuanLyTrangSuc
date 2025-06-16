@@ -117,7 +117,7 @@
                 <DockPanel>
                     <TextBlock Text="Product" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" HorizontalAlignment="Left"/>
                     <Border DockPanel.Dock="Right" Width="150">
-                        <TextBlock FontSize="16" Text="{Binding GrandTotal, StringFormat=C}" FontWeight="Light"/>
+                        <TextBlock FontSize="16" Text="{Binding GrandTotal, StringFormat={}{0:N0} $}" FontWeight="Light"/>
                     </Border>
                     <TextBlock DockPanel.Dock="Right" Text="Grand Total: " FontSize="16" FontWeight="Bold" HorizontalAlignment="Right"/>
                 </DockPanel>
@@ -137,8 +137,8 @@
                     <DataGridTextColumn IsReadOnly="True" Header="ID" Width="65" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
                     <DataGridTextColumn IsReadOnly="True" Header="Product" Width="*" Binding="{Binding Product.Name}"/>
                     <DataGridTextColumn IsReadOnly="True" Header="Quantity" Width="*" Binding="{Binding Quantity}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="Price" Width="*" Binding="{Binding Product.Price}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="Total" Width="*" Binding="{Binding TotalPrice}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Price" Width="*" Binding="{Binding Product.Price, StringFormat={}{0:N0} $}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Total" Width="*" Binding="{Binding TotalPrice, StringFormat={}{0:N0} $}"/>
                     <DataGridTemplateColumn Width="*">
                         <DataGridTemplateColumn.HeaderStyle>
                             <Style TargetType="{x:Type DataGridColumnHeader}">

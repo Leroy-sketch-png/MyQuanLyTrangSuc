@@ -126,8 +126,8 @@
                     <DataGridTextColumn IsReadOnly="True" Header="ID" Width="80" CanUserResize="False" Binding="{Binding Product.ProductId}"/>
                     <DataGridTextColumn IsReadOnly="True" Header="Name" Width="*" Binding="{Binding Product.Name}"/>
                     <DataGridTextColumn IsReadOnly="False" Header="Quantity" Width="*" Binding="{Binding Quantity, UpdateSourceTrigger=LostFocus}"/>
-                    <DataGridTextColumn IsReadOnly="False" Header="Price" Width="*" Binding="{Binding Price, UpdateSourceTrigger=LostFocus}"/>
-                    <DataGridTextColumn IsReadOnly="True" Header="Total" Width="*" Binding="{Binding TotalPrice}"/>
+                    <DataGridTextColumn IsReadOnly="False" Header="Price" Width="*" Binding="{Binding Price, UpdateSourceTrigger=LostFocus, StringFormat={}{0:N0} $}"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Total" Width="*" Binding="{Binding TotalPrice, StringFormat={}{0:N0} $}"/>
                     <DataGridTemplateColumn Width="*">
                         <DataGridTemplateColumn.HeaderStyle>
                             <Style TargetType="{x:Type DataGridColumnHeader}">
