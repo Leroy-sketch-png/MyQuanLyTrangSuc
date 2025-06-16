@@ -160,9 +160,8 @@ namespace MyQuanLyTrangSuc.ViewModel
             _itemPropertiesPageUI.itemCategory.Visibility = viewMode;
             _itemPropertiesPageUI.itemPrice.Visibility = viewMode;
             _itemPropertiesPageUI.itemStock.Visibility = viewMode;
-            _itemPropertiesPageUI.itemImage.Visibility = viewMode;
             _itemPropertiesPageUI.itemStatus.Visibility = viewMode;
-
+            Status = string.Empty;
             _itemPropertiesPageUI.inputItemName.Visibility = editMode;
             _itemPropertiesPageUI.inputItemCategory.Visibility = editMode;
             _itemPropertiesPageUI.inputItemPrice.Visibility = editMode;
@@ -181,7 +180,10 @@ namespace MyQuanLyTrangSuc.ViewModel
             };
 
             if (openFileDialog.ShowDialog() == true && SelectedProduct != null)
+            {
                 SelectedProduct.ImagePath = openFileDialog.FileName;
+                OnPropertyChanged(nameof(SelectedProduct));
+            }
         }
 
         public void OnCategoryChanged(string categoryName)
@@ -237,5 +239,42 @@ namespace MyQuanLyTrangSuc.ViewModel
                 OnPropertyChanged();
             }
         }
+        private string status;
+        public string Status
+        {
+            get
+            {
+                if (SelectedProduct.Quantity < 30)
+                {
+                    status = "Low on stock";
+                }
+                else if (SelectedProduct.Quantity < 150)
+                {
+                    status = "Adequate";
+                }
+                else
+                {
+                    status = "Abundant";
+                }
+                return status;
+            }
+            set
+            {
+                if (SelectedProduct.Quantity < 30)
+                {
+                    status = "Low on stock";
+                }
+                else if (SelectedProduct.Quantity < 150)
+                {
+                    status = "Adequate";
+                }
+                else
+                {
+                    status = "Abundant";
+                }
+                OnPropertyChanged();
+            }
+        }
+
     }
 }

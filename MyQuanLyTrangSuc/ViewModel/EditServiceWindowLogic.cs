@@ -92,10 +92,17 @@ namespace MyQuanLyTrangSuc.View.Windows
             if (string.IsNullOrWhiteSpace(priceText))
                 return false;
 
-            if (!decimal.TryParse(priceText, out decimal price))
+            string cleanedPriceText = Regex.Replace(priceText, @"[^\d.]", "");
+
+            if (string.IsNullOrWhiteSpace(cleanedPriceText))
                 return false;
 
-            return price > 0 && price <= 999999999; // Reasonable upper limit
+            if (!decimal.TryParse(cleanedPriceText, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal price))
+            {
+                return false; 
+            }
+
+            return price > 0 && price <= 999999999;
         }
 
         // Validate more info (optional field)

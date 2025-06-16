@@ -15,7 +15,8 @@ namespace MyQuanLyTrangSuc.ViewModel
         private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
         private Queue<NotificationWindow> notificationQueue = new Queue<NotificationWindow>();
         private bool isNotificationVisible = false;
-        public void LoadNotificationForItem()
+        public void 
+            ForItem()
         {
             var lowItems = context.Products.Where(item => item.Quantity <= 10 && item != null ).ToList();
             //&& item.isdeleted_item == false

@@ -33,7 +33,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             if (MyQuanLyTrangSucContext.Instance == null)
             {
-                MessageBox.Show("Database context chưa được khởi tạo!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Database context is not initialized!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             var monthYearDate = new DateTime(int.Parse(YearDisplay), int.Parse(MonthDisplay), 1);

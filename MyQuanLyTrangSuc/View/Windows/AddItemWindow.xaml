@@ -61,7 +61,7 @@
 
                 <StackPanel Grid.Column="0" Margin="0,0,20,0">
                     <TextBlock Text="Price: " FontSize="16" Margin="0,0,0,5"/>
-                    <TextBox x:Name="PriceTextBox" Text="{Binding Product.Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                    <TextBox x:Name="PriceTextBox" Text="{Binding Product.Price, StringFormat={}{0:N0} $, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                              FontSize="14" BorderThickness="1" Margin="0,0,0,10" 
                              PreviewTextInput="OnPreviewTextInput_PriceTextBox_AddItem"
                              DataObject.Pasting="OnPasting_PriceTextBox_AddItem"/>
@@ -70,16 +70,6 @@
          Width="222"/>-->
 
             </Grid>
-
-            <StackPanel>
-                <TextBlock Text="Stock: " FontSize="16" Margin="0,0,0,5"/>
-                <TextBox x:Name="StockTextBox" Text="{Binding Product.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                             FontSize="14" BorderThickness="1" Margin="0,0,317,10" 
-                             PreviewTextInput="OnPreviewTextInput_StockTextBox_AddItem"
-                             DataObject.Pasting="OnPasting_StockTextBox_AddItem"
-                         />
-            </StackPanel>
-
 
             <StackPanel Margin="0,5,0,10">
                 <TextBlock Text="Image Path: " FontSize="16" Margin="0,0,0,5"/>
@@ -97,8 +87,10 @@
                 </Grid>
             </StackPanel>
 
-            <Button x:Name="AddButton" Content="ADD" FontSize="20" Background="#BFDBFE" 
-                    Foreground="#1E40AF" Padding="5" HorizontalAlignment="Center" 
+            <Button x:Name="AddButton" Content="ADD" FontSize="20"
+                    Background="#BFDBFE" 
+                    Foreground="#1E40AF" 
+                    Padding="5" HorizontalAlignment="Center" 
                     Width="70" Height="40" Click="OnClick_Add_AddItem"/>
         </StackPanel>
     </Grid>

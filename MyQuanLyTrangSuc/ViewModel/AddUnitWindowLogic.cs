@@ -53,7 +53,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             if (!IsValidName(name))
             {
-                notificationWindowLogic.LoadNotification("Error", "Tên không hợp lệ!", "BottomRight");
+                notificationWindowLogic.LoadNotification("Error", "Invalid name!", "BottomRight");
                 return false;
             }
 

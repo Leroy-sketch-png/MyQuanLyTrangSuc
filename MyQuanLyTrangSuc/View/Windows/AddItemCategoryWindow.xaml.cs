@@ -84,10 +84,12 @@ namespace MyQuanLyTrangSuc.View
         {
             AddUnitWindow addUnitWindow = new AddUnitWindow();
             bool? result = addUnitWindow.ShowDialog();
+
             if (result == true)
             {
+                logicService.LoadInitialData();
+            } 
             logicService.RefreshListOfUnits();
-            }
         }
     }
 }

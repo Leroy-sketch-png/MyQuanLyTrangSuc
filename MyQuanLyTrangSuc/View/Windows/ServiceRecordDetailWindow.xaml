@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MyQuanLyTrangSuc.View"
         mc:Ignorable="d"
         Title="Service Details"
-        Height="500" Width="1000"
+        MinHeight="500" MinWidth="1000"
         WindowStartupLocation="CenterScreen">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid Margin="10">
@@ -27,22 +27,27 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="0,0,10,0">
                     <TextBlock Text="Date: " FontSize="16" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding SelectedServiceRecord.Date, StringFormat='{}{0:dd/MM/yyyy}'}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0"/>
+                    <TextBlock Text="{Binding SelectedServiceRecord.CreateDate, StringFormat='{}{0:dd/MM/yyyy}'}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0"/>
                 </StackPanel>
             </DockPanel>
 
             <!-- Service Details Table -->
             <Border Grid.Row="2" BorderThickness="1" BorderBrush="Gray">
-                <DataGrid ItemsSource="{Binding ServiceDetails}" AutoGenerateColumns="False" IsReadOnly="True" Margin="5">
+                <DataGrid ItemsSource="{Binding ServiceDetails}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          Margin="5"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Service ID" Binding="{Binding ServiceId}" Width="*"/>
-                        <DataGridTextColumn Header="Service Name" Binding="{Binding Service.ServiceName}" Width="*"/>
-                        <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*"/>
-                        <DataGridTextColumn Header="Extra Expense" Binding="{Binding ExtraExpense, StringFormat={}{0:C}}" Width="*"/>
-                        <DataGridTextColumn Header="Prepaid" Binding="{Binding Prepaid, StringFormat={}{0:C}}" Width="*"/>
-                        <DataGridTextColumn Header="Unpaid" Binding="{Binding Unpaid, StringFormat={}{0:C}}" Width="*"/>
-                        <DataGridTextColumn Header="Due Day" Binding="{Binding DueDay, StringFormat={}{0:dd/MM/yyyy}}" Width="*"/>
-                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
+                        <DataGridTextColumn Header="Service ID" Binding="{Binding ServiceId}" Width="*" />
+                        <DataGridTextColumn Header="Service Name" Binding="{Binding Service.ServiceName}" Width="*" />
+                        <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*" />
+                        <DataGridTextColumn Header="Extra Expense" Binding="{Binding ExtraExpense, StringFormat={}{0:C}}" Width="*" />
+                        <DataGridTextColumn Header="Prepaid" Binding="{Binding Prepaid, StringFormat={}{0:C}}" Width="*" />
+                        <DataGridTextColumn Header="Unpaid" Binding="{Binding Unpaid, StringFormat={}{0:C}}" Width="*" />
+                        <DataGridTextColumn Header="Due Day" Binding="{Binding DueDay, StringFormat={}{0:dd/MM/yyyy}}" Width="*" />
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*" />
                         <DataGridTemplateColumn Header="Action" Width="100">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

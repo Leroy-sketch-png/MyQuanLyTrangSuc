@@ -94,7 +94,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        public async Task UpdateServiceDetailStatusAsync(ServiceDetail detailToUpdate)
+        public void UpdateServiceDetailStatusAsync(ServiceDetail detailToUpdate)
         {
             if (detailToUpdate == null)
                 return;
@@ -133,7 +133,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 existing.Unpaid = 0m;
                 _context.Entry(existing).State = EntityState.Modified;
 
-                await _context.SaveChangesAsync();
+                _context.SaveChangesAsync();
 
                 ServiceDetails.Insert(idx, existing); // Thêm lại vào ObservableCollection để UI cập nhật
                                                       // (Cũng có thể chỉ cần cập nhật thuộc tính nếu ServiceDetail implement INotifyPropertyChanged)

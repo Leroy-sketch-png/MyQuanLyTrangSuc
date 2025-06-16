@@ -35,7 +35,8 @@ namespace MyQuanLyTrangSuc.View
         {
             InitializeComponent();
             logicService = new EmployeePropertiesPageLogic(this);
-            this.DataContext = employee;
+            this.DataContext = logicService;
+            logicService.LoadEmployeeDetails(employee.EmployeeId);
         }
 
         private void OnClick_Edit_EmployeePropertiesPage(object sender, RoutedEventArgs e)

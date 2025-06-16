@@ -61,22 +61,20 @@ namespace MyQuanLyTrangSuc.View
             bool res = Logic.AddProduct();
             if (res)
             {
+                this.DialogResult = true;
                 this.Close();
             }
         }
 
         private void addNewCategoryBtn_Click(object sender, RoutedEventArgs e)
         {
-            //AddItemCategoryWindow addItemCategoryWindow = new AddItemCategoryWindow();
-            //addItemCategoryWindow.ShowDialog();
             AddItemCategoryWindow addItemCategoryWindow = new AddItemCategoryWindow();
-            /*bool? result = addItemCategoryWindow.ShowDialog();
+            bool? result = addItemCategoryWindow.ShowDialog();
 
             if (result == true)
             {
                 Logic.LoadCategories();
-            } cái này để thêm loại sp bên trong item*/
-            addItemCategoryWindow.ShowDialog();
+            } 
             Logic.RefreshListOfCategories();
         }
     }

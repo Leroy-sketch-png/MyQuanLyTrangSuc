@@ -227,7 +227,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             if (selectedInvoice != null)
             {
-                var printPage = new ReceiptWindow(selectedInvoice); // Assuming ReceiptWindow is your printable view
+                var printPage = new ReceiptWindow(selectedInvoice);
                 var printDialog = new PrintDialog();
 
                 if (printDialog.ShowDialog() == true)

@@ -216,7 +216,10 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             if (selectedImportRecord != null)
             {
-                var printPage = new ImportDetailsWindow(selectedImportRecord); // Assuming ImportDetailsWindow is your printable view
+                var printPage = new ImportDetailsWindow(selectedImportRecord);
+                printPage.WindowStyle = WindowStyle.None;
+                printPage.WindowState = WindowState.Maximized;
+                printPage.ResizeMode = ResizeMode.NoResize;
                 var printDialog = new PrintDialog();
 
                 if (printDialog.ShowDialog() == true)

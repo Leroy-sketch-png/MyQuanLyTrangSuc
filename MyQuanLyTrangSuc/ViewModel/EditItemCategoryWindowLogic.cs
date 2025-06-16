@@ -70,8 +70,8 @@ namespace MyQuanLyTrangSuc.ViewModel
                 if (columnName == nameof(ProfitPercentage))
                 {
                     if (ProfitPercentage < 0 || ProfitPercentage > 100)
-                        notificationWindowLogic.LoadNotification("Error", "Giá trị không phù hợp!", "BottomRight");
-                    return "Giá trị không được âm hoặc lớn hơn 100!";
+                        notificationWindowLogic.LoadNotification("Error", "Invalid value!", "BottomRight");
+                    return "Value must be positive and less than 100!";
                 }
                 return null;
             }

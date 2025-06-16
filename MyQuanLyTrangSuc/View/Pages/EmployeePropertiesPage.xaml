@@ -46,12 +46,12 @@
                 <Border  Width="314" Height="314" Grid.Column="0" BorderBrush="PeachPuff" BorderThickness="31"
                         CornerRadius="314">
                     <Grid>
-                        <Ellipse  x:Name="inputEmployeeImage" Width="250" Height="250">
+                        <Ellipse  x:Name="employeeImage" Width="250" Height="250">
                             <Ellipse.Fill>
-                                <ImageBrush ImageSource="{Binding ImagePath}"/>
+                                <ImageBrush ImageSource="{Binding SelectedEmployee.ImagePath}"/>
                             </Ellipse.Fill>
                         </Ellipse>
-                        <Button Background="Transparent" BorderBrush="Transparent" Height="250"
+                        <Button x:Name="inputEmployeeImage" Background="Transparent" BorderBrush="Transparent" Height="250"
                                 materialDesign:ButtonAssist.CornerRadius="314" Visibility="Collapsed"
                                 Click="OnClick_EditImage_EmployeePropertiesPage"/>
                     </Grid>
@@ -63,9 +63,9 @@
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                 <materialDesign:PackIcon Kind="AccountBoxOutline" Width="37" Height="37" />
                                 <Grid>
-                                    <TextBlock x:Name="employeeName" Text="{Binding Name}" FontSize="32" Foreground="White"
+                                    <TextBlock x:Name="employeeName" Text="{Binding SelectedEmployee.Name}" FontSize="32" Foreground="White"
                                                FontWeight="Bold" TextAlignment="Center" Visibility="Visible"/>
-                                    <TextBox x:Name="inputEmployeeName" Text="{Binding Name, Mode=TwoWay}" FontSize="28" Foreground="White"
+                                    <TextBox x:Name="inputEmployeeName" Text="{Binding SelectedEmployee.Name, Mode=TwoWay}" FontSize="28" Foreground="White"
                                              FontWeight="Bold" TextAlignment="Center" Visibility="Collapsed">
                                         <TextBox.ToolTip>
                                             <ToolTip Content="Please enter a valid full name (no numbers)."
@@ -76,15 +76,15 @@
                             </StackPanel>
                         </Border>
 
-                        <TextBlock Text="{Binding EmployeeId}" FontSize="25" Foreground="DarkGray" TextAlignment="Center" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedEmployee.EmployeeId}" FontSize="25" Foreground="DarkGray" TextAlignment="Center" Margin="0,0,0,5"/>
 
                         <StackPanel Orientation="Horizontal" Margin="10,10,0,10">
                             <materialDesign:PackIcon Kind="CakeVariantOutline" Width="25" Height="25" />
                             <TextBlock Text="Birthday: " FontSize="20" Foreground="Black" VerticalAlignment="Center" />
                             <Grid>
-                                <TextBlock x:Name="employeeBirthday" Text="{Binding DateOfBirth, StringFormat='{}{0:MMM dd, yyyy}'}" FontSize="20"
+                                <TextBlock x:Name="employeeBirthday" Text="{Binding SelectedEmployee.DateOfBirth, StringFormat='{}{0:MMM dd, yyyy}'}" FontSize="20"
                                            Foreground="DarkGreen" FontWeight="Bold" Visibility="Visible"/>
-                                <DatePicker x:Name="inputEmployeeBirthday" SelectedDate="{Binding DateOfBirth, Mode=TwoWay}" FontSize="20"
+                                <DatePicker x:Name="inputEmployeeBirthday" SelectedDate="{Binding SelectedEmployee.DateOfBirth, Mode=TwoWay}" FontSize="20"
                                             materialDesign:TextFieldAssist.HasClearButton="True"
                                             Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
                                             Visibility="Collapsed"/>
@@ -95,8 +95,8 @@
                             <materialDesign:PackIcon Kind="Email" Width="25" Height="25" />
                             <TextBlock Text="Email: " FontSize="20" Foreground="Black" VerticalAlignment="Center" />
                             <Grid>
-                                <TextBlock x:Name="employeeEmail" Text="{Binding Email}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Visible"/>
-                                <TextBox x:Name="inputEmployeeEmail" Text="{Binding Email, Mode=TwoWay}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Collapsed">
+                                <TextBlock x:Name="employeeEmail" Text="{Binding SelectedEmployee.Email}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Visible"/>
+                                <TextBox x:Name="inputEmployeeEmail" Text="{Binding SelectedEmployee.Email, Mode=TwoWay}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Collapsed">
                                     <TextBox.ToolTip>
                                         <ToolTip Content="Please enter a valid email (e.g. example@mail.com)."
                                                 Foreground="Black" Background="White"/>
@@ -109,8 +109,8 @@
                             <materialDesign:PackIcon Kind="Phone" Width="25" Height="25" />
                             <TextBlock Text="Phone: " FontSize="20" Foreground="Black" VerticalAlignment="Center" />
                             <Grid>
-                                <TextBlock x:Name="employeePhone" Text="{Binding ContactNumber}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Visible"/>
-                                <TextBox x:Name="inputEmployeePhone" Text="{Binding ContactNumber, Mode=TwoWay}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Collapsed">
+                                <TextBlock x:Name="employeePhone" Text="{Binding SelectedEmployee.ContactNumber}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Visible"/>
+                                <TextBox x:Name="inputEmployeePhone" Text="{Binding SelectedEmployee.ContactNumber, Mode=TwoWay}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Collapsed">
                                     <TextBox.ToolTip>
                                         <ToolTip Content="Enter a valid phone (10–15 digits)." Foreground="Black" Background="White"/>
                                     </TextBox.ToolTip>
@@ -122,14 +122,14 @@
                             <materialDesign:PackIcon Kind="GenderMaleFemale" Width="25" Height="25" />
                             <TextBlock Text="Gender: " FontSize="20" Foreground="Black" VerticalAlignment="Center" />
                             <Grid>
-                                <TextBlock x:Name="employeeGender" Text="{Binding Gender}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Visible"/>
+                                <TextBlock x:Name="employeeGender" Text="{Binding SelectedEmployee.Gender}" FontSize="20" Foreground="#4682B4" FontWeight="SemiBold" Visibility="Visible"/>
                                 <ComboBox x:Name="inputEmployeeGender"
           Visibility="Collapsed"
           FontSize="20"
           Foreground="#4682B4"
           FontWeight="SemiBold"
           SelectedValuePath="Content"
-          SelectedValue="{Binding Gender, Mode=TwoWay}">
+          SelectedValue="{Binding SelectedEmployee.Gender, Mode=TwoWay}">
                                     <ComboBoxItem Content="male"/>
                                     <ComboBoxItem Content="female"/>
                                 </ComboBox>

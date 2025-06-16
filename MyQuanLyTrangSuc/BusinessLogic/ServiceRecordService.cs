@@ -65,7 +65,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic {
         public void DeleteServiceRecord(ServiceRecord serviceRecord)
         {
             serviceRecordRepository.DeleteServiceRecord(serviceRecord);
-
+            OnServiceRecordDeleted?.Invoke(serviceRecord);
         }
 
         public int GenerateNewServiceDetailID() {

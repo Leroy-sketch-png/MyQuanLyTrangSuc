@@ -140,7 +140,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Binding="{Binding ProfitPercentage}" Header="Profit Percentage" CanUserResize="False" Width="*">
+                        <DataGridTextColumn Binding="{Binding ProfitPercentage, StringFormat={}{0:N0} %}" Header="Profit Percentage" CanUserResize="False" Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
