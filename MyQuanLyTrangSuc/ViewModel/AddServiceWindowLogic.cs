@@ -1,11 +1,12 @@
 ﻿using MyQuanLyTrangSuc.Model;
+using MyQuanLyTrangSuc.View;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
-using System.Text.RegularExpressions;
-using MyQuanLyTrangSuc.View;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
@@ -41,10 +42,13 @@ namespace MyQuanLyTrangSuc.ViewModel
             _window = window ?? throw new ArgumentNullException(nameof(window));
             Service = new Service();
             GenerateServiceId();
+            //LoadServices();
             notificationWindowLogic = new NotificationWindowLogic();
 
             AddServiceCommand = new CommandHandler(AddService, () => true);
         }
+
+
 
         private void GenerateServiceId()
         {

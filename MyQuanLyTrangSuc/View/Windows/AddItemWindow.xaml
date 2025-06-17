@@ -47,7 +47,7 @@
                         Content="+" 
                             ToolTip="Add new client"
                             Background="#BFDBFE" Foreground="#1E40AF" 
-                            Padding="10,5" Margin="10,0,0,-5"
+                            Padding="10,5" Margin="10,19,0,14"
                             Name="addNewClientBtn" Click="addNewCategoryBtn_Click"
                             />
             </Grid>

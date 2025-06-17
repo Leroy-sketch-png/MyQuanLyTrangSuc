@@ -76,7 +76,13 @@
                            Margin="0 20 0 0" HorizontalAlignment="Center" Foreground="#121518"/>
                     <TextBox/>
                     <Border BorderBrush="Black" BorderThickness="1" Padding="5" Margin="0,0,0,10">
-                        <TextBox x:Name="PrepaidPercentage" Text="{Binding PrepaidPercentage, Mode=TwoWay}" FontSize="32" VerticalAlignment="Center"/>
+                        <TextBox x:Name="PrepaidPercentage"
+         Text="{Binding PrepaidPercentage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+         FontSize="32"
+         VerticalAlignment="Center"
+         PreviewTextInput="PrepaidPercentage_PreviewTextInput"
+         DataObject.Pasting="PrepaidPercentage_Pasting"
+         />
                     </Border>
                 </StackPanel>
                 <Button Height="50" Background="#FF747525" Grid.Row="7"
