@@ -188,6 +188,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                 MessageBox.Show("Invalid file path!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+            bool flag = false;
 
             DataTable dt = new DataTable();
             dt.Columns.Add("Name");
@@ -214,6 +215,16 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                         string address = workSheet.Cells[i, j++].Text;
 
                         //MessageBox.Show($"Row {i}: {name}, {email}, {phone}, {address}");
+                        if (supplierRepository.GetListOfSuppliers().Any(e => e.Email == email && !e.IsDeleted))
+                        {
+                            MessageBox.Show($"Row {i}: Email '{email}' is existed.", "Duplication Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            continue;
+                        }
+                        if (supplierRepository.GetListOfSuppliers().Any(e => e.ContactNumber == phone && !e.IsDeleted))
+                        {
+                            MessageBox.Show($"Row {i}: Telephone '{phone}' is existed.", "Duplication Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            continue;
+                        }
 
 
                         if (!IsValidSupplierData(name, email, phone))
@@ -231,15 +242,26 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                             IsDeleted = false
                         };
                         //MessageBox.Show(sup.SupplierId + " " + sup.Name);
+                        if (supplierRepository.GetListOfSuppliers().Any(e => e.Email == email && !e.IsDeleted))
+                        {
+                            MessageBox.Show($"Row {i}: Email '{email}' is existed (including soft-deleted suppliers).", "Duplication Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            continue;
+                        }
+                        if (supplierRepository.GetListOfSuppliers().Any(e => e.ContactNumber == phone && !e.IsDeleted))
+                        {
+                            MessageBox.Show($"Row {i}: Telephone '{phone}' is existed (including soft-deleted suppliers).", "Duplication Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            continue;
+                        }
                         supplierRepository.AddSupplier(sup);
                         OnSupplierAdded.Invoke(sup);
+                        flag = true;
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show($"Invalid data at row abcde {i}: " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show($"Invalid data at row {i}: " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-                MessageBox.Show("Import successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (flag) MessageBox.Show("Import successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch
             {

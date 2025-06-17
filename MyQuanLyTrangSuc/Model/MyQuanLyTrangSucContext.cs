@@ -267,9 +267,9 @@ public partial class MyQuanLyTrangSucContext : DbContext
 
             entity.ToTable("Employee");
 
-            entity.HasIndex(e => e.ContactNumber, "UQ__Employee__4F86E9D74B031F1A").IsUnique();
+            entity.HasIndex(e => e.ContactNumber, "UQ__Employee__4F86E9D74B031F1A").IsUnique().HasFilter("[isDeleted] = CAST(0 AS BIT)");
 
-            entity.HasIndex(e => e.Email, "UQ__Employee__AB6E616425200F63").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Employee__AB6E616425200F63").IsUnique().HasFilter("[isDeleted] = CAST(0 AS BIT)");
 
             entity.Property(e => e.EmployeeId)
                 .HasMaxLength(6)
@@ -883,7 +883,7 @@ public partial class MyQuanLyTrangSucContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
             //Your server goes here!
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=DESKTOP-71PN892\\SQLEXPRESS;Database=MyQuanLyTrangSuc;TrustServerCertificate=True;Trusted_Connection=True");
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Server=LAPTOP-TNOFNAMI\\SQLEXPRESS;Database=MyQuanLyTrangSuc;TrustServerCertificate=True;Trusted_Connection=True");
         }
     }
 }

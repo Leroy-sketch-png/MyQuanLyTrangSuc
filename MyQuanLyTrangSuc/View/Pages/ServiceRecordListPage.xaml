@@ -369,7 +369,7 @@
                                                 ConverterParameter=PrintServiceRecord}">
                                             <Icon:PackIconMaterial Kind="Printer" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
-                                        <Button Margin="3 0 0 0" Style="{StaticResource gridEditButton}"
+                                        <Button Margin="3 0 0 0" Style="{StaticResource gridRemoveButton}"
                                                 Command="{Binding DataContext.DeleteServiceRecordCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding}"
                                                 Visibility="{Binding Path=DataContext.CurrentUserPrincipal, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},

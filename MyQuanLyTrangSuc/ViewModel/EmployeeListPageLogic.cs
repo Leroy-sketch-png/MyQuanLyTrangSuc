@@ -280,6 +280,17 @@ namespace MyQuanLyTrangSuc.ViewModel
                         string gender = workSheet.Cells[i, j++].Value?.ToString() ?? string.Empty;
                         DateTime dateValue = string.IsNullOrEmpty(birthday) ? DateTime.MinValue : ConvertExcelDate(birthday);
 
+                        if (context.Employees.Any(e => e.Email == email && !e.IsDeleted))
+                        {
+                            MessageBox.Show($"Row {i}: Email '{email}' is existed.", "Duplication Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            continue; 
+                        }
+                        if (context.Employees.Any(e => e.ContactNumber == phone && !e.IsDeleted))
+                        {
+                            MessageBox.Show($"Row {i}: Telephone '{phone}' is existed.", "Duplication Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            continue; 
+                        }
+
                         if (!employeeService.IsValidEmployeeData(name, email, phone)) continue;
 
                         Employee employee = new Employee
@@ -292,6 +303,17 @@ namespace MyQuanLyTrangSuc.ViewModel
                             Gender = gender,
                             IsDeleted = false
                         };
+
+                        if (context.Employees.Any(e => e.Email == email))
+                        {
+                            MessageBox.Show($"Row {i}: Email '{email}' is existed (including soft-deleted employees).", "Duplication Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            continue;
+                        }
+                        if (context.Employees.Any(e => e.ContactNumber == phone))
+                        {
+                            MessageBox.Show($"Row {i}: Telephone '{phone}' is existed (including soft-deleted employees).", "Duplication Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            continue;
+                        }
 
                         Employees.Add(employee);
                         context.Employees.Add(employee);

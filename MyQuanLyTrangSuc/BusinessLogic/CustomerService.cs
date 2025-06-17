@@ -190,6 +190,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                 MessageBox.Show("Invalid file path!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+            bool flag = false;
 
             DataTable dt = new DataTable();
             dt.Columns.Add("Name");
@@ -202,7 +203,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
             {
                 //Open excel file
                 var package = new ExcelPackage(new FileInfo(filePath));
-                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                //ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
                 //Get first worksheet
                 ExcelWorksheet workSheet = package.Workbook.Worksheets[0];
@@ -221,7 +222,16 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                         string gender = workSheet.Cells[i, j++].Text;
 
                         //MessageBox.Show($"Row {i}: {name}, {email}, {phone}, {address}");
-
+                        if (customerRepository.GetListOfCustomers().Any(e => e.Email == email && !e.IsDeleted))
+                        {
+                            MessageBox.Show($"Row {i}: Email '{email}' is existed.", "Duplication Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            continue;
+                        }
+                        if (customerRepository.GetListOfCustomers().Any(e => e.ContactNumber == phone && !e.IsDeleted))
+                        {
+                            MessageBox.Show($"Row {i}: Telephone '{phone}' is existed.", "Duplication Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            continue;
+                        }
 
                         if (!IsValidCustomerData(name, email, phone))
                         {
@@ -239,16 +249,27 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                             Gender = gender,
                             IsDeleted = false
                         };
+                        if (customerRepository.GetListOfCustomers().Any(e => e.Email == email && !e.IsDeleted))
+                        {
+                            MessageBox.Show($"Row {i}: Email '{email}' is existed (including soft-deleted customers).", "Duplication Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            continue;
+                        }
+                        if (customerRepository.GetListOfCustomers().Any(e => e.ContactNumber == phone && !e.IsDeleted))
+                        {
+                            MessageBox.Show($"Row {i}: Telephone '{phone}' is existed (including soft-deleted customers).", "Duplication Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            continue;
+                        }
                         //MessageBox.Show(sup.SupplierId + " " + sup.Name);
                         customerRepository.AddCustomer(cus);
                         OnCustomerAdded.Invoke(cus);
+                        flag = true; 
                     }
                     catch (Exception e)
                     {
                         MessageBox.Show($"Invalid data at row abcde {i}: " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-                MessageBox.Show("Import successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (flag) MessageBox.Show("Import successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch
             {
@@ -278,7 +299,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
                 return;
             }
 
-            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+            //ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             try
             {
                 using (ExcelPackage p = new ExcelPackage())
