@@ -13,7 +13,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
     public class ItemCategoryService
     {
         private ItemCategoryRepository itemCategoryRepository;
-        private readonly string prefix = "LSP";
+        private readonly string prefix = "CAT";
         public event Action<ProductCategory> OnItemCategoryAdded; //add or update
         public event Action<ProductCategory> OnItemCategoryUpdated; //edit
 

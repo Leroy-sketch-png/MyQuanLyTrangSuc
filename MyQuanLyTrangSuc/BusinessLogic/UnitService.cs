@@ -11,7 +11,7 @@ namespace MyQuanLyTrangSuc.BusinessLogic
     public class UnitService
     {
         private readonly UnitRepository unitRepository;
-        private readonly string prefix = "DVT";
+        private readonly string prefix = "UNIT";
         public event Action<Unit> OnUnitAdded; //add or update
         public event Action<Unit> OnUnitUpdated; //edit
 
