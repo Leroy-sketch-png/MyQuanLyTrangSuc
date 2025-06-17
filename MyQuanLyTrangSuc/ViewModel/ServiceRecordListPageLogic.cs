@@ -145,9 +145,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             // Subscribe to events from the service
             serviceRecordService.OnServiceRecordAdded += HandleServiceRecordAdded;
             serviceRecordService.OnServiceRecordUpdated += HandleServiceRecordUpdated;
-            // Assuming ServiceRecordService also has an OnServiceRecordDeleted event
-            // If not, you might need to manually handle the ObservableCollection removal after successful DB delete.
-            // For now, I'll add a placeholder if it doesn't exist yet.
             serviceRecordService.OnServiceRecordDeleted += HandleServiceRecordDeleted;
 
             InitializeCommands();
@@ -171,7 +168,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             return SelectedServiceRecord != null && CurrentUserPrincipal?.HasPermission("EditServiceRecord") == true;
         }
-         
+
         private bool CanDeleteServiceRecord()
         {
             return SelectedServiceRecord != null && CurrentUserPrincipal?.HasPermission("DeleteServiceRecord") == true;
@@ -252,11 +249,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var existing = ServiceRecords.FirstOrDefault(r => r.ServiceRecordId == deletedRecord.ServiceRecordId);
-                if (existing != null)
-                {
-                    ServiceRecords.Remove(existing);
-                }
+                ServiceRecords.Remove(deletedRecord);
             });
         }
 
@@ -345,7 +338,17 @@ namespace MyQuanLyTrangSuc.ViewModel
             if (SelectedServiceRecord != null)
             {
                 var printPage = new ServiceRecordPrint(SelectedServiceRecord);
-                printPage.Show();
+                printPage.WindowStyle = WindowStyle.None;
+                printPage.WindowState = WindowState.Maximized;
+                printPage.ResizeMode = ResizeMode.NoResize;
+                var printDialog = new PrintDialog();
+                if (printDialog.ShowDialog() == true)
+                {
+                    printPage.Show();
+                    printPage.UpdateLayout();
+                    printDialog.PrintVisual(printPage, $"Service Record - {SelectedServiceRecord.ServiceRecordId}");
+                    printPage.Close();
+                }
             }
             else
             {

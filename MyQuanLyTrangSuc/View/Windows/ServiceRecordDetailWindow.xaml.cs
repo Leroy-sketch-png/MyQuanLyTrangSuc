@@ -24,11 +24,11 @@ namespace MyQuanLyTrangSuc.View
             }
         }
 
-        private async void payButton_Click(object sender, RoutedEventArgs e)
+        private void payButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.DataContext is ServiceDetail serviceDetail)
             {
-                await viewModel.UpdateServiceDetailStatusAsync(serviceDetail);
+                viewModel.UpdateServiceDetailStatusAsync(serviceDetail);
             }
         }
     }

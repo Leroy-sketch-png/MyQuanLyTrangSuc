@@ -42,6 +42,22 @@ namespace MyQuanLyTrangSuc.ViewModel
             get => Thread.CurrentPrincipal as CustomPrincipal;
         }
 
+        private int _permissionsVersion;
+        public int PermissionsVersion
+        {
+            get => _permissionsVersion;
+            private set
+            {
+                _permissionsVersion = value;
+                OnPropertyChanged(nameof(PermissionsVersion));
+            }
+        }
+
+        public void NotifyPermissionsChanged()
+        {
+            PermissionsVersion++;
+        }
+        
         // Private constructor for singleton
         // Only this constructor will be called by the Initialize method.
         private MainNavigationWindowLogic(MainNavigationWindow mainNavigationWindowUI)

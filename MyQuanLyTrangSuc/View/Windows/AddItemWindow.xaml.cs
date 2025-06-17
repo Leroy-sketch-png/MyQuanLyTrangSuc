@@ -22,7 +22,6 @@ namespace MyQuanLyTrangSuc.View
             bool res = Logic.AddProduct();
             if (res)
             {
-                this.DialogResult = true;
                 this.Close();
             }
         }

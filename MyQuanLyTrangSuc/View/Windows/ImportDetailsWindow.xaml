@@ -8,8 +8,8 @@
         mc:Ignorable="d"
         x:Name="PrintPage"
         WindowStartupLocation="CenterScreen"
-        Height="500" Width="600">
-    <ScrollViewer HorizontalAlignment="Center" Width="600">
+        MinWidth="600" MinHeight="500">
+    <ScrollViewer HorizontalAlignment="Center" MinWidth="600" VerticalScrollBarVisibility="Auto">
         <Grid>
 
             <Grid.RowDefinitions>
@@ -19,6 +19,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
+
             <TextBlock Grid.Row="0" Text="IMPORT RECORD" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
 
             <DockPanel Grid.Row="1">
@@ -31,6 +32,7 @@
                     <TextBlock Text="{Binding SelectedImportRecord.Date}" VerticalAlignment="Center" Margin="10,20,20,20" FontWeight="Bold" FontSize="16"/>
                 </StackPanel>
             </DockPanel>
+
             <Border Grid.Row="2" Margin="5">
                 <DataGrid Margin="5" AutoGenerateColumns="False" ItemsSource="{Binding ImportDetails}"
           IsReadOnly="True">
@@ -45,6 +47,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>
+
             <DockPanel Grid.Row="3">
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="40,0,0,0" HorizontalAlignment="Left">
                     <TextBlock Text="Creator: " VerticalAlignment="Center" FontSize="16"/>
@@ -72,4 +75,4 @@
         </Grid>
     </ScrollViewer>
 
-</Window> 
+</Window>

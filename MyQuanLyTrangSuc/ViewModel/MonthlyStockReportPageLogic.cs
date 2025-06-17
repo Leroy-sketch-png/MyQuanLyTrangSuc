@@ -195,11 +195,8 @@ namespace MyQuanLyTrangSuc.ViewModel
         }
 
 
-        public void CreateOrUpdateCurrentMonthReport()
+        public void CreateOrUpdateCurrentMonthReport(DateTime reportDate)
         {
-            DateTime currentDate = DateTime.Now;
-            var reportDate = new DateTime(currentDate.Year, currentDate.Month, 1);
-
             try
             {
                 using (var transaction = context.Database.BeginTransaction())
@@ -211,7 +208,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                         int totalFinishStock = 0;
                         int detailCount = 0;
 
-                        // Find existing report, even if soft-deleted
+                        // Find existing report, including soft-deleted ones
                         var existingReport = context.StockReports
                             .IgnoreQueryFilters()
                             .Include(r => r.StockReportDetails)
@@ -221,7 +218,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                         bool isExistingReport = existingReport != null;
                         bool isSoftDeleted = existingReport?.IsDeleted == true;
 
-                        // Confirm with user if a visible (not deleted) report exists
+                        // Confirm with user if visible report exists
                         if (isExistingReport && !isSoftDeleted)
                         {
                             var confirmResult = MessageBox.Show(
@@ -238,19 +235,19 @@ namespace MyQuanLyTrangSuc.ViewModel
 
                         if (isExistingReport)
                         {
-                            // Recover and reuse existing report
+                            // Recover or reuse existing
                             stockReport = existingReport;
                             stockReport.IsDeleted = false;
 
-                            // Clear old details
+                            // Remove old details
                             context.StockReportDetails.RemoveRange(stockReport.StockReportDetails);
                             stockReport.StockReportDetails.Clear();
 
-                            context.Update(stockReport); // Mark for update explicitly
+                            context.Update(stockReport); // Mark as modified
                         }
                         else
                         {
-                            // Create a brand new report
+                            // New report
                             stockReport = new StockReport
                             {
                                 StockReportId = GenerateStockReportId(reportDate),
@@ -263,7 +260,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                             context.StockReports.Add(stockReport);
                         }
 
-                        // Generate new details
+                        // Build details
                         foreach (var product in products)
                         {
                             var beginStock = CalculateBeginStock(product.ProductId, reportDate);
@@ -286,11 +283,10 @@ namespace MyQuanLyTrangSuc.ViewModel
                             detailCount++;
                         }
 
-                        // Update report totals
+                        // Finalize report totals
                         stockReport.TotalBeginStock = totalBeginStock;
                         stockReport.TotalFinishStock = totalFinishStock;
 
-                        // Save everything
                         context.SaveChanges();
                         transaction.Commit();
 
@@ -447,13 +443,13 @@ namespace MyQuanLyTrangSuc.ViewModel
         {
             // Tổng nhập trước ngày báo cáo
             var totalImported = context.ImportDetails
-                .Where(detail => detail.ProductId == productId &&
+                .Where(detail => !detail.Import.IsDeleted && detail.ProductId == productId &&
                                 detail.Import.Date < reportDate)
                 .Sum(detail => (int?)detail.Quantity) ?? 0;
 
             // Tổng xuất (bán) trước ngày báo cáo  
             var totalSold = context.InvoiceDetails
-                .Where(detail => detail.ProductId == productId &&
+                .Where(detail => !detail.Invoice.IsDeleted && detail.ProductId == productId &&
                                 detail.Invoice.Date < reportDate)
                 .Sum(detail => (int?)detail.Quantity) ?? 0;
 
@@ -464,14 +460,14 @@ namespace MyQuanLyTrangSuc.ViewModel
         private int CalculateSalesQuantity(string productId, DateTime reportDate)
         {
             var hasData = context.InvoiceDetails
-                .Any(detail => detail.ProductId == productId &&
+                .Any(detail => !detail.Invoice.IsDeleted && detail.ProductId == productId &&
                               detail.Invoice.Date.Value.Month == reportDate.Month &&
                               detail.Invoice.Date.Value.Year == reportDate.Year);
 
             if (!hasData) return 0;
 
             return context.InvoiceDetails
-                .Where(detail => detail.ProductId == productId &&
+                .Where(detail => !detail.Invoice.IsDeleted && detail.ProductId == productId &&
                                 detail.Invoice.Date.Value.Month == reportDate.Month &&
                                 detail.Invoice.Date.Value.Year == reportDate.Year)
                 .Sum(detail => (int?)detail.Quantity) ?? 0;
@@ -481,14 +477,14 @@ namespace MyQuanLyTrangSuc.ViewModel
         private int CalculatePurchaseQuantity(string productId, DateTime reportDate)
         {
             var hasData = context.ImportDetails
-                .Any(detail => detail.ProductId == productId &&
+                .Any(detail => !detail.Import.IsDeleted && detail.ProductId == productId &&
                               detail.Import.Date.Value.Month == reportDate.Month &&
                               detail.Import.Date.Value.Year == reportDate.Year);
 
             if (!hasData) return 0;
 
             return context.ImportDetails
-                .Where(detail => detail.ProductId == productId &&
+                .Where(detail => !detail.Import.IsDeleted && detail.ProductId == productId &&
                                 detail.Import.Date.Value.Month == reportDate.Month &&
                                 detail.Import.Date.Value.Year == reportDate.Year)
                 .Sum(detail => (int?)detail.Quantity) ?? 0;
@@ -573,11 +569,6 @@ namespace MyQuanLyTrangSuc.ViewModel
                 .Select(g => new StockReport
                 {
                     MonthYear = new DateTime(g.Key.Year, g.Key.Month, 1)
-                    //ProductId = "SUMMARY",
-                    //BeginStock = g.Sum(r => r.BeginStock),
-                    //PurchaseQuantity = g.Sum(r => r.PurchaseQuantity),
-                    //SalesQuantity = g.Sum(r => r.SalesQuantity),
-                    //FinishStock = g.Sum(r => r.FinishStock)
                 })
                 .OrderByDescending(r => r.MonthYear)
                 .ToList();
@@ -602,11 +593,6 @@ namespace MyQuanLyTrangSuc.ViewModel
                 .Select(g => new StockReport
                 {
                     MonthYear = new DateTime(g.Key.Year, g.Key.Month, 1)
-                    //ProductId = "SUMMARY",
-                    //BeginStock = g.Sum(r => r.BeginStock),
-                    //PurchaseQuantity = g.Sum(r => r.PurchaseQuantity),
-                    //SalesQuantity = g.Sum(r => r.SalesQuantity),
-                    //FinishStock = g.Sum(r => r.FinishStock)
                 })
                 .OrderByDescending(r => r.MonthYear)
                 .ToList();

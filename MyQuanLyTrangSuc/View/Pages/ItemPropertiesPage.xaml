@@ -221,7 +221,7 @@
                                    Foreground="Black"/>
                         <Grid>
                             <TextBlock x:Name="itemStatus"
-                                       Text="{Binding SelectedProduct.Status}"
+                                       Text="{Binding Status}"
                                        FontSize="25"
                                        FontWeight="Bold"
                                        Foreground="Blue"/>

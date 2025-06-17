@@ -18,10 +18,6 @@ namespace MyQuanLyTrangSuc.ViewModel
         private const string NumericPattern = "[^0-9]+";
         private const string ImageFilter = "Image files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg";
         private const string ImageDialogTitle = "Choose image of product";
-        private const string ErrorTitle = "Error";
-        private const string SuccessTitle = "Notification";
-        private const string ValidationErrorMessage = "Invalid input!";
-        private const string SuccessMessage = "Product added successfully!";
         private readonly ItemCategoryService _itemCategoryService;
 
         private readonly NotificationWindowLogic notificationWindowLogic;
@@ -135,13 +131,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             return decimal.TryParse(price, out decimal parsedPrice) && parsedPrice > 0;
         }
 
-        private bool IsValidQuantity(string quantity)
-        {
-            if (string.IsNullOrWhiteSpace(quantity)) return false;
-
-            return int.TryParse(quantity, out int parsedQuantity) && parsedQuantity > 0;
-        }
-
         public bool AddProduct()
         {
             var db = MyQuanLyTrangSucContext.Instance;
@@ -156,11 +145,6 @@ namespace MyQuanLyTrangSuc.ViewModel
                 notificationWindowLogic.LoadNotification("Error", "Price must be positive!", "BottomRight");
                 return false;
             }
-            if (!IsValidQuantity(Product.Quantity.ToString()))
-            {
-                notificationWindowLogic.LoadNotification("Error", "Quantity must be positive!", "BottomRight");
-                return false;
-            }
 
             if (db.Products.Any(p => p.Name == Product.Name))
             {
@@ -173,7 +157,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 ProductId = Product.ProductId,
                 Name = Product.Name,
                 Price = Product.Price,
-                Quantity = Product.Quantity,
+                Quantity = 0,
                 CategoryId = Product.CategoryId,
                 ImagePath = Product.ImagePath
             };

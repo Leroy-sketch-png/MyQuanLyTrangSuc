@@ -23,6 +23,7 @@
             <customConverters:PermissionToIsEnabledConverter x:Key="PermissionToIsEnabledConverter" />
             <customConverters:PermissionToVisibilityConverter x:Key="PermissionToVisibilityConverter" />
             <customConverters:ImportDetailEditabilityConverter x:Key="ImportDetailEditabilityConverter"/>
+            <customConverters:PermissionToVisibilityMultiConverter x:Key="PermissionToVisibilityMultiConverter"/>
 
 
             <Style x:Key="MyCustomMaterialDisabledButton"

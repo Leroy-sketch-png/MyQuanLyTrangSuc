@@ -71,16 +71,6 @@
 
             </Grid>
 
-            <StackPanel>
-                <TextBlock Text="Stock: " FontSize="16" Margin="0,0,0,5"/>
-                <TextBox x:Name="StockTextBox" Text="{Binding Product.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                             FontSize="14" BorderThickness="1" Margin="0,0,317,10" 
-                             PreviewTextInput="OnPreviewTextInput_StockTextBox_AddItem"
-                             DataObject.Pasting="OnPasting_StockTextBox_AddItem"
-                         />
-            </StackPanel>
-
-
             <StackPanel Margin="0,5,0,10">
                 <TextBlock Text="Image Path: " FontSize="16" Margin="0,0,0,5"/>
                 <Grid>
@@ -97,8 +87,10 @@
                 </Grid>
             </StackPanel>
 
-            <Button x:Name="AddButton" Content="ADD" FontSize="20" Background="#BFDBFE" 
-                    Foreground="#1E40AF" Padding="5" HorizontalAlignment="Center" 
+            <Button x:Name="AddButton" Content="ADD" FontSize="20"
+                    Background="#BFDBFE" 
+                    Foreground="#1E40AF" 
+                    Padding="5" HorizontalAlignment="Center" 
                     Width="70" Height="40" Click="OnClick_Add_AddItem"/>
         </StackPanel>
     </Grid>

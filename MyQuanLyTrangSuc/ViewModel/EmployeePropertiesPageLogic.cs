@@ -3,13 +3,18 @@ using Microsoft.Win32;
 using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.Security;
 using MyQuanLyTrangSuc.View;
+using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace MyQuanLyTrangSuc.ViewModel
 {
-    public class EmployeePropertiesPageLogic
+    public class EmployeePropertiesPageLogic : INotifyPropertyChanged
     {
         private readonly MainNavigationWindowLogic mainNavigationWindowLogic = MainNavigationWindowLogic.Instance;
         private readonly MyQuanLyTrangSucContext context = MyQuanLyTrangSucContext.Instance;
@@ -17,6 +22,17 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         private EmployeePropertiesPage employeePropertiesPageUI;
         private bool isEditing = false;
+
+        private Employee selectedEmployee;
+        public Employee SelectedEmployee
+        {
+            get => selectedEmployee;
+            set
+            {
+                selectedEmployee = value;
+                OnPropertyChanged();
+            }
+        }
 
         public CustomPrincipal CurrentUserPrincipal
         {
@@ -27,13 +43,43 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public EmployeePropertiesPageLogic(EmployeePropertiesPage employeePropertiesPageUI)
         {
-            this.employeePropertiesPageUI = employeePropertiesPageUI;
-            if (CurrentUserPrincipal.HasPermission("AccountListPage") == false)
+            this.employeePropertiesPageUI = employeePropertiesPageUI ?? throw new ArgumentNullException(nameof(employeePropertiesPageUI));
+            if (CurrentUserPrincipal?.HasPermission("AccountListPage") == false)
             {
+                // Hide assign account button if no permission
                 employeePropertiesPageUI.assignAccountButton.Visibility = Visibility.Collapsed;
             }
         }
 
+        /// <summary>
+        /// Load employee by ID into SelectedEmployee. Call this after setting DataContext.
+        /// </summary>
+        public void LoadEmployeeDetails(string employeeId)
+        {
+            try
+            {
+                var employee = context.Employees
+                    .AsNoTracking()
+                    .FirstOrDefault(e => e.EmployeeId == employeeId);
+                if (employee != null)
+                {
+                    SelectedEmployee = employee;
+                    // Also initialize UI fields if needed, e.g. populate input controls via binding
+                }
+                else
+                {
+                    MessageBox.Show($"No employee found with ID: {employeeId}", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading employee details: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Navigate back to list page, handling unsaved edits.
+        /// </summary>
         public void LoadEmployeeListPage()
         {
             if (isEditing)
@@ -61,24 +107,45 @@ namespace MyQuanLyTrangSuc.ViewModel
             mainNavigationWindowLogic.NavigateToPage(typeof(EmployeeListPage), "EmployeeListPage");
         }
 
+        /// <summary>
+        /// Reload SelectedEmployee from database, discarding unsaved changes.
+        /// </summary>
         private void ReloadEmployeeData()
         {
-            var employee = (Employee)employeePropertiesPageUI.DataContext;
-            context.Entry(employee).Reload();
-            context.ResetEmployees();
+            if (SelectedEmployee == null) return;
+            try
+            {
+                // Reload the entity
+                context.Entry(SelectedEmployee).Reload();
+                context.ResetEmployees(); // if you have this to refresh any cached lists
+                OnPropertyChanged(nameof(SelectedEmployee));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error reloading employee: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
+        /// <summary>
+        /// Toggle between edit/view mode. If currently not editing, enters edit mode; if editing, attempts to validate & apply.
+        /// </summary>
         public void EditEmployee()
         {
             if (!isEditing)
             {
+                // Enter edit mode: just toggle UI
                 ToggleEditMode(true);
                 return;
             }
 
-            var employee = (Employee)employeePropertiesPageUI.DataContext;
+            // Currently editing: collect inputs from UI, validate, then apply
+            if (SelectedEmployee == null)
+            {
+                MessageBox.Show("No employee loaded!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
-            // Validation will happen when applying changes
+            // Validation using UI inputs
             if (!IsValidData(employeePropertiesPageUI.inputEmployeeName,
                              employeePropertiesPageUI.inputEmployeeEmail,
                              employeePropertiesPageUI.inputEmployeePhone))
@@ -87,11 +154,11 @@ namespace MyQuanLyTrangSuc.ViewModel
                 return;
             }
 
-            // Robust gender extraction
+            // Gender extraction
             object selected = employeePropertiesPageUI.inputEmployeeGender.SelectedItem;
             string gender = selected switch
             {
-                ComboBoxItem item => item.Content.ToString(),
+                ComboBoxItem item => item.Content?.ToString(),
                 string str => str,
                 _ => null
             };
@@ -101,7 +168,6 @@ namespace MyQuanLyTrangSuc.ViewModel
                 MessageBox.Show("Please select a gender.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
             if (!IsValidGender(gender))
             {
                 MessageBox.Show(
@@ -112,24 +178,37 @@ namespace MyQuanLyTrangSuc.ViewModel
                 );
                 return;
             }
-            employee.Gender = gender;
+            SelectedEmployee.Gender = gender;
 
-            if (!IsValidDateOfBirth(employee.DateOfBirth))
+            // DateOfBirth is assumed bound to SelectedEmployee.DateOfBirth via UI; re-validate:
+            if (!IsValidDateOfBirth(SelectedEmployee.DateOfBirth))
             {
                 MessageBox.Show("Please choose valid birthday.", "Invalid birthday", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
+            // Assign other fields from UI to SelectedEmployee
+            SelectedEmployee.Name = employeePropertiesPageUI.inputEmployeeName.Text.Trim();
+            SelectedEmployee.Email = employeePropertiesPageUI.inputEmployeeEmail.Text.Trim();
+            SelectedEmployee.ContactNumber = employeePropertiesPageUI.inputEmployeePhone.Text.Trim();
+            // DateOfBirth already set via binding or set earlier
+            // ImagePath is handled separately
+
+            // Exit edit mode UI
             ToggleEditMode(false);
-            // Persist immediately after toggling off
+
+            // Persist changes
             ApplyChanges();
         }
 
+        /// <summary>
+        /// Persist SelectedEmployee to database.
+        /// </summary>
         public void ApplyChanges()
         {
-            var employee = (Employee)employeePropertiesPageUI.DataContext;
+            if (SelectedEmployee == null) return;
 
-            // Apply the changes only if data is valid
+            // Validate again
             if (!IsValidData(employeePropertiesPageUI.inputEmployeeName,
                              employeePropertiesPageUI.inputEmployeeEmail,
                              employeePropertiesPageUI.inputEmployeePhone))
@@ -137,8 +216,7 @@ namespace MyQuanLyTrangSuc.ViewModel
                 MessageBox.Show("Invalid information! Please enter valid information", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-
-            if (!IsValidDateOfBirth(employee.DateOfBirth))
+            if (!IsValidDateOfBirth(SelectedEmployee.DateOfBirth))
             {
                 MessageBox.Show("Please enter valid birthday.", "Invalid birthday", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -146,13 +224,19 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             try
             {
-                // Save the changes to the database
-                context.Attach(employee);
-                context.Entry(employee).State = EntityState.Modified;
+                // Detach local instance if tracked
+                var local = context.Employees.Local.FirstOrDefault(e => e.EmployeeId == SelectedEmployee.EmployeeId);
+                if (local != null)
+                    context.Entry(local).State = EntityState.Detached;
+
+                context.Attach(SelectedEmployee);
+                context.Entry(SelectedEmployee).State = EntityState.Modified;
                 context.SaveChanges();
 
                 notificationWindowLogic.LoadNotification("Success", "Update employee information successfully!", "BottomRight");
-                isEditing = false;  // Mark as done editing
+                isEditing = false;
+                ToggleEditMode(false);
+                OnPropertyChanged(nameof(SelectedEmployee));
             }
             catch (Exception ex)
             {
@@ -160,8 +244,12 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
+        /// <summary>
+        /// Change employee image path.
+        /// </summary>
         public void EditEmployeeImage()
         {
+            if (SelectedEmployee == null) return;
             var openFileDialog = new OpenFileDialog
             {
                 Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png|All files (*.*)|*.*"
@@ -169,12 +257,14 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             if (openFileDialog.ShowDialog() == true)
             {
-                var employee = (Employee)employeePropertiesPageUI.DataContext;
-                employee.ImagePath = openFileDialog.FileName;
-                ApplyChanges(); // Save image change immediately
+                SelectedEmployee.ImagePath = openFileDialog.FileName;
+                OnPropertyChanged(nameof(SelectedEmployee));
             }
         }
 
+        /// <summary>
+        /// Toggles UI elements' visibility based on edit mode.
+        /// </summary>
         private void ToggleEditMode(bool enable)
         {
             if (employeePropertiesPageUI == null) return;
@@ -182,12 +272,14 @@ namespace MyQuanLyTrangSuc.ViewModel
             var visibleWhenEditing = enable ? Visibility.Visible : Visibility.Collapsed;
             var visibleWhenViewing = enable ? Visibility.Collapsed : Visibility.Visible;
 
+            // Viewing elements
             employeePropertiesPageUI.employeeName.Visibility = visibleWhenViewing;
             employeePropertiesPageUI.employeeBirthday.Visibility = visibleWhenViewing;
             employeePropertiesPageUI.employeeEmail.Visibility = visibleWhenViewing;
             employeePropertiesPageUI.employeePhone.Visibility = visibleWhenViewing;
             employeePropertiesPageUI.employeeGender.Visibility = visibleWhenViewing;
 
+            // Editing inputs
             employeePropertiesPageUI.inputEmployeeName.Visibility = visibleWhenEditing;
             employeePropertiesPageUI.inputEmployeeBirthday.Visibility = visibleWhenEditing;
             employeePropertiesPageUI.inputEmployeeEmail.Visibility = visibleWhenEditing;
@@ -195,8 +287,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             employeePropertiesPageUI.inputEmployeeGender.Visibility = visibleWhenEditing;
             employeePropertiesPageUI.inputEmployeeImage.Visibility = visibleWhenEditing;
 
-            employeePropertiesPageUI.employeeDescription.IsReadOnly = !enable;
-
+            // Edit button content
             if (employeePropertiesPageUI.editButton is Button editBtn)
                 editBtn.Content = enable ? "Apply!" : "Modify?";
 
@@ -224,5 +315,9 @@ namespace MyQuanLyTrangSuc.ViewModel
 
         public bool IsValidData(TextBox nameTextbox, TextBox emailTextbox, TextBox phoneTextbox) =>
             IsValidName(nameTextbox.Text) && IsValidEmail(emailTextbox.Text) && IsValidTelephoneNumber(phoneTextbox.Text);
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

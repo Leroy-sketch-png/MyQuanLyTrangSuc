@@ -70,8 +70,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 Products.Add(product);
             }
-
-            OnPropertyChanged(nameof(Products));
         }
 
         private void LoadCategories()
@@ -88,8 +86,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 Categories.Add(category);
             }
-
-            OnPropertyChanged(nameof(Categories));
         }
         private void FilterItemsByCategory()
         {
@@ -104,8 +100,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 Products.Add(product);
             }
-
-            OnPropertyChanged(nameof(Products));
         }
 
         public void SearchItemsByName(string name)
@@ -128,8 +122,6 @@ namespace MyQuanLyTrangSuc.ViewModel
             {
                 Products.Add(product);
             }
-
-            OnPropertyChanged(nameof(Products));
         }
 
         public void LoadAddItemWindow()
@@ -144,13 +136,11 @@ namespace MyQuanLyTrangSuc.ViewModel
                 else
                 {
                     MessageBox.Show($"You do not have permission to add products.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    // Optional: Navigate to a "Permission Denied" page
                 }
             }
             else
             {
                 MessageBox.Show($"You do not have permission to add products.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
-                // Optional: Navigate to a "Permission Denied" page
             }
 
         }

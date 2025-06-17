@@ -50,13 +50,18 @@
                         <StackPanel DockPanel.Dock="Top">
                             <Separator Margin="25" Height="0.8" Background="#FFC1CC00"/>
                         </StackPanel>
-
                         <ScrollViewer DockPanel.Dock="Top" Height="350" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
                             <StackPanel>
-                                <StackPanel x:Name="DashboardPanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=DashboardPage}">
+                                <StackPanel x:Name="DashboardPanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                DashboardPage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToDashboardCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="BulletinBoard" Foreground="White" HorizontalAlignment="Left"/>
@@ -67,10 +72,16 @@
 
                                 <Separator Margin="6" Height="0.8" Background="#FFC1CC00"/>
 
-                                <StackPanel x:Name="JewelryPanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=ItemListPage}">
+                                <StackPanel x:Name="JewelryPanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                ItemListPage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToItemListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="DiamondStone" Foreground="White"/>
@@ -78,11 +89,17 @@
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
-                                
-                                <StackPanel x:Name="ServicePanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=ServiceListPage}">
+
+                                <StackPanel x:Name="ServicePanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                ServiceListPage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToServiceListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Microscope" Foreground="White"/>
@@ -93,10 +110,16 @@
                                 <Separator Margin="6" Height="0.8" Background="#FFC1CC00"/>
 
 
-                                <StackPanel x:Name="ImportPanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=ImportPage}">
+                                <StackPanel x:Name="ImportPanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                ImportPage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToImportPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Import" Foreground="White"/>
@@ -105,10 +128,16 @@
                                     </Button>
                                 </StackPanel>
 
-                                <StackPanel x:Name="InvoicePanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=InvoicePage}">
+                                <StackPanel x:Name="InvoicePanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                InvoicePage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToInvoicePageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Invoice" Foreground="White"/>
@@ -116,10 +145,16 @@
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
-                                <StackPanel x:Name="ServiceRecordPanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=ServiceRecordListPage}">
+                                <StackPanel x:Name="ServiceRecordPanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                ServiceRecordListPage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToServiceRecordListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Paper" Foreground="White"/>
@@ -130,10 +165,16 @@
                                 <Separator Margin="6" Height="0.8" Background="#FFC1CC00"/>
 
 
-                                <StackPanel x:Name="CustomerPanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=CustomerListPage}">
+                                <StackPanel x:Name="CustomerPanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                CustomerListPage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToCustomerListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="FaceWomanShimmerOutline" Foreground="White"/>
@@ -142,10 +183,16 @@
                                     </Button>
                                 </StackPanel>
 
-                                <StackPanel x:Name="SupplierPanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=SupplierListPage}">
+                                <StackPanel x:Name="SupplierPanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                SupplierListPage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToSupplierListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="PackageVariantClosedPlus" Foreground="White"/>
@@ -153,10 +200,16 @@
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
-                                <StackPanel x:Name="HumanResourcePanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=EmployeeListPage}">
+                                <StackPanel x:Name="HumanResourcePanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                EmployeeListPage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToEmployeeListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="AccountGroup" Foreground="White"/>
@@ -167,10 +220,16 @@
 
                                 <Separator Margin="6" Height="0.8" Background="#FFC1CC00"/>
 
-                                <StackPanel x:Name="CategoryPanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=ItemCategoryListPage}">
+                                <StackPanel x:Name="CategoryPanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                ItemCategoryListPage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToItemCategoryListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="ShapePlusOutline" Foreground="White"/>
@@ -179,10 +238,16 @@
                                     </Button>
                                 </StackPanel>
 
-                                <StackPanel x:Name="UnitPanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=UnitListPage}">
+                                <StackPanel x:Name="UnitPanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                UnitListPage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToUnitListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="TallyMark3" Foreground="White"/>
@@ -191,10 +256,16 @@
                                     </Button>
                                 </StackPanel>
                                 <Separator Margin="6" Height="0.8" Background="#FFC1CC00"/>
-                                <StackPanel x:Name="MonthStockPanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=MonthlyStockReportPage}">
+                                <StackPanel x:Name="MonthStockPanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                MonthlyStockReportPage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToMonthlyStockReportPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Warehouse" Foreground="White"/>
@@ -203,24 +274,18 @@
                                     </Button>
                                 </StackPanel>
 
-                                <!--<StackPanel x:Name="MonthRevenuePanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=MonthlyRevenueReportPage}">
-                                    <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToMonthlyRevenueReportPageCommand}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <materialDesign:PackIcon Kind="FileChartOutline" Foreground="White"/>
-                                            <TextBlock Text=" Revenue Reports" Foreground="White"/>
-                                        </StackPanel>
-                                    </Button>
-                                </StackPanel>-->
-                                
                                 <Separator Margin="6" Height="0.8" Background="#FFC1CC00"/>
 
-                                <StackPanel x:Name="AccountPanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=AccountListPage}">
+                                <StackPanel x:Name="AccountPanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                AccountListPage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToAccountListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Account" Foreground="White"/>
@@ -229,10 +294,16 @@
                                     </Button>
                                 </StackPanel>
 
-                                <StackPanel x:Name="UserGroupPanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=UserGroupListPage}">
+                                <StackPanel x:Name="UserGroupPanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                UserGroupListPage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToUserGroupListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="AccountGroup" Foreground="White"/>
@@ -242,10 +313,16 @@
                                 </StackPanel>
 
 
-                                <StackPanel x:Name="PermissionPanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=PermissionListPage}">
+                                <StackPanel x:Name="PermissionPanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                PermissionListPage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToPermissionListPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="AlphaP" Foreground="White"/>
@@ -253,11 +330,17 @@
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
-                                
-                                <StackPanel x:Name="RulePanel" DockPanel.Dock="Top"
-                                Visibility="{Binding Path=CurrentUserPrincipal,
-                                                     Converter={StaticResource PermissionToVisibilityConverter},
-                                                     ConverterParameter=RulePage}">
+
+                                <StackPanel x:Name="RulePanel" DockPanel.Dock="Top">
+                                    <StackPanel.Visibility>
+                                        <MultiBinding Converter="{StaticResource PermissionToVisibilityMultiConverter}">
+                                            <Binding Path="CurrentUserPrincipal" />
+                                            <Binding Path="PermissionsVersion" />
+                                            <MultiBinding.ConverterParameter>
+                                                RulePage
+                                            </MultiBinding.ConverterParameter>
+                                        </MultiBinding>
+                                    </StackPanel.Visibility>
                                     <Button Style="{StaticResource menuButton}" Command="{Binding NavigateToRulesPageCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="ExclamationBold" Foreground="White"/>
