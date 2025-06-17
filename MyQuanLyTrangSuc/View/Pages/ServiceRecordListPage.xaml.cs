@@ -29,31 +29,6 @@ namespace MyQuanLyTrangSuc.View
             DataContext = logicService;
         }
 
-        private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (searchComboBox.SelectedItem != null)
-            {
-                string selectedCriteria = (searchComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
-                switch (selectedCriteria)
-                {
-                    case "Customer":
-                        logicService.SearchServiceRecordsByNameOfCustomer(searchTextBox.Text);
-                        break;
-                    case "ID":
-                        logicService.SearchServiceRecordsByID(searchTextBox.Text);
-                        break;
-                    case "Date":
-                        logicService.SearchServiceRecordsByDate(searchTextBox.Text);
-                        break;
-                }
-            }
-            if (string.IsNullOrEmpty(searchTextBox.Text))
-            {
-                searchTextBlock.Text = "Search";
-            }
-        }
-
-
 
         // Show the filter popup when filter button is clicked
         private void FilterButton_Click(object sender, RoutedEventArgs e)

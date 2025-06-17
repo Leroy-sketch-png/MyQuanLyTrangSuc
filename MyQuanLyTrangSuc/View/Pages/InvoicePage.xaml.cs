@@ -18,27 +18,7 @@ namespace MyQuanLyTrangSuc.View
             logicService = new InvoicePageLogic(this);
             DataContext = logicService;
         }
-
-        private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (searchComboBox.SelectedItem != null)
-            {
-                string selectedCriteria = (searchComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
-                switch (selectedCriteria)
-                {
-                    case "Customer":
-                        logicService.SearchInvoicesByNameOfCustomer(searchTextBox.Text);
-                        break;
-                    case "ID":
-                        logicService.SearchInvoicesByID(searchTextBox.Text);
-                        break;
-                    case "Date":
-                        logicService.SearchInvoicesByDate(searchTextBox.Text);
-                        break;
-                }
-            }
-        }
-
+        
         private void editButton_Click(object sender, RoutedEventArgs e)
         {
             logicService.LoadEditInvoiceWindow((Model.Invoice)InvoicesDataGrid.SelectedItem);

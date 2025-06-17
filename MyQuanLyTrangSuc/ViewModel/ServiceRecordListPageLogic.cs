@@ -412,8 +412,8 @@ namespace MyQuanLyTrangSuc.ViewModel
         /// </summary>
         public List<ServiceRecord> SearchServiceRecordsByNameOfCustomer(string name)
         {
-            return context.ServiceRecords
-                          .Include(sr => sr.Customer)
+            return ServiceRecords
+                          //.Include(sr => sr.Customer)
                           .Where(sr => sr.Customer != null && sr.Customer.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0)
                           .ToList();
         }
@@ -423,9 +423,9 @@ namespace MyQuanLyTrangSuc.ViewModel
         /// </summary>
         public List<ServiceRecord> SearchServiceRecordsByID(string ID)
         {
-            return context.ServiceRecords
-                          .Include(sr => sr.Customer) // Keep includes for consistency in displayed data
-                          .Include(sr => sr.Employee)
+            return ServiceRecords
+                          //.Include(sr => sr.Customer) // Keep includes for consistency in displayed data
+                          //.Include(sr => sr.Employee)
                           .Where(sr => sr.ServiceRecordId.IndexOf(ID, StringComparison.OrdinalIgnoreCase) >= 0)
                           .ToList();
         }
@@ -439,9 +439,9 @@ namespace MyQuanLyTrangSuc.ViewModel
             // Attempt to parse the full date first
             if (DateTime.TryParse(date, out DateTime parsedDate))
             {
-                matchingRecords = context.ServiceRecords
-                                          .Include(sr => sr.Customer)
-                                          .Include(sr => sr.Employee)
+                matchingRecords = ServiceRecords
+                                          //.Include(sr => sr.Customer)
+                                          //.Include(sr => sr.Employee)
                                           .Where(sr => sr.CreateDate.HasValue &&
                                                       sr.CreateDate.Value.Date == parsedDate.Date)
                                           .ToList();

@@ -137,11 +137,9 @@
 
                     <!-- Search TextBox -->
                     <Grid Grid.Column="0">
-                        <TextBlock x:Name="searchTextBlock" Margin="15 8 0 5" VerticalAlignment="Center" Foreground="#b0b9c6"
-                                   IsHitTestVisible="False" Panel.ZIndex="1" Text=""
-                                   Visibility="{Binding ElementName=searchTextBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
                         <TextBox x:Name="searchTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
-                                 materialDesign:HintAssist.Hint="Search" TextChanged="searchTextBox_TextChanged"/>
+                                 materialDesign:HintAssist.Hint="Search"
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
 
                     <!-- Search ComboBox -->

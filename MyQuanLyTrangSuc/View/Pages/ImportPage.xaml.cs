@@ -19,30 +19,6 @@ namespace MyQuanLyTrangSuc.View
             logicService = new ImportPageLogic(this);
             DataContext = logicService;
         }
-
-
-
-
-        private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (searchComboBox.SelectedItem != null)
-            {
-                string selectedCriteria = (searchComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
-                switch (selectedCriteria)
-                {
-                    case "Supplier":
-                        logicService.ImportsSearchByNameOfSupplier(searchTextBox.Text);
-                        break;
-                    case "ID":
-                        logicService.ImportsSearchByID(searchTextBox.Text);
-                        break;
-                    case "Date":
-                        logicService.ImportsSearchByDate(searchTextBox.Text);
-                        break;
-                }
-            }
-        }
-
         private void editButton_Click(object sender, RoutedEventArgs e)
         {
             logicService.LoadEditImportWindow((Model.Import)importRecordsDataGrid.SelectedItem);
