@@ -1,4 +1,5 @@
-﻿using MyQuanLyTrangSuc.Model;
+﻿using ControlzEx.Standard;
+using MyQuanLyTrangSuc.Model;
 using MyQuanLyTrangSuc.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -108,6 +109,24 @@ namespace MyQuanLyTrangSuc.View
 
         private void PrepaidTextBox_LostFocus(object sender, RoutedEventArgs e) {
             logicService.ValidatePrepaidInput();
+        }
+
+        private void addNewCustomerBtn_Click(object sender, RoutedEventArgs e)
+        {
+            AddCustomerWindow addCustomerWindow = new AddCustomerWindow();
+            bool? res = addCustomerWindow.ShowDialog();
+            if (res == true)
+            {
+                logicService.LoadInitialData();
+            }
+        }
+        private void addNewServiceBtn_Click(object sender, RoutedEventArgs e)
+        {
+            AddServiceWindow addServiceWindow = new AddServiceWindow();
+            addServiceWindow.ShowDialog();
+                logicService.LoadServices();
+            
+            //logicService.RefreshListOfServices();
         }
     }
 }

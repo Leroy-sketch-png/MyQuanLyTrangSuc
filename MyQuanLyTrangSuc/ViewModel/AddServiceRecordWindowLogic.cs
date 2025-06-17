@@ -25,13 +25,15 @@ namespace MyQuanLyTrangSuc.ViewModel
             employeeService = EmployeeService.Instance;
             notificationWindowLogic = new NotificationWindowLogic();
             GenerateNewServiceRecordID();
-            Services = serviceRecordService.GetListOfServices();
-            Customers = serviceRecordService.GetListOfCustomers();
+            LoadInitialData();
             ServiceDetails = new ObservableCollection<ServiceDetail>();
             _newServiceDetailId = serviceRecordService.GenerateNewServiceDetailID();
             Status = "not delivered";
             PrepaidPercentage = serviceRecordService.GetPrepaidPercentage();
         }
+
+
+
 
         private string _newServiceRecordId;
         public string NewServiceRecordId
@@ -166,10 +168,18 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
-        public List<Service> Services { get; set; }
-        public List<Customer> Customers { get; set; }
-
+        //public List<Service> Services { get; set; }
         public ObservableCollection<ServiceDetail> ServiceDetails { get; set; }
+        private ObservableCollection<Customer> _customers;
+        public ObservableCollection<Customer> Customers 
+        { 
+            get => _customers; 
+            set
+            {
+                _customers = value;
+                OnPropertyChanged();
+            } 
+        }
 
         private int _newServiceDetailId;
         private int GenerateNewServiceDetailID() => _newServiceDetailId++;
@@ -361,5 +371,40 @@ namespace MyQuanLyTrangSuc.ViewModel
             }
         }
 
+        private ObservableCollection<Service> _services;
+        public ObservableCollection<Service> Services
+        {
+            get => _services;
+            set
+            {
+                _services = value;
+                OnPropertyChanged(nameof(Services));
+            }
+        }
+
+        public void LoadServices()
+        {
+            Services = new ObservableCollection<Service>(serviceRecordService.GetListOfServices());
+
+            if (Services.Any())
+            {
+                SelectedService = Services.First();
+            }
+        }
+        public void RefreshListOfCategories()
+        {
+            var db = MyQuanLyTrangSucContext.Instance;
+            Services.Clear();
+            foreach (var service in db.Services.ToList())
+            {
+                Services.Add(service);
+            }
+        }
+
+        public void LoadInitialData()
+        {
+            Services = new ObservableCollection<Service>(serviceRecordService.GetListOfServices());
+            Customers = new ObservableCollection<Customer>(serviceRecordService.GetListOfCustomers());
+        }
     }
 }
