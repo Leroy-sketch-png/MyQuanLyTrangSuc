@@ -68,6 +68,12 @@ namespace MyQuanLyTrangSuc.DataAccess
                 .Include(id => id.Product)
                 .AsNoTracking();
         }
+        public IEnumerable<ImportDetail> GetImportDetailsByImportIdAsTracking(string importId)
+        {
+            return context.ImportDetails
+                .Where(id => id.ImportId == importId)
+                .Include(id => id.Product);
+        }
 
         public void RemoveImportDetail(string importId, string productId)
         {
@@ -119,7 +125,7 @@ namespace MyQuanLyTrangSuc.DataAccess
         {
             if (selectedItem != null)
             {
-                foreach (ImportDetail importDetail in GetImportDetailsByImportId(selectedItem.ImportId))
+                foreach (ImportDetail importDetail in GetImportDetailsByImportIdAsTracking(selectedItem.ImportId))
                 {
                     importDetail.Product.Quantity -= importDetail.Quantity;
                 }

@@ -217,12 +217,12 @@ namespace MyQuanLyTrangSuc.ViewModel {
 
             public decimal CalculateDailyRevenue(DateTime date) {
                 var hasRecords = context.Invoices
-                    .Any(e => e.Date.HasValue && e.Date.Value.Date == date.Date);
+                    .Any(e => !e.IsDeleted && e.Date.HasValue && e.Date.Value.Date == date.Date);
 
                 if (!hasRecords) return 0;
 
                 var revenue = context.Invoices
-                    .Where(e => e.Date.HasValue && e.Date.Value.Date == date.Date)
+                    .Where(e => !e.IsDeleted && e.Date.HasValue && e.Date.Value.Date == date.Date)
                     .Sum(e => e.TotalAmount ?? 0);
 
                 return revenue;
@@ -234,12 +234,12 @@ namespace MyQuanLyTrangSuc.ViewModel {
 
             public int TotalDailySales(DateTime date) {
                 var hasRecords = context.Invoices
-                    .Any(e => e.Date.HasValue && e.Date.Value.Date == date.Date);
+                    .Any(e => !e.IsDeleted && e.Date.HasValue && e.Date.Value.Date == date.Date);
 
                 if (!hasRecords) return 0;
 
                 var total = context.InvoiceDetails
-                    .Where(e => e.Invoice.Date.HasValue && e.Invoice.Date.Value.Date == date.Date)
+                    .Where(e => !e.Invoice.IsDeleted && e.Invoice.Date.HasValue && e.Invoice.Date.Value.Date == date.Date)
                     .Sum(e => e.Quantity ?? 0);
 
                 return total;
@@ -261,7 +261,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
         public void UpdateDailyRevenueTextBox(DateTime date, TextBlock textBlock) {
             var dailyRevenue = revenueCalculator.CalculateDailyRevenue(date);
             Application.Current.Dispatcher.Invoke(() => {
-                textBlock.Text = dailyRevenue == 0 ? "No sales today." : $"{dailyRevenue:N} VND";
+                textBlock.Text = dailyRevenue == 0 ? "No sales today." : $"{dailyRevenue:N} $";
             });
         }
 
@@ -270,6 +270,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
 
             public void UpdateTopProductsTextBlocks(TextBlock firstTextBlock, TextBlock secondTextBlock, TextBlock thirdTextBlock, TextBlock fourthTextBlock, TextBlock firstProduct, TextBlock secondProduct, TextBlock thirdProduct, TextBlock fourthProduct) {
                 var topProducts = context.InvoiceDetails
+                    .Where(e => !e.Invoice.IsDeleted)
                     .GroupBy(e => e.ProductId)
                     .Select(g => new {
                         Product = g.FirstOrDefault().Product,
@@ -307,6 +308,7 @@ namespace MyQuanLyTrangSuc.ViewModel {
 
             public void UpdateRecentCustomerTextBlocks(TextBlock fifthTextBlock, TextBlock sixthTextBlock, TextBlock seventhTextBlock, TextBlock eighthTextBlock) {
                 var recentExports = context.Invoices
+                    .Where(e => !e.IsDeleted)
                     .OrderByDescending(e => e.Date)
                     .ToList();
 

@@ -112,12 +112,19 @@ namespace MyQuanLyTrangSuc.DataAccess
                           .Include(id => id.Product)
                           .AsNoTracking();
         }
+        public IEnumerable<InvoiceDetail> GetInvoiceDetailsByInvoiceIdAsTracking(string invoiceId)
+        {
+            return context.InvoiceDetails
+                          .Where(id => id.InvoiceId == invoiceId)
+                          .Include(id => id.Product);
+        }
+
 
         public void DeleteInvoice(Invoice selectedItem)
         {
             if (selectedItem != null)
             {
-                foreach (InvoiceDetail invoiceDetail in GetInvoiceDetailsByInvoiceId(selectedItem.InvoiceId))
+                foreach (InvoiceDetail invoiceDetail in GetInvoiceDetailsByInvoiceIdAsTracking(selectedItem.InvoiceId))
                 {
                     invoiceDetail.Product.Quantity += invoiceDetail.Quantity;
                 }

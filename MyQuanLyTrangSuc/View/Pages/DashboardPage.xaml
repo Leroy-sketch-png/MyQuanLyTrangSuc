@@ -292,7 +292,7 @@
                         </Grid.RowDefinitions>
 
                         <Border CornerRadius="4 0 0 4">
-                            <TextBlock Text="TOP" TextAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#ffffff">
+                            <TextBlock Text="NO" TextAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="#ffffff">
                                 <TextBlock.Background>
                                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                         <GradientStop Color="#FF747525" Offset="0"/>

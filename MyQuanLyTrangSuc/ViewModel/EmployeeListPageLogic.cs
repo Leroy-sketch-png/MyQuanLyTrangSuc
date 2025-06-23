@@ -408,11 +408,8 @@ namespace MyQuanLyTrangSuc.ViewModel
                                 var cell = ws.Cells[rowIndex, colIndex];
                                 if (targetColumn.Header.ToString() == "Telephone")
                                 {
-                                    var phone = new string(cellContent.Text.Where(char.IsDigit).ToArray());
-                                    if (long.TryParse(phone, out long phoneNumber))
-                                    {
-                                        cell.Value = phoneNumber;
-                                    }
+                                        var phone = cellContent.Text;
+                                        cell.Value = $"{phone}";
                                 }
                                 else
                                 {
