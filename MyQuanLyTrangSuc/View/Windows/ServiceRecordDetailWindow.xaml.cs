@@ -29,6 +29,7 @@ namespace MyQuanLyTrangSuc.View
             if (sender is Button btn && btn.DataContext is ServiceDetail serviceDetail)
             {
                 viewModel.UpdateServiceDetailStatusAsync(serviceDetail);
+                btn.Visibility = Visibility.Hidden;
             }
         }
     }

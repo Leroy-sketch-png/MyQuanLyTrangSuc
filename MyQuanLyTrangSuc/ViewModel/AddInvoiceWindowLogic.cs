@@ -26,7 +26,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             notificationWindowLogic = new NotificationWindowLogic();
             GenerateNewInvoiceID();
             Customers = new ObservableCollection<Customer>(invoiceService.GetListOfCustomers());
-            Items = new ObservableCollection<Product>(invoiceService.GetListOfProducts());
+            Items = new ObservableCollection<Product>(invoiceService.GetListOfProducts().Where(p => p.Quantity > 0));
             InvoiceDetails = new ObservableCollection<InvoiceDetail>();
             _newInvoiceDetailID = invoiceService.GenerateNewInvoiceDetailID();
 
@@ -266,7 +266,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             GenerateNewInvoiceID();
             InvoiceDetails.Clear();
             GrandTotal = 0;
-            Items = new ObservableCollection<Product>(invoiceService.GetListOfProducts());
+            Items = new ObservableCollection<Product>(invoiceService.GetListOfProducts().Where(p => p.Quantity > 0));
             originalProductQuantities = Items.ToDictionary(p => p.ProductId, p => p.Quantity ?? 0); // refresh snapshot
             OnPropertyChanged(nameof(Items));
             SelectedItem = null;

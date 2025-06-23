@@ -64,7 +64,6 @@ namespace MyQuanLyTrangSuc.ViewModel
                 if (employee != null)
                 {
                     SelectedEmployee = employee;
-                    // Also initialize UI fields if needed, e.g. populate input controls via binding
                 }
                 else
                 {

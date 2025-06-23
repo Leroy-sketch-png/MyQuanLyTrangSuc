@@ -8,6 +8,9 @@
         Title="Service Details"
         MinHeight="500" MinWidth="1000"
         WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid Margin="10">
             <Grid.RowDefinitions>
@@ -51,9 +54,12 @@
                         <DataGridTemplateColumn Header="Action" Width="100">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="Paid"
-                                            Click="payButton_Click"
-                                            Padding="5,2"/>
+                                    <Button x:Name="payButton"
+            Content="Paid"
+            Click="payButton_Click"
+                                            Padding="5,2"
+                                            
+                                            />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

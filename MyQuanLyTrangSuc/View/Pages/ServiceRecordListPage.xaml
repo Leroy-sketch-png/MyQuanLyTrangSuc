@@ -99,7 +99,7 @@
                                        Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
                         </StackPanel>
                     </Button>
-                    <Button Style="{StaticResource MyCustomMaterialDisabledButton}" Command="{Binding ImportServiceRecordsCommand}"
+                    <!--Button Style="{StaticResource MyCustomMaterialDisabledButton}" Command="{Binding ImportServiceRecordsCommand}"
                             IsEnabled="{Binding Path=CurrentUserPrincipal,
                                             Converter={StaticResource PermissionToIsEnabledConverter},
                                             ConverterParameter=ImportServiceRecordExcel}" VerticalAlignment="Bottom" Width="100">
@@ -109,7 +109,7 @@
                             <TextBlock Text="Import" FontWeight="SemiBold"
                                        Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
                         </StackPanel>
-                    </Button>
+                    </Button-->
 
                     <Button Style="{StaticResource MyCustomMaterialDisabledButton}" Command="{Binding ExportServiceRecordsCommand}"
                             IsEnabled="{Binding Path=CurrentUserPrincipal,

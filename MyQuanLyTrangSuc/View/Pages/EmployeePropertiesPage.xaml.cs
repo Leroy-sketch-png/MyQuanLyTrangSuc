@@ -63,8 +63,9 @@ namespace MyQuanLyTrangSuc.View
 
         private void AssignAccountButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.DataContext is Employee employee)
+            if (logicService.SelectedEmployee != null)
             {
+                Employee employee = MyQuanLyTrangSucContext.Instance.Employees.FirstOrDefault(e => e.EmployeeId == logicService.SelectedEmployee.EmployeeId);
                 AssignAccountWindow assignAccountWindow = new AssignAccountWindow(employee);
                 assignAccountWindow.ShowDialog();
             }

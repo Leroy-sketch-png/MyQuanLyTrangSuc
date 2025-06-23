@@ -29,7 +29,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             Invoice = invoice;
 
             // Load master data
-            Items = new ObservableCollection<Product>(invoiceService.GetListOfProducts());
+            Items = new ObservableCollection<Product>(invoiceService.GetListOfProducts().Where(p => p.Quantity > 0));
             Customers = new ObservableCollection<Customer>(invoiceService.GetListOfCustomers());
 
             // Snapshot original quantities
@@ -271,7 +271,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             notificationWindowLogic.LoadNotification("Success", "Invoice updated successfully", "BottomRight");
 
             // Refresh master data and snapshot
-            Items = new ObservableCollection<Product>(invoiceService.GetListOfProducts());
+            Items = new ObservableCollection<Product>(invoiceService.GetListOfProducts().Where(p => p.Quantity>0));
             originalProductQuantities = Items.ToDictionary(p => p.ProductId, p => p.Quantity ?? 0);
             OnPropertyChanged(nameof(Items));
         }

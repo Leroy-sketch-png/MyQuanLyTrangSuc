@@ -32,14 +32,14 @@ namespace MyQuanLyTrangSuc.ViewModel
 
             Import = import;
 
+            var existingDetails = importService.GetImportDetailsByImportId(import.ImportId);
+
             // Load master data
-            Items = new ObservableCollection<Product>(importService.GetListOfProducts());
+            Items = new ObservableCollection<Product>(importService.GetListOfProducts().Where(p => !p.Category.IsNotMarketable || existingDetails.Any(d => d.ProductId == p.ProductId)));
             Suppliers = new ObservableCollection<Supplier>(importService.GetListOfSuppliers());
 
             // Snapshot initial product quantities
             originalProductQuantities = Items.ToDictionary(p => p.ProductId, p => p.Quantity ?? 0);
-
-            var existingDetails = importService.GetImportDetailsByImportId(import.ImportId);
 
             // Initialize ViewModel properties
             ImportDetails = new ObservableCollection<ImportDetail>(existingDetails);
@@ -262,7 +262,7 @@ namespace MyQuanLyTrangSuc.ViewModel
         public void LoadInitialData()
         {
             Suppliers = new ObservableCollection<Supplier>(importService.GetListOfSuppliers());
-            Items = new ObservableCollection<Product>(importService.GetListOfProducts());
+            Items = new ObservableCollection<Product>(importService.GetListOfProducts().Where(p => !p.Category.IsNotMarketable || ImportDetails.Any(d => d.ProductId == p.ProductId)));
         }
 
         public bool CanEditImportDetail(ImportDetail importDetail)

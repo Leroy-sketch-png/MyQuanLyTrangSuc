@@ -25,7 +25,7 @@ namespace MyQuanLyTrangSuc.ViewModel
             employeeService = EmployeeService.Instance;
             notificationWindowLogic = new NotificationWindowLogic();
             GenerateNewImportID();
-            Items = new ObservableCollection<Product>(importService.GetListOfProducts());
+            Items = new ObservableCollection<Product>(importService.GetListOfProducts().Where(p => !p.Category.IsNotMarketable));
             Suppliers = new ObservableCollection<Supplier>(importService.GetListOfSuppliers());
             ImportDetails = new ObservableCollection<ImportDetail>();
             _newImportDetailID = importService.GenerateNewImportDetailID();
